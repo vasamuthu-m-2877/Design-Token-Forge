@@ -151,31 +151,31 @@
   /* Day — default */
   --datepicker-day-bg: transparent;
   --datepicker-day-fg: var(--surface-float-ct-default);
-  --datepicker-day-bg-hover: var(--primary-container-bg);
-  --datepicker-day-fg-hover: var(--primary-on-container);
+  --datepicker-day-bg-hover: var(--brand-container-bg);
+  --datepicker-day-fg-hover: var(--brand-on-container);
   --datepicker-day-border-color: transparent;
 
   /* Today (unselected) */
   --datepicker-today-bg: transparent;
-  --datepicker-today-fg: var(--primary-component-bg-default);
-  --datepicker-today-border-color: var(--primary-component-outline-default);
+  --datepicker-today-fg: var(--brand-component-bg-default);
+  --datepicker-today-border-color: var(--brand-component-outline-default);
   --datepicker-today-font-weight: var(--font-weight-bold);
 
   /* Selected */
-  --datepicker-selected-bg: var(--primary-component-bg-default);
-  --datepicker-selected-fg: var(--primary-on-component);
-  --datepicker-selected-bg-hover: var(--primary-component-bg-hover);
-  --datepicker-selected-fg-hover: var(--primary-on-component);
+  --datepicker-selected-bg: var(--brand-component-bg-default);
+  --datepicker-selected-fg: var(--brand-on-component);
+  --datepicker-selected-bg-hover: var(--brand-component-bg-hover);
+  --datepicker-selected-fg-hover: var(--brand-on-component);
   --datepicker-selected-border-color: transparent;
   --datepicker-selected-shadow: var(--shadow-xs);
 
   /* Range */
-  --datepicker-range-bg: var(--primary-container-bg);
+  --datepicker-range-bg: var(--brand-container-bg);
   --datepicker-range-fg: var(--surface-float-ct-default);
-  --datepicker-range-start-bg: var(--primary-component-bg-default);
-  --datepicker-range-start-fg: var(--primary-on-component);
-  --datepicker-range-end-bg: var(--primary-component-bg-default);
-  --datepicker-range-end-fg: var(--primary-on-component);
+  --datepicker-range-start-bg: var(--brand-component-bg-default);
+  --datepicker-range-start-fg: var(--brand-on-component);
+  --datepicker-range-end-bg: var(--brand-component-bg-default);
+  --datepicker-range-end-fg: var(--brand-on-component);
 
   /* Outside month */
   --datepicker-outside-fg: var(--surface-float-ct-faint);
@@ -195,8 +195,8 @@
   --datepicker-header-fg: var(--surface-float-ct-strong);
   --datepicker-nav-bg: transparent;
   --datepicker-nav-fg: var(--surface-float-ct-subtle);
-  --datepicker-nav-bg-hover: var(--primary-container-bg);
-  --datepicker-nav-fg-hover: var(--primary-on-container);
+  --datepicker-nav-bg-hover: var(--brand-container-bg);
+  --datepicker-nav-fg-hover: var(--brand-on-container);
 
   /* Weekday labels */
   --datepicker-weekday-fg: var(--surface-float-ct-faint);
@@ -215,7 +215,7 @@
   --datepicker-separator-color: var(--surface-float-separator);
 
   /* Focus ring */
-  --datepicker-focus-outline-color: var(--primary-component-outline-default);
+  --datepicker-focus-outline-color: var(--brand-component-outline-default);
   --datepicker-focus-outline-width: 2px;
   --datepicker-focus-outline-offset: 2px;
 
@@ -272,7 +272,7 @@
   --datepicker-nav-icon-color: currentColor;
   --datepicker-today-dot-display: none;
   --datepicker-today-dot-size: 4px;
-  --datepicker-today-dot-color: var(--primary-component-bg-default);
+  --datepicker-today-dot-color: var(--brand-component-bg-default);
   --datepicker-nav-label-gap: var(--spacing-4);
   --datepicker-day-line-height: 1;
   --datepicker-day-content: none;

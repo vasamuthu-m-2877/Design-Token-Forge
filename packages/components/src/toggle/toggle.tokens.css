@@ -76,10 +76,10 @@
   --switch-track-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Track: checked (on) ── */
-  --switch-track-bg-on: var(--primary-component-bg-default);
-  --switch-track-bg-on-hover: var(--primary-component-bg-hover);
-  --switch-track-border-color-on: var(--primary-component-bg-default);
-  --switch-track-border-color-on-hover: var(--primary-component-bg-hover);
+  --switch-track-bg-on: var(--brand-component-bg-default);
+  --switch-track-bg-on-hover: var(--brand-component-bg-hover);
+  --switch-track-border-color-on: var(--brand-component-bg-default);
+  --switch-track-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Thumb ── */
   --switch-thumb-bg: var(--color-fixed-white);
@@ -89,7 +89,7 @@
 
   /* ── Disabled ── */
   --switch-track-bg-disabled: var(--surface-base-cm-outline);
-  --switch-track-bg-on-disabled: var(--primary-component-bg-default);
+  --switch-track-bg-on-disabled: var(--brand-component-bg-default);
   --switch-track-border-color-disabled: var(--surface-base-cm-outline);
   --switch-thumb-bg-disabled: var(--color-fixed-white);
   --switch-thumb-shadow-disabled: none;
@@ -97,7 +97,7 @@
 
   /* ── Thumb icon (optional check / x) ── */
   --switch-thumb-icon-color-off: var(--surface-base-ct-subtle);
-  --switch-thumb-icon-color-on: var(--primary-component-bg-default);
+  --switch-thumb-icon-color-on: var(--brand-component-bg-default);
   --switch-thumb-icon-size: 0.65em;
 
   /* ────────────────────────────────────────────────────────────
@@ -131,10 +131,10 @@
   --switch-outline-track-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Outline track: checked (on) — filled with semantic role ── */
-  --switch-outline-track-bg-on: var(--primary-component-bg-default);
-  --switch-outline-track-bg-on-hover: var(--primary-component-bg-hover);
-  --switch-outline-track-border-color-on: var(--primary-component-bg-default);
-  --switch-outline-track-border-color-on-hover: var(--primary-component-bg-hover);
+  --switch-outline-track-bg-on: var(--brand-component-bg-default);
+  --switch-outline-track-bg-on-hover: var(--brand-component-bg-hover);
+  --switch-outline-track-border-color-on: var(--brand-component-bg-default);
+  --switch-outline-track-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Outline thumb ── */
   --switch-outline-thumb-bg: var(--color-fixed-white);
@@ -145,7 +145,7 @@
   /* ── Outline disabled + border ── */
   --switch-outline-track-border-width: 2px;
   --switch-outline-track-bg-disabled: transparent;
-  --switch-outline-track-bg-on-disabled: var(--primary-component-bg-default);
+  --switch-outline-track-bg-on-disabled: var(--brand-component-bg-default);
   --switch-outline-thumb-bg-disabled: var(--color-fixed-white);
   --switch-outline-opacity-disabled: 0.5;
 
@@ -207,7 +207,7 @@
      ♿ ACCESSIBILITY  (8 vars) ─ 128 total
      ──────────────────────────────────────────────────────────── */
   --switch-focus-outline-width: 2px;
-  --switch-focus-outline-color: var(--primary-component-outline-default);
+  --switch-focus-outline-color: var(--brand-component-outline-default);
   --switch-focus-outline-offset: 2px;
   --switch-min-tap-target: 44px;
   --switch-required-indicator: '*';

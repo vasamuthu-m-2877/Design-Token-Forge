@@ -137,7 +137,7 @@
   --input-outline-fg-disabled: var(--surface-base-ct-faint);
   --input-outline-border-color: var(--surface-base-cm-outline);
   --input-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --input-outline-border-color-focus: var(--primary-component-outline-default);
+  --input-outline-border-color-focus: var(--brand-component-outline-default);
   --input-outline-border-color-disabled: var(--surface-base-cm-outline);
   --input-outline-border-color-error: var(--danger-component-outline-default);
   --input-outline-placeholder: var(--surface-base-ct-faint);
@@ -154,7 +154,7 @@
   --input-filled-fg-disabled: var(--surface-base-ct-faint);
   --input-filled-border-color: var(--surface-base-cm-outline);
   --input-filled-border-color-hover: var(--surface-base-cm-outline-hover);
-  --input-filled-border-color-focus: var(--primary-component-outline-default);
+  --input-filled-border-color-focus: var(--brand-component-outline-default);
   --input-filled-border-color-disabled: var(--surface-base-cm-outline);
   --input-filled-border-color-error: var(--danger-component-outline-default);
   --input-filled-placeholder: var(--surface-base-ct-faint);
@@ -171,7 +171,7 @@
   --input-underline-fg-disabled: var(--surface-base-ct-faint);
   --input-underline-border-color: var(--surface-base-cm-outline);
   --input-underline-border-color-hover: var(--surface-base-ct-subtle);
-  --input-underline-border-color-focus: var(--primary-component-outline-default);
+  --input-underline-border-color-focus: var(--brand-component-outline-default);
   --input-underline-border-color-disabled: var(--surface-base-cm-outline);
   --input-underline-border-color-error: var(--danger-component-outline-default);
   --input-underline-placeholder: var(--surface-base-ct-faint);
@@ -180,12 +180,12 @@
 
   /* ── Shared surface tokens ──────────────────────────────── */
   --input-label-color: var(--surface-base-ct-subtle);
-  --input-label-color-focus: var(--primary-content-default);
+  --input-label-color-focus: var(--brand-content-default);
   --input-label-color-error: var(--danger-content-default);
   --input-label-color-disabled: var(--surface-base-ct-faint);
   --input-helper-color: var(--surface-base-ct-subtle);
   --input-helper-color-error: var(--danger-content-default);
-  --input-caret-color: var(--primary-component-bg-default);
+  --input-caret-color: var(--brand-component-bg-default);
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (15 vars)
@@ -263,7 +263,7 @@
      ♿ ACCESSIBILITY  (6 vars)
      ──────────────────────────────────────────────────────────── */
   --input-focus-outline-width: 2px;
-  --input-focus-outline-color: var(--primary-component-outline-default);
+  --input-focus-outline-color: var(--brand-component-outline-default);
   --input-focus-outline-offset: 2px;
   --input-min-tap-target: 44px;
   --input-required-indicator: '*';

@@ -72,9 +72,9 @@
 
   /* ── per-role accents  (5 roles × 3 = 15 vars) ──── */
   /* primary — canonical name */
-  --toast-primary-accent:      var(--primary-component-bg-default);
-  --toast-primary-icon-color:  var(--primary-component-bg-default);
-  --toast-primary-title-color: var(--primary-content-strong);
+  --toast-primary-accent:      var(--brand-component-bg-default);
+  --toast-primary-icon-color:  var(--brand-component-bg-default);
+  --toast-primary-title-color: var(--brand-content-strong);
 
   /* info — backward-compatible alias */
   --toast-info-accent:        var(--toast-primary-accent);
@@ -99,7 +99,7 @@
   --toast-neutral-title-color: var(--surface-base-ct-strong);
 
   /* ── soft variant bg  (5 vars) ──────────────── */
-  --toast-primary-soft-bg: var(--primary-container-bg);
+  --toast-primary-soft-bg: var(--brand-container-bg);
   --toast-info-soft-bg:    var(--toast-primary-soft-bg);
   --toast-success-soft-bg: var(--success-container-bg);
   --toast-warning-soft-bg: var(--warning-container-bg);
@@ -107,8 +107,8 @@
   --toast-neutral-soft-bg:  var(--surface-base-cn-bg);
 
   /* ── filled variant  (5 roles × 2 = 10 vars) ───── */
-  --toast-primary-filled-bg:  var(--primary-component-bg-default);
-  --toast-primary-filled-fg:  var(--primary-on-component);
+  --toast-primary-filled-bg:  var(--brand-component-bg-default);
+  --toast-primary-filled-fg:  var(--brand-on-component);
   --toast-info-filled-bg:     var(--toast-primary-filled-bg);
   --toast-info-filled-fg:     var(--toast-primary-filled-fg);
   --toast-success-filled-bg:  var(--success-component-bg-default);
@@ -121,7 +121,7 @@
   --toast-neutral-filled-fg:  var(--surface-base-ct-strong);
 
   /* ── outline variant border  (5 vars) ──────────── */
-  --toast-primary-outline-border: var(--primary-component-bg-default);
+  --toast-primary-outline-border: var(--brand-component-bg-default);
   --toast-info-outline-border:    var(--toast-primary-outline-border);
   --toast-success-outline-border: var(--success-component-bg-default);
   --toast-warning-outline-border: var(--warning-component-bg-default);
@@ -168,6 +168,6 @@
      9 · ACCESSIBILITY  (2 vars)
      ──────────────────────────────────────────────────────────── */
   --toast-focus-outline-width: 2px;
-  --toast-focus-outline-color: var(--primary-component-outline-default);
+  --toast-focus-outline-color: var(--brand-component-outline-default);
   --toast-focus-outline-offset: 2px;
 }

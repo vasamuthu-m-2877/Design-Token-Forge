@@ -82,7 +82,7 @@
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="" type="button">Default</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="brand" type="button">Brand</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
@@ -257,7 +257,7 @@
 &lt;/div&gt;
 
 &lt;!-- Initials avatar --&gt;
-&lt;div class="avatar" data-size="large" data-role="primary"
+&lt;div class="avatar" data-size="large" data-role="brand"
      role="img" aria-label="Jane Doe"&gt;
   &lt;span class="avatar__initials"&gt;JD&lt;/span&gt;
 &lt;/div&gt;
@@ -318,7 +318,7 @@
   var SHAPES = ['circle','squircle','rounded-square'];
   var SIZES  = ['micro','tiny','small','base','medium','large','big','huge','mega','ultra'];
   var SIZE_PX = {micro:20,tiny:24,small:28,base:32,medium:36,large:40,big:48,huge:56,mega:64,ultra:80};
-  var ROLES  = [{key:'',label:'Default'},{key:'primary',label:'Primary'},{key:'brand',label:'Brand'},{key:'danger',label:'Danger'},{key:'success',label:'Success'},{key:'warning',label:'Warning'}];
+  var ROLES  = [{key:'',label:'Default'},{key:'brand',label:'Brand'},{key:'danger',label:'Danger'},{key:'success',label:'Success'},{key:'warning',label:'Warning'}];
   var STATUSES = ['online','offline','busy','away'];
   var NAMES  = ['Alice Chen','Bob Rivera','Carla Kim','David Park','Eva Singh'];
   var HUES   = [220,340,160,30,280];
@@ -428,7 +428,7 @@
   function renderHero(){
     var el = clr('heroPreview');
     el.appendChild(makeAvatar({name:'Alice Chen',image:true,initials:'AC',hue:220}));
-    el.appendChild(makeAvatar({name:'Bob Rivera',initials:'BR',noGlobalRole:true,role:'primary'}));
+    el.appendChild(makeAvatar({name:'Bob Rivera',initials:'BR',noGlobalRole:true,role:'brand'}));
     el.appendChild(makeAvatar({name:'User'}));
     renderInspector();
   }
@@ -436,7 +436,7 @@
   function renderContent(){
     var el = clr('contentModes');
     el.appendChild(card(makeAvatar({name:'Alice',image:true,initials:'AC',hue:220,size:'large'}),'Image'));
-    el.appendChild(card(makeAvatar({name:'Bob',initials:'BR',role:'primary',size:'large'}),'Initials'));
+    el.appendChild(card(makeAvatar({name:'Bob',initials:'BR',role:'brand',size:'large'}),'Initials'));
     el.appendChild(card(makeAvatar({name:'User',size:'large'}),'Icon Fallback'));
   }
 
@@ -444,7 +444,7 @@
     var el = clr('shapeGallery');
     SHAPES.forEach(function(sh){
       el.appendChild(card(makeAvatar({shape:sh,forceDefault:true,name:'User',image:true,initials:'JD',hue:220,size:'large'}),cap(sh)));
-      el.appendChild(card(makeAvatar({shape:sh,forceDefault:true,name:'User',initials:'JD',role:'primary',size:'large'}),cap(sh)+' Initials'));
+      el.appendChild(card(makeAvatar({shape:sh,forceDefault:true,name:'User',initials:'JD',role:'brand',size:'large'}),cap(sh)+' Initials'));
       el.appendChild(card(makeAvatar({shape:sh,forceDefault:true,name:'User',size:'large'}),cap(sh)+' Icon'));
     });
   }
@@ -454,7 +454,7 @@
     SIZES.forEach(function(s){
       var item = document.createElement('div');
       item.className = 'density-item';
-      item.appendChild(makeAvatar({size:s,name:'User',initials:'JD',role:'primary',noGlobalRole:true}));
+      item.appendChild(makeAvatar({size:s,name:'User',initials:'JD',role:'brand',noGlobalRole:true}));
       var m = document.createElement('div');
       m.className = 'density-meta';
       m.textContent = SIZE_PX[s]+'px';
@@ -477,7 +477,7 @@
     var el = clr('stateMatrix');
     var modes = [
       {label:'Image',    fn:function(o){o.image=true;o.initials='AC';o.hue=220;return o}},
-      {label:'Initials', fn:function(o){o.initials='JD';o.role='primary';o.noGlobalRole=true;return o}},
+      {label:'Initials', fn:function(o){o.initials='JD';o.role='brand';o.noGlobalRole=true;return o}},
       {label:'Icon',     fn:function(o){return o}}
     ];
     var states = [{label:'Default',st:{}},{label:'Disabled',st:{disabled:true}},{label:'Loading',st:{loading:true}},{label:'Elevated',st:{strong:true}}];
@@ -538,7 +538,7 @@
   function renderBadges(){
     var el = clr('badgeDemo');
     STATUSES.forEach(function(st){
-      el.appendChild(card(makeAvatar({name:'User',initials:'JD',role:'primary',noGlobalRole:true,status:st,size:'large'}),cap(st)));
+      el.appendChild(card(makeAvatar({name:'User',initials:'JD',role:'brand',noGlobalRole:true,status:st,size:'large'}),cap(st)));
     });
     // Also show at different sizes
     ['small','base','big','huge'].forEach(function(sz){
@@ -575,7 +575,7 @@
     // Image layer
     el.appendChild(card(makeAvatar({name:'Image Layer',image:true,initials:'AC',hue:220,size:'huge'}),'Image'));
     // Initials layer
-    el.appendChild(card(makeAvatar({name:'Initials',initials:'BR',role:'primary',noGlobalRole:true,size:'huge'}),'Initials'));
+    el.appendChild(card(makeAvatar({name:'Initials',initials:'BR',role:'brand',noGlobalRole:true,size:'huge'}),'Initials'));
     // Icon fallback layer
     el.appendChild(card(makeAvatar({name:'Icon',size:'huge'}),'Icon Fallback'));
     // Badge positioned

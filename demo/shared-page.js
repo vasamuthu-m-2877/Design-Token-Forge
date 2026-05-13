@@ -183,16 +183,16 @@ window.DTFPage = (function() {
 
   /**
    * Override primary-* role tokens on a container to simulate a different role.
-   * Pass 'primary' to reset to defaults.
+   * Pass 'brand' to reset to defaults.
    */
   function applyRole(bodyEl, roleId) {
-    if (roleId === 'primary') {
+    if (roleId === 'brand') {
       ROLE_TOKENS.forEach(function(tok) {
-        bodyEl.style.removeProperty('--primary-' + tok);
+        bodyEl.style.removeProperty('--brand-' + tok);
       });
     } else {
       ROLE_TOKENS.forEach(function(tok) {
-        bodyEl.style.setProperty('--primary-' + tok, 'var(--' + roleId + '-' + tok + ')');
+        bodyEl.style.setProperty('--brand-' + tok, 'var(--' + roleId + '-' + tok + ')');
       });
     }
   }
@@ -202,7 +202,7 @@ window.DTFPage = (function() {
   /**
    * Render a CSS-grid state matrix.
    * @param {string}   containerId - DOM id
-   * @param {Array}    variants    - e.g. ['primary','secondary','ghost']
+   * @param {Array}    variants    - e.g. ['brand','secondary','ghost']
    * @param {Array}    states      - e.g. ['Default','Hover','Active','Disabled']
    * @param {function} makeCell    - fn(variant, stateLabel) → DOM element
    */

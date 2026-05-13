@@ -93,7 +93,7 @@
 /* ────────────────────────────────────────────────────────────────
    4.  ROLE COLOR VARIANTS
    ──────────────────────────────────────────────────────────────── */
-.avatar[data-role="primary"]{--_av-bg:var(--avatar-primary-bg);--_av-fg:var(--avatar-primary-fg)}
+.avatar[data-role="brand"]{--_av-bg:var(--avatar-primary-bg);--_av-fg:var(--avatar-primary-fg)}
 .avatar[data-role="brand"]{--_av-bg:var(--avatar-brand-bg);--_av-fg:var(--avatar-brand-fg)}
 .avatar[data-role="danger"]{--_av-bg:var(--avatar-danger-bg);--_av-fg:var(--avatar-danger-fg)}
 .avatar[data-role="success"]{--_av-bg:var(--avatar-success-bg);--_av-fg:var(--avatar-success-fg)}

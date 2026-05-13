@@ -132,7 +132,7 @@ const SURFACE_NAMES = [
 ];
 
 const SEMANTIC_ROLES = [
-  'primary', 'brand', 'success', 'warning', 'danger', 'info'
+  'brand', 'success', 'warning', 'danger', 'info'
 ];
 
 // ── CSS parser ────────────────────────────────────────────────
@@ -246,7 +246,7 @@ function surfaceFigmaPath(cssName) {
 }
 
 function semanticFigmaPath(cssName) {
-  // cssName like "primary-content-default" or "brand-component-bg-hover"
+  // cssName like "brand-content-default" or "brand-component-bg-hover"
   const parts = cssName.split('-');
   const role = parts[0];
   const prop = parts.slice(1).join('-');
@@ -457,7 +457,7 @@ function buildT2(t1Collection) {
 }
 
 // ── T3: Status Context Tokens ─────────────────────────────────
-//    Modes: primary, brand, success, warning, danger, info
+//    Modes: brand, success, warning, danger, info
 //    Each value aliases the corresponding T1 semantic variable.
 
 function buildT3(t1Collection) {

@@ -52,10 +52,7 @@ export async function generateTheme({ color, name, output = './brand-theme.css' 
    ════════════════════════════════════════════════════════════════ */
 
 ${selector} {
-  /* ── Primary Palette (${steps.length} steps) ── */
-${paletteToCss('primary', steps)}
-
-  /* ── Brand Palette (mirrors primary for single-brand systems) ── */
+  /* ── Brand Palette (${steps.length} steps) ── */
 ${paletteToCss('brand', steps)}
 }
 `;

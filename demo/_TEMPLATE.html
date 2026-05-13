@@ -152,7 +152,7 @@
     <label>Variant</label>
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
       <!-- DEFAULT pill gets aria-pressed="true" — adjust per component -->
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="secondary" type="button">Secondary</button>
       <!-- ... add all variants ... -->
     </div>
@@ -290,7 +290,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card A</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="A"><option value="base" selected>Base</option><option value="bright">Bright</option><option value="deep">Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="primary" selected>Primary</option><option value="brand">Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyA">
             <!-- JS populates with component variants -->
@@ -300,7 +300,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card B</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="B"><option value="base">Base</option><option value="bright">Bright</option><option value="deep" selected>Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="primary">Primary</option><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyB">
             <!-- JS populates with component variants -->
@@ -396,12 +396,12 @@
 
   /* ── Component Config ────────────────────────────────── */
   // TODO: Adjust for your component
-  var VARIANTS = ['primary','secondary','ghost'];  // or ROLES for display components
+  var VARIANTS = ['brand','secondary','ghost'];  // or ROLES for display components
   var SIZES = P.SIZES;  // or a subset: ['small','base','large']
 
   /* ── State ───────────────────────────────────────────── */
   var G = {
-    variant: 'primary', // or role: 'primary'
+    variant: 'brand', // or role: 'brand'
     size: 'base',
     rounded: false
   };

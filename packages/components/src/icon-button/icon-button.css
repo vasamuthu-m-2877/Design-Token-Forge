@@ -401,37 +401,37 @@
    Semantic roles:      primary | danger | success | warning | brand | info | neutral
 
    HOW IT WORKS:
-   • Structural variants (filled/outlined/soft) read from --primary-* semantic palette.
-   • Role selectors remap --primary-* to the chosen role palette at the element level.
+   • Structural variants (filled/outlined/soft) read from --brand-* semantic palette.
+   • Role selectors remap --brand-* to the chosen role palette at the element level.
    • This composes automatically — any structure × any role without per-combo selectors.
    • Ghost defaults to neutral (surface tokens). Role selectors override ghost tokens too.
    • Legacy single-value names (danger, success, etc.) keep working unchanged above.
    ════════════════════════════════════════════════════════════════ */
 
-/* ── data-role="primary" ────────────────────────────────────── */
-/* Filled/outlined/soft already read --primary-* by default.
+/* ── data-role="brand" ────────────────────────────────────── */
+/* Filled/outlined/soft already read --brand-* by default.
    Only ghost needs explicit primary override (default ghost = neutral). */
-.icon-btn[data-role="primary"] {
-  --icon-btn-ghost-bg-hover: var(--primary-container-bg);
-  --icon-btn-ghost-bg-active: var(--primary-container-pressed);
-  --icon-btn-ghost-fg: var(--primary-content-default);
-  --icon-btn-ghost-fg-hover: var(--primary-content-default);
-  --icon-btn-ghost-fg-disabled: var(--primary-content-default);
+.icon-btn[data-role="brand"] {
+  --icon-btn-ghost-bg-hover: var(--brand-container-bg);
+  --icon-btn-ghost-bg-active: var(--brand-container-pressed);
+  --icon-btn-ghost-fg: var(--brand-content-default);
+  --icon-btn-ghost-fg-hover: var(--brand-content-default);
+  --icon-btn-ghost-fg-disabled: var(--brand-content-default);
 }
 
 /* ── data-role="danger" ─────────────────────────────────────── */
 .icon-btn[data-role="danger"] {
-  --primary-component-bg-default: var(--danger-component-bg-default);
-  --primary-component-bg-hover: var(--danger-component-bg-hover);
-  --primary-component-bg-pressed: var(--danger-component-bg-pressed);
-  --primary-on-component: var(--danger-on-component);
-  --primary-content-default: var(--danger-content-default);
-  --primary-container-bg: var(--danger-container-bg);
-  --primary-container-hover: var(--danger-container-hover);
-  --primary-container-pressed: var(--danger-container-pressed);
-  --primary-component-outline-default: var(--danger-component-outline-default);
-  --primary-component-outline-hover: var(--danger-component-outline-hover);
-  --primary-component-outline-pressed: var(--danger-component-outline-pressed);
+  --brand-component-bg-default: var(--danger-component-bg-default);
+  --brand-component-bg-hover: var(--danger-component-bg-hover);
+  --brand-component-bg-pressed: var(--danger-component-bg-pressed);
+  --brand-on-component: var(--danger-on-component);
+  --brand-content-default: var(--danger-content-default);
+  --brand-container-bg: var(--danger-container-bg);
+  --brand-container-hover: var(--danger-container-hover);
+  --brand-container-pressed: var(--danger-container-pressed);
+  --brand-component-outline-default: var(--danger-component-outline-default);
+  --brand-component-outline-hover: var(--danger-component-outline-hover);
+  --brand-component-outline-pressed: var(--danger-component-outline-pressed);
   /* Ghost overrides */
   --icon-btn-ghost-bg-hover: var(--danger-container-bg);
   --icon-btn-ghost-bg-active: var(--danger-container-pressed);
@@ -442,17 +442,17 @@
 
 /* ── data-role="success" ────────────────────────────────────── */
 .icon-btn[data-role="success"] {
-  --primary-component-bg-default: var(--success-component-bg-default);
-  --primary-component-bg-hover: var(--success-component-bg-hover);
-  --primary-component-bg-pressed: var(--success-component-bg-pressed);
-  --primary-on-component: var(--success-on-component);
-  --primary-content-default: var(--success-content-default);
-  --primary-container-bg: var(--success-container-bg);
-  --primary-container-hover: var(--success-container-hover);
-  --primary-container-pressed: var(--success-container-pressed);
-  --primary-component-outline-default: var(--success-component-outline-default);
-  --primary-component-outline-hover: var(--success-component-outline-hover);
-  --primary-component-outline-pressed: var(--success-component-outline-pressed);
+  --brand-component-bg-default: var(--success-component-bg-default);
+  --brand-component-bg-hover: var(--success-component-bg-hover);
+  --brand-component-bg-pressed: var(--success-component-bg-pressed);
+  --brand-on-component: var(--success-on-component);
+  --brand-content-default: var(--success-content-default);
+  --brand-container-bg: var(--success-container-bg);
+  --brand-container-hover: var(--success-container-hover);
+  --brand-container-pressed: var(--success-container-pressed);
+  --brand-component-outline-default: var(--success-component-outline-default);
+  --brand-component-outline-hover: var(--success-component-outline-hover);
+  --brand-component-outline-pressed: var(--success-component-outline-pressed);
   /* Ghost overrides */
   --icon-btn-ghost-bg-hover: var(--success-container-bg);
   --icon-btn-ghost-bg-active: var(--success-container-pressed);
@@ -463,17 +463,17 @@
 
 /* ── data-role="warning" ────────────────────────────────────── */
 .icon-btn[data-role="warning"] {
-  --primary-component-bg-default: var(--warning-component-bg-default);
-  --primary-component-bg-hover: var(--warning-component-bg-hover);
-  --primary-component-bg-pressed: var(--warning-component-bg-pressed);
-  --primary-on-component: var(--warning-on-component);
-  --primary-content-default: var(--warning-content-default);
-  --primary-container-bg: var(--warning-container-bg);
-  --primary-container-hover: var(--warning-container-hover);
-  --primary-container-pressed: var(--warning-container-pressed);
-  --primary-component-outline-default: var(--warning-component-outline-default);
-  --primary-component-outline-hover: var(--warning-component-outline-hover);
-  --primary-component-outline-pressed: var(--warning-component-outline-pressed);
+  --brand-component-bg-default: var(--warning-component-bg-default);
+  --brand-component-bg-hover: var(--warning-component-bg-hover);
+  --brand-component-bg-pressed: var(--warning-component-bg-pressed);
+  --brand-on-component: var(--warning-on-component);
+  --brand-content-default: var(--warning-content-default);
+  --brand-container-bg: var(--warning-container-bg);
+  --brand-container-hover: var(--warning-container-hover);
+  --brand-container-pressed: var(--warning-container-pressed);
+  --brand-component-outline-default: var(--warning-component-outline-default);
+  --brand-component-outline-hover: var(--warning-component-outline-hover);
+  --brand-component-outline-pressed: var(--warning-component-outline-pressed);
   /* Ghost overrides */
   --icon-btn-ghost-bg-hover: var(--warning-container-bg);
   --icon-btn-ghost-bg-active: var(--warning-container-pressed);
@@ -484,17 +484,17 @@
 
 /* ── data-role="brand" ──────────────────────────────────────── */
 .icon-btn[data-role="brand"] {
-  --primary-component-bg-default: var(--brand-component-bg-default);
-  --primary-component-bg-hover: var(--brand-component-bg-hover);
-  --primary-component-bg-pressed: var(--brand-component-bg-pressed);
-  --primary-on-component: var(--brand-on-component);
-  --primary-content-default: var(--brand-content-default);
-  --primary-container-bg: var(--brand-container-bg);
-  --primary-container-hover: var(--brand-container-hover);
-  --primary-container-pressed: var(--brand-container-pressed);
-  --primary-component-outline-default: var(--brand-component-outline-default);
-  --primary-component-outline-hover: var(--brand-component-outline-hover);
-  --primary-component-outline-pressed: var(--brand-component-outline-pressed);
+  --brand-component-bg-default: var(--brand-component-bg-default);
+  --brand-component-bg-hover: var(--brand-component-bg-hover);
+  --brand-component-bg-pressed: var(--brand-component-bg-pressed);
+  --brand-on-component: var(--brand-on-component);
+  --brand-content-default: var(--brand-content-default);
+  --brand-container-bg: var(--brand-container-bg);
+  --brand-container-hover: var(--brand-container-hover);
+  --brand-container-pressed: var(--brand-container-pressed);
+  --brand-component-outline-default: var(--brand-component-outline-default);
+  --brand-component-outline-hover: var(--brand-component-outline-hover);
+  --brand-component-outline-pressed: var(--brand-component-outline-pressed);
   /* Ghost overrides */
   --icon-btn-ghost-bg-hover: var(--brand-container-bg);
   --icon-btn-ghost-bg-active: var(--brand-container-pressed);
@@ -505,17 +505,17 @@
 
 /* ── data-role="info" ───────────────────────────────────────── */
 .icon-btn[data-role="info"] {
-  --primary-component-bg-default: var(--info-component-bg-default);
-  --primary-component-bg-hover: var(--info-component-bg-hover);
-  --primary-component-bg-pressed: var(--info-component-bg-pressed);
-  --primary-on-component: var(--info-on-component);
-  --primary-content-default: var(--info-content-default);
-  --primary-container-bg: var(--info-container-bg);
-  --primary-container-hover: var(--info-container-hover);
-  --primary-container-pressed: var(--info-container-pressed);
-  --primary-component-outline-default: var(--info-component-outline-default);
-  --primary-component-outline-hover: var(--info-component-outline-hover);
-  --primary-component-outline-pressed: var(--info-component-outline-pressed);
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-bg-hover: var(--info-component-bg-hover);
+  --brand-component-bg-pressed: var(--info-component-bg-pressed);
+  --brand-on-component: var(--info-on-component);
+  --brand-content-default: var(--info-content-default);
+  --brand-container-bg: var(--info-container-bg);
+  --brand-container-hover: var(--info-container-hover);
+  --brand-container-pressed: var(--info-container-pressed);
+  --brand-component-outline-default: var(--info-component-outline-default);
+  --brand-component-outline-hover: var(--info-component-outline-hover);
+  --brand-component-outline-pressed: var(--info-component-outline-pressed);
   /* Ghost overrides */
   --icon-btn-ghost-bg-hover: var(--info-container-bg);
   --icon-btn-ghost-bg-active: var(--info-container-pressed);
@@ -528,17 +528,17 @@
 /* Remaps primary palette → surface-context tokens so structural
    variants automatically get neutral/surface treatment. */
 .icon-btn[data-role="neutral"] {
-  --primary-component-bg-default: var(--surface-base-cm-bg);
-  --primary-component-bg-hover: var(--surface-base-cm-bg-hover);
-  --primary-component-bg-pressed: var(--surface-base-cm-bg-pressed);
-  --primary-on-component: var(--surface-base-ct-default);
-  --primary-content-default: var(--surface-base-ct-default);
-  --primary-container-bg: var(--surface-base-subtle);
-  --primary-container-hover: var(--surface-base-strong);
-  --primary-container-pressed: var(--surface-base-strong);
-  --primary-component-outline-default: var(--surface-base-cm-outline);
-  --primary-component-outline-hover: var(--surface-base-cm-outline-hover);
-  --primary-component-outline-pressed: var(--surface-base-cm-outline-pressed);
+  --brand-component-bg-default: var(--surface-base-cm-bg);
+  --brand-component-bg-hover: var(--surface-base-cm-bg-hover);
+  --brand-component-bg-pressed: var(--surface-base-cm-bg-pressed);
+  --brand-on-component: var(--surface-base-ct-default);
+  --brand-content-default: var(--surface-base-ct-default);
+  --brand-container-bg: var(--surface-base-subtle);
+  --brand-container-hover: var(--surface-base-strong);
+  --brand-container-pressed: var(--surface-base-strong);
+  --brand-component-outline-default: var(--surface-base-cm-outline);
+  --brand-component-outline-hover: var(--surface-base-cm-outline-hover);
+  --brand-component-outline-pressed: var(--surface-base-cm-outline-pressed);
   /* Ghost stays at its surface-token defaults — no override needed */
 }
 /* ════════════════════════════════════════════════════════════════

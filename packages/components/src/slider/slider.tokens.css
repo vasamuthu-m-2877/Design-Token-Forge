@@ -120,7 +120,7 @@
 
   /* ────────────────────────────────────────────────────────────
      🎨 SURFACE — FILLED variant (default)
-     Reads from --primary-* palette; role selectors remap automatically.
+     Reads from --brand-* palette; role selectors remap automatically.
      ──────────────────────────────────────────────────────────── */
 
   /* ── Track (unfilled rail) — neutral, not role-colored ── */
@@ -134,35 +134,35 @@
   --slider-track-shadow-disabled: var(--shadow-none);
 
   /* ── Fill (value indicator) ── */
-  --slider-fill-bg: var(--primary-component-bg-default);
-  --slider-fill-bg-hover: var(--primary-component-bg-hover);
-  --slider-fill-bg-active: var(--primary-component-bg-pressed);
-  --slider-fill-bg-disabled: var(--primary-component-bg-default);
+  --slider-fill-bg: var(--brand-component-bg-default);
+  --slider-fill-bg-hover: var(--brand-component-bg-hover);
+  --slider-fill-bg-active: var(--brand-component-bg-pressed);
+  --slider-fill-bg-disabled: var(--brand-component-bg-default);
 
   /* ── Thumb — white fill + colored border = distinct from fill bar ── */
   --slider-thumb-bg: var(--color-fixed-white);
   --slider-thumb-bg-hover: var(--color-fixed-white);
   --slider-thumb-bg-active: var(--color-fixed-white);
   --slider-thumb-bg-disabled: var(--color-fixed-white);
-  --slider-thumb-border-color: var(--primary-component-bg-default);
-  --slider-thumb-border-color-hover: var(--primary-component-bg-hover);
-  --slider-thumb-border-color-active: var(--primary-component-bg-pressed);
+  --slider-thumb-border-color: var(--brand-component-bg-default);
+  --slider-thumb-border-color-hover: var(--brand-component-bg-hover);
+  --slider-thumb-border-color-active: var(--brand-component-bg-pressed);
   --slider-thumb-border-color-disabled: var(--color-fixed-white);
   --slider-thumb-shadow-disabled: var(--shadow-none);
 
   /* ── Halo (Material-style hover ring around thumb) ── */
-  --slider-thumb-halo-bg: var(--primary-container-bg);
-  --slider-thumb-halo-bg-active: var(--primary-container-pressed);
+  --slider-thumb-halo-bg: var(--brand-container-bg);
+  --slider-thumb-halo-bg-active: var(--brand-container-pressed);
   --slider-thumb-halo-opacity: 0.2;
 
   /* ── Tick marks ── */
   --slider-tick-color: var(--surface-base-cm-outline);
-  --slider-tick-color-active: var(--primary-component-bg-default);
+  --slider-tick-color-active: var(--brand-component-bg-default);
   --slider-tick-color-disabled: var(--surface-base-cm-outline);
 
   /* ── Tooltip ── */
-  --slider-tooltip-bg: var(--primary-component-bg-default);
-  --slider-tooltip-fg: var(--primary-on-component);
+  --slider-tooltip-bg: var(--brand-component-bg-default);
+  --slider-tooltip-fg: var(--brand-on-component);
   --slider-tooltip-border-color: transparent;
 
   /* ── Disabled ── */
@@ -171,16 +171,16 @@
   /* ────────────────────────────────────────────────────────────
      🎨 SURFACE — SOFT variant
      Fill uses container-level tint; thumb stays solid.
-     Role selectors remap --primary-* automatically.
+     Role selectors remap --brand-* automatically.
      ──────────────────────────────────────────────────────────── */
 
-  --slider-soft-fill-bg: var(--primary-container-bg);
-  --slider-soft-fill-bg-hover: var(--primary-container-hover);
-  --slider-soft-fill-bg-active: var(--primary-container-pressed);
-  --slider-soft-fill-bg-disabled: var(--primary-container-bg);
-  --slider-soft-tooltip-bg: var(--primary-container-bg);
-  --slider-soft-tooltip-fg: var(--primary-content-default);
-  --slider-soft-tick-color-active: var(--primary-container-bg);
+  --slider-soft-fill-bg: var(--brand-container-bg);
+  --slider-soft-fill-bg-hover: var(--brand-container-hover);
+  --slider-soft-fill-bg-active: var(--brand-container-pressed);
+  --slider-soft-fill-bg-disabled: var(--brand-container-bg);
+  --slider-soft-tooltip-bg: var(--brand-container-bg);
+  --slider-soft-tooltip-fg: var(--brand-content-default);
+  --slider-soft-tick-color-active: var(--brand-container-bg);
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (11 vars)
@@ -222,7 +222,7 @@
 
   --slider-thumb-scale-active: 1.15;
   --slider-thumb-icon-size: 0.6em;
-  --slider-thumb-icon-color: var(--primary-on-component);
+  --slider-thumb-icon-color: var(--brand-on-component);
   --slider-tooltip-display: none;
   --slider-ticks-display: none;
   --slider-fill-display: block;
@@ -248,7 +248,7 @@
      ──────────────────────────────────────────────────────────── */
 
   --slider-focus-outline-width: 2px;
-  --slider-focus-outline-color: var(--primary-component-outline-default);
+  --slider-focus-outline-color: var(--brand-component-outline-default);
   --slider-focus-outline-offset: 2px;
   --slider-min-tap-target: 44px;
   --slider-label-color: var(--surface-base-ct-default);

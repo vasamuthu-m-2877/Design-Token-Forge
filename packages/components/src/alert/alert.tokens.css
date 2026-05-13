@@ -63,14 +63,14 @@
      4 · SURFACE — per-role default/soft  (5 roles × 8 = 40 vars)
      ────────────────────────────────────────────────────────── */
   /* primary — canonical name (matches other components) */
-  --alert-primary-bg:          var(--primary-container-bg);
-  --alert-primary-fg:          var(--primary-content-default);
-  --alert-primary-accent:      var(--primary-component-bg-default);
-  --alert-primary-border:      var(--primary-container-bg);
-  --alert-primary-icon-color:  var(--primary-component-bg-default);
-  --alert-primary-title-color: var(--primary-content-strong);
-  --alert-primary-link-color:  var(--primary-content-default);
-  --alert-primary-link-hover:  var(--primary-content-strong);
+  --alert-primary-bg:          var(--brand-container-bg);
+  --alert-primary-fg:          var(--brand-content-default);
+  --alert-primary-accent:      var(--brand-component-bg-default);
+  --alert-primary-border:      var(--brand-container-bg);
+  --alert-primary-icon-color:  var(--brand-component-bg-default);
+  --alert-primary-title-color: var(--brand-content-strong);
+  --alert-primary-link-color:  var(--brand-content-default);
+  --alert-primary-link-hover:  var(--brand-content-strong);
 
   /* info — dedicated info palette (unique blue, distinct from primary) */
   --alert-info-bg:          var(--info-container-bg);
@@ -120,8 +120,8 @@
   --alert-neutral-link-hover:  var(--surface-base-ct-strong);
 
   /* ── filled variant  (5 roles × 2 = 10 vars) ───── */
-  --alert-primary-filled-bg:  var(--primary-component-bg-default);
-  --alert-primary-filled-fg:  var(--primary-on-component);
+  --alert-primary-filled-bg:  var(--brand-component-bg-default);
+  --alert-primary-filled-fg:  var(--brand-on-component);
   --alert-info-filled-bg:     var(--info-component-bg-default);
   --alert-info-filled-fg:     var(--info-on-component);
   --alert-success-filled-bg:  var(--success-component-bg-default);
@@ -134,7 +134,7 @@
   --alert-neutral-filled-fg:  var(--surface-base-ct-strong);
 
   /* ── outline variant border  (5 vars) ──────────── */
-  --alert-primary-outline-border: var(--primary-component-bg-default);
+  --alert-primary-outline-border: var(--brand-component-bg-default);
   --alert-info-outline-border:    var(--info-component-bg-default);
   --alert-success-outline-border: var(--success-component-bg-default);
   --alert-warning-outline-border: var(--warning-component-bg-default);
@@ -142,7 +142,7 @@
   --alert-neutral-outline-border: var(--surface-base-cm-outline);
 
   /* ── soft variant bg  (6 vars) ────────────────── */
-  --alert-primary-soft-bg: var(--primary-container-bg);
+  --alert-primary-soft-bg: var(--brand-container-bg);
   --alert-info-soft-bg:    var(--info-container-bg);
   --alert-success-soft-bg: var(--success-container-bg);
   --alert-warning-soft-bg: var(--warning-container-bg);
@@ -183,7 +183,7 @@
      9 · ACCESSIBILITY  (2 vars)
      ──────────────────────────────────────────────────────────── */
   --alert-focus-outline-width: 2px;
-  --alert-focus-outline-color: var(--primary-component-outline-default);
+  --alert-focus-outline-color: var(--brand-component-outline-default);
   --alert-focus-outline-offset: 2px;
 
   /* ────────────────────────────────────────────────────────────

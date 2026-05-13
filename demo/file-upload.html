@@ -81,7 +81,7 @@
   <div class="control-group">
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
@@ -355,7 +355,7 @@
               <option value="var(--surface-dim-bg)">Dim</option>
             </select>
             <select id="pgRoleA" class="pg-select" aria-label="Role A">
-              <option value="primary">Primary</option>
+              <option value="brand">Primary</option>
               <option value="danger">Danger</option>
               <option value="success">Success</option>
               <option value="warning">Warning</option>
@@ -377,7 +377,7 @@
               <option value="var(--surface-dim-bg)">Dim</option>
             </select>
             <select id="pgRoleB" class="pg-select" aria-label="Role B">
-              <option value="primary">Primary</option>
+              <option value="brand">Primary</option>
               <option value="danger" selected>Danger</option>
               <option value="success">Success</option>
               <option value="warning">Warning</option>
@@ -404,13 +404,13 @@
   var VARIANTS = ['outline','filled'];
   var MODES    = ['dropzone','button'];
   var SIZES    = ['small','base','large'];
-  var ROLES    = ['primary','danger','success','warning','brand','info','neutral'];
+  var ROLES    = ['brand','danger','success','warning','info','neutral'];
 
   var ICON_UPLOAD = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
   var ICON_FILE  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
   var ICON_X     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
-  var G = { variant:'outline', mode:'dropzone', size:'base', role:'primary', rounded:false };
+  var G = { variant:'outline', mode:'dropzone', size:'base', role:'brand', rounded:false };
 
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1) }
   function clr(id){ var e=document.getElementById(id); if(e) e.innerHTML=''; return e }
@@ -427,7 +427,7 @@
     wrap.dataset.variant = v;
     wrap.dataset.size = s;
     wrap.dataset.mode = m;
-    if (role && role !== 'primary') wrap.dataset.role = role;
+    if (role && role !== 'brand') wrap.dataset.role = role;
     if (rounded) wrap.dataset.rounded = '';
     if (opts.disabled) wrap.dataset.disabled = '';
     if (opts.error) wrap.dataset.error = '';

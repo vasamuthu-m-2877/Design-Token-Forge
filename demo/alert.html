@@ -48,7 +48,7 @@
   <div class="control-group">
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="info" type="button">Info</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
@@ -168,7 +168,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card A</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="A"><option value="base" selected>Base</option><option value="bright">Bright</option><option value="deep">Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="primary" selected>Primary</option><option value="info">Info</option><option value="brand">Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Primary</option><option value="info">Info</option><option value="brand">Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyA"></div>
         </div>
@@ -176,7 +176,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card B</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="B"><option value="base">Base</option><option value="bright">Bright</option><option value="deep" selected>Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="primary">Primary</option><option value="info">Info</option><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="brand">Primary</option><option value="info">Info</option><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyB"></div>
         </div>
@@ -193,7 +193,7 @@
       <div class="a11y-grid">
         <div class="a11y-card">
           <div class="a11y-card-title">Focus Ring</div>
-          <p class="a11y-card-desc">Close button shows <code>:focus-visible</code> ring via <code>--alert-focus-outline-width</code> (2px) + <code>--alert-focus-outline-color</code> → <code>--primary-component-outline-default</code>.</p>
+          <p class="a11y-card-desc">Close button shows <code>:focus-visible</code> ring via <code>--alert-focus-outline-width</code> (2px) + <code>--alert-focus-outline-color</code> → <code>--brand-component-outline-default</code>.</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px" id="a11yFocus"></div>
         </div>
         <div class="a11y-card">
@@ -255,7 +255,7 @@
 &lt;/div&gt;</div>
         <div class="fw-snippet-code" data-panel="vue">&lt;div
   class="alert"
-  :data-role="role ?? 'primary'"
+  :data-role="role ?? 'brand'"
   :data-variant="variant || undefined"
   :data-size="size ?? 'base'"
   :role="['danger','warning'].includes(role) ? 'alert' : 'status'"
@@ -347,7 +347,7 @@
 
 /* ── A11y (2 vars) ── */
 --alert-focus-outline-width       /* 2px */
---alert-focus-outline-color       /* → --primary-component-outline-default */
+--alert-focus-outline-color       /* → --brand-component-outline-default */
 
 /* ── Shadow (1 var) ── */
 --alert-shadow                    /* none */</div>
@@ -370,7 +370,7 @@
   /* ══════════════════════════════════════════════════════
      CONSTANTS — sourced from alert.tokens.css
      ══════════════════════════════════════════════════════ */
-  var ROLES    = ['primary','info','success','warning','danger','neutral'];
+  var ROLES    = ['brand','info','success','warning','danger','neutral'];
   var SIZES    = ['small','base','large'];
   var VARIANTS = ['','filled','outline','soft'];
   var VLABELS  = {'':'Default', filled:'Filled', outline:'Outline', soft:'Soft'};
@@ -389,13 +389,13 @@
 
   /* Role → semantic upstream token (per-role, default/container layer) */
   var ROLE_UPSTREAM = {
-    primary: '--primary-', info: '--info-', success: '--success-',
+    brand: '--brand-', info: '--info-', success: '--success-',
     warning: '--warning-', danger: '--danger-', neutral: '--surface-base-'
   };
 
   /* Per-role icons */
   var ICONS = {
-    primary: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+    brand: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
     info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
     success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
     warning: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
@@ -403,9 +403,9 @@
     neutral: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>'
   };
   var CLOSE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>';
-  var TITLES = { primary:'Information', info:'Info', success:'Success', warning:'Warning', danger:'Error', neutral:'Notice' };
+  var TITLES = { brand:'Information', info:'Info', success:'Success', warning:'Warning', danger:'Error', neutral:'Notice' };
   var BODIES = {
-    primary: 'This is an informational message to help guide the user.',
+    brand: 'This is an informational message to help guide the user.',
     info:    'Here are some additional details you might find useful.',
     success: 'Your changes have been saved successfully.',
     warning: 'Please review the settings before proceeding.',
@@ -416,7 +416,7 @@
   /* ══════════════════════════════════════════════════════
      STATE — global controls
      ══════════════════════════════════════════════════════ */
-  var G = { role:'primary', size:'base', variant:'' };
+  var G = { role:'brand', size:'base', variant:'' };
 
   /* ══════════════════════════════════════════════════════
      FACTORY — creates a real alert component.
@@ -491,7 +491,7 @@
     var cs = getComputedStyle(target);
     var s = G.size, r = G.role, v = G.variant;
     var vLabel = VLABELS[v] || 'Default';
-    var up = ROLE_UPSTREAM[r] || '--primary-';
+    var up = ROLE_UPSTREAM[r] || '--brand-';
     var rows = [
       /* Dimension tokens — per-size */
       ['--alert-padding-y-'+s,          AL_TOKENS.py[s],         cs.paddingTop],
@@ -662,7 +662,7 @@
      ══════════════════════════════════════════════════════ */
   function renderA11y() {
     var f = P.clr('a11yFocus');
-    f.appendChild(makeAlert({ dismiss:true, title:'Tab to close button', body:'Focus ring: --alert-focus-outline-width (2px) + --alert-focus-outline-color → --primary-component-outline-default' }));
+    f.appendChild(makeAlert({ dismiss:true, title:'Tab to close button', body:'Focus ring: --alert-focus-outline-width (2px) + --alert-focus-outline-color → --brand-component-outline-default' }));
     var d = P.clr('a11yDisabled');
     d.appendChild(makeAlert({ disabled:true, body:'--alert-disabled-opacity → 0.5. pointer-events: none.' }));
     var m = P.clr('a11yMotion');
@@ -697,7 +697,7 @@
       lbl.className = 'pg-variant-label';
       lbl.textContent = VLABELS[v];
       row.appendChild(lbl);
-      row.appendChild(makeAlert({ variant:v||undefined, size:pgSize, dismiss:true, role:'primary' }));
+      row.appendChild(makeAlert({ variant:v||undefined, size:pgSize, dismiss:true, role:'brand' }));
       body.appendChild(row);
     });
   }

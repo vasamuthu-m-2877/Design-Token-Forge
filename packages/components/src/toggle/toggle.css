@@ -239,61 +239,61 @@
    ROLE SELECTORS — palette-level remapping
    ════════════════════════════════════════════════════════════════ */
 
-/* ── data-role="primary" (no-op, already default) ─────────── */
-.switch[data-role="primary"] {
+/* ── data-role="brand" (no-op, already default) ─────────── */
+.switch[data-role="brand"] {
   /* explicit primary — no-op */
 }
 
 /* ── data-role="danger" ─────────────────────────────────── */
 .switch[data-role="danger"] {
-  --primary-component-bg-default: var(--danger-component-bg-default);
-  --primary-component-bg-hover: var(--danger-component-bg-hover);
-  --primary-component-bg-pressed: var(--danger-component-bg-pressed);
-  --primary-on-component: var(--danger-on-component);
-  --primary-content-default: var(--danger-content-default);
-  --primary-container-bg: var(--danger-container-bg);
-  --primary-container-hover: var(--danger-container-hover);
-  --primary-container-pressed: var(--danger-container-pressed);
-  --primary-component-outline-default: var(--danger-component-outline-default);
+  --brand-component-bg-default: var(--danger-component-bg-default);
+  --brand-component-bg-hover: var(--danger-component-bg-hover);
+  --brand-component-bg-pressed: var(--danger-component-bg-pressed);
+  --brand-on-component: var(--danger-on-component);
+  --brand-content-default: var(--danger-content-default);
+  --brand-container-bg: var(--danger-container-bg);
+  --brand-container-hover: var(--danger-container-hover);
+  --brand-container-pressed: var(--danger-container-pressed);
+  --brand-component-outline-default: var(--danger-component-outline-default);
 }
 
 /* ── data-role="success" ────────────────────────────────── */
 .switch[data-role="success"] {
-  --primary-component-bg-default: var(--success-component-bg-default);
-  --primary-component-bg-hover: var(--success-component-bg-hover);
-  --primary-component-bg-pressed: var(--success-component-bg-pressed);
-  --primary-on-component: var(--success-on-component);
-  --primary-content-default: var(--success-content-default);
-  --primary-container-bg: var(--success-container-bg);
-  --primary-container-hover: var(--success-container-hover);
-  --primary-container-pressed: var(--success-container-pressed);
-  --primary-component-outline-default: var(--success-component-outline-default);
+  --brand-component-bg-default: var(--success-component-bg-default);
+  --brand-component-bg-hover: var(--success-component-bg-hover);
+  --brand-component-bg-pressed: var(--success-component-bg-pressed);
+  --brand-on-component: var(--success-on-component);
+  --brand-content-default: var(--success-content-default);
+  --brand-container-bg: var(--success-container-bg);
+  --brand-container-hover: var(--success-container-hover);
+  --brand-container-pressed: var(--success-container-pressed);
+  --brand-component-outline-default: var(--success-component-outline-default);
 }
 
 /* ── data-role="warning" ────────────────────────────────── */
 .switch[data-role="warning"] {
-  --primary-component-bg-default: var(--warning-component-bg-default);
-  --primary-component-bg-hover: var(--warning-component-bg-hover);
-  --primary-component-bg-pressed: var(--warning-component-bg-pressed);
-  --primary-on-component: var(--warning-on-component);
-  --primary-content-default: var(--warning-content-default);
-  --primary-container-bg: var(--warning-container-bg);
-  --primary-container-hover: var(--warning-container-hover);
-  --primary-container-pressed: var(--warning-container-pressed);
-  --primary-component-outline-default: var(--warning-component-outline-default);
+  --brand-component-bg-default: var(--warning-component-bg-default);
+  --brand-component-bg-hover: var(--warning-component-bg-hover);
+  --brand-component-bg-pressed: var(--warning-component-bg-pressed);
+  --brand-on-component: var(--warning-on-component);
+  --brand-content-default: var(--warning-content-default);
+  --brand-container-bg: var(--warning-container-bg);
+  --brand-container-hover: var(--warning-container-hover);
+  --brand-container-pressed: var(--warning-container-pressed);
+  --brand-component-outline-default: var(--warning-component-outline-default);
 }
 
 /* ── data-role="neutral" ────────────────────────────────── */
 .switch[data-role="neutral"] {
-  --primary-component-bg-default: var(--surface-base-cm-bg);
-  --primary-component-bg-hover: var(--surface-base-cm-bg-hover);
-  --primary-component-bg-pressed: var(--surface-base-cm-bg-pressed);
-  --primary-on-component: var(--surface-base-ct-default);
-  --primary-content-default: var(--surface-base-ct-default);
-  --primary-container-bg: var(--surface-base-subtle);
-  --primary-container-hover: var(--surface-base-strong);
-  --primary-container-pressed: var(--surface-base-strong);
-  --primary-component-outline-default: var(--surface-base-cm-outline);
+  --brand-component-bg-default: var(--surface-base-cm-bg);
+  --brand-component-bg-hover: var(--surface-base-cm-bg-hover);
+  --brand-component-bg-pressed: var(--surface-base-cm-bg-pressed);
+  --brand-on-component: var(--surface-base-ct-default);
+  --brand-content-default: var(--surface-base-ct-default);
+  --brand-container-bg: var(--surface-base-subtle);
+  --brand-container-hover: var(--surface-base-strong);
+  --brand-container-pressed: var(--surface-base-strong);
+  --brand-component-outline-default: var(--surface-base-cm-outline);
 }
 
 /* ════════════════════════════════════════════════════════════════

@@ -52,7 +52,7 @@
   <div class="control-group">
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
@@ -191,15 +191,15 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card A</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="A"><option value="base" selected>Base</option><option value="bright">Bright</option><option value="deep">Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="primary" selected>Primary</option><option value="brand">Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyA">
-            <div class="pg-variant-row"><span class="pg-variant-label">Primary</span><button class="icon-btn pg-btn" data-variant="primary" data-size="base" type="button" aria-label="Add"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span></button></div>
+            <div class="pg-variant-row"><span class="pg-variant-label">Primary</span><button class="icon-btn pg-btn" data-variant="brand" data-size="base" type="button" aria-label="Add"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Secondary</span><button class="icon-btn pg-btn" data-variant="secondary" data-size="base" type="button" aria-label="Edit"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 2.5l2 2M2 11l7-7 2 2-7 7H2v-2z"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Ghost</span><button class="icon-btn pg-btn" data-variant="ghost" data-size="base" type="button" aria-label="More"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="3" r="0.5"/><circle cx="8" cy="8" r="0.5"/><circle cx="8" cy="13" r="0.5"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Danger</span><button class="icon-btn pg-btn" data-variant="danger" data-size="base" type="button" aria-label="Delete"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10M6 4V3h4v1M5 4v9h6V4"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Neutral</span><button class="icon-btn pg-btn" data-variant="neutral" data-size="base" type="button" aria-label="Settings"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg></span></button></div>
-            <div class="pg-variant-row"><span class="pg-variant-label">Disabled</span><button class="icon-btn pg-btn" data-variant="primary" data-size="base" disabled type="button" aria-label="Disabled"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span></button></div>
+            <div class="pg-variant-row"><span class="pg-variant-label">Disabled</span><button class="icon-btn pg-btn" data-variant="brand" data-size="base" disabled type="button" aria-label="Disabled"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span></button></div>
           </div>
         </div>
         <!-- Card B -->
@@ -207,15 +207,15 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card B</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="B"><option value="base">Base</option><option value="bright">Bright</option><option value="deep" selected>Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="primary">Primary</option><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyB">
-            <div class="pg-variant-row"><span class="pg-variant-label">Primary</span><button class="icon-btn pg-btn" data-variant="primary" data-size="base" type="button" aria-label="Delete"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10M6 4V3h4v1M5 4v9h6V4"/></svg></span></button></div>
+            <div class="pg-variant-row"><span class="pg-variant-label">Primary</span><button class="icon-btn pg-btn" data-variant="brand" data-size="base" type="button" aria-label="Delete"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10M6 4V3h4v1M5 4v9h6V4"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Secondary</span><button class="icon-btn pg-btn" data-variant="secondary" data-size="base" type="button" aria-label="Remove"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Ghost</span><button class="icon-btn pg-btn" data-variant="ghost" data-size="base" type="button" aria-label="Close"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Danger</span><button class="icon-btn pg-btn" data-variant="danger" data-size="base" type="button" aria-label="Delete"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10M6 4V3h4v1M5 4v9h6V4"/></svg></span></button></div>
             <div class="pg-variant-row"><span class="pg-variant-label">Neutral</span><button class="icon-btn pg-btn" data-variant="neutral" data-size="base" type="button" aria-label="Settings"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41"/></svg></span></button></div>
-            <div class="pg-variant-row"><span class="pg-variant-label">Disabled</span><button class="icon-btn pg-btn" data-variant="primary" data-size="base" disabled type="button" aria-label="Disabled"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span></button></div>
+            <div class="pg-variant-row"><span class="pg-variant-label">Disabled</span><button class="icon-btn pg-btn" data-variant="brand" data-size="base" disabled type="button" aria-label="Disabled"><span class="icon-btn__icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span></button></div>
           </div>
         </div>
       </div>
@@ -294,8 +294,8 @@
 &lt;/button&gt;</div>
         <div class="fw-snippet-code" data-panel="vue">&lt;button
   class="icon-btn"
-  :data-variant="variant ?? 'primary'"
-  :data-role="role ?? 'primary'"
+  :data-variant="variant ?? 'brand'"
+  :data-role="role ?? 'brand'"
   :data-size="size ?? 'base'"
   :data-shape="shape ?? 'square'"
   :data-rounded="rounded || undefined"
@@ -305,7 +305,7 @@
 &gt;
   &lt;span class="icon-btn__icon"&gt;&lt;slot /&gt;&lt;/span&gt;
 &lt;/button&gt;</div>
-        <div class="fw-snippet-code" data-panel="html">&lt;button class="icon-btn" data-variant="filled" data-role="primary" data-size="base" data-shape="square" aria-label="Settings"&gt;
+        <div class="fw-snippet-code" data-panel="html">&lt;button class="icon-btn" data-variant="filled" data-role="brand" data-size="base" data-shape="square" aria-label="Settings"&gt;
   &lt;span class="icon-btn__icon"&gt;⚙&lt;/span&gt;
 &lt;/button&gt;</div>
         <div class="fw-snippet-code" data-panel="css">/* Shape */
@@ -347,7 +347,7 @@
   'use strict';
 
   var STRUCTS = ['filled','outlined','soft','ghost'];
-  var ROLES   = ['primary','danger','success','warning','brand','info','neutral'];
+  var ROLES   = ['brand','danger','success','warning','info','neutral'];
   var SIZES   = ['micro','tiny','small','base','medium','large','big','huge','mega','ultra'];
   var SIZE_HT = {micro:'24px',tiny:'28px',small:'32px',base:'36px',medium:'40px',large:'44px',big:'48px',huge:'56px',mega:'64px',ultra:'80px'};
   var SHADOWS = ['none','xs','sm','DEFAULT','md','lg','xl','2xl'];
@@ -362,7 +362,7 @@
 
   var STRUCT_ICONS={filled:ICON_PLUS,outlined:ICON_EDIT,soft:ICON_GEAR,ghost:ICON_DOTS};
   var ROLE_LABELS={
-    primary:{filled:'Add',outlined:'Edit',soft:'Settings',ghost:'More'},
+    brand:{filled:'Add',outlined:'Edit',soft:'Settings',ghost:'More'},
     danger:{filled:'Delete',outlined:'Remove',soft:'Archive',ghost:'Undo'},
     success:{filled:'Confirm',outlined:'Approve',soft:'Review',ghost:'OK'},
     warning:{filled:'Alert',outlined:'Warn',soft:'Caution',ghost:'Skip'},
@@ -371,7 +371,7 @@
     neutral:{filled:'Menu',outlined:'Close',soft:'Options',ghost:'More'}
   };
 
-  var curStruct='filled',curRole='primary',curS='base',curRounded=false;
+  var curStruct='filled',curRole='brand',curS='base',curRounded=false;
 
   function makeBtn(struct,role,s,o){
     o=o||{};
@@ -379,9 +379,9 @@
     b.type='button'; b.className='icon-btn';
     if(!o.noSync) b.classList.add('synced-btn');
     b.dataset.variant=struct;
-    if(role&&role!=='primary'||struct==='ghost')b.dataset.role=role||'primary';
+    if(role&&role!=='brand'||struct==='ghost')b.dataset.role=role||'brand';
     b.dataset.size=s;
-    var lbl=ROLE_LABELS[role||'primary'];
+    var lbl=ROLE_LABELS[role||'brand'];
     b.setAttribute('aria-label', o.label||(lbl&&lbl[struct])||struct);
     if(o.disabled) b.disabled=true;
     if(o.loading) b.dataset.loading='';
@@ -479,19 +479,19 @@
     iconSize:{micro:'--spacing-12',tiny:'--spacing-14',small:'--spacing-16',base:'--spacing-18',medium:'--spacing-20',large:'--spacing-22',big:'--spacing-24',huge:'--spacing-28',mega:'--spacing-32',ultra:'--spacing-40'},
     radius:{micro:'--radius-xs',tiny:'--radius-sm',small:'--radius-sm',base:'--radius-md',medium:'--radius-md',large:'--radius-DEFAULT',big:'--radius-DEFAULT',huge:'--radius-lg',mega:'--radius-xl',ultra:'--radius-xl'}
   };
-  var STRUCT_TOKEN={filled:'primary',outlined:'secondary',soft:'tertiary',ghost:'ghost'};
-  var ROLE_PREFIX={primary:'primary',danger:'danger',success:'success',warning:'warning',brand:'brand',info:'info',neutral:'surface-base'};
+  var STRUCT_TOKEN={filled:'brand',outlined:'secondary',soft:'tertiary',ghost:'ghost'};
+  var ROLE_PREFIX={danger:'danger',success:'success',warning:'warning',info:'info',neutral:'surface-base'};
 
   function updateInspector(){
     var hb=document.querySelector('.hero-preview .icon-btn');if(!hb)return;
-    var cs=getComputedStyle(hb),s=curS,tg=STRUCT_TOKEN[curStruct]||'primary';
+    var cs=getComputedStyle(hb),s=curS,tg=STRUCT_TOKEN[curStruct]||'brand';
     var isN=curRole==='neutral';
     var rows=[
       ['--icon-btn-size-'+s, IB_TOKENS.size[s], cs.width],
       ['--icon-btn-icon-size-'+s, IB_TOKENS.iconSize[s], cs.getPropertyValue('--_ib-icon-size').trim()||'\u2014'],
       [curRounded?'--icon-btn-radius-rounded':'--icon-btn-radius-'+s, curRounded?'--radius-full':IB_TOKENS.radius[s], cs.borderRadius],
-      ['--icon-btn-'+tg+'-bg', isN?'--surface-base-cm-bg':'--primary-component-bg-default', cs.backgroundColor],
-      ['--icon-btn-'+tg+'-fg', isN?'--surface-base-ct-default':'--primary-on-component', cs.color],
+      ['--icon-btn-'+tg+'-bg', isN?'--surface-base-cm-bg':'--brand-component-bg-default', cs.backgroundColor],
+      ['--icon-btn-'+tg+'-fg', isN?'--surface-base-ct-default':'--brand-on-component', cs.color],
       ['--icon-btn-'+tg+'-border-color', '\u2014', cs.borderColor],
       ['--icon-btn-shadow', '\u2014', cs.boxShadow==='none'?'none':cs.boxShadow],
       ['--icon-btn-transition-duration', '--duration-normal', cs.transitionDuration]
@@ -506,13 +506,13 @@
     var hb=document.querySelector('.hero-preview .icon-btn');
     if(hb){
       hb.dataset.variant=curStruct;
-      if(curRole!=='primary'||curStruct==='ghost'){hb.dataset.role=curRole}else{delete hb.dataset.role}
+      if(curRole!=='brand'||curStruct==='ghost'){hb.dataset.role=curRole}else{delete hb.dataset.role}
       hb.dataset.size=curS;
       if(curRounded)hb.dataset.rounded='';else delete hb.dataset.rounded;
     }
     document.querySelectorAll('.a11y-grid .synced-btn').forEach(function(b){
       b.dataset.variant=curStruct;
-      if(curRole!=='primary'||curStruct==='ghost'){b.dataset.role=curRole}else{delete b.dataset.role}
+      if(curRole!=='brand'||curStruct==='ghost'){b.dataset.role=curRole}else{delete b.dataset.role}
       b.dataset.size=curS;
       if(curRounded)b.dataset.rounded='';else delete b.dataset.rounded;
     });
@@ -548,21 +548,21 @@
   }
 
   function applyRole(el,rid){
-    if(rid==='primary'){ROLE_REMAP.forEach(function(t){el.style.removeProperty('--primary-'+t)})}
+    if(rid==='brand'){ROLE_REMAP.forEach(function(t){el.style.removeProperty('--brand-'+t)})}
     else if(rid==='neutral'){
-      el.style.setProperty('--primary-component-bg-default','var(--surface-base-cm-bg)');
-      el.style.setProperty('--primary-component-bg-hover','var(--surface-base-cm-bg-hover)');
-      el.style.setProperty('--primary-component-bg-pressed','var(--surface-base-cm-bg-pressed)');
-      el.style.setProperty('--primary-on-component','var(--surface-base-ct-default)');
-      el.style.setProperty('--primary-content-default','var(--surface-base-ct-default)');
-      el.style.setProperty('--primary-container-bg','var(--surface-base-subtle)');
-      el.style.setProperty('--primary-container-hover','var(--surface-base-strong)');
-      el.style.setProperty('--primary-container-pressed','var(--surface-base-strong)');
-      el.style.setProperty('--primary-component-outline-default','var(--surface-base-cm-outline)');
-      el.style.setProperty('--primary-component-outline-hover','var(--surface-base-cm-outline-hover)');
-      el.style.setProperty('--primary-component-outline-pressed','var(--surface-base-cm-outline-pressed)');
+      el.style.setProperty('--brand-component-bg-default','var(--surface-base-cm-bg)');
+      el.style.setProperty('--brand-component-bg-hover','var(--surface-base-cm-bg-hover)');
+      el.style.setProperty('--brand-component-bg-pressed','var(--surface-base-cm-bg-pressed)');
+      el.style.setProperty('--brand-on-component','var(--surface-base-ct-default)');
+      el.style.setProperty('--brand-content-default','var(--surface-base-ct-default)');
+      el.style.setProperty('--brand-container-bg','var(--surface-base-subtle)');
+      el.style.setProperty('--brand-container-hover','var(--surface-base-strong)');
+      el.style.setProperty('--brand-container-pressed','var(--surface-base-strong)');
+      el.style.setProperty('--brand-component-outline-default','var(--surface-base-cm-outline)');
+      el.style.setProperty('--brand-component-outline-hover','var(--surface-base-cm-outline-hover)');
+      el.style.setProperty('--brand-component-outline-pressed','var(--surface-base-cm-outline-pressed)');
     } else {
-      ROLE_REMAP.forEach(function(t){el.style.setProperty('--primary-'+t,'var(--'+rid+'-'+t+')')});
+      ROLE_REMAP.forEach(function(t){el.style.setProperty('--brand-'+t,'var(--'+rid+'-'+t+')')});
     }
   }
 
@@ -572,12 +572,12 @@
     STRUCTS.forEach(function(st){
       var row=document.createElement('div');row.className='pg-variant-row';
       var lbl=document.createElement('span');lbl.className='pg-variant-label';lbl.textContent=cap(st);row.appendChild(lbl);
-      row.appendChild(makeBtn(st,'primary',pgSize,{noSync:true}));
+      row.appendChild(makeBtn(st,'brand',pgSize,{noSync:true}));
       body.appendChild(row);
     });
     var drow=document.createElement('div');drow.className='pg-variant-row';
     var dlbl=document.createElement('span');dlbl.className='pg-variant-label';dlbl.textContent='Disabled';drow.appendChild(dlbl);
-    drow.appendChild(makeBtn('filled','primary',pgSize,{disabled:true,noSync:true}));
+    drow.appendChild(makeBtn('filled','brand',pgSize,{disabled:true,noSync:true}));
     body.appendChild(drow);
   }
   function pgApplyCard(card){

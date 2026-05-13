@@ -36,7 +36,7 @@
 .code-copy{padding:3px 10px;border-radius:var(--radius-xs,3px);border:1px solid var(--demo-border);background:var(--demo-surface);color:var(--demo-fg-subtle);font-size:var(--font-size-10,10px);font-weight:600;cursor:pointer;font-family:inherit;transition:all 150ms ease}
 .code-copy:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong)}
 pre.code-body{margin:0;padding:16px;overflow-x:auto;font-family:var(--font-family-mono,monospace);font-size:var(--font-size-12,12px);line-height:1.65;color:var(--demo-fg);background:var(--demo-surface);tab-size:2}
-pre.code-body .kw{color:var(--primary-content-default,#286CE5)}
+pre.code-body .kw{color:var(--brand-content-default,#286CE5)}
 pre.code-body .str{color:var(--success-content-default,#16a34a)}
 pre.code-body .cm{color:var(--demo-fg-faint);font-style:italic}
 pre.code-body .fn{color:var(--warning-content-default,#d97706)}
@@ -46,7 +46,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 .fw-tabs{display:flex;gap:0;border-bottom:2px solid var(--demo-border);margin-bottom:0}
 .fw-tab{padding:10px 20px;font-size:var(--font-size-12,12px);font-weight:600;color:var(--demo-fg-faint);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;transition:all 150ms ease;display:flex;align-items:center;gap:6px}
 .fw-tab:hover{color:var(--demo-fg-subtle)}
-.fw-tab[aria-selected="true"]{color:var(--primary-content-default);border-bottom-color:var(--primary-content-default)}
+.fw-tab[aria-selected="true"]{color:var(--brand-content-default);border-bottom-color:var(--brand-content-default)}
 .fw-tab-icon{width:16px;height:16px;opacity:0.6}
 .fw-tab[aria-selected="true"] .fw-tab-icon{opacity:1}
 .fw-panel{display:none}
@@ -56,14 +56,14 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 /* Install steps */
 .install-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .install-pill{padding:4px 12px;border-radius:var(--radius-sm,4px);border:1px solid var(--demo-border);font-size:var(--font-size-11,11px);font-weight:600;font-family:var(--font-family-mono,monospace);color:var(--demo-fg-subtle);cursor:pointer;background:var(--demo-surface);transition:all 120ms ease}
-.install-pill:hover,.install-pill[aria-pressed="true"]{background:var(--demo-cm-bg);color:var(--demo-fg-strong);border-color:var(--primary-component-outline-default)}
+.install-pill:hover,.install-pill[aria-pressed="true"]{background:var(--demo-cm-bg);color:var(--demo-fg-strong);border-color:var(--brand-component-outline-default)}
 
 /* Architecture diagram */
 .arch-diagram{display:flex;flex-direction:column;gap:0;padding:24px;border:1px solid var(--demo-border);border-radius:var(--radius-lg,12px);background:var(--demo-surface)}
 .arch-row{display:flex;align-items:center;gap:12px;padding:12px 0}
 .arch-row+.arch-row{border-top:1px dashed var(--demo-border)}
 .arch-box{padding:8px 16px;border-radius:var(--radius-md,6px);font-size:var(--font-size-12,12px);font-weight:600;white-space:nowrap}
-.arch-css{background:var(--primary-component-bg-default);color:var(--primary-on-component)}
+.arch-css{background:var(--brand-component-bg-default);color:var(--brand-on-component)}
 .arch-yours{background:var(--demo-cm-bg);color:var(--demo-fg-subtle);border:1px dashed var(--demo-fg-faint)}
 .arch-arrow{color:var(--demo-fg-faint);font-size:18px}
 .arch-label{font-size:var(--font-size-11,11px);color:var(--demo-fg-faint);flex:1}
@@ -86,7 +86,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 .map-table code{font-size:var(--font-size-11,11px);padding:2px 6px;border-radius:var(--radius-xs,3px);background:var(--demo-cm-bg);font-family:var(--font-family-mono,monospace);white-space:nowrap}
 .map-table tr:last-child td{border-bottom:none}
 
-.sub-note{font-size:var(--font-size-11,11px);color:var(--demo-fg-faint);line-height:1.5;padding:12px 16px;border-left:3px solid var(--primary-component-outline-default);background:var(--demo-cm-bg);border-radius:0 var(--radius-sm,4px) var(--radius-sm,4px) 0}
+.sub-note{font-size:var(--font-size-11,11px);color:var(--demo-fg-faint);line-height:1.5;padding:12px 16px;border-left:3px solid var(--brand-component-outline-default);background:var(--demo-cm-bg);border-radius:0 var(--radius-sm,4px) var(--radius-sm,4px) 0}
 </style>
 </head>
 <body>
@@ -206,9 +206,9 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
       </thead>
       <tbody>
         <tr>
-          <td><code>variant="primary"</code></td>
-          <td><code>data-variant="primary"</code></td>
-          <td><code>[data-variant="primary"]</code></td>
+          <td><code>variant="brand"</code></td>
+          <td><code>data-variant="brand"</code></td>
+          <td><code>[data-variant="brand"]</code></td>
           <td>Applies primary surface colors</td>
         </tr>
         <tr>
@@ -266,7 +266,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
           <div class="code-header"><span class="code-lang">React + TypeScript</span><button class="code-copy" data-target="reactBtn" type="button">Copy</button></div>
           <pre class="code-body" id="reactBtn"><span class="kw">import</span> { forwardRef } <span class="kw">from</span> <span class="str">'react'</span>;
 
-<span class="kw">type</span> Variant = <span class="str">'primary'</span> | <span class="str">'secondary'</span> | <span class="str">'ghost'</span> | <span class="str">'danger'</span> | <span class="str">'outline'</span>;
+<span class="kw">type</span> Variant = <span class="str">'brand'</span> | <span class="str">'secondary'</span> | <span class="str">'ghost'</span> | <span class="str">'danger'</span> | <span class="str">'outline'</span>;
 <span class="kw">type</span> Size = <span class="str">'micro'</span> | <span class="str">'tiny'</span> | <span class="str">'small'</span> | <span class="str">'base'</span> | <span class="str">'medium'</span> | <span class="str">'large'</span> | <span class="str">'big'</span> | <span class="str">'huge'</span> | <span class="str">'mega'</span> | <span class="str">'ultra'</span>;
 
 <span class="kw">interface</span> DTFButtonProps <span class="kw">extends</span> React.ButtonHTMLAttributes&lt;HTMLButtonElement&gt; {
@@ -276,7 +276,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 }
 
 <span class="kw">export const</span> <span class="fn">DTFButton</span> = <span class="fn">forwardRef</span>&lt;HTMLButtonElement, DTFButtonProps&gt;(
-  ({ variant = <span class="str">'primary'</span>, size = <span class="str">'base'</span>, loading, disabled, children, ...rest }, ref) =&gt; (
+  ({ variant = <span class="str">'brand'</span>, size = <span class="str">'base'</span>, loading, disabled, children, ...rest }, ref) =&gt; (
     &lt;<span class="tag">button</span>
       ref={ref}
       className=<span class="str">"btn"</span>
@@ -331,7 +331,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
   <span class="kw">return</span> (
     &lt;<span class="tag">form</span>&gt;
       &lt;<span class="fn">DTFInput</span> label=<span class="str">"Email"</span> variant=<span class="str">"outline"</span> size=<span class="str">"base"</span> type=<span class="str">"email"</span> /&gt;
-      &lt;<span class="fn">DTFButton</span> variant=<span class="str">"primary"</span> size=<span class="str">"large"</span>&gt;Submit&lt;/<span class="fn">DTFButton</span>&gt;
+      &lt;<span class="fn">DTFButton</span> variant=<span class="str">"brand"</span> size=<span class="str">"large"</span>&gt;Submit&lt;/<span class="fn">DTFButton</span>&gt;
     &lt;/<span class="tag">form</span>&gt;
   );
 }</pre>
@@ -347,7 +347,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
           <div class="code-header"><span class="code-lang">Vue 3 SFC</span><button class="code-copy" data-target="vueBtn" type="button">Copy</button></div>
           <pre class="code-body" id="vueBtn">&lt;<span class="tag">script</span> setup lang=<span class="str">"ts"</span>&gt;
 <span class="kw">defineProps</span>&lt;{
-  variant?: <span class="str">'primary'</span> | <span class="str">'secondary'</span> | <span class="str">'ghost'</span> | <span class="str">'danger'</span> | <span class="str">'outline'</span>
+  variant?: <span class="str">'brand'</span> | <span class="str">'secondary'</span> | <span class="str">'ghost'</span> | <span class="str">'danger'</span> | <span class="str">'outline'</span>
   size?: <span class="str">'micro'</span> | <span class="str">'tiny'</span> | <span class="str">'small'</span> | <span class="str">'base'</span> | <span class="str">'medium'</span> | <span class="str">'large'</span> | <span class="str">'big'</span> | <span class="str">'huge'</span> | <span class="str">'mega'</span> | <span class="str">'ultra'</span>
   loading?: <span class="kw">boolean</span>
   disabled?: <span class="kw">boolean</span>
@@ -357,7 +357,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 &lt;<span class="tag">template</span>&gt;
   &lt;<span class="tag">button</span>
     class=<span class="str">"btn"</span>
-    :<span class="kw">data-variant</span>=<span class="str">"variant ?? 'primary'"</span>
+    :<span class="kw">data-variant</span>=<span class="str">"variant ?? 'brand'"</span>
     :<span class="kw">data-size</span>=<span class="str">"size ?? 'base'"</span>
     :<span class="kw">data-loading</span>=<span class="str">"loading || undefined"</span>
     :<span class="kw">data-disabled</span>=<span class="str">"disabled || undefined"</span>
@@ -424,7 +424,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
   `</span>
 })
 <span class="kw">export class</span> <span class="fn">DtfButtonComponent</span> {
-  variant = <span class="fn">input</span>(<span class="str">'primary'</span>);
+  variant = <span class="fn">input</span>(<span class="str">'brand'</span>);
   size    = <span class="fn">input</span>(<span class="str">'base'</span>);
   loading = <span class="fn">input</span>(<span class="kw">false</span>);
   disabled = <span class="fn">input</span>(<span class="kw">false</span>);
@@ -453,7 +453,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
   <span class="kw">import type</span> { Snippet } <span class="kw">from</span> <span class="str">'svelte'</span>;
 
   <span class="kw">let</span> {
-    variant = <span class="str">'primary'</span>,
+    variant = <span class="str">'brand'</span>,
     size = <span class="str">'base'</span>,
     loading = <span class="kw">false</span>,
     disabled = <span class="kw">false</span>,
@@ -502,7 +502,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
   <span class="kw">return</span> (
     &lt;<span class="tag">button</span>
       class=<span class="str">"btn"</span>
-      data-variant={local.variant ?? <span class="str">'primary'</span>}
+      data-variant={local.variant ?? <span class="str">'brand'</span>}
       data-size={local.size ?? <span class="str">'base'</span>}
       data-loading={local.loading || <span class="kw">undefined</span>}
       {...rest}
@@ -528,7 +528,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
   <span class="fn">attributeChangedCallback</span>() { this.<span class="fn">render</span>(); }
 
   <span class="fn">render</span>() {
-    <span class="kw">const</span> v = this.<span class="fn">getAttribute</span>(<span class="str">'variant'</span>) || <span class="str">'primary'</span>;
+    <span class="kw">const</span> v = this.<span class="fn">getAttribute</span>(<span class="str">'variant'</span>) || <span class="str">'brand'</span>;
     <span class="kw">const</span> s = this.<span class="fn">getAttribute</span>(<span class="str">'size'</span>) || <span class="str">'base'</span>;
     <span class="kw">const</span> d = this.<span class="fn">hasAttribute</span>(<span class="str">'disabled'</span>);
 
@@ -568,7 +568,7 @@ customElements.<span class="fn">define</span>(<span class="str">'dtf-button'</sp
 }
 
 <span class="cm">/* Instance override — inline on one element */</span>
-&lt;button class=<span class="str">"btn"</span> data-variant=<span class="str">"primary"</span>
+&lt;button class=<span class="str">"btn"</span> data-variant=<span class="str">"brand"</span>
   style=<span class="str">"--btn-primary-bg: #8B5CF6"</span>&gt;
   Custom Purple
 &lt;/button&gt;</pre>
@@ -578,13 +578,13 @@ customElements.<span class="fn">define</span>(<span class="str">'dtf-button'</sp
     <div class="live-preview">
       <span class="live-label">Live — Token Override Demo</span>
       <div class="live-row">
-        <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Default Primary</span></button>
-        <button class="btn" data-variant="primary" data-size="base" style="--btn-primary-bg:#8B5CF6;--btn-primary-bg-hover:#7C3AED"><span class="btn__label">Purple Override</span></button>
-        <button class="btn" data-variant="primary" data-size="base" style="--btn-radius-base:var(--radius-full)"><span class="btn__label">Pill Shape</span></button>
+        <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Default Primary</span></button>
+        <button class="btn" data-variant="brand" data-size="base" style="--btn-primary-bg:#8B5CF6;--btn-primary-bg-hover:#7C3AED"><span class="btn__label">Purple Override</span></button>
+        <button class="btn" data-variant="brand" data-size="base" style="--btn-radius-base:var(--radius-full)"><span class="btn__label">Pill Shape</span></button>
       </div>
       <div class="live-row" style="--btn-height-base:var(--spacing-28);--btn-font-size-base:var(--font-size-10)">
         <span style="font-size:var(--font-size-11);color:var(--demo-fg-faint);align-self:center">Compact scope →</span>
-        <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Compact</span></button>
+        <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Compact</span></button>
         <button class="btn" data-variant="secondary" data-size="base"><span class="btn__label">Compact</span></button>
         <button class="btn" data-variant="ghost" data-size="base"><span class="btn__label">Compact</span></button>
       </div>
@@ -642,7 +642,7 @@ customElements.<span class="fn">define</span>(<span class="str">'dtf-button'</sp
     <div class="live-preview">
       <span class="live-label">Buttons</span>
       <div class="live-row">
-        <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Primary</span></button>
+        <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Primary</span></button>
         <button class="btn" data-variant="secondary" data-size="base"><span class="btn__label">Secondary</span></button>
         <button class="btn" data-variant="ghost" data-size="base"><span class="btn__label">Ghost</span></button>
         <button class="btn" data-variant="danger" data-size="base"><span class="btn__label">Danger</span></button>

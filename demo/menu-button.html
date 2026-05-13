@@ -53,7 +53,7 @@
   <div class="control-group">
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
@@ -199,11 +199,11 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card A</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="A"><option value="base" selected>Base</option><option value="bright">Bright</option><option value="deep">Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="primary" selected>Primary</option><option value="brand">Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyA">
             <div class="pg-variant-row"><span class="pg-variant-label">Primary</span>
-              <button class="menu-btn pg-mb" data-variant="primary" data-size="base" type="button" aria-haspopup="true">
+              <button class="menu-btn pg-mb" data-variant="brand" data-size="base" type="button" aria-haspopup="true">
                 <span class="menu-btn__label">Actions</span>
                 <span class="menu-btn__chevron"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg></span>
               </button>
@@ -227,7 +227,7 @@
               </button>
             </div>
             <div class="pg-variant-row"><span class="pg-variant-label">Disabled</span>
-              <button class="menu-btn pg-mb" data-variant="primary" data-size="base" type="button" disabled aria-haspopup="true">
+              <button class="menu-btn pg-mb" data-variant="brand" data-size="base" type="button" disabled aria-haspopup="true">
                 <span class="menu-btn__label">Disabled</span>
                 <span class="menu-btn__chevron"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg></span>
               </button>
@@ -239,11 +239,11 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card B</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="B"><option value="base">Base</option><option value="bright">Bright</option><option value="deep" selected>Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="primary">Primary</option><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyB">
             <div class="pg-variant-row"><span class="pg-variant-label">Primary</span>
-              <button class="menu-btn pg-mb" data-variant="primary" data-size="base" type="button" aria-haspopup="true">
+              <button class="menu-btn pg-mb" data-variant="brand" data-size="base" type="button" aria-haspopup="true">
                 <span class="menu-btn__label">Delete</span>
                 <span class="menu-btn__chevron"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg></span>
               </button>
@@ -267,7 +267,7 @@
               </button>
             </div>
             <div class="pg-variant-row"><span class="pg-variant-label">Disabled</span>
-              <button class="menu-btn pg-mb" data-variant="primary" data-size="base" type="button" disabled aria-haspopup="true">
+              <button class="menu-btn pg-mb" data-variant="brand" data-size="base" type="button" disabled aria-haspopup="true">
                 <span class="menu-btn__label">Disabled</span>
                 <span class="menu-btn__chevron"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg></span>
               </button>
@@ -362,8 +362,8 @@
 &lt;/button&gt;</div>
         <div class="fw-snippet-code" data-panel="vue">&lt;button
   class="menu-btn"
-  :data-variant="variant ?? 'primary'"
-  :data-role="role ?? 'primary'"
+  :data-variant="variant ?? 'brand'"
+  :data-role="role ?? 'brand'"
   :data-size="size ?? 'base'"
   :data-rounded="rounded || undefined"
   :data-loading="loading || undefined"
@@ -375,7 +375,7 @@
   &lt;span class="menu-btn__label"&gt;&lt;slot /&gt;&lt;/span&gt;
   &lt;span class="menu-btn__chevron"&gt;▾&lt;/span&gt;
 &lt;/button&gt;</div>
-        <div class="fw-snippet-code" data-panel="html">&lt;button class="menu-btn" data-variant="filled" data-role="primary" data-size="base" aria-expanded="false" aria-haspopup="true"&gt;
+        <div class="fw-snippet-code" data-panel="html">&lt;button class="menu-btn" data-variant="filled" data-role="brand" data-size="base" aria-expanded="false" aria-haspopup="true"&gt;
   &lt;span class="menu-btn__label"&gt;Options&lt;/span&gt;
   &lt;span class="menu-btn__chevron"&gt;▾&lt;/span&gt;
 &lt;/button&gt;</div>
@@ -424,7 +424,7 @@
   'use strict';
 
   var STRUCTS = ['filled','outlined','soft','ghost'];
-  var ROLES   = ['primary','danger','success','warning','brand','info','neutral'];
+  var ROLES   = ['brand','danger','success','warning','info','neutral'];
   var SIZES   = ['micro','tiny','small','base','medium','large','big','huge','mega','ultra'];
   var SIZE_HT = {micro:'24px',tiny:'28px',small:'32px',base:'36px',medium:'40px',large:'44px',big:'48px',huge:'56px',mega:'64px',ultra:'80px'};
   var SHADOWS = ['none','xs','sm','DEFAULT','md','lg','xl','2xl'];
@@ -437,7 +437,7 @@
 
   var STRUCT_ICONS={filled:ICON_MENU,outlined:ICON_DOWNLOAD,soft:ICON_SETTINGS,ghost:ICON_FILTER};
   var ROLE_LABELS={
-    primary:{filled:'Actions',outlined:'Options',soft:'Select',ghost:'Menu'},
+    brand:{filled:'Actions',outlined:'Options',soft:'Select',ghost:'Menu'},
     danger:{filled:'Delete',outlined:'Remove',soft:'Manage',ghost:'More'},
     success:{filled:'Confirm',outlined:'Approve',soft:'Review',ghost:'Options'},
     warning:{filled:'Alerts',outlined:'Warnings',soft:'Cautions',ghost:'More'},
@@ -446,7 +446,7 @@
     neutral:{filled:'Actions',outlined:'Options',soft:'Select',ghost:'More'}
   };
 
-  var curStruct='filled',curRole='primary',curS='base',curRounded=false;
+  var curStruct='filled',curRole='brand',curS='base',curRounded=false;
 
   function makeMB(struct,role,s,label,o){
     o=o||{};
@@ -454,7 +454,7 @@
     b.type='button';b.className='menu-btn';
     if(!o.noSync) b.classList.add('synced-btn');
     b.dataset.variant=struct;
-    if(role&&role!=='primary'||struct==='ghost')b.dataset.role=role||'primary';
+    if(role&&role!=='brand'||struct==='ghost')b.dataset.role=role||'brand';
     b.dataset.size=s;
     b.setAttribute('aria-haspopup','true');b.setAttribute('aria-expanded','false');
     if(o.disabled) b.disabled=true;
@@ -566,11 +566,11 @@
     fs:{micro:'--font-size-10',tiny:'--font-size-11',small:'--font-size-12',base:'--font-size-13',medium:'--font-size-14',large:'--font-size-16',big:'--font-size-18',huge:'--font-size-20',mega:'--font-size-24',ultra:'--font-size-28'},
     iconSize:{micro:'--spacing-12',tiny:'--spacing-14',small:'--spacing-16',base:'--spacing-18',medium:'--spacing-20',large:'--spacing-22',big:'--spacing-24',huge:'--spacing-28',mega:'--spacing-32',ultra:'--spacing-36'}
   };
-  var STRUCT_TOKEN={filled:'primary',outlined:'secondary',soft:'tertiary',ghost:'ghost'};
+  var STRUCT_TOKEN={filled:'brand',outlined:'secondary',soft:'tertiary',ghost:'ghost'};
 
   function updateInspector(){
     var hb=document.querySelector('.hero-preview .menu-btn');if(!hb)return;
-    var cs=getComputedStyle(hb),s=curS,tg=STRUCT_TOKEN[curStruct]||'primary';
+    var cs=getComputedStyle(hb),s=curS,tg=STRUCT_TOKEN[curStruct]||'brand';
     var isN=curRole==='neutral';
     var rows=[
       ['--menu-btn-height-'+s, MB_TOKENS.height[s], cs.height],
@@ -578,8 +578,8 @@
       ['--menu-btn-padding-x-'+s, MB_TOKENS.px[s], cs.paddingInlineStart],
       ['--menu-btn-font-size-'+s, MB_TOKENS.fs[s], cs.fontSize],
       ['--menu-btn-icon-size-'+s, MB_TOKENS.iconSize[s], ''],
-      ['--menu-btn-'+tg+'-bg', isN?'--surface-base-cm-bg':'--primary-component-bg-default', cs.backgroundColor],
-      ['--menu-btn-'+tg+'-fg', isN?'--surface-base-ct-default':'--primary-on-component', cs.color],
+      ['--menu-btn-'+tg+'-bg', isN?'--surface-base-cm-bg':'--brand-component-bg-default', cs.backgroundColor],
+      ['--menu-btn-'+tg+'-fg', isN?'--surface-base-ct-default':'--brand-on-component', cs.color],
       ['--menu-btn-'+tg+'-border-color', '\u2014', cs.borderColor],
       ['--menu-btn-shadow', '\u2014', cs.boxShadow==='none'?'none':cs.boxShadow]
     ];
@@ -593,13 +593,13 @@
     var hb=document.querySelector('.hero-preview .menu-btn');
     if(hb){
       hb.dataset.variant=curStruct;
-      if(curRole!=='primary'||curStruct==='ghost'){hb.dataset.role=curRole}else{delete hb.dataset.role}
+      if(curRole!=='brand'||curStruct==='ghost'){hb.dataset.role=curRole}else{delete hb.dataset.role}
       hb.dataset.size=curS;
       if(curRounded)hb.dataset.rounded='';else delete hb.dataset.rounded;
     }
     document.querySelectorAll('.a11y-grid .synced-btn').forEach(function(b){
       b.dataset.variant=curStruct;
-      if(curRole!=='primary'||curStruct==='ghost'){b.dataset.role=curRole}else{delete b.dataset.role}
+      if(curRole!=='brand'||curStruct==='ghost'){b.dataset.role=curRole}else{delete b.dataset.role}
       b.dataset.size=curS;
       if(curRounded)b.dataset.rounded='';else delete b.dataset.rounded;
     });
@@ -634,21 +634,21 @@
     else{SURFACE_TOKENS.forEach(function(t){el.style.setProperty('--surface-base-'+t,'var(--surface-'+sid+'-'+t+')')});el.style.background='var(--surface-'+sid+'-bg)'}
   }
   function applyRole(el,rid){
-    if(rid==='primary'){ROLE_REMAP.forEach(function(t){el.style.removeProperty('--primary-'+t)})}
+    if(rid==='brand'){ROLE_REMAP.forEach(function(t){el.style.removeProperty('--brand-'+t)})}
     else if(rid==='neutral'){
-      el.style.setProperty('--primary-component-bg-default','var(--surface-base-cm-bg)');
-      el.style.setProperty('--primary-component-bg-hover','var(--surface-base-cm-bg-hover)');
-      el.style.setProperty('--primary-component-bg-pressed','var(--surface-base-cm-bg-pressed)');
-      el.style.setProperty('--primary-on-component','var(--surface-base-ct-default)');
-      el.style.setProperty('--primary-content-default','var(--surface-base-ct-default)');
-      el.style.setProperty('--primary-container-bg','var(--surface-base-subtle)');
-      el.style.setProperty('--primary-container-hover','var(--surface-base-strong)');
-      el.style.setProperty('--primary-container-pressed','var(--surface-base-strong)');
-      el.style.setProperty('--primary-component-outline-default','var(--surface-base-cm-outline)');
-      el.style.setProperty('--primary-component-outline-hover','var(--surface-base-cm-outline-hover)');
-      el.style.setProperty('--primary-component-outline-pressed','var(--surface-base-cm-outline-pressed)');
+      el.style.setProperty('--brand-component-bg-default','var(--surface-base-cm-bg)');
+      el.style.setProperty('--brand-component-bg-hover','var(--surface-base-cm-bg-hover)');
+      el.style.setProperty('--brand-component-bg-pressed','var(--surface-base-cm-bg-pressed)');
+      el.style.setProperty('--brand-on-component','var(--surface-base-ct-default)');
+      el.style.setProperty('--brand-content-default','var(--surface-base-ct-default)');
+      el.style.setProperty('--brand-container-bg','var(--surface-base-subtle)');
+      el.style.setProperty('--brand-container-hover','var(--surface-base-strong)');
+      el.style.setProperty('--brand-container-pressed','var(--surface-base-strong)');
+      el.style.setProperty('--brand-component-outline-default','var(--surface-base-cm-outline)');
+      el.style.setProperty('--brand-component-outline-hover','var(--surface-base-cm-outline-hover)');
+      el.style.setProperty('--brand-component-outline-pressed','var(--surface-base-cm-outline-pressed)');
     } else {
-      ROLE_REMAP.forEach(function(t){el.style.setProperty('--primary-'+t,'var(--'+rid+'-'+t+')')});
+      ROLE_REMAP.forEach(function(t){el.style.setProperty('--brand-'+t,'var(--'+rid+'-'+t+')')});
     }
   }
 
@@ -659,7 +659,7 @@
     STRUCTS.forEach(function(st){
       var row=document.createElement('div');row.className='pg-variant-row';
       var lbl=document.createElement('span');lbl.className='pg-variant-label';lbl.textContent=cap(st);row.appendChild(lbl);
-      row.appendChild(makeMB(st,'primary',pgSize,labels[st]||cap(st),{iconStart:true,noSync:true}));
+      row.appendChild(makeMB(st,'brand',pgSize,labels[st]||cap(st),{iconStart:true,noSync:true}));
       body.appendChild(row);
     });
   }

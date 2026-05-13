@@ -89,9 +89,9 @@
   --progress-track-border-color: transparent;
 
   /* ── PRIMARY role ── */
-  --progress-primary-fill: var(--primary-component-bg-default);
-  --progress-primary-soft-track: var(--primary-container-bg);
-  --progress-primary-label: var(--primary-content-default);
+  --progress-primary-fill: var(--brand-component-bg-default);
+  --progress-primary-soft-track: var(--brand-container-bg);
+  --progress-primary-label: var(--brand-content-default);
 
   /* ── SUCCESS role ── */
   --progress-success-fill: var(--success-component-bg-default);
@@ -119,7 +119,7 @@
   --progress-outline-border-width: 1px;
 
   /* ── Buffer (streaming / video buffering) ── */
-  --progress-buffer-bg: var(--primary-container-bg);
+  --progress-buffer-bg: var(--brand-container-bg);
   --progress-buffer-opacity: 0.5;
 
   /* ── Indeterminate ── */
@@ -189,6 +189,6 @@
      ♿ ACCESSIBILITY  (3 vars)
      ──────────────────────────────────────────────────────────── */
   --progress-focus-outline-width: 2px;
-  --progress-focus-outline-color: var(--primary-component-outline-default);
+  --progress-focus-outline-color: var(--brand-component-outline-default);
   --progress-focus-outline-offset: 2px;
 }

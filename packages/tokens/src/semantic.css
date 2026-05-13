@@ -8,24 +8,24 @@
 :root {
 
   /* ── PRIMARY ─────────────────────────────────── */
-  --primary-content-default: #2A5BE3;
-  --primary-content-strong: #204ED1;
-  --primary-content-subtle: #5586FD;
-  --primary-content-faint: #8FB2FE;
-  --primary-component-bg-default: #3366F0;
-  --primary-component-bg-hover: #2A5BE3;
-  --primary-component-bg-pressed: #204ED1;
-  --primary-component-outline-default: #6593FE;
-  --primary-component-outline-hover: #6593FE;
-  --primary-component-outline-pressed: #5586FD;
-  --primary-component-separator: #CDDDFF;
-  --primary-container-bg: #EAF1FF;
-  --primary-container-hover: #DDE9FF;
-  --primary-container-pressed: #CDDDFF;
-  --primary-container-outline: #8FB2FE;
-  --primary-container-separator: #CDDDFF;
-  --primary-on-component: #FFFFFF;
-  --primary-on-container: #204ED1;
+  --brand-content-default: #2A5BE3;
+  --brand-content-strong: #204ED1;
+  --brand-content-subtle: #5586FD;
+  --brand-content-faint: #8FB2FE;
+  --brand-component-bg-default: #3366F0;
+  --brand-component-bg-hover: #2A5BE3;
+  --brand-component-bg-pressed: #204ED1;
+  --brand-component-outline-default: #6593FE;
+  --brand-component-outline-hover: #6593FE;
+  --brand-component-outline-pressed: #5586FD;
+  --brand-component-separator: #CDDDFF;
+  --brand-container-bg: #EAF1FF;
+  --brand-container-hover: #DDE9FF;
+  --brand-container-pressed: #CDDDFF;
+  --brand-container-outline: #8FB2FE;
+  --brand-container-separator: #CDDDFF;
+  --brand-on-component: #FFFFFF;
+  --brand-on-container: #204ED1;
 
   /* ── DANGER ─────────────────────────────────── */
   --danger-content-default: #C90314;
@@ -133,24 +133,24 @@
 [data-theme="dark"] {
 
   /* ── PRIMARY (dark) ─────────────────────────── */
-  --primary-content-default: #B8CFFF;
-  --primary-content-strong: #CDDDFF;
-  --primary-content-subtle: #8FB2FE;
-  --primary-content-faint: #5586FD;
-  --primary-component-bg-default: #3B6FF6;
-  --primary-component-bg-hover: #5586FD;
-  --primary-component-bg-pressed: #6593FE;
-  --primary-component-outline-default: #3B6FF6;
-  --primary-component-outline-hover: #5586FD;
-  --primary-component-outline-pressed: #5586FD;
-  --primary-component-separator: #5586FD;
-  --primary-container-bg: #021587;
-  --primary-container-hover: #0828A0;
-  --primary-container-pressed: #133BB9;
-  --primary-container-outline: #2A5BE3;
-  --primary-container-separator: #0828A0;
-  --primary-on-component: #FFFFFF;
-  --primary-on-container: #CDDDFF;
+  --brand-content-default: #B8CFFF;
+  --brand-content-strong: #CDDDFF;
+  --brand-content-subtle: #8FB2FE;
+  --brand-content-faint: #5586FD;
+  --brand-component-bg-default: #3B6FF6;
+  --brand-component-bg-hover: #5586FD;
+  --brand-component-bg-pressed: #6593FE;
+  --brand-component-outline-default: #3B6FF6;
+  --brand-component-outline-hover: #5586FD;
+  --brand-component-outline-pressed: #5586FD;
+  --brand-component-separator: #5586FD;
+  --brand-container-bg: #021587;
+  --brand-container-hover: #0828A0;
+  --brand-container-pressed: #133BB9;
+  --brand-container-outline: #2A5BE3;
+  --brand-container-separator: #0828A0;
+  --brand-on-component: #FFFFFF;
+  --brand-on-container: #CDDDFF;
 
   /* ── DANGER (dark) ─────────────────────────── */
   --danger-content-default: #FFBCB3;

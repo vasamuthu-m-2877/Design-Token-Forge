@@ -61,7 +61,7 @@ html[data-theme="dark"] .arch-token.t3{background:#7F1D1D;color:#FCA5A5;border-c
 .code-copy{padding:3px 10px;border-radius:var(--radius-xs,3px);border:1px solid var(--demo-border);background:var(--demo-surface);color:var(--demo-fg-subtle);font-size:var(--font-size-10,10px);font-weight:600;cursor:pointer;font-family:inherit;transition:all 150ms ease}
 .code-copy:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong)}
 pre.code-body{margin:0;padding:16px;overflow-x:auto;font-family:var(--font-family-mono,monospace);font-size:var(--font-size-12,12px);line-height:1.65;color:var(--demo-fg);background:var(--demo-surface);tab-size:2}
-pre.code-body .kw{color:var(--primary-content-default,#286CE5)}
+pre.code-body .kw{color:var(--brand-content-default,#286CE5)}
 pre.code-body .str{color:var(--success-content-default,#16a34a)}
 pre.code-body .cm{color:var(--demo-fg-faint);font-style:italic}
 pre.code-body .fn{color:var(--warning-content-default,#d97706)}
@@ -71,7 +71,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 .ci-tabs{display:flex;gap:0;border-bottom:2px solid var(--demo-border)}
 .ci-tab{padding:10px 20px;font-size:var(--font-size-12,12px);font-weight:600;color:var(--demo-fg-faint);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-2px;font-family:inherit;transition:all 150ms ease}
 .ci-tab:hover{color:var(--demo-fg-subtle)}
-.ci-tab[aria-selected="true"]{color:var(--primary-content-default);border-bottom-color:var(--primary-content-default)}
+.ci-tab[aria-selected="true"]{color:var(--brand-content-default);border-bottom-color:var(--brand-content-default)}
 .ci-panel{display:none}
 .ci-panel[data-active]{display:block}
 .ci-panel-stack{display:flex;flex-direction:column;gap:16px;padding-top:16px}
@@ -81,7 +81,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 .token-table th{background:var(--demo-surface-alt);padding:8px 14px;text-align:left;font-size:var(--font-size-10,10px);font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--demo-fg-faint);border-bottom:1px solid var(--demo-border)}
 .token-table td{padding:7px 14px;border-bottom:1px solid var(--demo-border);vertical-align:top}
 .token-table tr:last-child td{border-bottom:none}
-.token-table code{font-family:var(--font-family-mono,monospace);font-size:var(--font-size-11,11px);color:var(--primary-content-default)}
+.token-table code{font-family:var(--font-family-mono,monospace);font-size:var(--font-size-11,11px);color:var(--brand-content-default)}
 .token-table .td-use{color:var(--demo-fg-subtle);font-size:var(--font-size-11,11px)}
 
 /* Swatch preview row */
@@ -100,7 +100,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
 .surface-card-body .lbl{font-size:var(--font-size-10,10px);color:inherit;opacity:.7}
 
 /* Note box */
-.ci-note-box{padding:14px 16px;border-radius:var(--radius-md,6px);background:var(--primary-container-bg);border:1px solid var(--primary-container-outline);font-size:var(--font-size-12,12px);color:var(--primary-on-container);line-height:1.6}
+.ci-note-box{padding:14px 16px;border-radius:var(--radius-md,6px);background:var(--brand-container-bg);border:1px solid var(--brand-container-outline);font-size:var(--font-size-12,12px);color:var(--brand-on-container);line-height:1.6}
 .ci-note-box strong{font-weight:700}
 .ci-note-box code{font-family:var(--font-family-mono,monospace);font-size:var(--font-size-11,11px);background:rgba(0,0,0,.06);padding:1px 5px;border-radius:3px}
 html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
@@ -141,7 +141,7 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
       <div class="arch-level">
         <span class="arch-label">T1 Semantic</span>
         <div class="arch-tokens">
-          <span class="arch-token t1">--primary-content-default</span>
+          <span class="arch-token t1">--brand-content-default</span>
           <span class="arch-token t1">--danger-component-bg-default</span>
           <span class="arch-token t1">--warning-on-container</span>
         </div>
@@ -293,39 +293,39 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
       <pre class="code-body"><span class="cm">/* --{role}-{category}-{variant} */</span>
 
 <span class="cm">/* CONTENT — text, icons, labels */</span>
-<span class="kw">--primary-content-default</span>     <span class="cm">/* default text/icon color */</span>
-<span class="kw">--primary-content-strong</span>      <span class="cm">/* emphasized / heading text */</span>
-<span class="kw">--primary-content-subtle</span>      <span class="cm">/* secondary / hint text */</span>
-<span class="kw">--primary-content-faint</span>       <span class="cm">/* disabled / placeholder */</span>
+<span class="kw">--brand-content-default</span>     <span class="cm">/* default text/icon color */</span>
+<span class="kw">--brand-content-strong</span>      <span class="cm">/* emphasized / heading text */</span>
+<span class="kw">--brand-content-subtle</span>      <span class="cm">/* secondary / hint text */</span>
+<span class="kw">--brand-content-faint</span>       <span class="cm">/* disabled / placeholder */</span>
 
 <span class="cm">/* COMPONENT — filled interactive elements */</span>
-<span class="kw">--primary-component-bg-default</span>   <span class="cm">/* button/chip fill */</span>
-<span class="kw">--primary-component-bg-hover</span>     <span class="cm">/* hover state */</span>
-<span class="kw">--primary-component-bg-pressed</span>   <span class="cm">/* active/pressed state */</span>
-<span class="kw">--primary-component-outline-default</span>  <span class="cm">/* outline variant border */</span>
-<span class="kw">--primary-component-outline-hover</span>    <span class="cm">/* outline hover */</span>
-<span class="kw">--primary-component-outline-pressed</span>  <span class="cm">/* outline pressed */</span>
-<span class="kw">--primary-component-separator</span>   <span class="cm">/* divider inside component */</span>
+<span class="kw">--brand-component-bg-default</span>   <span class="cm">/* button/chip fill */</span>
+<span class="kw">--brand-component-bg-hover</span>     <span class="cm">/* hover state */</span>
+<span class="kw">--brand-component-bg-pressed</span>   <span class="cm">/* active/pressed state */</span>
+<span class="kw">--brand-component-outline-default</span>  <span class="cm">/* outline variant border */</span>
+<span class="kw">--brand-component-outline-hover</span>    <span class="cm">/* outline hover */</span>
+<span class="kw">--brand-component-outline-pressed</span>  <span class="cm">/* outline pressed */</span>
+<span class="kw">--brand-component-separator</span>   <span class="cm">/* divider inside component */</span>
 
 <span class="cm">/* CONTAINER — background panels, cards, banners */</span>
-<span class="kw">--primary-container-bg</span>        <span class="cm">/* subtle background fill */</span>
-<span class="kw">--primary-container-hover</span>     <span class="cm">/* container hover */</span>
-<span class="kw">--primary-container-pressed</span>   <span class="cm">/* container pressed */</span>
-<span class="kw">--primary-container-outline</span>   <span class="cm">/* container border */</span>
-<span class="kw">--primary-container-separator</span> <span class="cm">/* divider inside container */</span>
+<span class="kw">--brand-container-bg</span>        <span class="cm">/* subtle background fill */</span>
+<span class="kw">--brand-container-hover</span>     <span class="cm">/* container hover */</span>
+<span class="kw">--brand-container-pressed</span>   <span class="cm">/* container pressed */</span>
+<span class="kw">--brand-container-outline</span>   <span class="cm">/* container border */</span>
+<span class="kw">--brand-container-separator</span> <span class="cm">/* divider inside container */</span>
 
 <span class="cm">/* ON — text on filled surfaces */</span>
-<span class="kw">--primary-on-component</span>   <span class="cm">/* white text on filled button */</span>
-<span class="kw">--primary-on-container</span>   <span class="cm">/* dark text on tinted container */</span>
+<span class="kw">--brand-on-component</span>   <span class="cm">/* white text on filled button */</span>
+<span class="kw">--brand-on-container</span>   <span class="cm">/* dark text on tinted container */</span>
 
-<span class="cm">/* Replace "primary" with any role: danger, warning, success, info */</span></pre>
+<span class="cm">/* Replace "brand" with any role: danger, warning, success, info */</span></pre>
     </div>
 
     <h3>Role Reference</h3>
     <table class="token-table">
       <thead><tr><th>Role</th><th>Use For</th><th>Example Tokens</th></tr></thead>
       <tbody>
-        <tr><td><strong>primary</strong></td><td class="td-use">Main actions, links, active indicators, brand accent</td><td><code>--primary-component-bg-default</code></td></tr>
+        <tr><td><strong>primary</strong></td><td class="td-use">Main actions, links, active indicators, brand accent</td><td><code>--brand-component-bg-default</code></td></tr>
         <tr><td><strong>danger</strong></td><td class="td-use">Destructive actions, errors, validation failures</td><td><code>--danger-content-default</code></td></tr>
         <tr><td><strong>warning</strong></td><td class="td-use">Caution states, pending actions, amber alerts</td><td><code>--warning-container-bg</code></td></tr>
         <tr><td><strong>success</strong></td><td class="td-use">Confirmations, completed states, positive feedback</td><td><code>--success-on-container</code></td></tr>
@@ -349,7 +349,7 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
 
 <span class="cm">/* ── Text & icons ── */</span>
 .page-title {
-  color: <span class="fn">var</span>(<span class="kw">--primary-content-strong</span>);
+  color: <span class="fn">var</span>(<span class="kw">--brand-content-strong</span>);
 }
 .help-text {
   color: <span class="fn">var</span>(<span class="kw">--info-content-subtle</span>);
@@ -360,23 +360,23 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
 
 <span class="cm">/* ── Filled interactive elements ── */</span>
 .cta-button {
-  background: <span class="fn">var</span>(<span class="kw">--primary-component-bg-default</span>);
-  color: <span class="fn">var</span>(<span class="kw">--primary-on-component</span>);
+  background: <span class="fn">var</span>(<span class="kw">--brand-component-bg-default</span>);
+  color: <span class="fn">var</span>(<span class="kw">--brand-on-component</span>);
 }
 .cta-button:hover {
-  background: <span class="fn">var</span>(<span class="kw">--primary-component-bg-hover</span>);
+  background: <span class="fn">var</span>(<span class="kw">--brand-component-bg-hover</span>);
 }
 .cta-button:active {
-  background: <span class="fn">var</span>(<span class="kw">--primary-component-bg-pressed</span>);
+  background: <span class="fn">var</span>(<span class="kw">--brand-component-bg-pressed</span>);
 }
 
 <span class="cm">/* ── Outlined interactive elements ── */</span>
 .outline-tag {
-  border: 1px solid <span class="fn">var</span>(<span class="kw">--primary-component-outline-default</span>);
-  color: <span class="fn">var</span>(<span class="kw">--primary-content-default</span>);
+  border: 1px solid <span class="fn">var</span>(<span class="kw">--brand-component-outline-default</span>);
+  color: <span class="fn">var</span>(<span class="kw">--brand-content-default</span>);
 }
 .outline-tag:hover {
-  border-color: <span class="fn">var</span>(<span class="kw">--primary-component-outline-hover</span>);
+  border-color: <span class="fn">var</span>(<span class="kw">--brand-component-outline-hover</span>);
 }
 
 <span class="cm">/* ── Container / banner / card with tinted background ── */</span>
@@ -424,7 +424,7 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
 
 <span class="cm">/** Role-agnostic status card — pass any T1 role */</span>
 <span class="kw">export function</span> <span class="fn">StatusCard</span>({ role, children }: {
-  role: <span class="str">'primary'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>;
+  role: <span class="str">'brand'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>;
   children: React.ReactNode;
 }) {
   <span class="cm">// Map role to CSS custom properties via inline styles</span>
@@ -470,7 +470,7 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
           <div class="code-header"><span class="code-lang">Vue 3 SFC</span><span class="code-file">StatusCard.vue</span><button class="code-copy" data-target="t1vue" type="button">Copy</button></div>
           <pre class="code-body" id="t1vue">&lt;<span class="tag">script</span> setup lang=<span class="str">"ts"</span>&gt;
 <span class="kw">const</span> props = <span class="fn">defineProps</span>&lt;{
-  role: <span class="str">'primary'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>
+  role: <span class="str">'brand'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>
 }&gt;()
 &lt;/<span class="tag">script</span>&gt;
 
@@ -520,7 +520,7 @@ html[data-theme="dark"] .ci-note-box code{background:rgba(255,255,255,.1)}
     <div class="live-preview">
       <span class="live-label">Live — T1 Tokens in Action</span>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="background:var(--primary-container-bg);border:1px solid var(--primary-container-outline);color:var(--primary-on-container);padding:14px 18px;border-radius:8px;font-size:13px">
+        <div style="background:var(--brand-container-bg);border:1px solid var(--brand-container-outline);color:var(--brand-on-container);padding:14px 18px;border-radius:8px;font-size:13px">
           <strong>Primary container</strong> — informational highlight
         </div>
         <div style="background:var(--danger-container-bg);border:1px solid var(--danger-container-outline);color:var(--danger-on-container);padding:14px 18px;border-radius:8px;font-size:13px">
@@ -877,8 +877,8 @@ h1, h2, h3 {
       In <strong>CSS</strong>, you consume T3 by scoping T1 tokens to a data attribute, so the same component renders with different role colors depending on context.</p>
 
     <div class="ci-note-box">
-      <strong>Key insight:</strong> T3 does not introduce new token names — it remaps <code>--primary-*</code> to the appropriate role's values
-      based on a <code>data-status</code> attribute. This means any component using <code>--primary-*</code> tokens automatically adopts the correct
+      <strong>Key insight:</strong> T3 does not introduce new token names — it remaps <code>--brand-*</code> to the appropriate role's values
+      based on a <code>data-status</code> attribute. This means any component using <code>--brand-*</code> tokens automatically adopts the correct
       role colors when placed inside a <code>[data-status]</code> context.
     </div>
 
@@ -893,46 +893,46 @@ h1, h2, h3 {
       <div class="ci-panel-stack">
         <div class="code-block">
           <div class="code-header"><span class="code-lang">CSS</span><span class="code-file">T3 status context setup</span><button class="code-copy" data-target="t3css" type="button">Copy</button></div>
-          <pre class="code-body" id="t3css"><span class="cm">/* T3 remaps --primary-* per status context.
-   Components that use --primary-* auto-switch color. */</span>
+          <pre class="code-body" id="t3css"><span class="cm">/* T3 remaps --brand-* per status context.
+   Components that use --brand-* auto-switch color. */</span>
 
 <span class="cm">/* Define the remap rules: */</span>
 [data-status=<span class="str">"danger"</span>] {
-  <span class="kw">--primary-content-default</span>: <span class="fn">var</span>(<span class="kw">--danger-content-default</span>);
-  <span class="kw">--primary-content-strong</span>: <span class="fn">var</span>(<span class="kw">--danger-content-strong</span>);
-  <span class="kw">--primary-component-bg-default</span>: <span class="fn">var</span>(<span class="kw">--danger-component-bg-default</span>);
-  <span class="kw">--primary-component-bg-hover</span>: <span class="fn">var</span>(<span class="kw">--danger-component-bg-hover</span>);
-  <span class="kw">--primary-component-bg-pressed</span>: <span class="fn">var</span>(<span class="kw">--danger-component-bg-pressed</span>);
-  <span class="kw">--primary-on-component</span>: <span class="fn">var</span>(<span class="kw">--danger-on-component</span>);
-  <span class="kw">--primary-container-bg</span>: <span class="fn">var</span>(<span class="kw">--danger-container-bg</span>);
-  <span class="kw">--primary-container-outline</span>: <span class="fn">var</span>(<span class="kw">--danger-container-outline</span>);
-  <span class="kw">--primary-on-container</span>: <span class="fn">var</span>(<span class="kw">--danger-on-container</span>);
-  <span class="cm">/* … and so on for all --primary-* tokens */</span>
+  <span class="kw">--brand-content-default</span>: <span class="fn">var</span>(<span class="kw">--danger-content-default</span>);
+  <span class="kw">--brand-content-strong</span>: <span class="fn">var</span>(<span class="kw">--danger-content-strong</span>);
+  <span class="kw">--brand-component-bg-default</span>: <span class="fn">var</span>(<span class="kw">--danger-component-bg-default</span>);
+  <span class="kw">--brand-component-bg-hover</span>: <span class="fn">var</span>(<span class="kw">--danger-component-bg-hover</span>);
+  <span class="kw">--brand-component-bg-pressed</span>: <span class="fn">var</span>(<span class="kw">--danger-component-bg-pressed</span>);
+  <span class="kw">--brand-on-component</span>: <span class="fn">var</span>(<span class="kw">--danger-on-component</span>);
+  <span class="kw">--brand-container-bg</span>: <span class="fn">var</span>(<span class="kw">--danger-container-bg</span>);
+  <span class="kw">--brand-container-outline</span>: <span class="fn">var</span>(<span class="kw">--danger-container-outline</span>);
+  <span class="kw">--brand-on-container</span>: <span class="fn">var</span>(<span class="kw">--danger-on-container</span>);
+  <span class="cm">/* … and so on for all --brand-* tokens */</span>
 }
 
 [data-status=<span class="str">"success"</span>] {
-  <span class="kw">--primary-content-default</span>: <span class="fn">var</span>(<span class="kw">--success-content-default</span>);
-  <span class="kw">--primary-component-bg-default</span>: <span class="fn">var</span>(<span class="kw">--success-component-bg-default</span>);
-  <span class="kw">--primary-on-component</span>: <span class="fn">var</span>(<span class="kw">--success-on-component</span>);
+  <span class="kw">--brand-content-default</span>: <span class="fn">var</span>(<span class="kw">--success-content-default</span>);
+  <span class="kw">--brand-component-bg-default</span>: <span class="fn">var</span>(<span class="kw">--success-component-bg-default</span>);
+  <span class="kw">--brand-on-component</span>: <span class="fn">var</span>(<span class="kw">--success-on-component</span>);
   <span class="cm">/* … */</span>
 }
 
 [data-status=<span class="str">"warning"</span>] {
-  <span class="kw">--primary-content-default</span>: <span class="fn">var</span>(<span class="kw">--warning-content-default</span>);
-  <span class="kw">--primary-component-bg-default</span>: <span class="fn">var</span>(<span class="kw">--warning-component-bg-default</span>);
-  <span class="kw">--primary-on-component</span>: <span class="fn">var</span>(<span class="kw">--warning-on-component</span>);
+  <span class="kw">--brand-content-default</span>: <span class="fn">var</span>(<span class="kw">--warning-content-default</span>);
+  <span class="kw">--brand-component-bg-default</span>: <span class="fn">var</span>(<span class="kw">--warning-component-bg-default</span>);
+  <span class="kw">--brand-on-component</span>: <span class="fn">var</span>(<span class="kw">--warning-on-component</span>);
   <span class="cm">/* … */</span>
 }
 
 <span class="cm">/* Now use it: */</span>
 &lt;<span class="tag">div</span> data-status=<span class="str">"danger"</span>&gt;
-  <span class="cm">&lt;!-- All children using --primary-* render in danger colors --&gt;</span>
-  &lt;<span class="tag">button</span> class=<span class="str">"btn"</span> data-variant=<span class="str">"primary"</span>&gt;Delete Account&lt;/<span class="tag">button</span>&gt;
+  <span class="cm">&lt;!-- All children using --brand-* render in danger colors --&gt;</span>
+  &lt;<span class="tag">button</span> class=<span class="str">"btn"</span> data-variant=<span class="str">"brand"</span>&gt;Delete Account&lt;/<span class="tag">button</span>&gt;
 &lt;/<span class="tag">div</span>&gt;
 
 &lt;<span class="tag">div</span> data-status=<span class="str">"success"</span>&gt;
   <span class="cm">&lt;!-- Same button, but green --&gt;</span>
-  &lt;<span class="tag">button</span> class=<span class="str">"btn"</span> data-variant=<span class="str">"primary"</span>&gt;Confirmed&lt;/<span class="tag">button</span>&gt;
+  &lt;<span class="tag">button</span> class=<span class="str">"btn"</span> data-variant=<span class="str">"brand"</span>&gt;Confirmed&lt;/<span class="tag">button</span>&gt;
 &lt;/<span class="tag">div</span>&gt;</pre>
         </div>
       </div>
@@ -945,7 +945,7 @@ h1, h2, h3 {
           <pre class="code-body" id="t3react"><span class="kw">import</span> <span class="str">'@design-token-forge/tokens'</span>;
 <span class="kw">import</span> <span class="str">'./status-remap.css'</span>; <span class="cm">// the [data-status] rules above</span>
 
-<span class="kw">type</span> Status = <span class="str">'primary'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>;
+<span class="kw">type</span> Status = <span class="str">'brand'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>;
 
 <span class="cm">/** Wrap any content to remap primary tokens to a status role */</span>
 <span class="kw">export function</span> <span class="fn">StatusContext</span>({ status, children }: {
@@ -962,11 +962,11 @@ h1, h2, h3 {
 <span class="cm">// Usage — same &lt;Button&gt; component, different role colors:</span>
 <span class="cm">//</span>
 <span class="cm">// &lt;StatusContext status="danger"&gt;</span>
-<span class="cm">//   &lt;Button variant="primary"&gt;Delete&lt;/Button&gt;</span>
+<span class="cm">//   &lt;Button variant="brand"&gt;Delete&lt;/Button&gt;</span>
 <span class="cm">// &lt;/StatusContext&gt;</span>
 <span class="cm">//</span>
 <span class="cm">// &lt;StatusContext status="success"&gt;</span>
-<span class="cm">//   &lt;Button variant="primary"&gt;Confirm&lt;/Button&gt;</span>
+<span class="cm">//   &lt;Button variant="brand"&gt;Confirm&lt;/Button&gt;</span>
 <span class="cm">// &lt;/StatusContext&gt;</span></pre>
         </div>
       </div>
@@ -978,7 +978,7 @@ h1, h2, h3 {
           <div class="code-header"><span class="code-lang">Vue 3 SFC</span><span class="code-file">StatusContext.vue</span><button class="code-copy" data-target="t3vue" type="button">Copy</button></div>
           <pre class="code-body" id="t3vue">&lt;<span class="tag">script</span> setup lang=<span class="str">"ts"</span>&gt;
 <span class="kw">const</span> props = <span class="fn">defineProps</span>&lt;{
-  status: <span class="str">'primary'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>
+  status: <span class="str">'brand'</span> | <span class="str">'danger'</span> | <span class="str">'warning'</span> | <span class="str">'success'</span> | <span class="str">'info'</span>
 }&gt;()
 &lt;/<span class="tag">script</span>&gt;
 
@@ -990,11 +990,11 @@ h1, h2, h3 {
 
 <span class="cm">&lt;!-- Usage:
   &lt;StatusContext status="danger"&gt;
-    &lt;DtfButton variant="primary"&gt;Delete&lt;/DtfButton&gt;
+    &lt;DtfButton variant="brand"&gt;Delete&lt;/DtfButton&gt;
   &lt;/StatusContext&gt;
 
   &lt;StatusContext status="success"&gt;
-    &lt;DtfButton variant="primary"&gt;Confirm&lt;/DtfButton&gt;
+    &lt;DtfButton variant="brand"&gt;Confirm&lt;/DtfButton&gt;
   &lt;/StatusContext&gt;
 --&gt;</span></pre>
         </div>
@@ -1004,26 +1004,26 @@ h1, h2, h3 {
     <!-- Live T3 demo -->
     <div class="live-preview">
       <span class="live-label">Live — T3 Status Context Remapping</span>
-      <p style="font-size:12px;color:var(--surface-base-ct-subtle);margin-bottom:8px">Same <code>data-variant="primary"</code> button, different <code>data-status</code> context wrappers:</p>
+      <p style="font-size:12px;color:var(--surface-base-ct-subtle);margin-bottom:8px">Same <code>data-variant="brand"</code> button, different <code>data-status</code> context wrappers:</p>
       <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
         <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
-          <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Primary</span></button>
+          <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Primary</span></button>
           <span style="font-size:10px;color:var(--surface-base-ct-faint)">default</span>
         </div>
         <div data-status="danger" style="display:flex;flex-direction:column;gap:6px;align-items:center">
-          <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Delete</span></button>
+          <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Delete</span></button>
           <span style="font-size:10px;color:var(--surface-base-ct-faint)">data-status="danger"</span>
         </div>
         <div data-status="success" style="display:flex;flex-direction:column;gap:6px;align-items:center">
-          <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Confirm</span></button>
+          <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Confirm</span></button>
           <span style="font-size:10px;color:var(--surface-base-ct-faint)">data-status="success"</span>
         </div>
         <div data-status="warning" style="display:flex;flex-direction:column;gap:6px;align-items:center">
-          <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Caution</span></button>
+          <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Caution</span></button>
           <span style="font-size:10px;color:var(--surface-base-ct-faint)">data-status="warning"</span>
         </div>
         <div data-status="info" style="display:flex;flex-direction:column;gap:6px;align-items:center">
-          <button class="btn" data-variant="primary" data-size="base"><span class="btn__label">Learn</span></button>
+          <button class="btn" data-variant="brand" data-size="base"><span class="btn__label">Learn</span></button>
           <span style="font-size:10px;color:var(--surface-base-ct-faint)">data-status="info"</span>
         </div>
       </div>
@@ -1041,7 +1041,7 @@ h1, h2, h3 {
       <tbody>
         <tr><td class="td-use">Page background, sidebar, header</td><td><span class="tier-badge t2">T2</span> Surface</td><td><code>--surface-base-bg</code></td></tr>
         <tr><td class="td-use">Body text, headings on a page</td><td><span class="tier-badge t2">T2</span> Surface</td><td><code>--surface-base-ct-default</code></td></tr>
-        <tr><td class="td-use">Branded button, link, active tab</td><td><span class="tier-badge t1">T1</span> Semantic</td><td><code>--primary-component-bg-default</code></td></tr>
+        <tr><td class="td-use">Branded button, link, active tab</td><td><span class="tier-badge t1">T1</span> Semantic</td><td><code>--brand-component-bg-default</code></td></tr>
         <tr><td class="td-use">Error message text</td><td><span class="tier-badge t1">T1</span> Semantic</td><td><code>--danger-content-default</code></td></tr>
         <tr><td class="td-use">Alert/banner background</td><td><span class="tier-badge t1">T1</span> Semantic</td><td><code>--warning-container-bg</code></td></tr>
         <tr><td class="td-use">Neutral input, table border</td><td><span class="tier-badge t2">T2</span> Surface</td><td><code>--surface-bright-cm-outline</code></td></tr>

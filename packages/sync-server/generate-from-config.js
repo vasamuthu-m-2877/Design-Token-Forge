@@ -12,17 +12,23 @@
 import { generatePalette, STEP_NAMES } from '../generator/src/palette-engine.js';
 
 // ── Constants (must match color-system.html) ──────────────────
+//
+// Note: 'primary' was renamed to 'brand' across the system in May 2026.
+// 'brand' is now the canonical name for the project's main UI color and
+// derives from the monochromatic palette. The standalone 'brand' palette
+// key was dropped — projects only define one source palette ('monochromatic')
+// and the brand role inherits from it. See docs/decisions/adrs.md.
 
-const TOKEN_ROLES = ['primary', 'brand', 'danger', 'warning', 'info', 'success'];
+const TOKEN_ROLES = ['brand', 'danger', 'warning', 'info', 'success'];
 
 const ROLE_TO_PALETTE_KEY = {
-  primary: 'monochromatic', brand: 'brand', danger: 'danger',
+  brand: 'monochromatic', danger: 'danger',
   warning: 'warning', info: 'info', success: 'success',
   greyscale: 'greyscale', desaturated: 'desaturated'
 };
 
 const PALETTE_KEY_TO_ROLE = {
-  monochromatic: 'primary', brand: 'brand', danger: 'danger',
+  monochromatic: 'brand', danger: 'danger',
   warning: 'warning', info: 'info', success: 'success',
   greyscale: 'greyscale', desaturated: 'desaturated'
 };
@@ -105,6 +111,9 @@ function normalizeSemanticMap(map) {
 function buildPalettes(paletteKeys) {
   const palettes = {};
   for (const [key, hex] of Object.entries(paletteKeys)) {
+    // Drop legacy standalone 'brand' palette key — the brand role is
+    // now derived from the monochromatic palette via ROLE_TO_PALETTE_KEY.
+    if (key === 'brand') continue;
     palettes[key] = generatePalette(hex);
   }
   return palettes;
@@ -194,7 +203,7 @@ function generateSurfaceTokens(surfaceMap, palettes, surfacePaletteSrc) {
   const srcMap = { ...defaultSrc, ...(surfacePaletteSrc || {}) };
 
   // Map role names used in color-system editor to actual palette keys
-  const roleToKey = { primary: 'monochromatic', ...ROLE_TO_PALETTE_KEY };
+  const roleToKey = { ...ROLE_TO_PALETTE_KEY };
 
   const surfL  = surfaceMap?.light       || DEFAULT_SURF_L;
   const surfD  = surfaceMap?.dark        || DEFAULT_SURF_D;

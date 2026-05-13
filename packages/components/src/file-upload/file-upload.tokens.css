@@ -115,12 +115,12 @@
   --file-upload-outline-bg-hover: var(--surface-base-subtle);
   --file-upload-outline-bg-active: var(--surface-base-strong);
   --file-upload-outline-bg-disabled: transparent;
-  --file-upload-outline-bg-dragover: var(--primary-container-bg);
+  --file-upload-outline-bg-dragover: var(--brand-container-bg);
   --file-upload-outline-fg: var(--surface-base-ct-default);
   --file-upload-outline-fg-disabled: var(--surface-base-ct-faint);
   --file-upload-outline-border-color: var(--surface-base-cm-outline);
   --file-upload-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --file-upload-outline-border-color-dragover: var(--primary-component-outline-default);
+  --file-upload-outline-border-color-dragover: var(--brand-component-outline-default);
   --file-upload-outline-border-color-disabled: var(--surface-base-cm-outline);
   --file-upload-outline-border-color-error: var(--danger-component-outline-default);
   --file-upload-outline-opacity-disabled: 0.5;
@@ -130,12 +130,12 @@
   --file-upload-filled-bg-hover: var(--surface-base-cm-bg-hover);
   --file-upload-filled-bg-active: var(--surface-base-cm-bg-pressed);
   --file-upload-filled-bg-disabled: var(--surface-base-cm-bg);
-  --file-upload-filled-bg-dragover: var(--primary-container-bg);
+  --file-upload-filled-bg-dragover: var(--brand-container-bg);
   --file-upload-filled-fg: var(--surface-base-ct-default);
   --file-upload-filled-fg-disabled: var(--surface-base-ct-faint);
   --file-upload-filled-border-color: var(--surface-base-cm-outline);
   --file-upload-filled-border-color-hover: var(--surface-base-cm-outline-hover);
-  --file-upload-filled-border-color-dragover: var(--primary-component-outline-default);
+  --file-upload-filled-border-color-dragover: var(--brand-component-outline-default);
   --file-upload-filled-border-color-disabled: var(--surface-base-cm-outline);
   --file-upload-filled-border-color-error: var(--danger-component-outline-default);
   --file-upload-filled-opacity-disabled: 0.5;
@@ -146,9 +146,9 @@
   --file-upload-label-color-disabled: var(--surface-base-ct-faint);
   --file-upload-helper-color: var(--surface-base-ct-subtle);
   --file-upload-helper-color-error: var(--danger-content-default);
-  --file-upload-accent-color: var(--primary-content-default);
-  --file-upload-accent-color-hover: var(--primary-content-strong);
-  --file-upload-loader-color: var(--primary-content-default);
+  --file-upload-accent-color: var(--brand-content-default);
+  --file-upload-accent-color-hover: var(--brand-content-strong);
+  --file-upload-loader-color: var(--brand-content-default);
   --file-upload-loader-speed: 1.5s;
 
   /* ────────────────────────────────────────────────────────────
@@ -189,7 +189,7 @@
   --file-upload-icon-size-mega: var(--spacing-36);
   --file-upload-icon-size-ultra: var(--spacing-40);
   --file-upload-icon-color: var(--surface-base-ct-subtle);
-  --file-upload-icon-color-dragover: var(--primary-content-default);
+  --file-upload-icon-color-dragover: var(--brand-content-default);
 
   /* Label slot */
   --file-upload-label-font-size: var(--font-size-13);
@@ -215,7 +215,7 @@
   --file-upload-progress-height: var(--spacing-3);
   --file-upload-progress-radius: var(--radius-full);
   --file-upload-progress-bg: var(--surface-base-cm-bg);
-  --file-upload-progress-fill: var(--primary-component-bg-default);
+  --file-upload-progress-fill: var(--brand-component-bg-default);
   --file-upload-progress-fill-error: var(--danger-component-bg-default);
   --file-upload-progress-fill-success: var(--success-component-bg-default);
 
@@ -234,7 +234,7 @@
      ♿ ACCESSIBILITY  (4 vars)
      ──────────────────────────────────────────────────────────── */
   --file-upload-focus-outline-width: 2px;
-  --file-upload-focus-outline-color: var(--primary-component-outline-default);
+  --file-upload-focus-outline-color: var(--brand-component-outline-default);
   --file-upload-focus-outline-offset: 2px;
   --file-upload-min-tap-target: 44px;
 }

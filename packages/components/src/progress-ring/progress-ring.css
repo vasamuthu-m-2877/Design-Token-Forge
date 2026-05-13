@@ -4,7 +4,7 @@
    Uses internal (--_rg-*) vars set by role/size selectors.
 
    Markup:
-   <div class="progress-ring" data-size="base" data-role="primary"
+   <div class="progress-ring" data-size="base" data-role="brand"
         data-variant="filled"
         role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
      <svg class="progress-ring__svg" viewBox="0 0 36 36">
@@ -146,7 +146,7 @@
    ════════════════════════════════════════════════════════════════ */
 
 .progress-ring:not([data-role]),
-.progress-ring[data-role="primary"] {
+.progress-ring[data-role="brand"] {
   --_rg-fill: var(--ring-primary-fill);
   --_rg-soft-track: var(--ring-primary-soft-track);
 }

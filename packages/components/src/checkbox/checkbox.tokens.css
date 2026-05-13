@@ -52,16 +52,16 @@
   --checkbox-box-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Checked / indeterminate (on) ── */
-  --checkbox-box-bg-on: var(--primary-component-bg-default);
-  --checkbox-box-bg-on-hover: var(--primary-component-bg-hover);
-  --checkbox-box-border-color-on: var(--primary-component-bg-default);
-  --checkbox-box-border-color-on-hover: var(--primary-component-bg-hover);
+  --checkbox-box-bg-on: var(--brand-component-bg-default);
+  --checkbox-box-bg-on-hover: var(--brand-component-bg-hover);
+  --checkbox-box-border-color-on: var(--brand-component-bg-default);
+  --checkbox-box-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Check mark ── */
   --checkbox-check-color: var(--color-fixed-white);
 
   /* ── Disabled ── */
-  --checkbox-box-bg-on-disabled: var(--primary-component-bg-default);
+  --checkbox-box-bg-on-disabled: var(--brand-component-bg-default);
   --checkbox-box-border-color-disabled: var(--surface-base-cm-outline);
   --checkbox-opacity-disabled: 0.5;
 
@@ -76,16 +76,16 @@
   --checkbox-outline-box-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Outline checked (on) — filled with semantic role ── */
-  --checkbox-outline-box-bg-on: var(--primary-component-bg-default);
-  --checkbox-outline-box-bg-on-hover: var(--primary-component-bg-hover);
-  --checkbox-outline-box-border-color-on: var(--primary-component-bg-default);
-  --checkbox-outline-box-border-color-on-hover: var(--primary-component-bg-hover);
+  --checkbox-outline-box-bg-on: var(--brand-component-bg-default);
+  --checkbox-outline-box-bg-on-hover: var(--brand-component-bg-hover);
+  --checkbox-outline-box-border-color-on: var(--brand-component-bg-default);
+  --checkbox-outline-box-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Outline check mark ── */
   --checkbox-outline-check-color: var(--color-fixed-white);
 
   /* ── Outline disabled ── */
-  --checkbox-outline-box-bg-on-disabled: var(--primary-component-bg-default);
+  --checkbox-outline-box-bg-on-disabled: var(--brand-component-bg-default);
   --checkbox-outline-box-border-color-disabled: var(--surface-base-cm-outline);
   --checkbox-outline-opacity-disabled: 0.5;
 
@@ -146,7 +146,7 @@
      ♿ ACCESSIBILITY  (8 vars)
      ──────────────────────────────────────────────────────────── */
   --checkbox-focus-outline-width: 2px;
-  --checkbox-focus-outline-color: var(--primary-component-outline-default);
+  --checkbox-focus-outline-color: var(--brand-component-outline-default);
   --checkbox-focus-outline-offset: 2px;
   --checkbox-min-tap-target: 44px;
   --checkbox-required-indicator: '*';

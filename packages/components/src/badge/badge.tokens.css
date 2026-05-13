@@ -79,29 +79,29 @@
      ──────────────────────────────────────────────────────────── */
 
   /* ── FILLED (solid bg) ──────────────────────────────────── */
-  --badge-filled-bg: var(--primary-component-bg-default);
-  --badge-filled-fg: var(--primary-on-component);
+  --badge-filled-bg: var(--brand-component-bg-default);
+  --badge-filled-fg: var(--brand-on-component);
   --badge-filled-border-color: transparent;
-  --badge-filled-bg-hover: var(--primary-component-bg-hover);
-  --badge-filled-fg-hover: var(--primary-on-component);
+  --badge-filled-bg-hover: var(--brand-component-bg-hover);
+  --badge-filled-fg-hover: var(--brand-on-component);
 
   /* ── OUTLINE (border only) ──────────────────────────────── */
   --badge-outline-bg: transparent;
-  --badge-outline-fg: var(--primary-content-default);
-  --badge-outline-border-color: var(--primary-component-outline-default);
-  --badge-outline-bg-hover: var(--primary-container-bg);
-  --badge-outline-fg-hover: var(--primary-content-strong);
+  --badge-outline-fg: var(--brand-content-default);
+  --badge-outline-border-color: var(--brand-component-outline-default);
+  --badge-outline-bg-hover: var(--brand-container-bg);
+  --badge-outline-fg-hover: var(--brand-content-strong);
 
   /* ── SOFT (tinted container bg) ─────────────────────────── */
-  --badge-soft-bg: var(--primary-container-bg);
-  --badge-soft-fg: var(--primary-content-default);
+  --badge-soft-bg: var(--brand-container-bg);
+  --badge-soft-fg: var(--brand-content-default);
   --badge-soft-border-color: transparent;
-  --badge-soft-bg-hover: var(--primary-container-hover);
-  --badge-soft-fg-hover: var(--primary-content-strong);
+  --badge-soft-bg-hover: var(--brand-container-hover);
+  --badge-soft-fg-hover: var(--brand-content-strong);
 
   /* ── DOT (minimal — small dot indicator) ────────────────── */
   --badge-dot-size: var(--spacing-8);
-  --badge-dot-color: var(--primary-component-bg-default);
+  --badge-dot-color: var(--brand-component-bg-default);
 
   /* ── Semantic role overrides ────────────────────────────── */
   --badge-danger-filled-bg: var(--danger-component-bg-default);
@@ -192,6 +192,6 @@
      ♿ ACCESSIBILITY  (3 vars)
      ──────────────────────────────────────────────────────────── */
   --badge-focus-outline-width: 2px;
-  --badge-focus-outline-color: var(--primary-component-outline-default);
+  --badge-focus-outline-color: var(--brand-component-outline-default);
   --badge-focus-outline-offset: 2px;
 }

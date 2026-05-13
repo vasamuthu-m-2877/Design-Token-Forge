@@ -3,7 +3,7 @@
    Variable-driven rendering — reads only from --badge-* tokens.
 
    Markup:
-   <span class="badge" data-variant="filled" data-size="base" data-role="primary">
+   <span class="badge" data-variant="filled" data-size="base" data-role="brand">
      <span class="badge__icon"><svg>…</svg></span>
      <span class="badge__label">Label</span>
      <button class="badge__dismiss" aria-label="Remove">×</button>

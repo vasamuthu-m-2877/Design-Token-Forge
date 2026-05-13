@@ -95,14 +95,14 @@
 .ho-tab{padding:5px 14px;font-size:var(--font-size-11,11px);font-weight:600;cursor:pointer;border:none;background:var(--demo-surface);color:var(--demo-fg-subtle);transition:all 120ms ease;font-family:inherit;border-right:1px solid var(--demo-border)}
 .ho-tab:last-child{border-right:none}
 .ho-tab:hover{background:var(--demo-surface-alt);color:var(--demo-fg)}
-.ho-tab.on{background:var(--primary-component-bg-default,#286CE5);color:var(--primary-on-component,#FFF)}
+.ho-tab.on{background:var(--brand-component-bg-default,#286CE5);color:var(--brand-on-component,#FFF)}
 .ho-copy-btn{margin-left:auto;padding:5px 14px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--demo-fg-subtle);font-size:var(--font-size-11,11px);font-weight:600;cursor:pointer;transition:all 120ms ease;font-family:inherit;display:flex;align-items:center;gap:5px}
 .ho-copy-btn:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong);border-color:var(--demo-fg-faint)}
 .ho-copy-btn.copied{background:var(--success-container-bg,#DCFCE7);color:var(--success-content-default,#15803D);border-color:var(--success-component-outline-default,#34D269)}
 .ho-code{background:var(--demo-surface-alt);border:1px solid var(--demo-border);border-radius:var(--radius-md,6px);padding:16px 20px;font-family:var(--font-family-mono,monospace);font-size:11px;line-height:1.7;overflow-x:auto;max-height:600px;overflow-y:auto;white-space:pre;color:var(--demo-fg-subtle);tab-size:2}
 .ho-code .cc{color:var(--demo-fg-faint);font-style:italic}
 .ho-code .cv{color:var(--success-content-default,#16A34A)}
-.ho-code .ck{color:var(--primary-content-default,#286CE5)}
+.ho-code .ck{color:var(--brand-content-default,#286CE5)}
 .ho-code .cp{color:var(--brand-content-default,#E53F28)}
 .ho-table{width:100%;border-collapse:collapse;font-size:11px;font-family:var(--font-family-mono,monospace)}
 .ho-table th{text-align:left;padding:6px 10px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--demo-fg-faint);border-bottom:2px solid var(--demo-border);position:sticky;top:0;background:var(--demo-surface-alt)}
@@ -396,8 +396,8 @@ var PALETTES=[
   {name:'Success',     prefix:'prim-success',       key:'#16A34A'}
 ];
 
-var ROLES=['primary','brand','danger','success','warning','info'];
-var ROLE_SOURCE={primary:'monochromatic',brand:'brand',danger:'danger',success:'success',warning:'warning',info:'info'};
+var ROLES=['brand','danger','success','warning','info'];
+var ROLE_SOURCE={brand:'monochromatic',danger:'danger',success:'success',warning:'warning',info:'info'};
 
 var ROLE_TOKENS=[
   {group:'Content',tokens:['content-default','content-strong','content-subtle','content-faint']},
@@ -418,7 +418,7 @@ var UTILITY_TOKENS=[
 
 /* ── Light-theme semantic→primitive mapping (for annotations) ── */
 var LIGHT_MAP={
-  primary:{
+  brand:{
     'content-default':'monochromatic-600','content-strong':'monochromatic-700','content-subtle':'monochromatic-400','content-faint':'monochromatic-200',
     'component-bg-default':'monochromatic-500','component-bg-hover':'monochromatic-600','component-bg-pressed':'monochromatic-700',
     'component-outline-default':'monochromatic-300','component-outline-hover':'monochromatic-400','component-outline-pressed':'monochromatic-500',
@@ -475,7 +475,7 @@ var LIGHT_MAP={
 };
 
 var DARK_MAP={
-  primary:{
+  brand:{
     'content-default':'monochromatic-150','content-strong':'monochromatic-100','content-subtle':'monochromatic-200','content-faint':'monochromatic-400',
     'component-bg-default':'monochromatic-400','component-bg-hover':'monochromatic-300','component-bg-pressed':'monochromatic-250',
     'component-outline-default':'monochromatic-500','component-outline-hover':'monochromatic-400','component-outline-pressed':'monochromatic-300',
@@ -834,7 +834,7 @@ function _readThemeVals(role,theme){
 
 /* Active palettes & roles derived from the current project's config */
 /* Maps role IDs to palette prefix names (includes non-semantic palette sources for T0 derivation) */
-var ROLE_TO_PALETTE={primary:'monochromatic',brand:'brand',danger:'danger',warning:'warning',info:'info',success:'success',greyscale:'greyscale',desaturated:'desaturated'};
+var ROLE_TO_PALETTE={brand:'monochromatic',danger:'danger',warning:'warning',info:'info',success:'success',greyscale:'greyscale',desaturated:'desaturated'};
 
 function _readProjectConfig(){
   var activeId=localStorage.getItem('dtf-active-project')||'';
@@ -875,7 +875,7 @@ var activeRoles=(_projKeys)?ROLES.filter(function(role){
 }):ROLES.slice();
 
 /* Surface palette source map: which palette drives each surface context */
-var DEFAULT_SURF_SRC={bright:'greyscale',base:'greyscale',dim:'greyscale',deep:'greyscale',accent:'primary',container:'greyscale','over-container':'greyscale','float':'greyscale',inverse:'greyscale'};
+var DEFAULT_SURF_SRC={bright:'greyscale',base:'greyscale',dim:'greyscale',deep:'greyscale',accent:'brand',container:'greyscale','over-container':'greyscale','float':'greyscale',inverse:'greyscale'};
 var activeSurfacePaletteSrc=(_projCfg&&_projCfg.surfacePaletteSrc)?_projCfg.surfacePaletteSrc:DEFAULT_SURF_SRC;
 
 /* Active project name for handoff headers */
@@ -972,29 +972,29 @@ window.DTF.onThemeChange=renderAll;
 var COMPONENTS=[
   {id:'button',label:'Button',prefix:'btn',refs:[
     {group:'Filled (primary)',tokens:[
-      {name:'--btn-primary-bg',ref:'--primary-component-bg-default'},
-      {name:'--btn-primary-bg-hover',ref:'--primary-component-bg-hover'},
-      {name:'--btn-primary-bg-active',ref:'--primary-component-bg-pressed'},
-      {name:'--btn-primary-fg',ref:'--primary-on-component'},
-      {name:'--btn-primary-border-color',ref:'--primary-component-bg-default'},
-      {name:'--btn-primary-border-color-hover',ref:'--primary-component-bg-hover'}
+      {name:'--btn-primary-bg',ref:'--brand-component-bg-default'},
+      {name:'--btn-primary-bg-hover',ref:'--brand-component-bg-hover'},
+      {name:'--btn-primary-bg-active',ref:'--brand-component-bg-pressed'},
+      {name:'--btn-primary-fg',ref:'--brand-on-component'},
+      {name:'--btn-primary-border-color',ref:'--brand-component-bg-default'},
+      {name:'--btn-primary-border-color-hover',ref:'--brand-component-bg-hover'}
     ]},
     {group:'Outlined (secondary)',tokens:[
-      {name:'--btn-secondary-bg-hover',ref:'--primary-container-bg'},
-      {name:'--btn-secondary-bg-active',ref:'--primary-container-pressed'},
-      {name:'--btn-secondary-fg',ref:'--primary-content-default'},
-      {name:'--btn-secondary-border-color',ref:'--primary-component-outline-default'},
-      {name:'--btn-secondary-border-color-hover',ref:'--primary-component-outline-hover'}
+      {name:'--btn-secondary-bg-hover',ref:'--brand-container-bg'},
+      {name:'--btn-secondary-bg-active',ref:'--brand-container-pressed'},
+      {name:'--btn-secondary-fg',ref:'--brand-content-default'},
+      {name:'--btn-secondary-border-color',ref:'--brand-component-outline-default'},
+      {name:'--btn-secondary-border-color-hover',ref:'--brand-component-outline-hover'}
     ]},
     {group:'Soft (tertiary)',tokens:[
-      {name:'--btn-tertiary-bg',ref:'--primary-container-bg'},
-      {name:'--btn-tertiary-bg-hover',ref:'--primary-container-hover'},
-      {name:'--btn-tertiary-fg',ref:'--primary-content-default'}
+      {name:'--btn-tertiary-bg',ref:'--brand-container-bg'},
+      {name:'--btn-tertiary-bg-hover',ref:'--brand-container-hover'},
+      {name:'--btn-tertiary-fg',ref:'--brand-content-default'}
     ]},
     {group:'Ghost',tokens:[
-      {name:'--btn-ghost-fg',ref:'--primary-content-default'},
-      {name:'--btn-ghost-bg-hover',ref:'--primary-container-bg'},
-      {name:'--btn-ghost-bg-active',ref:'--primary-container-pressed'}
+      {name:'--btn-ghost-fg',ref:'--brand-content-default'},
+      {name:'--btn-ghost-bg-hover',ref:'--brand-container-bg'},
+      {name:'--btn-ghost-bg-active',ref:'--brand-container-pressed'}
     ]},
     {group:'Danger role',tokens:[
       {name:'--btn-danger-bg',ref:'--danger-component-bg-default'},
@@ -1012,7 +1012,7 @@ var COMPONENTS=[
       {name:'--input-outline-fg',ref:'--surface-base-ct-default'},
       {name:'--input-outline-border-color',ref:'--surface-base-cm-outline'},
       {name:'--input-outline-border-color-hover',ref:'--surface-base-cm-outline-hover'},
-      {name:'--input-outline-border-color-focus',ref:'--primary-component-outline-default'},
+      {name:'--input-outline-border-color-focus',ref:'--brand-component-outline-default'},
       {name:'--input-outline-border-color-error',ref:'--danger-component-outline-default'},
       {name:'--input-outline-placeholder',ref:'--surface-base-ct-faint'}
     ]},
@@ -1020,24 +1020,24 @@ var COMPONENTS=[
       {name:'--input-filled-bg',ref:'--surface-base-cm-bg'},
       {name:'--input-filled-bg-hover',ref:'--surface-base-cm-bg-hover'},
       {name:'--input-filled-fg',ref:'--surface-base-ct-default'},
-      {name:'--input-filled-border-color-focus',ref:'--primary-component-outline-default'}
+      {name:'--input-filled-border-color-focus',ref:'--brand-component-outline-default'}
     ]},
     {group:'Labels & helpers',tokens:[
       {name:'--input-label-color',ref:'--surface-base-ct-default'},
-      {name:'--input-label-color-focus',ref:'--primary-content-default'},
+      {name:'--input-label-color-focus',ref:'--brand-content-default'},
       {name:'--input-label-color-error',ref:'--danger-content-default'},
       {name:'--input-helper-color',ref:'--surface-base-ct-subtle'},
       {name:'--input-helper-color-error',ref:'--danger-content-default'},
-      {name:'--input-caret-color',ref:'--primary-component-bg-default'}
+      {name:'--input-caret-color',ref:'--brand-component-bg-default'}
     ]}
   ]},
   {id:'toggle',label:'Toggle',prefix:'switch',refs:[
     {group:'Track',tokens:[
       {name:'--switch-track-bg-off',ref:'--surface-base-cm-bg-pressed'},
-      {name:'--switch-track-bg-on',ref:'--primary-component-bg-default'},
-      {name:'--switch-track-bg-on-hover',ref:'--primary-component-bg-hover'},
+      {name:'--switch-track-bg-on',ref:'--brand-component-bg-default'},
+      {name:'--switch-track-bg-on-hover',ref:'--brand-component-bg-hover'},
       {name:'--switch-track-border-color-off',ref:'--surface-base-cm-outline'},
-      {name:'--switch-track-border-color-on',ref:'--primary-component-bg-default'}
+      {name:'--switch-track-border-color-on',ref:'--brand-component-bg-default'}
     ]},
     {group:'Thumb',tokens:[
       {name:'--switch-thumb-bg',ref:'--surface-base-cm-bg'},
@@ -1053,11 +1053,11 @@ var COMPONENTS=[
     {group:'Surface',tokens:[
       {name:'--cb-bg',ref:'--surface-base-cm-bg'},
       {name:'--cb-bg-hover',ref:'--surface-base-cm-bg-hover'},
-      {name:'--cb-bg-checked',ref:'--primary-component-bg-default'},
-      {name:'--cb-bg-checked-hover',ref:'--primary-component-bg-hover'},
+      {name:'--cb-bg-checked',ref:'--brand-component-bg-default'},
+      {name:'--cb-bg-checked-hover',ref:'--brand-component-bg-hover'},
       {name:'--cb-border-color',ref:'--surface-base-cm-outline'},
       {name:'--cb-border-color-hover',ref:'--surface-base-cm-outline-hover'},
-      {name:'--cb-check-color',ref:'--primary-on-component'}
+      {name:'--cb-check-color',ref:'--brand-on-component'}
     ]},
     {group:'Error state',tokens:[
       {name:'--cb-border-color-error',ref:'--danger-component-outline-default'},
@@ -1067,10 +1067,10 @@ var COMPONENTS=[
   {id:'radio',label:'Radio',prefix:'radio',refs:[
     {group:'Surface',tokens:[
       {name:'--radio-bg',ref:'--surface-base-cm-bg'},
-      {name:'--radio-bg-checked',ref:'--primary-component-bg-default'},
+      {name:'--radio-bg-checked',ref:'--brand-component-bg-default'},
       {name:'--radio-border-color',ref:'--surface-base-cm-outline'},
       {name:'--radio-border-color-hover',ref:'--surface-base-cm-outline-hover'},
-      {name:'--radio-dot-color',ref:'--primary-on-component'}
+      {name:'--radio-dot-color',ref:'--brand-on-component'}
     ]}
   ]},
   {id:'select',label:'Select',prefix:'select',refs:[
@@ -1079,7 +1079,7 @@ var COMPONENTS=[
       {name:'--select-fg',ref:'--surface-base-ct-default'},
       {name:'--select-border-color',ref:'--surface-base-cm-outline'},
       {name:'--select-border-color-hover',ref:'--surface-base-cm-outline-hover'},
-      {name:'--select-border-color-focus',ref:'--primary-component-outline-default'},
+      {name:'--select-border-color-focus',ref:'--brand-component-outline-default'},
       {name:'--select-icon-color',ref:'--surface-base-ct-subtle'}
     ]}
   ]},
@@ -1106,8 +1106,8 @@ var COMPONENTS=[
   ]},
   {id:'badge',label:'Badge',prefix:'badge',refs:[
     {group:'Primary',tokens:[
-      {name:'--badge-primary-bg',ref:'--primary-component-bg-default'},
-      {name:'--badge-primary-fg',ref:'--primary-on-component'}
+      {name:'--badge-primary-bg',ref:'--brand-component-bg-default'},
+      {name:'--badge-primary-fg',ref:'--brand-on-component'}
     ]},
     {group:'Danger',tokens:[
       {name:'--badge-danger-bg',ref:'--danger-component-bg-default'},
@@ -1141,7 +1141,7 @@ var COMPONENTS=[
   {id:'progress-bar',label:'Progress Bar',prefix:'pbar',refs:[
     {group:'Track & fill',tokens:[
       {name:'--pbar-track-bg',ref:'--surface-base-cm-bg-pressed'},
-      {name:'--pbar-fill-bg',ref:'--primary-component-bg-default'},
+      {name:'--pbar-fill-bg',ref:'--brand-component-bg-default'},
       {name:'--pbar-fill-bg-success',ref:'--success-component-bg-default'},
       {name:'--pbar-fill-bg-danger',ref:'--danger-component-bg-default'}
     ]}
@@ -1149,9 +1149,9 @@ var COMPONENTS=[
   {id:'slider',label:'Slider',prefix:'slider',refs:[
     {group:'Track & thumb',tokens:[
       {name:'--slider-track-bg',ref:'--surface-base-cm-bg-pressed'},
-      {name:'--slider-fill-bg',ref:'--primary-component-bg-default'},
+      {name:'--slider-fill-bg',ref:'--brand-component-bg-default'},
       {name:'--slider-thumb-bg',ref:'--surface-base-cm-bg'},
-      {name:'--slider-thumb-border-color',ref:'--primary-component-bg-default'}
+      {name:'--slider-thumb-border-color',ref:'--brand-component-bg-default'}
     ]}
   ]}
 ];

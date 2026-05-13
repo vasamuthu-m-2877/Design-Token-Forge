@@ -71,8 +71,8 @@
   --ring-track-color: var(--surface-base-cm-bg);
 
   /* ── PRIMARY role ── */
-  --ring-primary-fill: var(--primary-component-bg-default);
-  --ring-primary-soft-track: var(--primary-container-bg);
+  --ring-primary-fill: var(--brand-component-bg-default);
+  --ring-primary-soft-track: var(--brand-container-bg);
 
   /* ── SUCCESS role ── */
   --ring-success-fill: var(--success-component-bg-default);
@@ -91,7 +91,7 @@
   --ring-neutral-soft-track: var(--surface-base-subtle);
 
   /* ── Indeterminate ── */
-  --ring-indeterminate-fill: var(--primary-component-bg-default);
+  --ring-indeterminate-fill: var(--brand-component-bg-default);
 
   /* ── Disabled ── */
   --ring-opacity-disabled: 0.5;
@@ -157,6 +157,6 @@
      ♿ ACCESSIBILITY  (3 vars)
      ──────────────────────────────────────────────────────────── */
   --ring-focus-outline-width: 2px;
-  --ring-focus-outline-color: var(--primary-component-outline-default);
+  --ring-focus-outline-color: var(--brand-component-outline-default);
   --ring-focus-outline-offset: 2px;
 }

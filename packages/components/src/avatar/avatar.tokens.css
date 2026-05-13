@@ -73,8 +73,8 @@
   --avatar-fg: var(--surface-base-ct-default);
 
   /* Semantic role overrides */
-  --avatar-primary-bg: var(--primary-container-bg);
-  --avatar-primary-fg: var(--primary-content-default);
+  --avatar-primary-bg: var(--brand-container-bg);
+  --avatar-primary-fg: var(--brand-content-default);
   --avatar-brand-bg: var(--brand-container-bg);
   --avatar-brand-fg: var(--brand-content-default);
   --avatar-danger-bg: var(--danger-container-bg);
@@ -153,6 +153,6 @@
      ♿ ACCESSIBILITY  (3 vars)
      ──────────────────────────────────────────────────────────── */
   --avatar-focus-outline-width: 2px;
-  --avatar-focus-outline-color: var(--primary-component-outline-default);
+  --avatar-focus-outline-color: var(--brand-component-outline-default);
   --avatar-focus-outline-offset: 2px;
 }

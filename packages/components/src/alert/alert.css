@@ -94,8 +94,8 @@
 /* ────────────────────────────────────────────────────────────────
    3.  ROLE SELECTORS
    ──────────────────────────────────────────────────────────────── */
-/* primary = default role — uses --primary-* palette */
-.alert[data-role="primary"] {
+/* primary = default role — uses --brand-* palette */
+.alert[data-role="brand"] {
   --_al-bg:             var(--alert-primary-bg);
   --_al-fg:             var(--alert-primary-fg);
   --_al-accent:         var(--alert-primary-accent);

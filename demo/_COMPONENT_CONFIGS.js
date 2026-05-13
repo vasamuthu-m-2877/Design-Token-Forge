@@ -39,7 +39,7 @@ var COMPONENT_CONFIGS = {
     folder: 'button', prefix: 'btn', className: 'btn',
     vars: 246,
     pillBars: ['variantBar', 'sizeBar', 'roundedBar'],
-    variants: ['primary','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
+    variants: ['brand','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
     sizes: 'all10',  // micro → ultra
     sections: {
       hero:       '✅',
@@ -60,7 +60,7 @@ var COMPONENT_CONFIGS = {
     folder: 'icon-button', prefix: 'ib', className: 'icon-btn',
     vars: 120,
     pillBars: ['variantBar', 'sizeBar', 'roundedBar'],
-    variants: ['primary','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
+    variants: ['brand','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
     sizes: 'all10',
     sections: {
       hero:       '✅',
@@ -81,7 +81,7 @@ var COMPONENT_CONFIGS = {
     folder: 'split-button', prefix: 'sb', className: 'split-btn',
     vars: 154,
     pillBars: ['variantBar', 'sizeBar', 'roundedBar'],
-    variants: ['primary','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
+    variants: ['brand','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
     sizes: 'all10',
     sections: {
       hero:       '✅',
@@ -102,7 +102,7 @@ var COMPONENT_CONFIGS = {
     folder: 'menu-button', prefix: 'mb', className: 'menu-btn',
     vars: 139,
     pillBars: ['variantBar', 'sizeBar', 'roundedBar'],
-    variants: ['primary','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
+    variants: ['brand','secondary','tertiary','ghost','danger','success','warning','neutral','outline','brand'],
     sizes: 'all10',
     sections: {
       hero:       '✅',
@@ -265,7 +265,7 @@ var COMPONENT_CONFIGS = {
     folder: 'alert', prefix: 'al', className: 'alert',
     vars: 91,
     pillBars: ['roleBar', 'variantBar', 'sizeBar'],
-    roles: ['primary','success','warning','danger','neutral'],
+    roles: ['brand','success','warning','danger','neutral'],
     variants: ['default','filled','outline','soft'],
     sizes: ['small','base','large'],      // 3 sizes (not 10)
     sections: {
@@ -288,7 +288,7 @@ var COMPONENT_CONFIGS = {
     folder: 'toast', prefix: 'ts', className: 'toast',
     vars: 89,
     pillBars: ['roleBar', 'variantBar', 'sizeBar'],
-    roles: ['primary','success','warning','danger','neutral'],
+    roles: ['brand','success','warning','danger','neutral'],
     variants: ['default','filled','outline'],
     sizes: ['small','base','large'],
     sections: {
@@ -310,7 +310,7 @@ var COMPONENT_CONFIGS = {
     folder: 'badge', prefix: 'bd', className: 'badge',
     vars: 90,
     pillBars: ['roleBar', 'variantBar', 'shapeBar', 'sizeBar'],
-    roles: ['primary','success','warning','danger','neutral'],
+    roles: ['brand','success','warning','danger','neutral'],
     variants: ['filled','outlined','soft','ghost'],
     sizes: ['micro','tiny','small','base','medium','large'],  // 6-size (inline component)
     sections: {
@@ -354,7 +354,7 @@ var COMPONENT_CONFIGS = {
     folder: 'avatar', prefix: 'av', className: 'avatar',
     vars: 80,
     pillBars: ['roleBar', 'shapeBar', 'sizeBar'],
-    roles: ['primary','success','warning','danger','neutral'],
+    roles: ['brand','success','warning','danger','neutral'],
     sizes: 'all10',
     sections: {
       hero:       '✅',
@@ -381,7 +381,7 @@ var COMPONENT_CONFIGS = {
     folder: 'progress-bar', prefix: 'pg', className: 'progress-bar',
     vars: 110,
     pillBars: ['roleBar', 'variantBar', 'sizeBar', 'shapeBar'],
-    roles: ['primary','success','warning','danger','neutral'],
+    roles: ['brand','success','warning','danger','neutral'],
     variants: ['filled','outline'],
     sizes: 'all10',
     sections: {
@@ -403,7 +403,7 @@ var COMPONENT_CONFIGS = {
     folder: 'progress-ring', prefix: 'rg', className: 'progress-ring',
     vars: 86,
     pillBars: ['roleBar', 'variantBar', 'sizeBar'],
-    roles: ['primary','success','warning','danger','neutral'],
+    roles: ['brand','success','warning','danger','neutral'],
     variants: ['filled','outline'],
     sizes: 'all10',
     sections: {

@@ -322,7 +322,7 @@
 .datepicker__footer-btn {
   border: none;
   background: transparent;
-  color: var(--primary-component-bg-default);
+  color: var(--brand-component-bg-default);
   font-family: var(--datepicker-day-font-family);
   font-size: var(--datepicker-footer-font-size);
   font-weight: var(--datepicker-footer-font-weight);

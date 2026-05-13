@@ -83,7 +83,7 @@
   <div class="control-group">
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
@@ -240,7 +240,7 @@
   &lt;button v-if="!dot &amp;&amp; dismissible" class="badge__dismiss" aria-label="Remove" @click="$emit('dismiss')"&gt;×&lt;/button&gt;
 &lt;/span&gt;</div>
         <div class="fw-snippet-code" data-panel="html">&lt;!-- Filled badge with icon --&gt;
-&lt;span class="badge" data-variant="filled" data-size="base" data-role="primary"&gt;
+&lt;span class="badge" data-variant="filled" data-size="base" data-role="brand"&gt;
   &lt;span class="badge__icon"&gt;&lt;svg&gt;…&lt;/svg&gt;&lt;/span&gt;
   &lt;span class="badge__label"&gt;Label&lt;/span&gt;
 &lt;/span&gt;
@@ -309,13 +309,13 @@
   var SHAPES   = ['pill','rounded','square'];
   var SIZES    = ['micro','tiny','small','base','medium','large'];
   var VARIANTS = [{key:'filled',label:'Filled'},{key:'outline',label:'Outline'},{key:'soft',label:'Soft'}];
-  var ROLES    = [{key:'primary',label:'Primary'},{key:'danger',label:'Danger'},{key:'success',label:'Success'},{key:'warning',label:'Warning'},{key:'neutral',label:'Neutral'}];
+  var ROLES    = [{key:'brand',label:'Primary'},{key:'danger',label:'Danger'},{key:'success',label:'Success'},{key:'warning',label:'Warning'},{key:'neutral',label:'Neutral'}];
 
   var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   var ICON_STAR  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
   var ICON_X     = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>';
 
-  var G = { variant:'filled', shape:'pill', size:'base', role:'primary' };
+  var G = { variant:'filled', shape:'pill', size:'base', role:'brand' };
 
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1) }
   function clr(id){ var e=document.getElementById(id); if(e) e.innerHTML=''; return e }

@@ -29,7 +29,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   transition:border-color 150ms,box-shadow 150ms;
 }
 .hub-link:hover{
-  border-color:var(--primary-component-outline-default);
+  border-color:var(--brand-component-outline-default);
   box-shadow:0 2px 8px rgba(0,0,0,.05);
 }
 .hub-link-icon{
@@ -51,7 +51,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   color:var(--demo-fg-subtle);text-decoration:none;
   transition:color 150ms;
 }
-.hub-secondary a:hover{color:var(--primary-component-bg-default);text-decoration:underline}
+.hub-secondary a:hover{color:var(--brand-component-bg-default);text-decoration:underline}
 .hub-dot{color:var(--demo-fg-faint);font-size:10px}
 
 /* ── Main Grid ────────────────────────────────────── */
@@ -70,7 +70,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   background:var(--demo-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='5'/%3E%3Cpath d='M11 11l3.5 3.5'/%3E%3C/svg%3E") no-repeat 12px center;
   font-size:13px;color:var(--demo-fg);font-family:inherit;
 }
-.hub-search:focus{outline:2px solid var(--primary-component-bg-default);outline-offset:-1px;border-color:transparent}
+.hub-search:focus{outline:2px solid var(--brand-component-bg-default);outline-offset:-1px;border-color:transparent}
 .hub-search::placeholder{color:var(--demo-fg-faint)}
 .filter-pills{display:flex;gap:4px}
 .filter-pill{
@@ -80,8 +80,8 @@ body{min-height:100vh;display:flex;flex-direction:column}
 }
 .filter-pill:hover{border-color:var(--demo-fg-faint);color:var(--demo-fg-strong)}
 .filter-pill.active{
-  background:var(--primary-component-bg-default);color:var(--primary-on-component);
-  border-color:var(--primary-component-bg-default);
+  background:var(--brand-component-bg-default);color:var(--brand-on-component);
+  border-color:var(--brand-component-bg-default);
 }
 
 /* ── Category ─────────────────────────────────────── */
@@ -105,7 +105,7 @@ body{min-height:100vh;display:flex;flex-direction:column}
   transition:border-color 180ms,box-shadow 180ms,transform 120ms;
 }
 .comp-card:hover{
-  border-color:var(--primary-component-outline-default);
+  border-color:var(--brand-component-outline-default);
   box-shadow:0 4px 16px rgba(0,0,0,.06);transform:translateY(-2px);
 }
 .comp-card[data-status="planned"]{opacity:.45;pointer-events:none}

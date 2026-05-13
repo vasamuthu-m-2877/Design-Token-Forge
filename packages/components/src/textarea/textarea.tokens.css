@@ -97,7 +97,7 @@
   --textarea-outline-fg-disabled: var(--surface-base-ct-faint);
   --textarea-outline-border-color: var(--surface-base-cm-outline);
   --textarea-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --textarea-outline-border-color-focus: var(--primary-component-outline-default);
+  --textarea-outline-border-color-focus: var(--brand-component-outline-default);
   --textarea-outline-border-color-disabled: var(--surface-base-cm-outline);
   --textarea-outline-border-color-error: var(--danger-component-outline-default);
   --textarea-outline-placeholder: var(--surface-base-ct-faint);
@@ -116,7 +116,7 @@
   --textarea-filled-fg-disabled: var(--surface-base-ct-faint);
   --textarea-filled-border-color: var(--surface-base-cm-outline);
   --textarea-filled-border-color-hover: var(--surface-base-cm-outline-hover);
-  --textarea-filled-border-color-focus: var(--primary-component-outline-default);
+  --textarea-filled-border-color-focus: var(--brand-component-outline-default);
   --textarea-filled-border-color-disabled: var(--surface-base-cm-outline);
   --textarea-filled-border-color-error: var(--danger-component-outline-default);
   --textarea-filled-placeholder: var(--surface-base-ct-faint);
@@ -135,7 +135,7 @@
   --textarea-underline-fg-disabled: var(--surface-base-ct-faint);
   --textarea-underline-border-color: var(--surface-base-cm-outline);
   --textarea-underline-border-color-hover: var(--surface-base-ct-subtle);
-  --textarea-underline-border-color-focus: var(--primary-component-outline-default);
+  --textarea-underline-border-color-focus: var(--brand-component-outline-default);
   --textarea-underline-border-color-disabled: var(--surface-base-cm-outline);
   --textarea-underline-border-color-error: var(--danger-component-outline-default);
   --textarea-underline-placeholder: var(--surface-base-ct-faint);
@@ -146,12 +146,12 @@
      🎨 SURFACE — SHARED  (7 vars)
      ──────────────────────────────────────────────────────────── */
   --textarea-label-color: var(--surface-base-ct-subtle);
-  --textarea-label-color-focus: var(--primary-content-default);
+  --textarea-label-color-focus: var(--brand-content-default);
   --textarea-label-color-error: var(--danger-content-default);
   --textarea-label-color-disabled: var(--surface-base-ct-faint);
   --textarea-helper-color: var(--surface-base-ct-subtle);
   --textarea-helper-color-error: var(--danger-content-default);
-  --textarea-caret-color: var(--primary-component-bg-default);
+  --textarea-caret-color: var(--brand-component-bg-default);
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (13 vars)
@@ -194,7 +194,7 @@
      ♿ ACCESSIBILITY  (6 vars)
      ──────────────────────────────────────────────────────────── */
   --textarea-focus-outline-width: 2px;
-  --textarea-focus-outline-color: var(--primary-component-outline-default);
+  --textarea-focus-outline-color: var(--brand-component-outline-default);
   --textarea-focus-outline-offset: 2px;
   --textarea-min-tap-target: 44px;
   --textarea-required-indicator: '*';

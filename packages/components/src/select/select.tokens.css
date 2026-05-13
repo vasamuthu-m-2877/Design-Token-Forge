@@ -89,7 +89,7 @@
   --select-outline-fg-disabled: var(--surface-base-ct-faint);
   --select-outline-border-color: var(--surface-base-cm-outline);
   --select-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --select-outline-border-color-focus: var(--primary-component-outline-default);
+  --select-outline-border-color-focus: var(--brand-component-outline-default);
   --select-outline-border-color-disabled: var(--surface-base-cm-outline);
   --select-outline-border-color-error: var(--danger-component-outline-default);
   --select-outline-placeholder: var(--surface-base-ct-faint);
@@ -108,7 +108,7 @@
   --select-filled-fg-disabled: var(--surface-base-ct-faint);
   --select-filled-border-color: var(--surface-base-cm-outline);
   --select-filled-border-color-hover: var(--surface-base-cm-outline-hover);
-  --select-filled-border-color-focus: var(--primary-component-outline-default);
+  --select-filled-border-color-focus: var(--brand-component-outline-default);
   --select-filled-border-color-disabled: var(--surface-base-cm-outline);
   --select-filled-border-color-error: var(--danger-component-outline-default);
   --select-filled-placeholder: var(--surface-base-ct-faint);
@@ -127,7 +127,7 @@
   --select-underline-fg-disabled: var(--surface-base-ct-faint);
   --select-underline-border-color: var(--surface-base-cm-outline);
   --select-underline-border-color-hover: var(--surface-base-ct-subtle);
-  --select-underline-border-color-focus: var(--primary-component-outline-default);
+  --select-underline-border-color-focus: var(--brand-component-outline-default);
   --select-underline-border-color-disabled: var(--surface-base-cm-outline);
   --select-underline-border-color-error: var(--danger-component-outline-default);
   --select-underline-placeholder: var(--surface-base-ct-faint);
@@ -138,7 +138,7 @@
      🎨 SURFACE — SHARED  (7 vars)
      ──────────────────────────────────────────────────────────── */
   --select-label-color: var(--surface-base-ct-subtle);
-  --select-label-color-focus: var(--primary-content-default);
+  --select-label-color-focus: var(--brand-content-default);
   --select-label-color-error: var(--danger-content-default);
   --select-label-color-disabled: var(--surface-base-ct-faint);
   --select-helper-color: var(--surface-base-ct-subtle);
@@ -202,7 +202,7 @@
      ♿ ACCESSIBILITY  (6 vars)
      ──────────────────────────────────────────────────────────── */
   --select-focus-outline-width: 2px;
-  --select-focus-outline-color: var(--primary-component-outline-default);
+  --select-focus-outline-color: var(--brand-component-outline-default);
   --select-focus-outline-offset: 2px;
   --select-min-tap-target: 44px;
   --select-required-indicator: '*';

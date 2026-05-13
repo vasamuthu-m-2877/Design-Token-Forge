@@ -51,7 +51,7 @@
   <div class="control-group">
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
-      <button class="pill" role="radio" aria-pressed="true"  data-ctrl-role="primary" type="button">Primary</button>
+      <button class="pill" role="radio" aria-pressed="true"  data-ctrl-role="brand" type="button">Primary</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
@@ -281,7 +281,7 @@
         <div class="fw-snippet-code" data-panel="vue">&lt;div
   class="progress-bar"
   :data-size="size ?? 'base'"
-  :data-role="role ?? 'primary'"
+  :data-role="role ?? 'brand'"
   :data-variant="variant ?? 'filled'"
   :data-striped="striped || undefined"
   :data-animated="animated || undefined"
@@ -302,7 +302,7 @@
   &lt;span v-if="icon" class="progress-bar__icon"&gt;&lt;slot name="icon" /&gt;&lt;/span&gt;
 &lt;/div&gt;</div>
         <div class="fw-snippet-code" data-panel="html">&lt;!-- Determinate --&gt;
-&lt;div class="progress-bar" data-size="base" data-role="primary" data-variant="filled"
+&lt;div class="progress-bar" data-size="base" data-role="brand" data-variant="filled"
      role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"&gt;
   &lt;div class="progress-bar__track"&gt;
     &lt;div class="progress-bar__fill" style="--progress: 60%"&gt;&lt;/div&gt;
@@ -311,7 +311,7 @@
 &lt;/div&gt;
 
 &lt;!-- Indeterminate --&gt;
-&lt;div class="progress-bar" data-indeterminate data-role="primary"
+&lt;div class="progress-bar" data-indeterminate data-role="brand"
      role="progressbar" aria-label="Loading..."&gt;
   &lt;div class="progress-bar__track"&gt;
     &lt;div class="progress-bar__fill"&gt;&lt;/div&gt;
@@ -376,7 +376,7 @@
 
   /* ── Constants ── */
   var SIZES = ['micro','tiny','small','base','medium','large','big','huge','mega','ultra'];
-  var ROLES = ['primary','success','warning','danger','neutral'];
+  var ROLES = ['brand','success','warning','danger','neutral'];
   var VARIANTS = ['filled','outline','soft'];
   var STATES = ['Determinate','Indeterminate','Striped','Disabled'];
 
@@ -384,7 +384,7 @@
   var ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
   /* ── Current globals ── */
-  var curRole = 'primary';
+  var curRole = 'brand';
   var curSize = 'base';
   var curVariant = 'filled';
   var curShape = 'default';

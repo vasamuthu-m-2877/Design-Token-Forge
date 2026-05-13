@@ -175,7 +175,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card A</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="A"><option value="base" selected>Base</option><option value="bright">Bright</option><option value="deep">Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="primary" selected>Primary</option><option value="brand">Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyA"></div>
         </div>
@@ -184,7 +184,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card B</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="B"><option value="base">Base</option><option value="bright">Bright</option><option value="deep" selected>Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="primary">Primary</option><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="brand">Brand</option><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyB"></div>
         </div>
@@ -644,11 +644,11 @@
   }
 
   function applyRole(bodyEl,roleId){
-    if(roleId==='primary'){
-      ROLE_TOKENS.forEach(function(tok){bodyEl.style.removeProperty('--primary-'+tok);});
+    if(roleId==='brand'){
+      ROLE_TOKENS.forEach(function(tok){bodyEl.style.removeProperty('--brand-'+tok);});
     } else {
       ROLE_TOKENS.forEach(function(tok){
-        bodyEl.style.setProperty('--primary-'+tok,'var(--'+roleId+'-'+tok+')');
+        bodyEl.style.setProperty('--brand-'+tok,'var(--'+roleId+'-'+tok+')');
       });
     }
   }

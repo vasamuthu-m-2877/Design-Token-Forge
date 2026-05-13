@@ -53,16 +53,16 @@
   --radio-circle-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Checked (on) ── */
-  --radio-circle-bg-on: var(--primary-component-bg-default);
-  --radio-circle-bg-on-hover: var(--primary-component-bg-hover);
-  --radio-circle-border-color-on: var(--primary-component-bg-default);
-  --radio-circle-border-color-on-hover: var(--primary-component-bg-hover);
+  --radio-circle-bg-on: var(--brand-component-bg-default);
+  --radio-circle-bg-on-hover: var(--brand-component-bg-hover);
+  --radio-circle-border-color-on: var(--brand-component-bg-default);
+  --radio-circle-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Dot ── */
   --radio-dot-color: var(--color-fixed-white);
 
   /* ── Disabled ── */
-  --radio-circle-bg-on-disabled: var(--primary-component-bg-default);
+  --radio-circle-bg-on-disabled: var(--brand-component-bg-default);
   --radio-circle-border-color-disabled: var(--surface-base-cm-outline);
   --radio-opacity-disabled: 0.5;
 
@@ -89,16 +89,16 @@
   --radio-outline-circle-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Outline checked (on) — filled with semantic role ── */
-  --radio-outline-circle-bg-on: var(--primary-component-bg-default);
-  --radio-outline-circle-bg-on-hover: var(--primary-component-bg-hover);
-  --radio-outline-circle-border-color-on: var(--primary-component-bg-default);
-  --radio-outline-circle-border-color-on-hover: var(--primary-component-bg-hover);
+  --radio-outline-circle-bg-on: var(--brand-component-bg-default);
+  --radio-outline-circle-bg-on-hover: var(--brand-component-bg-hover);
+  --radio-outline-circle-border-color-on: var(--brand-component-bg-default);
+  --radio-outline-circle-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Outline dot ── */
   --radio-outline-dot-color: var(--color-fixed-white);
 
   /* ── Outline disabled ── */
-  --radio-outline-circle-bg-on-disabled: var(--primary-component-bg-default);
+  --radio-outline-circle-bg-on-disabled: var(--brand-component-bg-default);
   --radio-outline-circle-border-color-disabled: var(--surface-base-cm-outline);
   --radio-outline-opacity-disabled: 0.5;
 
@@ -146,7 +146,7 @@
      ♿ ACCESSIBILITY  (8 vars)
      ──────────────────────────────────────────────────────────── */
   --radio-focus-outline-width: 2px;
-  --radio-focus-outline-color: var(--primary-component-outline-default);
+  --radio-focus-outline-color: var(--brand-component-outline-default);
   --radio-focus-outline-offset: 2px;
   --radio-min-tap-target: 44px;
   --radio-required-indicator: '*';

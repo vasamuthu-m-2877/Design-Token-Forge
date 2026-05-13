@@ -92,9 +92,9 @@ function generatePalette(keyHex) {
 
 // ── Token Generation ──────────────────────────────────────────
 
-const TOKEN_ROLES = ['primary', 'brand', 'danger', 'warning', 'info', 'success'];
+const TOKEN_ROLES = ['brand', 'danger', 'warning', 'info', 'success'];
 const ROLE_TO_PALETTE = {
-  primary: 'monochromatic', brand: 'brand', danger: 'danger',
+  brand: 'monochromatic', danger: 'danger',
   warning: 'warning', info: 'info', success: 'success'
 };
 
