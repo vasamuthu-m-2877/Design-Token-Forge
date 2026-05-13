@@ -14,8 +14,8 @@
      tertiary ≡ soft     (tinted container, role-colored)
      ghost    = ghost    (transparent, neutral by default)
 
-   All primary/secondary/tertiary tokens reference --primary-* semantic palette.
-   CSS role selectors remap --primary-* → --{role}-* at the element level,
+   All primary/secondary/tertiary tokens reference --brand-* semantic palette.
+   CSS role selectors remap --brand-* → --{role}-* at the element level,
    so every structural variant × every role composes automatically.
 
    danger/success/warning/neutral/outline/brand token groups below are
@@ -23,7 +23,8 @@
    for backward compatibility with data-variant="danger" syntax.
    ════════════════════════════════════════════════════════════════ */
 
-.btn {
+.btn,
+:root {
 
   /* ────────────────────────────────────────────────────────────
      📐 SHAPE  (23 vars)
@@ -174,7 +175,7 @@
      🎨 SURFACE  (120 vars = 10 groups × 12 properties)
      Pattern: --btn-{group}-{property}[-{state}]
 
-     STRUCTURAL GROUPS (read from --primary-* by default):
+     STRUCTURAL GROUPS (read from --brand-* by default):
        primary  ≡ filled   — solid bg, on-component fg
        secondary ≡ outlined — transparent bg, colored border
        tertiary ≡ soft     — container tint bg, content fg
@@ -186,42 +187,42 @@
        outline — outlined + surface context
      ──────────────────────────────────────────────────────────── */
 
-  /* ── PRIMARY ≡ FILLED (solid bg, reads --primary-* palette) ─ */
-  --btn-primary-bg: var(--primary-component-bg-default);
-  --btn-primary-bg-hover: var(--primary-component-bg-hover);
-  --btn-primary-bg-active: var(--primary-component-bg-pressed);
-  --btn-primary-bg-disabled: var(--primary-component-bg-default);
-  --btn-primary-fg: var(--primary-on-component);
-  --btn-primary-fg-hover: var(--primary-on-component);
-  --btn-primary-fg-disabled: var(--primary-on-component);
-  --btn-primary-border-color: var(--primary-component-bg-default);
-  --btn-primary-border-color-hover: var(--primary-component-bg-hover);
-  --btn-primary-border-color-active: var(--primary-component-bg-pressed);
-  --btn-primary-border-color-disabled: var(--primary-component-bg-default);
+  /* ── PRIMARY ≡ FILLED (solid bg, reads --brand-* palette) ─ */
+  --btn-primary-bg: var(--brand-component-bg-default);
+  --btn-primary-bg-hover: var(--brand-component-bg-hover);
+  --btn-primary-bg-active: var(--brand-component-bg-pressed);
+  --btn-primary-bg-disabled: var(--brand-component-bg-default);
+  --btn-primary-fg: var(--brand-on-component);
+  --btn-primary-fg-hover: var(--brand-on-component);
+  --btn-primary-fg-disabled: var(--brand-on-component);
+  --btn-primary-border-color: var(--brand-component-bg-default);
+  --btn-primary-border-color-hover: var(--brand-component-bg-hover);
+  --btn-primary-border-color-active: var(--brand-component-bg-pressed);
+  --btn-primary-border-color-disabled: var(--brand-component-bg-default);
   --btn-primary-opacity-disabled: 0.5;
 
-  /* ── SECONDARY ≡ OUTLINED (border emphasis, --primary-* palette) */
+  /* ── SECONDARY ≡ OUTLINED (border emphasis, --brand-* palette) */
   --btn-secondary-bg: transparent;
-  --btn-secondary-bg-hover: var(--primary-container-bg);
-  --btn-secondary-bg-active: var(--primary-container-pressed);
+  --btn-secondary-bg-hover: var(--brand-container-bg);
+  --btn-secondary-bg-active: var(--brand-container-pressed);
   --btn-secondary-bg-disabled: transparent;
-  --btn-secondary-fg: var(--primary-content-default);
-  --btn-secondary-fg-hover: var(--primary-content-default);
-  --btn-secondary-fg-disabled: var(--primary-content-default);
-  --btn-secondary-border-color: var(--primary-component-outline-default);
-  --btn-secondary-border-color-hover: var(--primary-component-outline-hover);
-  --btn-secondary-border-color-active: var(--primary-component-outline-pressed);
-  --btn-secondary-border-color-disabled: var(--primary-component-outline-default);
+  --btn-secondary-fg: var(--brand-content-default);
+  --btn-secondary-fg-hover: var(--brand-content-default);
+  --btn-secondary-fg-disabled: var(--brand-content-default);
+  --btn-secondary-border-color: var(--brand-component-outline-default);
+  --btn-secondary-border-color-hover: var(--brand-component-outline-hover);
+  --btn-secondary-border-color-active: var(--brand-component-outline-pressed);
+  --btn-secondary-border-color-disabled: var(--brand-component-outline-default);
   --btn-secondary-opacity-disabled: 0.5;
 
-  /* ── TERTIARY ≡ SOFT (tinted container, --primary-* palette) */
-  --btn-tertiary-bg: var(--primary-container-bg);
-  --btn-tertiary-bg-hover: var(--primary-container-hover);
-  --btn-tertiary-bg-active: var(--primary-container-pressed);
-  --btn-tertiary-bg-disabled: var(--primary-container-bg);
-  --btn-tertiary-fg: var(--primary-content-default);
-  --btn-tertiary-fg-hover: var(--primary-content-default);
-  --btn-tertiary-fg-disabled: var(--primary-content-default);
+  /* ── TERTIARY ≡ SOFT (tinted container, --brand-* palette) */
+  --btn-tertiary-bg: var(--brand-container-bg);
+  --btn-tertiary-bg-hover: var(--brand-container-hover);
+  --btn-tertiary-bg-active: var(--brand-container-pressed);
+  --btn-tertiary-bg-disabled: var(--brand-container-bg);
+  --btn-tertiary-fg: var(--brand-content-default);
+  --btn-tertiary-fg-hover: var(--brand-content-default);
+  --btn-tertiary-fg-disabled: var(--brand-content-default);
   --btn-tertiary-border-color: transparent;
   --btn-tertiary-border-color-hover: transparent;
   --btn-tertiary-border-color-active: transparent;
@@ -383,7 +384,7 @@
      ♿ ACCESSIBILITY  (4 vars)
      ──────────────────────────────────────────────────────────── */
   --btn-focus-outline-width: 2px;
-  --btn-focus-outline-color: var(--primary-component-outline-default);
+  --btn-focus-outline-color: var(--brand-component-outline-default);
   --btn-focus-outline-offset: 2px;
   --btn-min-tap-target: 0px; /* Sizes are intentional — use pseudo-element for a11y tap area if needed */
 }

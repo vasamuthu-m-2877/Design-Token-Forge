@@ -14,8 +14,8 @@
      tertiary ≡ soft     (tinted container, role-colored)
      ghost    = ghost    (transparent, neutral by default)
 
-   All primary/secondary/tertiary tokens reference --primary-* semantic palette.
-   CSS role selectors remap --primary-* → --{role}-* at the element level,
+   All primary/secondary/tertiary tokens reference --brand-* semantic palette.
+   CSS role selectors remap --brand-* → --{role}-* at the element level,
    so every structural variant × every role composes automatically.
 
    danger/success/warning/neutral/outline/brand token groups below are
@@ -27,130 +27,136 @@
 
   /* ────────────────────────────────────────────────────────────
      📐 SHAPE  (14 vars)
+     INHERITS comp-sizes from --btn-* per multi-zone-model.md (Q6).
+     A "base" split-button matches a "base" button visually.
      ──────────────────────────────────────────────────────────── */
 
-  /* Border radius per density mode (outer container corners) */
-  --split-btn-radius-micro: var(--radius-xs);
-  --split-btn-radius-tiny: var(--radius-sm);
-  --split-btn-radius-small: var(--radius-sm);
-  --split-btn-radius-base: var(--radius-md);
-  --split-btn-radius-medium: var(--radius-md);
-  --split-btn-radius-large: var(--radius-DEFAULT);
-  --split-btn-radius-big: var(--radius-DEFAULT);
-  --split-btn-radius-huge: var(--radius-lg);
-  --split-btn-radius-mega: var(--radius-xl);
-  --split-btn-radius-ultra: var(--radius-xl);
+  /* Border radius per density mode — outer corners; inner corners forced 0 by .css */
+  --split-btn-radius-micro:  var(--btn-radius-micro);
+  --split-btn-radius-tiny:   var(--btn-radius-tiny);
+  --split-btn-radius-small:  var(--btn-radius-small);
+  --split-btn-radius-base:   var(--btn-radius-base);
+  --split-btn-radius-medium: var(--btn-radius-medium);
+  --split-btn-radius-large:  var(--btn-radius-large);
+  --split-btn-radius-big:    var(--btn-radius-big);
+  --split-btn-radius-huge:   var(--btn-radius-huge);
+  --split-btn-radius-mega:   var(--btn-radius-mega);
+  --split-btn-radius-ultra:  var(--btn-radius-ultra);
 
-  /* Border */
-  --split-btn-border-width: 1px;
-  --split-btn-border-style: solid;
+  /* Border — single-edge values, since wrapper has uniform border */
+  --split-btn-border-width: var(--btn-border-width-t);
+  --split-btn-border-style: var(--btn-border-style);
 
   /* Shadow */
-  --split-btn-shadow: var(--shadow-none);
-  --split-btn-shadow-hover: var(--shadow-none);
-  --split-btn-shadow-active: var(--shadow-none);
-  --split-btn-shadow-strong: var(--shadow-sm);
+  --split-btn-shadow:        var(--btn-shadow);
+  --split-btn-shadow-hover:  var(--btn-shadow-hover);
+  --split-btn-shadow-active: var(--btn-shadow-active);
+  --split-btn-shadow-strong: var(--btn-shadow-strong);
 
   /* ────────────────────────────────────────────────────────────
      📏 DIMENSION  (50 vars)
+     All scales INHERIT from --btn-* so split-button base === button base.
+     Action-zone outer padding   → --btn-padding-x-*  (text-edge padding)
+     Trigger-zone padding        → --btn-icon-pad-*   (symmetric icon-only)
+     Gap (icon ↔ label)          → --btn-icon-gap-*
      ──────────────────────────────────────────────────────────── */
 
-  /* Height per density mode */
-  --split-btn-height-micro: var(--spacing-24);
-  --split-btn-height-tiny: var(--spacing-28);
-  --split-btn-height-small: var(--spacing-32);
-  --split-btn-height-base: var(--spacing-36);
-  --split-btn-height-medium: var(--spacing-40);
-  --split-btn-height-large: var(--spacing-44);
-  --split-btn-height-big: var(--spacing-48);
-  --split-btn-height-huge: var(--spacing-56);
-  --split-btn-height-mega: var(--spacing-64);
-  --split-btn-height-ultra: var(--spacing-80);
+  /* Height per density mode — aligned with button */
+  --split-btn-height-micro:  var(--btn-height-micro);
+  --split-btn-height-tiny:   var(--btn-height-tiny);
+  --split-btn-height-small:  var(--btn-height-small);
+  --split-btn-height-base:   var(--btn-height-base);
+  --split-btn-height-medium: var(--btn-height-medium);
+  --split-btn-height-large:  var(--btn-height-large);
+  --split-btn-height-big:    var(--btn-height-big);
+  --split-btn-height-huge:   var(--btn-height-huge);
+  --split-btn-height-mega:   var(--btn-height-mega);
+  --split-btn-height-ultra:  var(--btn-height-ultra);
 
-  /* Horizontal padding inside the action zone (icon-wrapper padding) */
-  --split-btn-action-padding-x-micro: var(--spacing-8);
-  --split-btn-action-padding-x-tiny: var(--spacing-8);
-  --split-btn-action-padding-x-small: var(--spacing-10);
-  --split-btn-action-padding-x-base: var(--spacing-12);
-  --split-btn-action-padding-x-medium: var(--spacing-14);
-  --split-btn-action-padding-x-large: var(--spacing-16);
-  --split-btn-action-padding-x-big: var(--spacing-18);
-  --split-btn-action-padding-x-huge: var(--spacing-20);
-  --split-btn-action-padding-x-mega: var(--spacing-24);
-  --split-btn-action-padding-x-ultra: var(--spacing-28);
+  /* Action zone outer-edge padding-x — mirrors button's text-edge padding */
+  --split-btn-action-padding-x-micro:  var(--btn-padding-x-micro);
+  --split-btn-action-padding-x-tiny:   var(--btn-padding-x-tiny);
+  --split-btn-action-padding-x-small:  var(--btn-padding-x-small);
+  --split-btn-action-padding-x-base:   var(--btn-padding-x-base);
+  --split-btn-action-padding-x-medium: var(--btn-padding-x-medium);
+  --split-btn-action-padding-x-large:  var(--btn-padding-x-large);
+  --split-btn-action-padding-x-big:    var(--btn-padding-x-big);
+  --split-btn-action-padding-x-huge:   var(--btn-padding-x-huge);
+  --split-btn-action-padding-x-mega:   var(--btn-padding-x-mega);
+  --split-btn-action-padding-x-ultra:  var(--btn-padding-x-ultra);
 
-  /* Vertical padding for action zone */
-  --split-btn-padding-y-micro: var(--spacing-2);
-  --split-btn-padding-y-tiny: var(--spacing-3);
-  --split-btn-padding-y-small: var(--spacing-4);
-  --split-btn-padding-y-base: var(--spacing-6);
-  --split-btn-padding-y-medium: var(--spacing-8);
-  --split-btn-padding-y-large: var(--spacing-10);
-  --split-btn-padding-y-big: var(--spacing-12);
-  --split-btn-padding-y-huge: var(--spacing-14);
-  --split-btn-padding-y-mega: var(--spacing-16);
-  --split-btn-padding-y-ultra: var(--spacing-20);
+  /* Vertical padding — mirrors button */
+  --split-btn-padding-y-micro:  var(--btn-padding-y-micro);
+  --split-btn-padding-y-tiny:   var(--btn-padding-y-tiny);
+  --split-btn-padding-y-small:  var(--btn-padding-y-small);
+  --split-btn-padding-y-base:   var(--btn-padding-y-base);
+  --split-btn-padding-y-medium: var(--btn-padding-y-medium);
+  --split-btn-padding-y-large:  var(--btn-padding-y-large);
+  --split-btn-padding-y-big:    var(--btn-padding-y-big);
+  --split-btn-padding-y-huge:   var(--btn-padding-y-huge);
+  --split-btn-padding-y-mega:   var(--btn-padding-y-mega);
+  --split-btn-padding-y-ultra:  var(--btn-padding-y-ultra);
 
-  /* Gap between icon and label in action zone */
-  --split-btn-gap-micro: var(--spacing-4);
-  --split-btn-gap-tiny: var(--spacing-6);
-  --split-btn-gap-small: var(--spacing-8);
-  --split-btn-gap-base: var(--spacing-8);
-  --split-btn-gap-medium: var(--spacing-8);
-  --split-btn-gap-large: var(--spacing-10);
-  --split-btn-gap-big: var(--spacing-10);
-  --split-btn-gap-huge: var(--spacing-12);
-  --split-btn-gap-mega: var(--spacing-14);
-  --split-btn-gap-ultra: var(--spacing-16);
+  /* Gap (icon ↔ label) — mirrors button's icon-to-text gap */
+  --split-btn-gap-micro:  var(--btn-icon-gap-micro);
+  --split-btn-gap-tiny:   var(--btn-icon-gap-tiny);
+  --split-btn-gap-small:  var(--btn-icon-gap-small);
+  --split-btn-gap-base:   var(--btn-icon-gap-base);
+  --split-btn-gap-medium: var(--btn-icon-gap-medium);
+  --split-btn-gap-large:  var(--btn-icon-gap-large);
+  --split-btn-gap-big:    var(--btn-icon-gap-big);
+  --split-btn-gap-huge:   var(--btn-icon-gap-huge);
+  --split-btn-gap-mega:   var(--btn-icon-gap-mega);
+  --split-btn-gap-ultra:  var(--btn-icon-gap-ultra);
 
-  /* Horizontal padding inside the trigger zone (chevron-wrapper padding) */
-  --split-btn-trigger-padding-x-micro: var(--spacing-2);
-  --split-btn-trigger-padding-x-tiny: var(--spacing-2);
-  --split-btn-trigger-padding-x-small: var(--spacing-3);
-  --split-btn-trigger-padding-x-base: var(--spacing-3);
-  --split-btn-trigger-padding-x-medium: var(--spacing-4);
-  --split-btn-trigger-padding-x-large: var(--spacing-4);
-  --split-btn-trigger-padding-x-big: var(--spacing-5);
-  --split-btn-trigger-padding-x-huge: var(--spacing-6);
-  --split-btn-trigger-padding-x-mega: var(--spacing-8);
-  --split-btn-trigger-padding-x-ultra: var(--spacing-10);
+  /* Trigger zone padding-x — chevron is icon-only, use button's symmetric icon-pad */
+  --split-btn-trigger-padding-x-micro:  var(--btn-icon-pad-micro);
+  --split-btn-trigger-padding-x-tiny:   var(--btn-icon-pad-tiny);
+  --split-btn-trigger-padding-x-small:  var(--btn-icon-pad-small);
+  --split-btn-trigger-padding-x-base:   var(--btn-icon-pad-base);
+  --split-btn-trigger-padding-x-medium: var(--btn-icon-pad-medium);
+  --split-btn-trigger-padding-x-large:  var(--btn-icon-pad-large);
+  --split-btn-trigger-padding-x-big:    var(--btn-icon-pad-big);
+  --split-btn-trigger-padding-x-huge:   var(--btn-icon-pad-huge);
+  --split-btn-trigger-padding-x-mega:   var(--btn-icon-pad-mega);
+  --split-btn-trigger-padding-x-ultra:  var(--btn-icon-pad-ultra);
 
   /* Width model */
   --split-btn-max-width: none;
   --split-btn-inline-size: auto;
-  --split-btn-white-space: nowrap;
+  --split-btn-white-space: var(--btn-white-space);
 
   /* ────────────────────────────────────────────────────────────
      🎨 SURFACE  (48 vars = 4 variants × 12 properties)
      Pattern: --split-btn-{variant}-{property}[-{state}]
      ──────────────────────────────────────────────────────────── */
 
-  /* ── PRIMARY ≡ FILLED (solid bg, reads --primary-* palette) ─────────────────────────────── */
-  --split-btn-primary-bg: var(--primary-component-bg-default);
-  --split-btn-primary-bg-hover: var(--primary-component-bg-hover);
-  --split-btn-primary-bg-active: var(--primary-component-bg-pressed);
-  --split-btn-primary-bg-disabled: var(--primary-component-bg-default);
-  --split-btn-primary-fg: var(--primary-on-component);
-  --split-btn-primary-fg-hover: var(--primary-on-component);
-  --split-btn-primary-fg-disabled: var(--primary-on-component);
-  --split-btn-primary-border-color: var(--primary-component-bg-default);
-  --split-btn-primary-border-color-hover: var(--primary-component-bg-hover);
-  --split-btn-primary-border-color-active: var(--primary-component-bg-pressed);
-  --split-btn-primary-border-color-disabled: var(--primary-component-bg-default);
+  /* ── PRIMARY ≡ FILLED (solid bg, reads --brand-* palette) ─────────────────────────────── */
+  --split-btn-primary-bg: var(--brand-component-bg-default);
+  --split-btn-primary-bg-hover: var(--brand-component-bg-hover);
+  --split-btn-primary-bg-active: var(--brand-component-bg-pressed);
+  --split-btn-primary-bg-disabled: var(--brand-component-bg-default);
+  --split-btn-primary-fg: var(--brand-on-component);
+  --split-btn-primary-fg-hover: var(--brand-on-component);
+  --split-btn-primary-fg-disabled: var(--brand-on-component);
+  --split-btn-primary-border-color: var(--brand-component-bg-default);
+  --split-btn-primary-border-color-hover: var(--brand-component-bg-hover);
+  --split-btn-primary-border-color-active: var(--brand-component-bg-pressed);
+  --split-btn-primary-border-color-disabled: var(--brand-component-bg-default);
   --split-btn-primary-opacity-disabled: 0.5;
 
-  /* ── SECONDARY ≡ OUTLINED (border emphasis, --primary-* palette) ─────────── */
+  /* ── SECONDARY ≡ OUTLINED (border emphasis, --brand-* palette) ─────────── */
   --split-btn-secondary-bg: transparent;
-  --split-btn-secondary-bg-hover: var(--primary-container-bg);
-  --split-btn-secondary-bg-active: var(--primary-container-pressed);
+  --split-btn-secondary-bg-hover: var(--brand-container-bg);
+  --split-btn-secondary-bg-active: var(--brand-container-pressed);
   --split-btn-secondary-bg-disabled: transparent;
-  --split-btn-secondary-fg: var(--primary-content-default);
-  --split-btn-secondary-fg-hover: var(--primary-content-default);
-  --split-btn-secondary-fg-disabled: var(--primary-content-default);
-  --split-btn-secondary-border-color: var(--primary-component-outline-default);
-  --split-btn-secondary-border-color-hover: var(--primary-component-outline-hover);
-  --split-btn-secondary-border-color-active: var(--primary-component-outline-pressed);
-  --split-btn-secondary-border-color-disabled: var(--primary-component-outline-default);
+  --split-btn-secondary-fg: var(--brand-content-default);
+  --split-btn-secondary-fg-hover: var(--brand-content-default);
+  --split-btn-secondary-fg-disabled: var(--brand-content-default);
+  --split-btn-secondary-border-color: var(--brand-component-outline-default);
+  --split-btn-secondary-border-color-hover: var(--brand-component-outline-hover);
+  --split-btn-secondary-border-color-active: var(--brand-component-outline-pressed);
+  --split-btn-secondary-border-color-disabled: var(--brand-component-outline-default);
   --split-btn-secondary-opacity-disabled: 0.5;
 
   /* ── DANGER (legacy: filled + danger role) ───────────────────────────────── */
@@ -181,14 +187,14 @@
   --split-btn-neutral-border-color-disabled: var(--surface-base-cm-outline);
   --split-btn-neutral-opacity-disabled: 0.5;
 
-  /* ── TERTIARY ≡ SOFT (tinted container, --primary-* palette) ──────────────────────── */
-  --split-btn-tertiary-bg: var(--primary-container-bg);
-  --split-btn-tertiary-bg-hover: var(--primary-container-hover);
-  --split-btn-tertiary-bg-active: var(--primary-container-pressed);
-  --split-btn-tertiary-bg-disabled: var(--primary-container-bg);
-  --split-btn-tertiary-fg: var(--primary-content-default);
-  --split-btn-tertiary-fg-hover: var(--primary-content-default);
-  --split-btn-tertiary-fg-disabled: var(--primary-content-default);
+  /* ── TERTIARY ≡ SOFT (tinted container, --brand-* palette) ──────────────────────── */
+  --split-btn-tertiary-bg: var(--brand-container-bg);
+  --split-btn-tertiary-bg-hover: var(--brand-container-hover);
+  --split-btn-tertiary-bg-active: var(--brand-container-pressed);
+  --split-btn-tertiary-bg-disabled: var(--brand-container-bg);
+  --split-btn-tertiary-fg: var(--brand-content-default);
+  --split-btn-tertiary-fg-hover: var(--brand-content-default);
+  --split-btn-tertiary-fg-disabled: var(--brand-content-default);
   --split-btn-tertiary-border-color: transparent;
   --split-btn-tertiary-border-color-hover: transparent;
   --split-btn-tertiary-border-color-active: transparent;
@@ -266,79 +272,84 @@
   --split-btn-brand-opacity-disabled: 0.5;
 
   /* ────────────────────────────────────────────────────────────
-     DIVIDER  (11 vars)
+     DIVIDER  (11 vars)  — STRUCTURAL, owned (no inheritance from button).
+     For filled variants the divider tracks the role's on-component
+     color at 30% so it reads as a faint separator on any brand color
+     without ever hardcoding white. Outlined/ghost use neutral outline.
      ──────────────────────────────────────────────────────────── */
   --split-btn-divider-width: 1px;
-  --split-btn-divider-color-primary: rgba(255, 255, 255, 0.3);
-  --split-btn-divider-color-secondary: var(--primary-component-outline-default);
-  --split-btn-divider-color-danger: rgba(255, 255, 255, 0.3);
-  --split-btn-divider-color-neutral: var(--surface-base-cm-outline);
-  --split-btn-divider-color-tertiary: var(--primary-component-outline-default);
-  --split-btn-divider-color-ghost: var(--surface-base-cm-outline);
-  --split-btn-divider-color-success: rgba(255, 255, 255, 0.3);
-  --split-btn-divider-color-warning: rgba(255, 255, 255, 0.3);
-  --split-btn-divider-color-outline: var(--surface-base-outline);
-  --split-btn-divider-color-brand: rgba(255, 255, 255, 0.3);
+  --split-btn-divider-color-primary:   color-mix(in srgb, var(--brand-on-component)   30%, transparent);
+  --split-btn-divider-color-secondary: var(--brand-component-outline-default);
+  --split-btn-divider-color-danger:    color-mix(in srgb, var(--danger-on-component)  30%, transparent);
+  --split-btn-divider-color-neutral:   var(--surface-base-cm-outline);
+  --split-btn-divider-color-tertiary:  var(--brand-component-outline-default);
+  --split-btn-divider-color-ghost:     var(--surface-base-cm-outline);
+  --split-btn-divider-color-success:   color-mix(in srgb, var(--success-on-component) 30%, transparent);
+  --split-btn-divider-color-warning:   color-mix(in srgb, var(--warning-on-component) 30%, transparent);
+  --split-btn-divider-color-outline:   var(--surface-base-outline);
+  --split-btn-divider-color-brand:     color-mix(in srgb, var(--brand-on-component)   30%, transparent);
 
   /* ────────────────────────────────────────────────────────────
-     ✏️ TYPOGRAPHY  (15 vars)
+     ✏️ TYPOGRAPHY  (15 vars) — INHERITS from button
      ──────────────────────────────────────────────────────────── */
-  --split-btn-font-family: var(--font-family-sans);
+  --split-btn-font-family: var(--btn-font-family);
 
   /* Font size per density mode */
-  --split-btn-font-size-micro: var(--font-size-10);
-  --split-btn-font-size-tiny: var(--font-size-11);
-  --split-btn-font-size-small: var(--font-size-12);
-  --split-btn-font-size-base: var(--font-size-14);
-  --split-btn-font-size-medium: var(--font-size-14);
-  --split-btn-font-size-large: var(--font-size-16);
-  --split-btn-font-size-big: var(--font-size-16);
-  --split-btn-font-size-huge: var(--font-size-18);
-  --split-btn-font-size-mega: var(--font-size-20);
-  --split-btn-font-size-ultra: var(--font-size-24);
+  --split-btn-font-size-micro:  var(--btn-font-size-micro);
+  --split-btn-font-size-tiny:   var(--btn-font-size-tiny);
+  --split-btn-font-size-small:  var(--btn-font-size-small);
+  --split-btn-font-size-base:   var(--btn-font-size-base);
+  --split-btn-font-size-medium: var(--btn-font-size-medium);
+  --split-btn-font-size-large:  var(--btn-font-size-large);
+  --split-btn-font-size-big:    var(--btn-font-size-big);
+  --split-btn-font-size-huge:   var(--btn-font-size-huge);
+  --split-btn-font-size-mega:   var(--btn-font-size-mega);
+  --split-btn-font-size-ultra:  var(--btn-font-size-ultra);
 
-  --split-btn-font-weight: var(--font-weight-medium);
-  --split-btn-line-height: var(--line-height-normal);
-  --split-btn-letter-spacing: var(--letter-spacing-normal);
-  --split-btn-text-transform: none;
-
-  /* ────────────────────────────────────────────────────────────
-     🧩 SLOTS  (12 vars)
-     ──────────────────────────────────────────────────────────── */
-
-  /* Icon size (action zone icon + trigger zone chevron) */
-  --split-btn-icon-size-micro: var(--spacing-10);
-  --split-btn-icon-size-tiny: var(--spacing-12);
-  --split-btn-icon-size-small: var(--spacing-13);
-  --split-btn-icon-size-base: var(--spacing-16);
-  --split-btn-icon-size-medium: var(--spacing-16);
-  --split-btn-icon-size-large: var(--spacing-18);
-  --split-btn-icon-size-big: var(--spacing-18);
-  --split-btn-icon-size-huge: var(--spacing-20);
-  --split-btn-icon-size-mega: var(--spacing-24);
-  --split-btn-icon-size-ultra: var(--spacing-28);
-
-  --split-btn-icon-color: currentColor;
-  --split-btn-icon-color-hover: currentColor;
+  --split-btn-font-weight:    var(--btn-font-weight);
+  --split-btn-line-height:    var(--btn-line-height);
+  --split-btn-letter-spacing: var(--btn-letter-spacing);
+  --split-btn-text-transform: var(--btn-text-transform);
 
   /* ────────────────────────────────────────────────────────────
-     ⚡ MOTION  (5 vars)
+     🧩 SLOTS  (12 vars) — icon scale aligned with button
      ──────────────────────────────────────────────────────────── */
-  --split-btn-transition-property: background-color, border-color, color, box-shadow, opacity;
-  --split-btn-transition-duration: var(--duration-normal);
-  --split-btn-transition-easing: var(--easing-in-out);
-  --split-btn-animation-enter: none;
-  --split-btn-animation-exit: none;
+
+  /* Icon size (action-zone icon + trigger-zone chevron) */
+  --split-btn-icon-size-micro:  var(--btn-icon-size-micro);
+  --split-btn-icon-size-tiny:   var(--btn-icon-size-tiny);
+  --split-btn-icon-size-small:  var(--btn-icon-size-small);
+  --split-btn-icon-size-base:   var(--btn-icon-size-base);
+  --split-btn-icon-size-medium: var(--btn-icon-size-medium);
+  --split-btn-icon-size-large:  var(--btn-icon-size-large);
+  --split-btn-icon-size-big:    var(--btn-icon-size-big);
+  --split-btn-icon-size-huge:   var(--btn-icon-size-huge);
+  --split-btn-icon-size-mega:   var(--btn-icon-size-mega);
+  --split-btn-icon-size-ultra:  var(--btn-icon-size-ultra);
+
+  --split-btn-icon-color:       var(--btn-icon-color);
+  --split-btn-icon-color-hover: var(--btn-icon-color-hover);
+
+  /* ────────────────────────────────────────────────────────────
+     ⚡ MOTION  (5 vars) — INHERITS from button
+     ──────────────────────────────────────────────────────────── */
+  --split-btn-transition-property: var(--btn-transition-property);
+  --split-btn-transition-duration: var(--btn-transition-duration);
+  --split-btn-transition-easing:   var(--btn-transition-easing);
+  --split-btn-animation-enter:     var(--btn-animation-enter);
+  --split-btn-animation-exit:      var(--btn-animation-exit);
 
   /* Loader */
-  --split-btn-loader-speed: 1.5s;
+  --split-btn-loader-speed: var(--btn-loader-speed);
 
   /* ────────────────────────────────────────────────────────────
-     ♿ ACCESSIBILITY  (5 vars)
+     ♿ ACCESSIBILITY  (5 vars) — INHERITS focus from button.
+     min-tap-target stays owned (split-button has zone-level targets).
+     radius-rounded INHERITS from button so the boolean axis matches.
      ──────────────────────────────────────────────────────────── */
-  --split-btn-focus-outline-width: 2px;
-  --split-btn-focus-outline-color: var(--primary-component-outline-default);
-  --split-btn-focus-outline-offset: 2px;
+  --split-btn-focus-outline-width:  var(--btn-focus-outline-width);
+  --split-btn-focus-outline-color:  var(--btn-focus-outline-color);
+  --split-btn-focus-outline-offset: var(--btn-focus-outline-offset);
   --split-btn-min-tap-target: 44px;
-  --split-btn-radius-rounded: var(--radius-full);
+  --split-btn-radius-rounded: var(--btn-radius-rounded);
 }
