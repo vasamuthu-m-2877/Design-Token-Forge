@@ -1650,11 +1650,13 @@ async function generateComponentFromBlueprint(blueprint) {
         iconWrapper.fills = [];
         iconWrapper.itemSpacing = 0;
 
-        /* Icon wrapper: ALWAYS bind both padL + padR.
-           In icon+text masters, padR acts as the icon-to-text gap. */
+        /* Icon wrapper: ALWAYS bind padL.
+           padR depends on whether this is the only slot (icon-only → symmetric edge padding)
+           or there's a text slot after it (icon+text → padR is icon-to-text gap). */
         var iwPadLVar = compSizeVars[BP.sizeBindings.iconWrapperPadL];
         if (iwPadLVar) { await tryBindVar(iconWrapper, 'paddingLeft', iwPadLVar); stats.bindings++; }
-        var iwPadRVar = compSizeVars[BP.sizeBindings.iconWrapperPadR];
+        var isOnlySlot = (slots.length === 1);
+        var iwPadRVar = compSizeVars[isOnlySlot ? BP.sizeBindings.iconWrapperPadL : BP.sizeBindings.iconWrapperPadR];
         if (iwPadRVar) { await tryBindVar(iconWrapper, 'paddingRight', iwPadRVar); stats.bindings++; }
 
         /* ── Icon Instance (INSTANCE of placeholder component) ──
