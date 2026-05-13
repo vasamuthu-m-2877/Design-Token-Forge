@@ -503,7 +503,7 @@ function buildT3(t1Collection) {
 //    Values alias primitives-numbers (spacing/*, radius/*, font/size-*)
 
 const COMP_SIZE_MODES = [
-  'micro', 'tiny', 'small', 'base', 'medium',
+  'base', 'micro', 'tiny', 'small', 'medium',
   'large', 'big', 'huge', 'mega', 'ultra'
 ];
 
@@ -638,7 +638,7 @@ function buildCompSize(extrasCollection) {
     const btnProps = [
       { propCSS: 'height',         propFigma: 'height' },
       { propCSS: 'padding-x-icon', propFigma: 'icon wrapper padding L' },
-      { propCSS: 'padding-x-icon', propFigma: 'icon wrapper padding R' },
+      { propCSS: 'icon-gap',       propFigma: 'icon wrapper padding R' },
       { propCSS: 'radius',         propFigma: 'radius' },
       { propCSS: 'icon-size',      propFigma: 'icon container' },
       { propCSS: 'font-size',      propFigma: 'font-size' },

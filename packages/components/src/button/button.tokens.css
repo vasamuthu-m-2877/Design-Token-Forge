@@ -31,15 +31,15 @@
 
   /* Border radius per density mode */
   --btn-radius-micro: var(--radius-sm);
-  --btn-radius-tiny: var(--radius-sm-md);
+  --btn-radius-tiny: var(--radius-sm);
   --btn-radius-small: var(--radius-md);
   --btn-radius-base: var(--radius-md);
   --btn-radius-medium: var(--radius-DEFAULT);
   --btn-radius-large: var(--radius-DEFAULT);
   --btn-radius-big: var(--radius-md-lg);
-  --btn-radius-huge: var(--radius-lg);
-  --btn-radius-mega: var(--radius-lg-xl);
-  --btn-radius-ultra: var(--radius-xl);
+  --btn-radius-huge: var(--radius-md-lg);
+  --btn-radius-mega: var(--radius-lg);
+  --btn-radius-ultra: var(--radius-lg-xl);
 
   /* Border width — 4 sides */
   --btn-border-width-t: 1px;
@@ -71,28 +71,28 @@
      ──────────────────────────────────────────────────────────── */
 
   /* Height per density mode */
-  --btn-height-micro: var(--spacing-24);
-  --btn-height-tiny: var(--spacing-28);
-  --btn-height-small: var(--spacing-32);
-  --btn-height-base: var(--spacing-36);
-  --btn-height-medium: var(--spacing-40);
-  --btn-height-large: var(--spacing-44);
+  --btn-height-micro: var(--spacing-20);
+  --btn-height-tiny: var(--spacing-24);
+  --btn-height-small: var(--spacing-28);
+  --btn-height-base: var(--spacing-32);
+  --btn-height-medium: var(--spacing-36);
+  --btn-height-large: var(--spacing-40);
   --btn-height-big: var(--spacing-48);
-  --btn-height-huge: var(--spacing-56);
-  --btn-height-mega: var(--spacing-64);
-  --btn-height-ultra: var(--spacing-80);
+  --btn-height-huge: var(--spacing-54);
+  --btn-height-mega: var(--spacing-56);
+  --btn-height-ultra: var(--spacing-64);
 
-  /* Horizontal padding per density mode */
-  --btn-padding-x-micro: var(--spacing-8);
-  --btn-padding-x-tiny: var(--spacing-10);
-  --btn-padding-x-small: var(--spacing-12);
-  --btn-padding-x-base: var(--spacing-16);
-  --btn-padding-x-medium: var(--spacing-18);
-  --btn-padding-x-large: var(--spacing-20);
-  --btn-padding-x-big: var(--spacing-24);
-  --btn-padding-x-huge: var(--spacing-28);
-  --btn-padding-x-mega: var(--spacing-32);
-  --btn-padding-x-ultra: var(--spacing-40);
+  /* Horizontal padding per density mode (text-side edge padding) */
+  --btn-padding-x-micro: var(--spacing-4);
+  --btn-padding-x-tiny: var(--spacing-6);
+  --btn-padding-x-small: var(--spacing-8);
+  --btn-padding-x-base: var(--spacing-10);
+  --btn-padding-x-medium: var(--spacing-10);
+  --btn-padding-x-large: var(--spacing-12);
+  --btn-padding-x-big: var(--spacing-14);
+  --btn-padding-x-huge: var(--spacing-14);
+  --btn-padding-x-mega: var(--spacing-16);
+  --btn-padding-x-ultra: var(--spacing-20);
 
   /* Vertical padding per density mode */
   --btn-padding-y-micro: var(--spacing-2);
@@ -122,17 +122,29 @@
   --btn-max-width: none;
   --btn-inline-size: fit-content;
 
-  /* Icon-side padding per density mode (tighter than label-side for visual balance) */
-  --btn-padding-x-icon-micro: var(--spacing-4);
-  --btn-padding-x-icon-tiny: var(--spacing-5);
-  --btn-padding-x-icon-small: var(--spacing-6);
-  --btn-padding-x-icon-base: var(--spacing-7);
+  /* Icon-side padding per density mode (edge → icon spacing) */
+  --btn-padding-x-icon-micro: var(--spacing-3);
+  --btn-padding-x-icon-tiny: var(--spacing-4);
+  --btn-padding-x-icon-small: var(--spacing-5);
+  --btn-padding-x-icon-base: var(--spacing-6);
   --btn-padding-x-icon-medium: var(--spacing-8);
-  --btn-padding-x-icon-large: var(--spacing-10);
-  --btn-padding-x-icon-big: var(--spacing-12);
-  --btn-padding-x-icon-huge: var(--spacing-14);
-  --btn-padding-x-icon-mega: var(--spacing-16);
-  --btn-padding-x-icon-ultra: var(--spacing-20);
+  --btn-padding-x-icon-large: var(--spacing-8);
+  --btn-padding-x-icon-big: var(--spacing-10);
+  --btn-padding-x-icon-huge: var(--spacing-12);
+  --btn-padding-x-icon-mega: var(--spacing-14);
+  --btn-padding-x-icon-ultra: var(--spacing-16);
+
+  /* Icon-to-text gap per density mode (tighter than edge for visual grouping) */
+  --btn-icon-gap-micro: var(--spacing-2);
+  --btn-icon-gap-tiny: var(--spacing-2);
+  --btn-icon-gap-small: var(--spacing-3);
+  --btn-icon-gap-base: var(--spacing-4);
+  --btn-icon-gap-medium: var(--spacing-4);
+  --btn-icon-gap-large: var(--spacing-5);
+  --btn-icon-gap-big: var(--spacing-6);
+  --btn-icon-gap-huge: var(--spacing-6);
+  --btn-icon-gap-mega: var(--spacing-8);
+  --btn-icon-gap-ultra: var(--spacing-8);
 
   /* Gap per density mode (between icon / label / loader) */
   --btn-gap-micro: var(--spacing-2);
@@ -313,11 +325,11 @@
   --btn-font-size-small: var(--font-size-12);
   --btn-font-size-base: var(--font-size-13);
   --btn-font-size-medium: var(--font-size-14);
-  --btn-font-size-large: var(--font-size-16);
-  --btn-font-size-big: var(--font-size-18);
-  --btn-font-size-huge: var(--font-size-20);
-  --btn-font-size-mega: var(--font-size-24);
-  --btn-font-size-ultra: var(--font-size-28);
+  --btn-font-size-large: var(--font-size-14);
+  --btn-font-size-big: var(--font-size-16);
+  --btn-font-size-huge: var(--font-size-18);
+  --btn-font-size-mega: var(--font-size-20);
+  --btn-font-size-ultra: var(--font-size-22);
 
   --btn-font-weight: var(--font-weight-medium);
   --btn-line-height: var(--line-height-normal);
@@ -328,17 +340,17 @@
      🧩 SLOTS  (14 vars)
      ──────────────────────────────────────────────────────────── */
 
-  /* Icon slot — size per density mode */
+  /* Icon slot — size per density mode (standard tiers: 12, 16, 20, 24, 32) */
   --btn-icon-size-micro: var(--spacing-12);
-  --btn-icon-size-tiny: var(--spacing-14);
+  --btn-icon-size-tiny: var(--spacing-12);
   --btn-icon-size-small: var(--spacing-16);
-  --btn-icon-size-base: var(--spacing-18);
+  --btn-icon-size-base: var(--spacing-16);
   --btn-icon-size-medium: var(--spacing-20);
-  --btn-icon-size-large: var(--spacing-22);
+  --btn-icon-size-large: var(--spacing-20);
   --btn-icon-size-big: var(--spacing-24);
-  --btn-icon-size-huge: var(--spacing-28);
+  --btn-icon-size-huge: var(--spacing-24);
   --btn-icon-size-mega: var(--spacing-32);
-  --btn-icon-size-ultra: var(--spacing-36);
+  --btn-icon-size-ultra: var(--spacing-32);
   --btn-icon-color: currentColor;
   --btn-icon-color-hover: currentColor;
 

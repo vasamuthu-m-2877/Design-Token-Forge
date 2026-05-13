@@ -411,6 +411,53 @@
   <div class="log-list" id="logList"></div>
 </details>
 
+<!-- ── Component Builder Section ───────────────────────── -->
+<div id="componentBuilderSection" style="margin-top: 16px; padding-top: 14px; border-top: 2px solid #e5e5e5; display: none;">
+  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+    <div style="width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,#7C3AED,#A855F7);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/></svg>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;">Component Builder</div>
+      <div style="font-size:10px;color:#888;">Generate Figma components bound to token variables</div>
+    </div>
+  </div>
+
+  <!-- Prerequisites -->
+  <div id="genPrereqs" style="font-size:11px;color:#666;margin-bottom:10px;padding:8px 10px;background:#f8f8f8;border-radius:6px;border:1px solid #eee;">
+    <div style="font-weight:600;margin-bottom:4px;font-size:10px;text-transform:uppercase;letter-spacing:0.05em;color:#999;">Prerequisites</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <span id="prereqCS">&#9744; comp-size</span>
+      <span id="prereqT2">&#9744; T2 Surface Context</span>
+      <span id="prereqT3">&#9744; T3 Status Context</span>
+    </div>
+  </div>
+
+  <!-- Component picker -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+    <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;padding:4px 8px;border:1px solid #e0e0e0;border-radius:4px;background:#fff;">
+      <input type="checkbox" class="comp-check" value="button" checked> Button
+    </label>
+    <!-- Future components added here -->
+  </div>
+
+  <!-- Generate button -->
+  <button id="generateBtn" disabled style="
+    width:100%;padding:10px 16px;border:none;border-radius:6px;cursor:pointer;
+    font-size:12px;font-weight:600;font-family:inherit;color:#fff;
+    background:linear-gradient(135deg,#7C3AED,#6D28D9);
+    opacity:0.5;transition:opacity 0.2s,transform 0.1s;">
+    &#9881; Generate Components
+  </button>
+
+  <!-- Status -->
+  <div id="genStatus" style="font-size:11px;color:#666;margin-top:8px;min-height:16px;"></div>
+
+  <!-- Generated components info -->
+  <div id="genInfo" style="display:none;margin-top:8px;padding:8px 10px;background:#e6f9e6;border:1px solid #bbf7d0;border-radius:6px;font-size:11px;color:#166534;">
+  </div>
+</div>
+
 <script>
   /* ── Global error handler — shows JS errors in the UI ── */
   window.onerror = function(msg, src, line, col, err) {
@@ -522,6 +569,8 @@
 
   /* ── Scan Figma on load ──────────────────────────────── */
   parent.postMessage({ pluginMessage: { type: 'scan' } }, '*');
+  /* Request user info for component builder gate */
+  parent.postMessage({ pluginMessage: { type: 'get-user-info' } }, '*');
 
   /* ── Polling ─────────────────────────────────────────── */
   function startPolling() {
@@ -1072,6 +1121,39 @@
       syncBtn.textContent = 'Retry Sync';
     }
 
+    /* ── Component Builder messages ────────────────────── */
+    if (msg.type === 'user-info') {
+      /* Show component builder only for authorized user */
+      var builderEl = document.getElementById('componentBuilderSection');
+      if (builderEl && msg.authorized) {
+        builderEl.style.display = '';
+      }
+    }
+    if (msg.type === 'gen-progress') {
+      genStatus.textContent = msg.text;
+    }
+    if (msg.type === 'gen-done') {
+      var gs = msg.stats;
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = '&#9881; Generate Components';
+      generateBtn.style.opacity = '1';
+      genStatus.textContent = gs.components + ' variants, ' + gs.bindings + ' bindings, ' + gs.reactions + ' reactions' +
+        (gs.errors.length > 0 ? ' — ' + gs.errors.length + ' errors' : '');
+      genInfo.style.display = 'block';
+      genInfo.innerHTML = '&#9989; Component generation complete!';
+      parent.postMessage({ pluginMessage: { type: 'check-gen-prereqs' } }, '*');
+    }
+    if (msg.type === 'gen-error') {
+      generateBtn.disabled = false;
+      generateBtn.innerHTML = '&#9881; Generate Components';
+      generateBtn.style.opacity = genReady ? '1' : '0.5';
+      genStatus.textContent = 'Error: ' + msg.error;
+      genStatus.style.color = '#DC2626';
+      setTimeout(function() { genStatus.style.color = '#666'; }, 5000);
+    }
+    if (msg.type === 'gen-prereqs') {
+      updateGenPrereqs(msg);
+    }
 
   };
 
@@ -1304,6 +1386,59 @@
     if (pollTimer) clearInterval(pollTimer);
     startPolling();
     log('Switched to project: ' + CURRENT_PROJECT);
+  });
+
+  /* ── Component Builder ─────────────────────────────── */
+  var generateBtn = document.getElementById('generateBtn');
+  var genStatus = document.getElementById('genStatus');
+  var genInfo = document.getElementById('genInfo');
+  var prereqCS = document.getElementById('prereqCS');
+  var prereqT2 = document.getElementById('prereqT2');
+  var prereqT3 = document.getElementById('prereqT3');
+  var genReady = false;
+
+  /* Check prerequisites on load */
+  parent.postMessage({ pluginMessage: { type: 'check-gen-prereqs' } }, '*');
+
+  function updateGenPrereqs(data) {
+    var csOk = data.compSizeCount > 0;
+    var t2Ok = data.t2Count > 0;
+    var t3Ok = data.t3Count > 0;
+    prereqCS.innerHTML = (csOk ? '&#9745;' : '&#9744;') + ' comp-size' + (csOk ? ' <span style="color:#16A34A">(' + data.compSizeCount + ')</span>' : '');
+    prereqT2.innerHTML = (t2Ok ? '&#9745;' : '&#9744;') + ' T2 Surface' + (t2Ok ? ' <span style="color:#16A34A">(' + data.t2Count + ')</span>' : '');
+    prereqT3.innerHTML = (t3Ok ? '&#9745;' : '&#9744;') + ' T3 Status' + (t3Ok ? ' <span style="color:#16A34A">(' + data.t3Count + ')</span>' : '');
+    genReady = csOk && t2Ok;
+    generateBtn.disabled = !genReady;
+    generateBtn.style.opacity = genReady ? '1' : '0.5';
+
+    /* Show existing generated components */
+    if (data.versions && Object.keys(data.versions).length > 0) {
+      var parts = [];
+      for (var k in data.versions) {
+        if (data.versions.hasOwnProperty(k)) {
+          var v = data.versions[k];
+          parts.push(k + ' v' + v.version + ' (' + v.totalComponents + ' variants)');
+        }
+      }
+      genInfo.style.display = 'block';
+      genInfo.innerHTML = '&#9989; Generated: ' + parts.join(', ');
+    }
+  }
+
+  generateBtn.addEventListener('click', function() {
+    if (!genReady) return;
+    var selected = [];
+    var checks = document.querySelectorAll('.comp-check:checked');
+    for (var i = 0; i < checks.length; i++) selected.push(checks[i].value);
+    if (selected.length === 0) {
+      genStatus.textContent = 'Select at least one component';
+      return;
+    }
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Generating\u2026';
+    genStatus.textContent = 'Starting component generation\u2026';
+    genInfo.style.display = 'none';
+    parent.postMessage({ pluginMessage: { type: 'generate-components', components: selected } }, '*');
   });
 
 </script>
