@@ -1547,17 +1547,17 @@ async function generateComponentFromBlueprint(blueprint) {
   /* Header bar — plain frame with absolute text */
   var mHeaderBar = figma.createFrame();
   mHeaderBar.name = 'tier1-header';
-  mHeaderBar.resize(CARD_W, 88);
-  mHeaderBar.cornerRadius = 12;
-  mHeaderBar.fills = [{ type: 'SOLID', color: COLOR_CARD_BG }];
+  mHeaderBar.resize(CARD_W, 96);
+  mHeaderBar.cornerRadius = 0;
+  mHeaderBar.fills = [];
   mHeaderBar.clipsContent = false;
 
   var mhBadge = createBadge('TIER 1', COLOR_PRIMARY_CONTAINER, COLOR_PRIMARY_CT);
-  mHeaderBar.appendChild(mhBadge); mhBadge.x = 28; mhBadge.y = 16;
-  var mhTitle = createLabel('Master Components', 20, true, COLOR_HEADING);
-  mHeaderBar.appendChild(mhTitle); mhTitle.x = 28; mhTitle.y = 42;
+  mHeaderBar.appendChild(mhBadge); mhBadge.x = 0; mhBadge.y = 8;
+  var mhTitle = createLabel('Master Components', 26, true, COLOR_HEADING);
+  mHeaderBar.appendChild(mhTitle); mhTitle.x = 0; mhTitle.y = 38;
   var mhDesc = createLabel('Structure + spacing \u00b7 Bound to comp-size variables \u00b7 No color (inherited from Tier 2)', 12, false, COLOR_BODY);
-  mHeaderBar.appendChild(mhDesc); mhDesc.x = 28; mhDesc.y = 66;
+  mHeaderBar.appendChild(mhDesc); mhDesc.x = 0; mhDesc.y = 74;
 
   masterSec.section.appendChild(mHeaderBar);
   mHeaderBar.x = masterSec.innerX;
@@ -1567,7 +1567,6 @@ async function generateComponentFromBlueprint(blueprint) {
   if (t2Col && brightModeId) {
     try {
       mHeaderBar.setExplicitVariableModeForCollection(t2Col, brightModeId);
-      tryBindFill(mHeaderBar, t2Vars['default/surfaces/subtle']);
       tryBindFill(mhTitle, t2Vars['default/content/strong']);
       tryBindFill(mhDesc, t2Vars['default/content/default']);
     } catch (mhBindErr) {
@@ -1846,17 +1845,17 @@ async function generateComponentFromBlueprint(blueprint) {
   /* Header bar — plain frame, absolute children */
   var vHeaderBar = figma.createFrame();
   vHeaderBar.name = 'tier2-header';
-  vHeaderBar.resize(CARD_W, 88);
-  vHeaderBar.cornerRadius = 12;
-  vHeaderBar.fills = [{ type: 'SOLID', color: COLOR_CARD_BG }];
+  vHeaderBar.resize(CARD_W, 96);
+  vHeaderBar.cornerRadius = 0;
+  vHeaderBar.fills = [];
   vHeaderBar.clipsContent = false;
 
   var vhBadge = createBadge('TIER 2', COLOR_SUCCESS_CONTAINER, COLOR_SUCCESS_CT);
-  vHeaderBar.appendChild(vhBadge); vhBadge.x = 28; vhBadge.y = 16;
-  var vhTitle = createLabel('Variant Component Sets', 20, true, COLOR_HEADING);
-  vHeaderBar.appendChild(vhTitle); vhTitle.x = 28; vhTitle.y = 42;
+  vHeaderBar.appendChild(vhBadge); vhBadge.x = 0; vhBadge.y = 8;
+  var vhTitle = createLabel('Variant Component Sets', 26, true, COLOR_HEADING);
+  vHeaderBar.appendChild(vhTitle); vhTitle.x = 0; vhTitle.y = 38;
   var vhDesc = createLabel('Color + state overrides \u00b7 Each variant wraps a Tier 1 master instance with token-bound fills, strokes, and content colors', 12, false, COLOR_BODY);
-  vHeaderBar.appendChild(vhDesc); vhDesc.x = 28; vhDesc.y = 66;
+  vHeaderBar.appendChild(vhDesc); vhDesc.x = 0; vhDesc.y = 74;
 
   variantSec.section.appendChild(vHeaderBar);
   vHeaderBar.x = variantSec.innerX;
@@ -1866,7 +1865,6 @@ async function generateComponentFromBlueprint(blueprint) {
   if (t2Col && brightModeId) {
     try {
       vHeaderBar.setExplicitVariableModeForCollection(t2Col, brightModeId);
-      tryBindFill(vHeaderBar, t2Vars['default/surfaces/subtle']);
       tryBindFill(vhTitle, t2Vars['default/content/strong']);
       tryBindFill(vhDesc, t2Vars['default/content/default']);
     } catch (vhBindErr) {
