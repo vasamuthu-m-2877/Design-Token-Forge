@@ -373,5 +373,5 @@
   --btn-focus-outline-width: 2px;
   --btn-focus-outline-color: var(--primary-component-outline-default);
   --btn-focus-outline-offset: 2px;
-  --btn-min-tap-target: 44px;
+  --btn-min-tap-target: 0px; /* Sizes are intentional — use pseudo-element for a11y tap area if needed */
 }
