@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="../packages/components/src/toggle/toggle.css">
 <link rel="stylesheet" href="../packages/components/src/checkbox/checkbox.tokens.css">
 <link rel="stylesheet" href="../packages/components/src/checkbox/checkbox.css">
-<link rel="stylesheet" href="shared.css?v=20260514k">
+<link rel="stylesheet" href="shared.css?v=20260514l">
 <style id="dynamicTokens"></style>
 <style>
 /* ════════════════════════════════════════════════════════════
@@ -359,7 +359,7 @@ body.auth-locked .global-save-bar{filter:blur(6px);pointer-events:none;user-sele
     <span class="section-tag">All Palettes</span>
     <button class="section-reset" id="resetRolesBtn" type="button" title="Reset roles to defaults"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>Reset Roles</button>
   </div>
-  <p class="section-desc">Each role generates a WCAG-guaranteed 22-step palette from a single key color. Desaturated is auto-derived from the primary hue. Add custom roles for secondary, tertiary, or accent colors.</p>
+  <p class="section-desc">Each role generates a WCAG-guaranteed 22-step palette from a single key color. Desaturated is auto-derived from the brand hue. Add custom roles for accent or domain-specific colors.</p>
   <div class="section-body">
     <div class="role-list" id="rolesList"></div>
     <div class="add-role-wrap">
@@ -436,19 +436,19 @@ body.auth-locked .global-save-bar{filter:blur(6px);pointer-events:none;user-sele
       <!-- Light mode pane -->
       <div class="live-pane live-pane--light" id="liveLight">
         <div class="live-pane-title">Light Mode</div>
-        <div class="live-row-label">Primary Variants</div>
+        <div class="live-row-label">Variants</div>
         <div class="live-row">
-          <button class="btn" data-variant="brand" data-size="base" type="button"><span class="btn__label">Primary</span></button>
-          <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Secondary</span></button>
-          <button class="btn" data-variant="soft" data-size="base" type="button"><span class="btn__label">Tertiary</span></button>
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" type="button"><span class="btn__label">Filled</span></button>
+          <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Outlined</span></button>
+          <button class="btn" data-variant="soft" data-size="base" type="button"><span class="btn__label">Soft</span></button>
           <button class="btn" data-variant="ghost" data-size="base" type="button"><span class="btn__label">Ghost</span></button>
         </div>
         <div class="live-row-label">Status Variants</div>
         <div class="live-row">
-          <button class="btn" data-variant="danger" data-size="base" type="button"><span class="btn__label">Danger</span></button>
-          <button class="btn" data-variant="success" data-size="base" type="button"><span class="btn__label">Success</span></button>
-          <button class="btn" data-variant="warning" data-size="base" type="button"><span class="btn__label">Warning</span></button>
-          <button class="btn" data-variant="brand" data-size="base" disabled type="button"><span class="btn__label">Disabled</span></button>
+          <button class="btn" data-variant="filled" data-role="danger" data-size="base" type="button"><span class="btn__label">Danger</span></button>
+          <button class="btn" data-variant="filled" data-role="success" data-size="base" type="button"><span class="btn__label">Success</span></button>
+          <button class="btn" data-variant="filled" data-role="warning" data-size="base" type="button"><span class="btn__label">Warning</span></button>
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" disabled type="button"><span class="btn__label">Disabled</span></button>
         </div>
         <div class="live-row-label">Input</div>
         <div class="live-row">
@@ -487,7 +487,7 @@ body.auth-locked .global-save-bar{filter:blur(6px);pointer-events:none;user-sele
         <div class="live-row-label">On Accent Surface</div>
         <div class="live-card" style="background:var(--surface-accent-bg);border-color:var(--surface-accent-outline)">
           <div class="live-row">
-            <button class="btn" data-variant="brand" data-size="base" type="button"><span class="btn__label">Action</span></button>
+            <button class="btn" data-variant="filled" data-role="brand" data-size="base" type="button"><span class="btn__label">Action</span></button>
             <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Cancel</span></button>
             <div class="input-group" data-variant="outline" data-size="base" style="flex:1;max-width:220px">
               <div class="input-field"><input type="text" placeholder="Search..."></div>
@@ -499,19 +499,19 @@ body.auth-locked .global-save-bar{filter:blur(6px);pointer-events:none;user-sele
       <!-- Dark mode pane -->
       <div class="live-pane live-pane--dark" id="liveDark" data-theme="dark">
         <div class="live-pane-title">Dark Mode</div>
-        <div class="live-row-label" style="color:#888">Primary Variants</div>
+        <div class="live-row-label" style="color:#888">Variants</div>
         <div class="live-row">
-          <button class="btn" data-variant="brand" data-size="base" type="button"><span class="btn__label">Primary</span></button>
-          <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Secondary</span></button>
-          <button class="btn" data-variant="soft" data-size="base" type="button"><span class="btn__label">Tertiary</span></button>
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" type="button"><span class="btn__label">Filled</span></button>
+          <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Outlined</span></button>
+          <button class="btn" data-variant="soft" data-size="base" type="button"><span class="btn__label">Soft</span></button>
           <button class="btn" data-variant="ghost" data-size="base" type="button"><span class="btn__label">Ghost</span></button>
         </div>
         <div class="live-row-label" style="color:#888">Status Variants</div>
         <div class="live-row">
-          <button class="btn" data-variant="danger" data-size="base" type="button"><span class="btn__label">Danger</span></button>
-          <button class="btn" data-variant="success" data-size="base" type="button"><span class="btn__label">Success</span></button>
-          <button class="btn" data-variant="warning" data-size="base" type="button"><span class="btn__label">Warning</span></button>
-          <button class="btn" data-variant="brand" data-size="base" disabled type="button"><span class="btn__label">Disabled</span></button>
+          <button class="btn" data-variant="filled" data-role="danger" data-size="base" type="button"><span class="btn__label">Danger</span></button>
+          <button class="btn" data-variant="filled" data-role="success" data-size="base" type="button"><span class="btn__label">Success</span></button>
+          <button class="btn" data-variant="filled" data-role="warning" data-size="base" type="button"><span class="btn__label">Warning</span></button>
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" disabled type="button"><span class="btn__label">Disabled</span></button>
         </div>
         <div class="live-row-label" style="color:#888">Input</div>
         <div class="live-row">
@@ -1029,7 +1029,7 @@ function renderRolesList() {
   for (var i = 0; i < roles.length; i++) {
     var r = roles[i];
     if (r.type === 'auto' && i > 0 && roles[i-1].type !== 'auto') {
-      html += '<div class="role-group-label">Auto-derived from Primary</div>';
+      html += '<div class="role-group-label">Auto-derived from Brand</div>';
     }
     if (r.type === 'custom' && i > 0 && roles[i-1].type !== 'custom') {
       html += '<div class="role-group-label">Custom Roles</div>';
@@ -1061,7 +1061,7 @@ function buildRoleRow(r) {
     h += '<input type="text" class="pick-hex" data-role-hex="' + r.id + '" value="' + r.keyHex + '" maxlength="7" spellcheck="false">';
     h += '</div>';
   } else {
-    h += '<span class="role-auto-tag">from Primary \u2022 ' + (r.keyHex || '') + '</span>';
+    h += '<span class="role-auto-tag">from Brand \u2022 ' + (r.keyHex || '') + '</span>';
   }
 
   if (cert) {
@@ -1210,7 +1210,7 @@ function updateRoleStrip(roleId) {
     var row = rolesList.querySelector('[data-role="' + roleId + '"]');
     if (row) {
       var tag = row.querySelector('.role-auto-tag');
-      if (tag) tag.textContent = 'from Primary \u2022 ' + (r.keyHex || '');
+      if (tag) tag.textContent = 'from Brand \u2022 ' + (r.keyHex || '');
     }
   }
 }

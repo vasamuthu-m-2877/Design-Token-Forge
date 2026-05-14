@@ -17,7 +17,7 @@ const SCAN_DIRS = ['demo', 'packages/components/src', 'packages/tokens/src', 'pr
 const EXTS = new Set(['.html', '.css', '.js', '.json']);
 const SKIP = /node_modules|dist|\.git|\.old$|\.prev$|\.backup$/;
 
-// [pattern, message, optional file-path filter]
+// [pattern, message, optional file-extension restriction]
 const RULES = [
   // Role tokens
   [/--primary-(?!on-component\b)[\w-]*/g, 'legacy --primary-* token (use --brand-*)'],
@@ -28,7 +28,7 @@ const RULES = [
   [/--(?:btn|split-btn|menu-btn|icon-btn)-(?:primary|secondary|tertiary)-[\w-]*/g,
     'legacy component variant token (use -filled-/-outlined-/-soft-)'],
 
-  // HTML data attributes
+  // HTML data attributes (legacy variant values)
   [/data-variant="(primary|secondary|tertiary)"/g,
     'legacy data-variant value (use filled|outlined|soft)'],
   [/data-ctrl-role="primary"/g, 'legacy data-ctrl-role="primary" (use brand)'],
@@ -49,6 +49,25 @@ const RULES = [
   // Variant-list documentation strings
   // Canonical: filled | outlined | soft | ghost
   [/\bprimary\s*\|\s*secondary\s*\|\s*tertiary\b/gi, 'legacy variant-list (use filled | outlined | soft | ghost)'],
+
+  // data-ctrl-variant in HTML pill bars (button-family only): role names should not appear as variants
+  [/data-ctrl-variant="(primary|secondary|tertiary)"/g,
+    'data-ctrl-variant uses legacy primary/secondary/tertiary (use filled|outlined|soft)',
+    { ext: '.html' }],
+
+  // Visible variant-pill labels: pill button with canonical variant attr but legacy text
+  [/data-ctrl-variant="(filled|outlined|soft|ghost)"[^>]*>(Primary|Secondary|Tertiary)</g,
+    'variant pill labeled with legacy "Primary/Secondary/Tertiary" (use Filled/Outlined/Soft)',
+    { ext: '.html' }],
+
+  // pg-variant-label legacy text
+  [/<span class="pg-variant-label">(Primary|Secondary|Tertiary)</g,
+    'pg-variant-label uses legacy term (use Filled/Outlined/Soft)',
+    { ext: '.html' }],
+
+  // Hardcoded "Primary" UI strings in JS (Color Editor template literals)
+  [/['"](?:from |Auto-derived from )Primary[^'"]*['"]/g,
+    'JS UI string says "Primary" (use "Brand")'],
 ];
 
 const violations = [];
@@ -65,7 +84,10 @@ function walk(dir) {
 function scan(file) {
   const text = fs.readFileSync(file, 'utf8');
   const lines = text.split('\n');
-  for (const [pattern, msg] of RULES) {
+  const ext = path.extname(file);
+  for (const rule of RULES) {
+    const [pattern, msg, opts] = rule;
+    if (opts && opts.ext && opts.ext !== ext) continue;
     const re = new RegExp(pattern.source, pattern.flags);
     let m;
     while ((m = re.exec(text)) !== null) {
