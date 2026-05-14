@@ -214,11 +214,9 @@
     return steps.map(function (s) {
       var b = baseSteps.find(function(x){ return x.name === s.name; });
       var diff = b && b.hex.toUpperCase() !== s.hex.toUpperCase();
-      return '<div class="ev2-step">'
-        + '<div class="ev2-step-swatches">'
-          + (diff ? '<div class="ev2-step-sw" style="background:' + b.hex + '" title="Before: ' + b.hex + '"></div>' : '')
-          + '<div class="ev2-step-sw" style="background:' + s.hex + '" title="After: ' + s.hex + '"></div>'
-        + '</div>'
+      var tip = diff ? 'Was ' + b.hex.toUpperCase() + ' \u2192 now ' + s.hex.toUpperCase() : s.hex.toUpperCase();
+      return '<div class="ev2-step"' + (diff ? ' data-changed="true"' : '') + ' title="' + tip + '">'
+        + '<div class="ev2-step-sw" style="background:' + s.hex + '"></div>'
         + '<div class="ev2-step-meta">'
           + '<div class="ev2-step-name">' + s.name + '</div>'
           + '<div class="ev2-step-hex">' + s.hex.replace('#','') + '</div>'
