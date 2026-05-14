@@ -125,7 +125,7 @@
   --menu-btn-min-width-big: var(--spacing-96);
   --menu-btn-min-width-huge: var(--spacing-112);
   --menu-btn-min-width-mega: var(--spacing-120);
-  --menu-btn-min-width-ultra: var(--spacing-144);
+  --menu-btn-min-width-ultra: var(--spacing-120); /* spacing-144 doesn't exist; ladder tops at 120 */
 
   /* Width model */
   --menu-btn-max-width: none;

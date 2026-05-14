@@ -8,6 +8,7 @@
     "start": "node dist/socket.js",
     "dev": "node src/socket.js",
     "audit:naming": "node scripts/audit-naming.cjs",
+    "audit:primitives": "node scripts/audit-primitive-aliases.cjs",
     "audit": "pnpm audit:naming",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
