@@ -6,7 +6,7 @@
 
 figma.showUI(__html__, { width: 480, height: 560 });
 
-var CODE_VERSION = '2026-05-14-v34';
+var CODE_VERSION = '2026-05-14-v35';
 log('code.js loaded — version ' + CODE_VERSION);
 
 /* ── URL migration via clientStorage (reliable, not blocked like localStorage) ── */
@@ -2180,10 +2180,17 @@ async function generateComponentFromBlueprint(blueprint) {
   var icDesc = createLabel('Default INSTANCE_SWAP target.\nReplace with your icon library.', 12, false, COLOR_BODY);
   iconCard.appendChild(icDesc); icDesc.x = 24; icDesc.y = 44;
 
-  /* Icon preview box */
+  /* Icon preview box — auto-layout so it hugs whatever children we
+     append (placeholder alone, or placeholder + 4-direction chevron set). */
   var icPreview = figma.createFrame();
   icPreview.name = 'icon-preview';
-  icPreview.resize(64, 64);
+  icPreview.layoutMode = 'HORIZONTAL';
+  icPreview.primaryAxisSizingMode = 'AUTO';
+  icPreview.counterAxisSizingMode = 'AUTO';
+  icPreview.counterAxisAlignItems = 'CENTER';
+  icPreview.itemSpacing = 24;
+  icPreview.paddingLeft = 22; icPreview.paddingRight = 22;
+  icPreview.paddingTop = 22; icPreview.paddingBottom = 22;
   icPreview.cornerRadius = 8;
   icPreview.fills = [{ type: 'SOLID', color: COLOR_SURFACE_BG }];
   icPreview.strokes = [{ type: 'SOLID', color: COLOR_OUTLINE }];
@@ -2193,31 +2200,23 @@ async function generateComponentFromBlueprint(blueprint) {
   iconCard.appendChild(icPreview);
   icPreview.x = 24; icPreview.y = 82;
   icPreview.appendChild(iconPlaceholder);
-  iconPlaceholder.x = 22; iconPlaceholder.y = 22;
+  try { iconPlaceholder.layoutSizingHorizontal = 'FIXED'; iconPlaceholder.layoutSizingVertical = 'FIXED'; } catch (e) {}
 
   /* If a chevron icon set was created (split-button generation), place it
-     beside the placeholder so designers see all 4 directions and can
-     visually verify alignment + the variant property mechanism. */
+     beside the placeholder. Auto-layout will grow icPreview to fit; we
+     then grow the outer iconCard to fit the new preview width/height. */
   if (chevronIconSet) {
     icPreview.appendChild(chevronIconSet);
-    chevronIconSet.x = 22 + 20 + 24; /* placeholder right edge + gap */
-    chevronIconSet.y = 22;
-    /* Widen preview AND outer card to fit placeholder + 4-direction chevron
-       set. chevronIconSet.width is reliable once the node is parented. Add
-       right-padding for breathing room and grow the iconCard so the inner
-       preview never overflows the card boundary. */
-    var chevW = chevronIconSet.width || (4 * 20 + 3 * 16 + 32);
-    var chevH = chevronIconSet.height || 64;
-    var newPreviewW = 22 + 20 + 24 + chevW + 22;
-    var newPreviewH = Math.max(icPreview.height, chevH + 44);
-    try { icPreview.resize(newPreviewW, newPreviewH); } catch (e) {}
+    try { chevronIconSet.layoutSizingHorizontal = 'FIXED'; chevronIconSet.layoutSizingVertical = 'FIXED'; } catch (e) {}
+    /* After auto-layout settles, icPreview.width/height reflect the real
+       hugged size. Grow iconCard accordingly. */
+    var newPreviewW = icPreview.width;
+    var newPreviewH = icPreview.height;
     try { iconCard.resize(Math.max(iconCard.width, 24 + newPreviewW + 24), Math.max(iconCard.height, 82 + newPreviewH + 24)); } catch (e) {}
   } else if (chevronIcon && chevronIcon !== iconPlaceholder) {
     /* Fallback path when combineAsVariants failed — single chevron component */
     icPreview.appendChild(chevronIcon);
-    chevronIcon.x = 22 + 20 + 24;
-    chevronIcon.y = 22;
-    try { icPreview.resize(20 + 24 + 20 + 22 * 2, icPreview.height); } catch (e) {}
+    try { chevronIcon.layoutSizingHorizontal = 'FIXED'; chevronIcon.layoutSizingVertical = 'FIXED'; } catch (e) {}
   }
 
   iconSec.section.appendChild(iconCard);
