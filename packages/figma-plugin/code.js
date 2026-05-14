@@ -6,7 +6,7 @@
 
 figma.showUI(__html__, { width: 480, height: 560 });
 
-var CODE_VERSION = '2026-05-14-v35';
+var CODE_VERSION = '2026-05-14-v36';
 log('code.js loaded — version ' + CODE_VERSION);
 
 /* ── URL migration via clientStorage (reliable, not blocked like localStorage) ── */
@@ -1368,7 +1368,13 @@ async function generateComponentFromBlueprint(blueprint) {
     { name: 'button/icon pad', defaultVal: 8 },
     /* Rounded (pill) corner radius — bound on Rounded=True variants instead
        of button/default/radius. Mirrors --btn-radius-rounded in CSS. */
-    { name: 'button/radius-rounded', defaultVal: 9999 }
+    { name: 'button/radius-rounded', defaultVal: 9999 },
+    /* Split-button chevron-zone structural tokens. Owned by split-button
+       (action-zone tokens come from the embedded button instance). Without
+       these, the chevron zone padding falls back to 0 and the chevron icon
+       wrapper has no width — so the trigger zone collapses. */
+    { name: 'split-button/chevron/padding', defaultVal: 8 },
+    { name: 'split-button/chevron/size',    defaultVal: 16 }
   ];
 
   var allCols = await figma.variables.getLocalVariableCollectionsAsync();
