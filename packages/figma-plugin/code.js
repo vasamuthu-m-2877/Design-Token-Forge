@@ -6,7 +6,7 @@
 
 figma.showUI(__html__, { width: 480, height: 560 });
 
-var CODE_VERSION = '2026-05-14-v31';
+var CODE_VERSION = '2026-05-14-v32';
 log('code.js loaded — version ' + CODE_VERSION);
 
 /* ── URL migration via clientStorage (reliable, not blocked like localStorage) ── */
@@ -749,7 +749,8 @@ var BUTTON_BLUEPRINT = {
           'Default':  { fill: 'default/component/bg-default' },
           'Hover':    { fill: 'default/component/bg-hover' },
           'Pressed':  { fill: 'default/component/bg-pressed' },
-          'Selected': { fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 1,
+          'Selected': { t3Mode: 'brand',
+                        fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 2,
                         text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
           'Focus':    { fill: 'default/component/bg-default', stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
           'Disabled': { fill: 'default/component/bg-default', componentOpacity: 0.3 }
@@ -758,7 +759,8 @@ var BUTTON_BLUEPRINT = {
           'Default':  { stroke: 'default/component/outline-default', strokeWeight: 1 },
           'Hover':    { fill: 'default/component/bg-hover',   stroke: 'default/component/outline-default', strokeWeight: 1 },
           'Pressed':  { fill: 'default/component/bg-pressed', stroke: 'default/component/outline-default', strokeWeight: 1 },
-          'Selected': { fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 1,
+          'Selected': { t3Mode: 'brand',
+                        fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 2,
                         text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
           'Focus':    { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
           'Disabled': { stroke: 'default/component/outline-default', strokeWeight: 1, componentOpacity: 0.3 }
@@ -767,7 +769,8 @@ var BUTTON_BLUEPRINT = {
           'Default':  {},
           'Hover':    { fill: 'default/component/bg-hover' },
           'Pressed':  { fill: 'default/component/bg-pressed' },
-          'Selected': { fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 1,
+          'Selected': { t3Mode: 'brand',
+                        fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 2,
                         text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
           'Focus':    { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
           'Disabled': { componentOpacity: 0.3 }
@@ -776,7 +779,8 @@ var BUTTON_BLUEPRINT = {
           'Default':  { fill: 'default/component/bg-default', stroke: 'default/component/outline-default', strokeWeight: 1 },
           'Hover':    { fill: 'default/component/bg-hover',   stroke: 'default/component/outline-default', strokeWeight: 1 },
           'Pressed':  { fill: 'default/component/bg-pressed', stroke: 'default/component/outline-default', strokeWeight: 1 },
-          'Selected': { fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 1,
+          'Selected': { t3Mode: 'brand',
+                        fill: { t3: 'container/bg' }, stroke: { t3: 'component/outline-default' }, strokeWeight: 2,
                         text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
           'Focus':    { fill: 'default/component/bg-default', stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
           'Disabled': { fill: 'default/component/bg-default', stroke: 'default/component/outline-default', strokeWeight: 1, componentOpacity: 0.3 }
@@ -977,8 +981,9 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     { fill: 'default/component/bg-default' },
           hover:    { fill: 'default/component/bg-hover' },
           pressed:  { fill: 'default/component/bg-pressed' },
-          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
-                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          selected: { t3Mode: 'brand',
+                      fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { fill: 'default/component/bg-default',
                       wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           disabled: { fill: 'default/component/bg-default',
@@ -988,8 +993,9 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     {},
           hover:    { fill: 'default/component/bg-hover' },
           pressed:  { fill: 'default/component/bg-pressed' },
-          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
-                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          selected: { t3Mode: 'brand',
+                      fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           disabled: { wrapper: { stroke: 'default/component/outline-default', strokeWeight: 1, componentOpacity: 0.3 } },
           wrapperBase: { stroke: 'default/component/outline-default', strokeWeight: 1 }
@@ -998,8 +1004,9 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     {},
           hover:    { fill: 'default/component/bg-hover' },
           pressed:  { fill: 'default/component/bg-pressed' },
-          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
-                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          selected: { t3Mode: 'brand',
+                      fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           disabled: { wrapper: { componentOpacity: 0.3 } }
         },
@@ -1007,8 +1014,9 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     { fill: 'default/component/bg-default' },
           hover:    { fill: 'default/component/bg-hover' },
           pressed:  { fill: 'default/component/bg-pressed' },
-          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
-                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          selected: { t3Mode: 'brand',
+                      fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { fill: 'default/component/bg-default',
                       wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           disabled: { fill: 'default/component/bg-default',
@@ -1128,7 +1136,8 @@ function expandTypeSpecsToZoneOverrides(typeSpecs, stateNames) {
       'Action Pressed':  { action: pressed,  trigger: rest,     wrapper: wrap(null) },
       'Trigger Hover':   { action: rest,     trigger: hover,    wrapper: wrap(null) },
       'Trigger Pressed': { action: rest,     trigger: pressed,  wrapper: wrap(null) },
-      'Selected':        { action: selected, trigger: selected, wrapper: wrap(spec.selected) },
+      'Selected':        { action: selected, trigger: selected, wrapper: wrap(spec.selected),
+                           t3Mode: spec.selected && spec.selected.t3Mode },
       'Focus':           { action: rest,     trigger: rest,     wrapper: wrap(spec.focus) },
       'Disabled':        { action: rest,     trigger: rest,     wrapper: wrap(spec.disabled) }
     };
@@ -2775,10 +2784,15 @@ async function generateComponentFromBlueprint(blueprint) {
           varComp.itemSpacing = 0;
 
           /* Lock T3 mode for brand/semantic families so all { t3: … } bindings
-             resolve to the family's status palette. */
-          if (famT3ModeId && t3Col) {
-            try { varComp.setExplicitVariableModeForCollection(t3Col, famT3ModeId); }
-            catch (e) { log('T3 mode lock failed (' + familyName + '): ' + e.message); }
+             resolve to the family's status palette. A per-state override
+             (overrides.t3Mode) wins — used by Selected to force brand-mode
+             resolution so the selected highlight is visibly distinct from
+             the default neutral surface. */
+          var stateT3ModeId = (overrides.t3Mode && t3Modes[overrides.t3Mode]) ? t3Modes[overrides.t3Mode] : null;
+          var effectiveT3ModeId = stateT3ModeId || famT3ModeId;
+          if (effectiveT3ModeId && t3Col) {
+            try { varComp.setExplicitVariableModeForCollection(t3Col, effectiveT3ModeId); }
+            catch (e) { log('T3 mode lock failed (' + familyName + '/' + stateName + '): ' + e.message); }
           }
 
           /* Disabled opacity lives on the COMPONENT (not the instance) */

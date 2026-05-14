@@ -383,7 +383,13 @@
 .split-btn[data-variant="ghost"]:hover {
   --_sb-border-color: var(--split-btn-ghost-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
-  --_sb-divider-color: var(--split-btn-divider-color-ghost);
+  --_sb-divider-color: var(--split-btn-divider-color-ghost-hover);
+}
+/* Also reveal divider when either zone is hovered/focused individually */
+.split-btn[data-variant="ghost"]:has(.split-btn__action:hover),
+.split-btn[data-variant="ghost"]:has(.split-btn__trigger:hover),
+.split-btn[data-variant="ghost"]:has(:focus-visible) {
+  --_sb-divider-color: var(--split-btn-divider-color-ghost-hover);
 }
 
 /* ── SUCCESS (filled, green) ───────────────────────────────── */

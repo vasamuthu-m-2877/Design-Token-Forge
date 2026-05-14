@@ -304,7 +304,8 @@
   --split-btn-divider-color-danger:    color-mix(in srgb, var(--split-btn-danger-fg)  30%, transparent);
   --split-btn-divider-color-neutral:   var(--split-btn-neutral-border-color);
   --split-btn-divider-color-soft:  var(--split-btn-outlined-border-color);
-  --split-btn-divider-color-ghost:     var(--split-btn-neutral-border-color);
+  --split-btn-divider-color-ghost:     transparent;
+  --split-btn-divider-color-ghost-hover: var(--split-btn-neutral-border-color);
   --split-btn-divider-color-success:   color-mix(in srgb, var(--split-btn-success-fg) 30%, transparent);
   --split-btn-divider-color-warning:   color-mix(in srgb, var(--split-btn-warning-fg) 30%, transparent);
   --split-btn-divider-color-outline:   var(--split-btn-outline-border-color);
