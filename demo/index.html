@@ -1087,7 +1087,7 @@ function buildStripHtml(roleId) {
   if (!pal) return '';
   return pal.steps.map(function(s, i) {
     var tc = s.contrast > 4.5 ? '#FFFFFF' : '#000000';
-    var attr = i === 12 ? ' data-key' : '';
+    var attr = s.name === '500' ? ' data-key' : '';
     return '<div class="role-swatch"' + attr + ' data-hex="' + s.hex + '" onclick="copyHex(\'' + s.hex + '\')" style="background:' + s.hex + '">' +
       '<span class="role-tip">' + s.name + ' ' + s.hex + '</span>' +
       '<span class="role-swatch-lbl" style="color:' + tc + '">' + s.name + '</span></div>';
