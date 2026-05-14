@@ -522,17 +522,6 @@
 
 /* ── data-role="brand" ──────────────────────────────────────── */
 .menu-btn[data-role="brand"] {
-  --brand-component-bg-default: var(--brand-component-bg-default);
-  --brand-component-bg-hover: var(--brand-component-bg-hover);
-  --brand-component-bg-pressed: var(--brand-component-bg-pressed);
-  --brand-on-component: var(--brand-on-component);
-  --brand-content-default: var(--brand-content-default);
-  --brand-container-bg: var(--brand-container-bg);
-  --brand-container-hover: var(--brand-container-hover);
-  --brand-container-pressed: var(--brand-container-pressed);
-  --brand-component-outline-default: var(--brand-component-outline-default);
-  --brand-component-outline-hover: var(--brand-component-outline-hover);
-  --brand-component-outline-pressed: var(--brand-component-outline-pressed);
   /* Ghost overrides */
   --menu-btn-ghost-bg-hover: var(--brand-container-bg);
   --menu-btn-ghost-bg-active: var(--brand-container-pressed);
