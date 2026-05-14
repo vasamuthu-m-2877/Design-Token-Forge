@@ -119,10 +119,16 @@
       var d = e.data || {};
       if (d.type !== 'ev2-focus') return;
       var lever = d.lever || null; // 'fill' | 'content' | 'container' | null
+      var match = null;
       document.querySelectorAll('.pv-section').forEach(function (s) {
         var shows = s.getAttribute('data-pv-shows');
-        s.setAttribute('data-active', String(lever && shows === lever));
+        var on = !!(lever && shows === lever);
+        s.setAttribute('data-active', String(on));
+        if (on) match = s;
       });
+      if (match && d.scroll) {
+        match.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   </script>
 

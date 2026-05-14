@@ -685,6 +685,8 @@
         refreshChangeBar();
         scheduleAutosave();
         renderT1();
+        // Highlight + scroll matching preview section into view
+        focusPreview(lever, true);
       });
     });
   }
@@ -703,9 +705,9 @@
     }
     return '<span class="ev2-pv-container" style="background:' + hex + ';border-color:' + hex + '"></span>';
   }
-  function focusPreview(leverId) {
+  function focusPreview(leverId, scroll) {
     try {
-      $frame.contentWindow.postMessage({ type: 'ev2-focus', lever: leverId }, '*');
+      $frame.contentWindow.postMessage({ type: 'ev2-focus', lever: leverId, scroll: !!scroll }, '*');
     } catch (e) {}
   }
 
@@ -816,7 +818,7 @@
         else b.removeAttribute('aria-current');
       });
     }
-    $frame.src = './preview.html';
+    $frame.src = './preview.html?v=' + Date.now();
     renderActiveTier();
     refreshChangeBar();
     initProjectWidget();
