@@ -6,7 +6,7 @@
 
 figma.showUI(__html__, { width: 480, height: 560 });
 
-var CODE_VERSION = '2026-05-14-v42';
+var CODE_VERSION = '2026-05-14-v43';
 log('code.js loaded — version ' + CODE_VERSION);
 
 /* ── URL migration via clientStorage (reliable, not blocked like localStorage) ── */

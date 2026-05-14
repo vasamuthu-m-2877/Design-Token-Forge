@@ -1237,6 +1237,10 @@
     figmaHash = '';
     lastSeenHash = ''; hashStableCount = 0; deploySettling = false;
     if (pollTimer) clearInterval(pollTimer);
+    /* Re-scan so saved dtf-hash is restored into figmaHash before the
+       first poll — otherwise poll sees figmaHash='' and falsely shows
+       'Token update available' even when Figma is in sync. */
+    parent.postMessage({ pluginMessage: { type: 'scan' } }, '*');
     fetchProjects();
     startPolling();
   }
@@ -1290,12 +1294,13 @@
       GH_USERNAME = user.login;
       storageSet('dtf-gh-username', GH_USERNAME);
       ghPatInput.value = '';
-      /* Always ensure server URL points to the shared Pages site */
+      /* Always ensure server URL points to the shared Pages site.
+         setServerUrl already re-scans + restarts polling \u2014 don't
+         start a SECOND poll timer or you'll race two pollers. */
       setServerUrl(DEFAULT_SERVER);
       projectsFetched = false;
       fetchProjects();
       showIdentityState();
-      startPolling();
     }).catch(function(e) {
       ghIdentityError.textContent = '\u2717 ' + e.message;
       ghIdentityError.style.display = 'block';
@@ -1390,6 +1395,8 @@
     serverStatus = null;
     lastSeenHash = ''; hashStableCount = 0; deploySettling = false;
     if (pollTimer) clearInterval(pollTimer);
+    /* Re-scan so saved hash is restored before the first poll completes. */
+    parent.postMessage({ pluginMessage: { type: 'scan' } }, '*');
     startPolling();
     log('Switched to project: ' + CURRENT_PROJECT);
   });
