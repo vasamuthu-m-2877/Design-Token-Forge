@@ -344,7 +344,7 @@
   --_sb-fg-hover: var(--split-btn-neutral-fg-hover);
   --_sb-border-color: var(--split-btn-neutral-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: transparent;
+  --_sb-divider-color: var(--split-btn-divider-color-neutral);
 }
 .split-btn[data-variant="neutral"]:hover {
   --_sb-border-color: var(--split-btn-neutral-border-color-hover);
@@ -361,7 +361,7 @@
   --_sb-fg-hover: var(--split-btn-tertiary-fg-hover);
   --_sb-border-color: var(--split-btn-tertiary-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: transparent;
+  --_sb-divider-color: var(--split-btn-divider-color-tertiary);
 }
 .split-btn[data-variant="tertiary"]:hover {
   --_sb-border-color: var(--split-btn-tertiary-border-color-hover);
@@ -378,7 +378,7 @@
   --_sb-fg-hover: var(--split-btn-ghost-fg-hover);
   --_sb-border-color: var(--split-btn-ghost-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: transparent;
+  --_sb-divider-color: var(--split-btn-divider-color-ghost);
 }
 .split-btn[data-variant="ghost"]:hover {
   --_sb-border-color: var(--split-btn-ghost-border-color-hover);
@@ -502,7 +502,7 @@
   --_sb-fg-hover: var(--split-btn-tertiary-fg-hover);
   --_sb-border-color: var(--split-btn-tertiary-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: transparent;
+  --_sb-divider-color: var(--split-btn-divider-color-tertiary);
 }
 .split-btn[data-variant="soft"]:hover {
   --_sb-border-color: var(--split-btn-tertiary-border-color-hover);
