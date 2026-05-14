@@ -264,8 +264,12 @@
                 + '<button class="ev2-reset" id="ev2-reset" type="button"' + (changedThisRole ? '' : ' disabled') + '>Reset</button>'
               + '</div>'
               + '<div class="ev2-anchor" role="radiogroup" aria-label="Step 500 anchor">'
-                + '<button data-anchor="exact" aria-checked="' + (State.anchor === 'exact') + '" role="radio">Exact match</button>'
-                + '<button data-anchor="normalized" aria-checked="' + (State.anchor === 'normalized') + '" role="radio">Normalized</button>'
+                + '<button data-anchor="exact" aria-checked="' + (State.anchor === 'exact') + '" role="radio" '
+                  + 'data-tip="Step 500 = your exact hex. Neighbor steps remap around it. Best when you have a brand color you must match precisely.">'
+                  + 'Exact match</button>'
+                + '<button data-anchor="normalized" aria-checked="' + (State.anchor === 'normalized') + '" role="radio" '
+                  + 'data-tip="Step 500 snaps to the standard L*=49 lightness curve. Best for new brands &mdash; gives the most balanced ladder across all 20 steps.">'
+                  + 'Normalized</button>'
               + '</div>'
             + '</div>'
           + '</div>'
@@ -471,6 +475,7 @@
     $frame.src = './preview.html';
     renderActiveTier();
     refreshChangeBar();
+    initProjectWidget();
     if (hadDraft) {
       refreshDraftStatus('saved');
       if (window.ev2Toast) window.ev2Toast('Restored from local draft', 'ok');
@@ -478,5 +483,147 @@
       refreshDraftStatus('idle');
     }
   }
+  // Boot runs at the very bottom, after all helpers are defined.
+
+  /* ══════════════════════════════════════════════════════
+     Project widget + switch guard
+     ══════════════════════════════════════════════════════ */
+  var $projBtn   = document.getElementById('projBtn');
+  var $projName  = document.getElementById('projName');
+  var $projPanel = document.getElementById('projPanel');
+
+  function getActiveProjectId() {
+    return localStorage.getItem('dtf-active-project') || '';
+  }
+  function getKnownProjects() {
+    try { return JSON.parse(localStorage.getItem('dtf-known-projects') || '[]') || []; }
+    catch (e) { return []; }
+  }
+  function projectName(id) {
+    var list = getKnownProjects();
+    var hit = list.find(function (p) { return p && p.id === id; });
+    return (hit && (hit.name || hit.id)) || id || 'No project';
+  }
+
+  function initProjectWidget() {
+    syncProjLabel();
+    renderProjPanel();
+
+    $projBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = !$projPanel.hasAttribute('hidden') ? false : true;
+      if (open) { $projPanel.removeAttribute('hidden'); $projBtn.setAttribute('aria-expanded', 'true'); renderProjPanel(); }
+      else { $projPanel.setAttribute('hidden', ''); $projBtn.setAttribute('aria-expanded', 'false'); }
+    });
+    document.addEventListener('click', function (e) {
+      if (!$projPanel.contains(e.target) && !$projBtn.contains(e.target)) {
+        $projPanel.setAttribute('hidden', '');
+        $projBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        $projPanel.setAttribute('hidden', '');
+        $projBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  function syncProjLabel() {
+    $projName.textContent = projectName(getActiveProjectId());
+  }
+
+  function renderProjPanel() {
+    var list = getKnownProjects();
+    var active = getActiveProjectId();
+    if (!list.length) {
+      $projPanel.innerHTML = '<div class="ev2-proj-empty">No projects yet.<br><a href="../onboard.html" style="color:var(--brand-content-default,#286CE5)">Create one</a></div>';
+      return;
+    }
+    $projPanel.innerHTML = list.map(function (p) {
+      var current = p.id === active;
+      return '<button class="ev2-proj-row" role="option" aria-current="' + current + '" data-proj-id="' + p.id + '">'
+        + '<span class="ev2-proj-row-name">' + (p.name || p.id) + '</span>'
+        + '<span class="ev2-proj-row-id">' + p.id + '</span>'
+        + (current
+            ? '<svg class="ev2-proj-row-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>'
+            : '')
+        + '</button>';
+    }).join('');
+
+    $projPanel.querySelectorAll('[data-proj-id]').forEach(function (row) {
+      row.addEventListener('click', function () {
+        var id = row.getAttribute('data-proj-id');
+        if (id === getActiveProjectId()) {
+          $projPanel.setAttribute('hidden', '');
+          $projBtn.setAttribute('aria-expanded', 'false');
+          return;
+        }
+        attemptProjectSwitch(id);
+      });
+    });
+  }
+
+  function attemptProjectSwitch(newId) {
+    var pending = totalChanges();
+    if (pending === 0) { performProjectSwitch(newId); return; }
+    openModal({
+      title: 'Switch project with unsaved changes?',
+      body: 'You have ' + pending + ' pending change' + (pending === 1 ? '' : 's')
+        + ' on ' + projectName(getActiveProjectId()) + '. Switching to '
+        + projectName(newId) + ' will discard your local draft for the current project.',
+      confirmLabel: 'Discard & switch',
+      cancelLabel: 'Stay here',
+      kind: 'danger',
+      onConfirm: function () {
+        clearDraftFromStorage();
+        performProjectSwitch(newId);
+      }
+    });
+  }
+
+  function performProjectSwitch(newId) {
+    localStorage.setItem('dtf-active-project', newId);
+    // Reload so the new project's tokens / config can be picked up cleanly.
+    window.location.reload();
+  }
+
+  /* ══════════════════════════════════════════════════════
+     Modal
+     ══════════════════════════════════════════════════════ */
+  var $modal = document.getElementById('ev2Modal');
+  var $modalTitle = document.getElementById('ev2ModalTitle');
+  var $modalBody = document.getElementById('ev2ModalBody');
+  var $modalConfirm = $modal.querySelector('[data-modal-action="confirm"]');
+  var $modalCancel  = $modal.querySelector('[data-modal-action="cancel"]');
+  var modalOnConfirm = null;
+
+  function openModal(opts) {
+    $modalTitle.textContent = opts.title || 'Confirm';
+    $modalBody.textContent = opts.body || '';
+    $modalConfirm.textContent = opts.confirmLabel || 'Confirm';
+    $modalCancel.textContent = opts.cancelLabel || 'Cancel';
+    $modalConfirm.classList.toggle('ev2-modal-btn-danger', opts.kind === 'danger');
+    $modalConfirm.classList.toggle('ev2-modal-btn-primary', opts.kind !== 'danger');
+    modalOnConfirm = opts.onConfirm || null;
+    $modal.removeAttribute('hidden');
+    setTimeout(function () { $modalConfirm.focus(); }, 10);
+  }
+  function closeModal() {
+    $modal.setAttribute('hidden', '');
+    modalOnConfirm = null;
+  }
+  $modalConfirm.addEventListener('click', function () {
+    var fn = modalOnConfirm;
+    closeModal();
+    if (fn) fn();
+  });
+  $modalCancel.addEventListener('click', closeModal);
+  $modal.querySelector('.ev2-modal-backdrop').addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !$modal.hasAttribute('hidden')) closeModal();
+  });
+
+  // Boot now — all helpers + DOM refs are in scope.
   boot();
 })();

@@ -32,7 +32,14 @@
         <span class="ev2-title-main">Token Editor</span>
         <span class="ev2-title-sub">v2 · preview</span>
       </div>
-      <div class="ev2-project" id="projectSlot" aria-label="Active project"></div>
+      <div class="ev2-project" id="projectSlot" aria-label="Active project">
+        <button class="ev2-proj-btn" id="projBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+          <span class="ev2-proj-label">Project</span>
+          <span class="ev2-proj-name" id="projName">…</span>
+          <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l3 3 3-3"/></svg>
+        </button>
+        <div class="ev2-proj-panel" id="projPanel" role="listbox" hidden></div>
+      </div>
     </div>
 
     <div class="ev2-topbar-c">
@@ -142,7 +149,19 @@
   <!-- Toast slot -->
   <div class="ev2-toast" id="ev2Toast" role="status" aria-live="polite"></div>
 
-  <script src="../nav.js" defer></script>
+  <!-- Confirm modal (project switch / discard guards) -->
+  <div class="ev2-modal" id="ev2Modal" hidden role="dialog" aria-modal="true" aria-labelledby="ev2ModalTitle">
+    <div class="ev2-modal-backdrop" data-modal-dismiss></div>
+    <div class="ev2-modal-card" role="document">
+      <h3 class="ev2-modal-title" id="ev2ModalTitle">Title</h3>
+      <p class="ev2-modal-body" id="ev2ModalBody">Body</p>
+      <div class="ev2-modal-actions">
+        <button class="ev2-modal-btn" data-modal-action="cancel" type="button">Cancel</button>
+        <button class="ev2-modal-btn ev2-modal-btn-danger" data-modal-action="confirm" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <script src="./editor-v2.js" defer></script>
 </body>
 </html>
