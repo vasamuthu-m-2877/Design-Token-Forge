@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview</title>
+  <link rel="stylesheet" href="../../packages/tokens/src/primitives.css">
+  <link rel="stylesheet" href="../../packages/tokens/src/semantic.css">
+  <link rel="stylesheet" href="../../packages/tokens/src/surfaces.css">
+  <link rel="stylesheet" href="../../packages/tokens/src/extras.css">
+  <link rel="stylesheet" href="../../packages/components/src/button/button.tokens.css">
+  <link rel="stylesheet" href="../../packages/components/src/button/button.css">
+  <link rel="stylesheet" href="../../packages/components/src/badge/badge.tokens.css">
+  <link rel="stylesheet" href="../../packages/components/src/badge/badge.css">
+  <link rel="stylesheet" href="../../packages/components/src/input/input.tokens.css">
+  <link rel="stylesheet" href="../../packages/components/src/input/input.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0}
+    body{font-family:var(--font-family-sans,system-ui);background:var(--surface-base-bg);color:var(--surface-base-ct-default);padding:24px;line-height:1.5}
+    .pv-section{margin-bottom:24px}
+    .pv-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--surface-base-ct-faint);margin-bottom:10px}
+    .pv-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .pv-stack{display:flex;flex-direction:column;gap:8px}
+    /* Style override slot — the editor injects a <style id="ev2-overrides"> here */
+  </style>
+</head>
+<body>
+
+  <div class="pv-section">
+    <div class="pv-label">Buttons</div>
+    <div class="pv-row">
+      <button class="btn" data-variant="filled" data-role="brand">Save</button>
+      <button class="btn" data-variant="outlined" data-role="brand">Cancel</button>
+      <button class="btn" data-variant="ghost" data-role="brand">Skip</button>
+      <button class="btn" data-variant="filled" data-role="brand" disabled>Disabled</button>
+    </div>
+    <div class="pv-row" style="margin-top:8px">
+      <button class="btn" data-variant="filled" data-role="danger">Delete</button>
+      <button class="btn" data-variant="filled" data-role="success">Confirm</button>
+      <button class="btn" data-variant="filled" data-role="warning">Review</button>
+      <button class="btn" data-variant="filled" data-role="info">Notify</button>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-label">Badges</div>
+    <div class="pv-row">
+      <span class="badge" data-variant="filled" data-role="brand">Brand</span>
+      <span class="badge" data-variant="outlined" data-role="brand">Brand</span>
+      <span class="badge" data-variant="filled" data-role="danger">3</span>
+      <span class="badge" data-variant="filled" data-role="success">Live</span>
+      <span class="badge" data-variant="filled" data-role="warning">Beta</span>
+      <span class="badge" data-variant="filled" data-role="info">New</span>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-label">Input</div>
+    <div class="pv-stack" style="max-width:320px">
+      <input class="input" type="text" placeholder="Brand-tinted focus ring" id="pv-input">
+    </div>
+  </div>
+
+</body>
+</html>

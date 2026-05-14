@@ -16,6 +16,9 @@
 
   <!-- Editor v2 specific layout -->
   <link rel="stylesheet" href="./editor-v2.css">
+
+  <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
+  <script src="../palette-engine.js" defer></script>
 </head>
 <body>
 
@@ -104,12 +107,7 @@
       </header>
 
       <div class="ev2-list-body" id="tokenListBody">
-        <!-- Step 2 will render token groups here. Step 1 shows a placeholder. -->
-        <div class="ev2-empty">
-          <div class="ev2-empty-icon" aria-hidden="true">◌</div>
-          <div class="ev2-empty-title">Token list will mount here</div>
-          <div class="ev2-empty-sub">Step 2 wires up the loader, grouping, and friendly labels.</div>
-        </div>
+        <!-- Tier-specific intent UI mounts here -->
       </div>
     </section>
 
@@ -120,22 +118,7 @@
           <span class="ev2-preview-title">Live preview</span>
           <span class="ev2-preview-hint">updates as you edit</span>
         </div>
-        <label class="ev2-preview-pick">
-          <span>Component</span>
-          <select id="previewComponent">
-            <option value="button">Button</option>
-            <option value="input">Input</option>
-            <option value="checkbox">Checkbox</option>
-            <option value="toggle">Toggle</option>
-            <option value="badge">Badge</option>
-            <option value="toast">Toast</option>
-            <option value="alert">Alert</option>
-            <option value="split-button">Split Button</option>
-          </select>
-        </label>
-        <div class="ev2-preview-pills" id="previewPills">
-          <!-- pill bars (variant/size/role/state) will mount in Step 4 -->
-        </div>
+        <button class="ev2-preview-reload" id="previewReload" type="button" title="Reload preview" aria-label="Reload preview">↻</button>
       </header>
 
       <div class="ev2-preview-stage" id="previewStage">
