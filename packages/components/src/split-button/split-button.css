@@ -287,35 +287,35 @@
 
 /* ── PRIMARY (default) ──────────────────────────────────────── */
 .split-btn:not([data-variant]),
-.split-btn[data-variant="primary"] {
-  --_sb-bg: var(--split-btn-primary-bg);
-  --_sb-bg-hover: var(--split-btn-primary-bg-hover);
-  --_sb-bg-active: var(--split-btn-primary-bg-active);
-  --_sb-fg: var(--split-btn-primary-fg);
-  --_sb-fg-hover: var(--split-btn-primary-fg-hover);
-  --_sb-border-color: var(--split-btn-primary-border-color);
+.split-btn[data-variant="filled"] {
+  --_sb-bg: var(--split-btn-filled-bg);
+  --_sb-bg-hover: var(--split-btn-filled-bg-hover);
+  --_sb-bg-active: var(--split-btn-filled-bg-active);
+  --_sb-fg: var(--split-btn-filled-fg);
+  --_sb-fg-hover: var(--split-btn-filled-fg-hover);
+  --_sb-border-color: var(--split-btn-filled-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: var(--split-btn-divider-color-primary);
+  --_sb-divider-color: var(--split-btn-divider-color-filled);
 }
 .split-btn:not([data-variant]):hover,
-.split-btn[data-variant="primary"]:hover {
-  --_sb-border-color: var(--split-btn-primary-border-color-hover);
+.split-btn[data-variant="filled"]:hover {
+  --_sb-border-color: var(--split-btn-filled-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
 }
 
 /* ── SECONDARY ──────────────────────────────────────────────── */
-.split-btn[data-variant="secondary"] {
-  --_sb-bg: var(--split-btn-secondary-bg);
-  --_sb-bg-hover: var(--split-btn-secondary-bg-hover);
-  --_sb-bg-active: var(--split-btn-secondary-bg-active);
-  --_sb-fg: var(--split-btn-secondary-fg);
-  --_sb-fg-hover: var(--split-btn-secondary-fg-hover);
-  --_sb-border-color: var(--split-btn-secondary-border-color);
+.split-btn[data-variant="outlined"] {
+  --_sb-bg: var(--split-btn-outlined-bg);
+  --_sb-bg-hover: var(--split-btn-outlined-bg-hover);
+  --_sb-bg-active: var(--split-btn-outlined-bg-active);
+  --_sb-fg: var(--split-btn-outlined-fg);
+  --_sb-fg-hover: var(--split-btn-outlined-fg-hover);
+  --_sb-border-color: var(--split-btn-outlined-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: var(--split-btn-divider-color-secondary);
+  --_sb-divider-color: var(--split-btn-divider-color-outlined);
 }
-.split-btn[data-variant="secondary"]:hover {
-  --_sb-border-color: var(--split-btn-secondary-border-color-hover);
+.split-btn[data-variant="outlined"]:hover {
+  --_sb-border-color: var(--split-btn-outlined-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
 }
 
@@ -353,20 +353,20 @@
 }
 
 /* ── TERTIARY (soft, tinted fill) ──────────────────────────── */
-.split-btn[data-variant="tertiary"] {
-  --_sb-bg: var(--split-btn-tertiary-bg);
-  --_sb-bg-hover: var(--split-btn-tertiary-bg-hover);
-  --_sb-bg-active: var(--split-btn-tertiary-bg-active);
-  --_sb-fg: var(--split-btn-tertiary-fg);
-  --_sb-fg-hover: var(--split-btn-tertiary-fg-hover);
-  --_sb-border-color: var(--split-btn-tertiary-border-color);
+.split-btn[data-variant="soft"] {
+  --_sb-bg: var(--split-btn-soft-bg);
+  --_sb-bg-hover: var(--split-btn-soft-bg-hover);
+  --_sb-bg-active: var(--split-btn-soft-bg-active);
+  --_sb-fg: var(--split-btn-soft-fg);
+  --_sb-fg-hover: var(--split-btn-soft-fg-hover);
+  --_sb-border-color: var(--split-btn-soft-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: var(--split-btn-divider-color-tertiary);
+  --_sb-divider-color: var(--split-btn-divider-color-soft);
 }
-.split-btn[data-variant="tertiary"]:hover {
-  --_sb-border-color: var(--split-btn-tertiary-border-color-hover);
+.split-btn[data-variant="soft"]:hover {
+  --_sb-border-color: var(--split-btn-soft-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
-  --_sb-divider-color: var(--split-btn-divider-color-tertiary);
+  --_sb-divider-color: var(--split-btn-divider-color-soft);
 }
 
 /* ── GHOST (transparent, neutral text) ──────────────────────── */
@@ -463,51 +463,51 @@
 
 /* ── FILLED (alias for primary) ─────────────────────────────── */
 .split-btn[data-variant="filled"] {
-  --_sb-bg: var(--split-btn-primary-bg);
-  --_sb-bg-hover: var(--split-btn-primary-bg-hover);
-  --_sb-bg-active: var(--split-btn-primary-bg-active);
-  --_sb-fg: var(--split-btn-primary-fg);
-  --_sb-fg-hover: var(--split-btn-primary-fg-hover);
-  --_sb-border-color: var(--split-btn-primary-border-color);
+  --_sb-bg: var(--split-btn-filled-bg);
+  --_sb-bg-hover: var(--split-btn-filled-bg-hover);
+  --_sb-bg-active: var(--split-btn-filled-bg-active);
+  --_sb-fg: var(--split-btn-filled-fg);
+  --_sb-fg-hover: var(--split-btn-filled-fg-hover);
+  --_sb-border-color: var(--split-btn-filled-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: var(--split-btn-divider-color-primary);
+  --_sb-divider-color: var(--split-btn-divider-color-filled);
 }
 .split-btn[data-variant="filled"]:hover {
-  --_sb-border-color: var(--split-btn-primary-border-color-hover);
+  --_sb-border-color: var(--split-btn-filled-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
 }
 
 /* ── OUTLINED (alias for secondary) ─────────────────────────── */
 .split-btn[data-variant="outlined"] {
-  --_sb-bg: var(--split-btn-secondary-bg);
-  --_sb-bg-hover: var(--split-btn-secondary-bg-hover);
-  --_sb-bg-active: var(--split-btn-secondary-bg-active);
-  --_sb-fg: var(--split-btn-secondary-fg);
-  --_sb-fg-hover: var(--split-btn-secondary-fg-hover);
-  --_sb-border-color: var(--split-btn-secondary-border-color);
+  --_sb-bg: var(--split-btn-outlined-bg);
+  --_sb-bg-hover: var(--split-btn-outlined-bg-hover);
+  --_sb-bg-active: var(--split-btn-outlined-bg-active);
+  --_sb-fg: var(--split-btn-outlined-fg);
+  --_sb-fg-hover: var(--split-btn-outlined-fg-hover);
+  --_sb-border-color: var(--split-btn-outlined-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: var(--split-btn-divider-color-secondary);
+  --_sb-divider-color: var(--split-btn-divider-color-outlined);
 }
 .split-btn[data-variant="outlined"]:hover {
-  --_sb-border-color: var(--split-btn-secondary-border-color-hover);
+  --_sb-border-color: var(--split-btn-outlined-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
 }
 
 /* ── SOFT (alias for tertiary) ──────────────────────────────── */
 .split-btn[data-variant="soft"] {
-  --_sb-bg: var(--split-btn-tertiary-bg);
-  --_sb-bg-hover: var(--split-btn-tertiary-bg-hover);
-  --_sb-bg-active: var(--split-btn-tertiary-bg-active);
-  --_sb-fg: var(--split-btn-tertiary-fg);
-  --_sb-fg-hover: var(--split-btn-tertiary-fg-hover);
-  --_sb-border-color: var(--split-btn-tertiary-border-color);
+  --_sb-bg: var(--split-btn-soft-bg);
+  --_sb-bg-hover: var(--split-btn-soft-bg-hover);
+  --_sb-bg-active: var(--split-btn-soft-bg-active);
+  --_sb-fg: var(--split-btn-soft-fg);
+  --_sb-fg-hover: var(--split-btn-soft-fg-hover);
+  --_sb-border-color: var(--split-btn-soft-border-color);
   --_sb-shadow: var(--split-btn-shadow);
-  --_sb-divider-color: var(--split-btn-divider-color-tertiary);
+  --_sb-divider-color: var(--split-btn-divider-color-soft);
 }
 .split-btn[data-variant="soft"]:hover {
-  --_sb-border-color: var(--split-btn-tertiary-border-color-hover);
+  --_sb-border-color: var(--split-btn-soft-border-color-hover);
   --_sb-shadow: var(--split-btn-shadow-hover);
-  --_sb-divider-color: var(--split-btn-divider-color-tertiary);
+  --_sb-divider-color: var(--split-btn-divider-color-soft);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -683,20 +683,20 @@
 }
 
 .split-btn:not([data-variant])[data-disabled],
-.split-btn[data-variant="primary"][data-disabled],
+.split-btn[data-variant="filled"][data-disabled],
 .split-btn:not([data-variant]):has(.split-btn__action:disabled),
-.split-btn[data-variant="primary"]:has(.split-btn__action:disabled) {
-  --_sb-bg: var(--split-btn-primary-bg-disabled);
-  --_sb-fg: var(--split-btn-primary-fg-disabled);
-  --_sb-border-color: var(--split-btn-primary-border-color-disabled);
-  opacity: var(--split-btn-primary-opacity-disabled);
+.split-btn[data-variant="filled"]:has(.split-btn__action:disabled) {
+  --_sb-bg: var(--split-btn-filled-bg-disabled);
+  --_sb-fg: var(--split-btn-filled-fg-disabled);
+  --_sb-border-color: var(--split-btn-filled-border-color-disabled);
+  opacity: var(--split-btn-filled-opacity-disabled);
 }
-.split-btn[data-variant="secondary"][data-disabled],
-.split-btn[data-variant="secondary"]:has(.split-btn__action:disabled) {
-  --_sb-bg: var(--split-btn-secondary-bg-disabled);
-  --_sb-fg: var(--split-btn-secondary-fg-disabled);
-  --_sb-border-color: var(--split-btn-secondary-border-color-disabled);
-  opacity: var(--split-btn-secondary-opacity-disabled);
+.split-btn[data-variant="outlined"][data-disabled],
+.split-btn[data-variant="outlined"]:has(.split-btn__action:disabled) {
+  --_sb-bg: var(--split-btn-outlined-bg-disabled);
+  --_sb-fg: var(--split-btn-outlined-fg-disabled);
+  --_sb-border-color: var(--split-btn-outlined-border-color-disabled);
+  opacity: var(--split-btn-outlined-opacity-disabled);
 }
 .split-btn[data-variant="danger"][data-disabled],
 .split-btn[data-variant="danger"]:has(.split-btn__action:disabled) {
@@ -712,12 +712,12 @@
   --_sb-border-color: var(--split-btn-neutral-border-color-disabled);
   opacity: var(--split-btn-neutral-opacity-disabled);
 }
-.split-btn[data-variant="tertiary"][data-disabled],
-.split-btn[data-variant="tertiary"]:has(.split-btn__action:disabled) {
-  --_sb-bg: var(--split-btn-tertiary-bg-disabled);
-  --_sb-fg: var(--split-btn-tertiary-fg-disabled);
-  --_sb-border-color: var(--split-btn-tertiary-border-color-disabled);
-  opacity: var(--split-btn-tertiary-opacity-disabled);
+.split-btn[data-variant="soft"][data-disabled],
+.split-btn[data-variant="soft"]:has(.split-btn__action:disabled) {
+  --_sb-bg: var(--split-btn-soft-bg-disabled);
+  --_sb-fg: var(--split-btn-soft-fg-disabled);
+  --_sb-border-color: var(--split-btn-soft-border-color-disabled);
+  opacity: var(--split-btn-soft-opacity-disabled);
 }
 .split-btn[data-variant="ghost"][data-disabled],
 .split-btn[data-variant="ghost"]:has(.split-btn__action:disabled) {
@@ -757,24 +757,24 @@
 /* ── Disabled: structural aliases ───────────────────────────── */
 .split-btn[data-variant="filled"][data-disabled],
 .split-btn[data-variant="filled"]:has(.split-btn__action:disabled) {
-  --_sb-bg: var(--split-btn-primary-bg-disabled);
-  --_sb-fg: var(--split-btn-primary-fg-disabled);
-  --_sb-border-color: var(--split-btn-primary-border-color-disabled);
-  opacity: var(--split-btn-primary-opacity-disabled);
+  --_sb-bg: var(--split-btn-filled-bg-disabled);
+  --_sb-fg: var(--split-btn-filled-fg-disabled);
+  --_sb-border-color: var(--split-btn-filled-border-color-disabled);
+  opacity: var(--split-btn-filled-opacity-disabled);
 }
 .split-btn[data-variant="outlined"][data-disabled],
 .split-btn[data-variant="outlined"]:has(.split-btn__action:disabled) {
-  --_sb-bg: var(--split-btn-secondary-bg-disabled);
-  --_sb-fg: var(--split-btn-secondary-fg-disabled);
-  --_sb-border-color: var(--split-btn-secondary-border-color-disabled);
-  opacity: var(--split-btn-secondary-opacity-disabled);
+  --_sb-bg: var(--split-btn-outlined-bg-disabled);
+  --_sb-fg: var(--split-btn-outlined-fg-disabled);
+  --_sb-border-color: var(--split-btn-outlined-border-color-disabled);
+  opacity: var(--split-btn-outlined-opacity-disabled);
 }
 .split-btn[data-variant="soft"][data-disabled],
 .split-btn[data-variant="soft"]:has(.split-btn__action:disabled) {
-  --_sb-bg: var(--split-btn-tertiary-bg-disabled);
-  --_sb-fg: var(--split-btn-tertiary-fg-disabled);
-  --_sb-border-color: var(--split-btn-tertiary-border-color-disabled);
-  opacity: var(--split-btn-tertiary-opacity-disabled);
+  --_sb-bg: var(--split-btn-soft-bg-disabled);
+  --_sb-fg: var(--split-btn-soft-fg-disabled);
+  --_sb-border-color: var(--split-btn-soft-border-color-disabled);
+  opacity: var(--split-btn-soft-opacity-disabled);
 }
 
 

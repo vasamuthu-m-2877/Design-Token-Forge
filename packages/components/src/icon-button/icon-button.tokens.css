@@ -88,32 +88,32 @@
      ──────────────────────────────────────────────────────────── */
 
   /* ── PRIMARY ≡ FILLED (solid bg, reads --brand-* palette) ─────────────────────────────── */
-  --icon-btn-primary-bg: var(--brand-component-bg-default);
-  --icon-btn-primary-bg-hover: var(--brand-component-bg-hover);
-  --icon-btn-primary-bg-active: var(--brand-component-bg-pressed);
-  --icon-btn-primary-bg-disabled: var(--brand-component-bg-default);
-  --icon-btn-primary-fg: var(--brand-on-component);
-  --icon-btn-primary-fg-hover: var(--brand-on-component);
-  --icon-btn-primary-fg-disabled: var(--brand-on-component);
-  --icon-btn-primary-border-color: var(--brand-component-bg-default);
-  --icon-btn-primary-border-color-hover: var(--brand-component-bg-hover);
-  --icon-btn-primary-border-color-active: var(--brand-component-bg-pressed);
-  --icon-btn-primary-border-color-disabled: var(--brand-component-bg-default);
-  --icon-btn-primary-opacity-disabled: 0.5;
+  --icon-btn-filled-bg: var(--brand-component-bg-default);
+  --icon-btn-filled-bg-hover: var(--brand-component-bg-hover);
+  --icon-btn-filled-bg-active: var(--brand-component-bg-pressed);
+  --icon-btn-filled-bg-disabled: var(--brand-component-bg-default);
+  --icon-btn-filled-fg: var(--brand-on-component);
+  --icon-btn-filled-fg-hover: var(--brand-on-component);
+  --icon-btn-filled-fg-disabled: var(--brand-on-component);
+  --icon-btn-filled-border-color: var(--brand-component-bg-default);
+  --icon-btn-filled-border-color-hover: var(--brand-component-bg-hover);
+  --icon-btn-filled-border-color-active: var(--brand-component-bg-pressed);
+  --icon-btn-filled-border-color-disabled: var(--brand-component-bg-default);
+  --icon-btn-filled-opacity-disabled: 0.5;
 
   /* ── SECONDARY ≡ OUTLINED (border emphasis, --brand-* palette) ─────────── */
-  --icon-btn-secondary-bg: transparent;
-  --icon-btn-secondary-bg-hover: var(--brand-container-bg);
-  --icon-btn-secondary-bg-active: var(--brand-container-pressed);
-  --icon-btn-secondary-bg-disabled: transparent;
-  --icon-btn-secondary-fg: var(--brand-content-default);
-  --icon-btn-secondary-fg-hover: var(--brand-content-default);
-  --icon-btn-secondary-fg-disabled: var(--brand-content-default);
-  --icon-btn-secondary-border-color: var(--brand-component-outline-default);
-  --icon-btn-secondary-border-color-hover: var(--brand-component-outline-hover);
-  --icon-btn-secondary-border-color-active: var(--brand-component-outline-pressed);
-  --icon-btn-secondary-border-color-disabled: var(--brand-component-outline-default);
-  --icon-btn-secondary-opacity-disabled: 0.5;
+  --icon-btn-outlined-bg: transparent;
+  --icon-btn-outlined-bg-hover: var(--brand-container-bg);
+  --icon-btn-outlined-bg-active: var(--brand-container-pressed);
+  --icon-btn-outlined-bg-disabled: transparent;
+  --icon-btn-outlined-fg: var(--brand-content-default);
+  --icon-btn-outlined-fg-hover: var(--brand-content-default);
+  --icon-btn-outlined-fg-disabled: var(--brand-content-default);
+  --icon-btn-outlined-border-color: var(--brand-component-outline-default);
+  --icon-btn-outlined-border-color-hover: var(--brand-component-outline-hover);
+  --icon-btn-outlined-border-color-active: var(--brand-component-outline-pressed);
+  --icon-btn-outlined-border-color-disabled: var(--brand-component-outline-default);
+  --icon-btn-outlined-opacity-disabled: 0.5;
 
   /* ── GHOST (transparent bg, --surface-* by default) ──────────────────── */
   --icon-btn-ghost-bg: transparent;
@@ -172,18 +172,18 @@
   --icon-btn-outline-opacity-disabled: 0.5;
 
   /* ── TERTIARY ≡ SOFT (tinted container, --brand-* palette) ────────────────────────── */
-  --icon-btn-tertiary-bg: var(--brand-container-bg);
-  --icon-btn-tertiary-bg-hover: var(--brand-container-hover);
-  --icon-btn-tertiary-bg-active: var(--brand-container-pressed);
-  --icon-btn-tertiary-bg-disabled: var(--brand-container-bg);
-  --icon-btn-tertiary-fg: var(--brand-content-default);
-  --icon-btn-tertiary-fg-hover: var(--brand-content-default);
-  --icon-btn-tertiary-fg-disabled: var(--brand-content-default);
-  --icon-btn-tertiary-border-color: transparent;
-  --icon-btn-tertiary-border-color-hover: transparent;
-  --icon-btn-tertiary-border-color-active: transparent;
-  --icon-btn-tertiary-border-color-disabled: transparent;
-  --icon-btn-tertiary-opacity-disabled: 0.5;
+  --icon-btn-soft-bg: var(--brand-container-bg);
+  --icon-btn-soft-bg-hover: var(--brand-container-hover);
+  --icon-btn-soft-bg-active: var(--brand-container-pressed);
+  --icon-btn-soft-bg-disabled: var(--brand-container-bg);
+  --icon-btn-soft-fg: var(--brand-content-default);
+  --icon-btn-soft-fg-hover: var(--brand-content-default);
+  --icon-btn-soft-fg-disabled: var(--brand-content-default);
+  --icon-btn-soft-border-color: transparent;
+  --icon-btn-soft-border-color-hover: transparent;
+  --icon-btn-soft-border-color-active: transparent;
+  --icon-btn-soft-border-color-disabled: transparent;
+  --icon-btn-soft-opacity-disabled: 0.5;
 
   /* ── SUCCESS (legacy: filled + success role) ─────────────────────────────── */
   --icon-btn-success-bg: var(--success-component-bg-default);

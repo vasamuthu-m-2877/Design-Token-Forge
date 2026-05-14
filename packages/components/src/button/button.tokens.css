@@ -193,46 +193,46 @@
      ──────────────────────────────────────────────────────────── */
 
   /* ── PRIMARY ≡ FILLED (solid bg, reads --brand-* palette) ─ */
-  --btn-primary-bg: var(--brand-component-bg-default);
-  --btn-primary-bg-hover: var(--brand-component-bg-hover);
-  --btn-primary-bg-active: var(--brand-component-bg-pressed);
-  --btn-primary-bg-disabled: var(--brand-component-bg-default);
-  --btn-primary-fg: var(--brand-on-component);
-  --btn-primary-fg-hover: var(--brand-on-component);
-  --btn-primary-fg-disabled: var(--brand-on-component);
-  --btn-primary-border-color: var(--brand-component-bg-default);
-  --btn-primary-border-color-hover: var(--brand-component-bg-hover);
-  --btn-primary-border-color-active: var(--brand-component-bg-pressed);
-  --btn-primary-border-color-disabled: var(--brand-component-bg-default);
-  --btn-primary-opacity-disabled: 0.5;
+  --btn-filled-bg: var(--brand-component-bg-default);
+  --btn-filled-bg-hover: var(--brand-component-bg-hover);
+  --btn-filled-bg-active: var(--brand-component-bg-pressed);
+  --btn-filled-bg-disabled: var(--brand-component-bg-default);
+  --btn-filled-fg: var(--brand-on-component);
+  --btn-filled-fg-hover: var(--brand-on-component);
+  --btn-filled-fg-disabled: var(--brand-on-component);
+  --btn-filled-border-color: var(--brand-component-bg-default);
+  --btn-filled-border-color-hover: var(--brand-component-bg-hover);
+  --btn-filled-border-color-active: var(--brand-component-bg-pressed);
+  --btn-filled-border-color-disabled: var(--brand-component-bg-default);
+  --btn-filled-opacity-disabled: 0.5;
 
   /* ── SECONDARY ≡ OUTLINED (border emphasis, --brand-* palette) */
-  --btn-secondary-bg: transparent;
-  --btn-secondary-bg-hover: var(--brand-container-bg);
-  --btn-secondary-bg-active: var(--brand-container-pressed);
-  --btn-secondary-bg-disabled: transparent;
-  --btn-secondary-fg: var(--brand-content-default);
-  --btn-secondary-fg-hover: var(--brand-content-default);
-  --btn-secondary-fg-disabled: var(--brand-content-default);
-  --btn-secondary-border-color: var(--brand-component-outline-default);
-  --btn-secondary-border-color-hover: var(--brand-component-outline-hover);
-  --btn-secondary-border-color-active: var(--brand-component-outline-pressed);
-  --btn-secondary-border-color-disabled: var(--brand-component-outline-default);
-  --btn-secondary-opacity-disabled: 0.5;
+  --btn-outlined-bg: transparent;
+  --btn-outlined-bg-hover: var(--brand-container-bg);
+  --btn-outlined-bg-active: var(--brand-container-pressed);
+  --btn-outlined-bg-disabled: transparent;
+  --btn-outlined-fg: var(--brand-content-default);
+  --btn-outlined-fg-hover: var(--brand-content-default);
+  --btn-outlined-fg-disabled: var(--brand-content-default);
+  --btn-outlined-border-color: var(--brand-component-outline-default);
+  --btn-outlined-border-color-hover: var(--brand-component-outline-hover);
+  --btn-outlined-border-color-active: var(--brand-component-outline-pressed);
+  --btn-outlined-border-color-disabled: var(--brand-component-outline-default);
+  --btn-outlined-opacity-disabled: 0.5;
 
   /* ── TERTIARY ≡ SOFT (tinted container, --brand-* palette) */
-  --btn-tertiary-bg: var(--brand-container-bg);
-  --btn-tertiary-bg-hover: var(--brand-container-hover);
-  --btn-tertiary-bg-active: var(--brand-container-pressed);
-  --btn-tertiary-bg-disabled: var(--brand-container-bg);
-  --btn-tertiary-fg: var(--brand-content-default);
-  --btn-tertiary-fg-hover: var(--brand-content-default);
-  --btn-tertiary-fg-disabled: var(--brand-content-default);
-  --btn-tertiary-border-color: transparent;
-  --btn-tertiary-border-color-hover: transparent;
-  --btn-tertiary-border-color-active: transparent;
-  --btn-tertiary-border-color-disabled: transparent;
-  --btn-tertiary-opacity-disabled: 0.5;
+  --btn-soft-bg: var(--brand-container-bg);
+  --btn-soft-bg-hover: var(--brand-container-hover);
+  --btn-soft-bg-active: var(--brand-container-pressed);
+  --btn-soft-bg-disabled: var(--brand-container-bg);
+  --btn-soft-fg: var(--brand-content-default);
+  --btn-soft-fg-hover: var(--brand-content-default);
+  --btn-soft-fg-disabled: var(--brand-content-default);
+  --btn-soft-border-color: transparent;
+  --btn-soft-border-color-hover: transparent;
+  --btn-soft-border-color-active: transparent;
+  --btn-soft-border-color-disabled: transparent;
+  --btn-soft-opacity-disabled: 0.5;
 
   /* ── GHOST (transparent bg, --surface-* by default) ─────── */
   --btn-ghost-bg: transparent;
