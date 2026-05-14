@@ -850,6 +850,220 @@ var BUTTON_BLUEPRINT = {
   }
 };
 
+/* ══════════════════════════════════════════════════════════════
+   SPLIT BUTTON BLUEPRINT — Wrapper + Button-Instance Architecture
+   ──────────────────────────────────────────────────────────────
+   Per multi-zone-model.md (Q1–Q7), refined for Option B (button reuse):
+     Q1: nested zones inside a wrapper (action [= button instance] + chevron)
+     Q3: divider rendered as a 1px LEFT-edge stroke on the chevron zone
+         (no sibling node, no thickness var)
+     Q4: outer corners owned by wrapper; clipsContent=true clips the inner
+         button-instance corners flush
+     Q5: Rounded boolean variant axis only
+     Q6: ALL action-zone tokens INHERIT from button (the action zone IS a
+         button instance — single source of truth, automatic propagation).
+         STRUCTURAL tokens OWNED by split-button:
+           - split-button/chevron/padding  (chevron zone padding)
+           - split-button/chevron/size       (chevron icon container)
+     Q7: ~6 component-level reactions per type (Default↔Hover, Default↔Pressed)
+
+   Each split-button master = HORIZONTAL frame containing:
+     [button-instance (action)] · [chevron zone with leftStroke = divider]
+
+   The action zone is an INSTANCE of one of the 3 button masters:
+     'Text + Chevron'         → instance of button 'Text Button'
+     'Icon + Text + Chevron'  → instance of button 'Icon + Text'
+     'Icon + Chevron'         → instance of button 'Icon Button'
+
+   Variant overrides apply fill/stroke to BOTH the button instance AND the
+   chevron zone (so both halves stay visually unified). The chevron zone's
+   leftStroke is bound to the separator color and is independent of the
+   variant's main fill/stroke.
+   ══════════════════════════════════════════════════════════════ */
+
+var SPLIT_BUTTON_BLUEPRINT = {
+  name: 'Split Button',
+  description: 'A two-zone action+menu button. Action zone is a button-master instance (inherits all button tokens). Trigger zone (chevron) opens a menu. Divider = 1px stroke between zones.',
+
+  /* Discriminator: tells the generator to use wrapper-with-button-instance
+     master construction. Variant overrides apply to the wrapper itself —
+     fills naturally show through the transparent button-instance and
+     chevron-zone children, so both halves stay color-unified. */
+  kind: 'wrapper-with-button-instance',
+
+  /* Master shapes — each maps to an existing button master used as the
+     action zone. The chevron zone is implicit and always present. */
+  masters: {
+    'Text + Chevron': {
+      buttonMaster: 'Text Button'
+    },
+    'Icon + Text + Chevron': {
+      buttonMaster: 'Icon + Text'
+    },
+    'Icon + Chevron': {
+      buttonMaster: 'Icon Button'
+    }
+  },
+
+  /* comp-size variable paths for STRUCTURAL tokens (split-button-owned).
+     Action-zone bindings are NOT here — they come from the button instance
+     automatically. Only the chevron zone needs explicit bindings. */
+  sizeBindings: {
+    /* Wrapper root: height + 4 outer corners INHERIT from button. */
+    root: {
+      height:           'button/default/height',
+      topLeftRadius:    'button/default/radius',
+      topRightRadius:   'button/default/radius',
+      bottomLeftRadius: 'button/default/radius',
+      bottomRightRadius:'button/default/radius'
+    },
+    /* Chevron zone — STRUCTURAL, owned. Symmetric padding around chevron. */
+    chevronWrapperPadL:   'split-button/chevron/padding',
+    chevronWrapperPadR:   'split-button/chevron/padding',
+    chevron: {
+      width:  'split-button/chevron/size',
+      height: 'split-button/chevron/size'
+    }
+  },
+
+  /* Default content color applied to chevron icon (T2 Surface Context).
+     The button instance carries its own content color from button master. */
+  masterContentColor: 'default/content/default',
+
+  /* Divider color binding strategy.
+     Bound as the chevron zone's LEFT stroke (strokeLeftWeight=1).
+     Neutral family → T2 'default/component/separator'.
+     Brand   family → T3 'component/separator' (resolved in family.t3Mode). */
+  dividerColor: {
+    t2: 'default/component/separator',
+    t3: 'component/separator'
+  },
+
+  /* ── Families ──────────────────────────────────────────────
+     Mirror BUTTON_BLUEPRINT's families exactly so split-button has
+     visual + state parity with button.
+
+  /* ── Families ──────────────────────────────────────────────
+     Per-zone state variants (Option B).
+
+     The state axis has 8 values that combine action-zone and trigger-zone
+     state independently:
+
+       Default          → both zones rest
+       Action Hover     → action zone hover,  trigger rest
+       Action Pressed   → action zone pressed, trigger rest
+       Trigger Hover    → action rest, trigger zone hover
+       Trigger Pressed  → action rest, trigger zone pressed
+       Selected         → both zones selected (whole component is "on")
+       Focus            → both zones rest, wrapper gets focus ring stroke
+       Disabled         → both zones rest, wrapper gets opacity 0.3
+
+     Per type, we declare semantic state SPECS (rest / hover / pressed /
+     selected / focus / disabled). The generator expands each spec to
+     per-zone overrides at variant time. This keeps the data tight and
+     authoring per-type painless.
+
+     A spec entry shape:
+       { fill, stroke, strokeWeight, text, icon }   ← applied per zone
+       wrapper: { stroke, strokeWeight, componentOpacity, fill } ← applied to wrapper
+     ─────────────────────────────────────────────────────────── */
+  states: ['Default', 'Action Hover', 'Action Pressed', 'Trigger Hover', 'Trigger Pressed', 'Selected', 'Focus', 'Disabled'],
+
+  families: {
+    'Neutral': {
+      types: ['Filled', 'Outlined', 'Ghost', 'Fill & Outline'],
+      typeSpecs: {
+        'Filled': {
+          rest:     { fill: 'default/component/bg-default' },
+          hover:    { fill: 'default/component/bg-hover' },
+          pressed:  { fill: 'default/component/bg-pressed' },
+          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          focus:    { fill: 'default/component/bg-default',
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { fill: 'default/component/bg-default',
+                      wrapper: { componentOpacity: 0.3 } }
+        },
+        'Outlined': {
+          rest:     {},
+          hover:    { fill: 'default/component/bg-hover' },
+          pressed:  { fill: 'default/component/bg-pressed' },
+          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          focus:    { wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { wrapper: { stroke: 'default/component/outline-default', strokeWeight: 1, componentOpacity: 0.3 } },
+          wrapperBase: { stroke: 'default/component/outline-default', strokeWeight: 1 }
+        },
+        'Ghost': {
+          rest:     {},
+          hover:    { fill: 'default/component/bg-hover' },
+          pressed:  { fill: 'default/component/bg-pressed' },
+          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          focus:    { wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { wrapper: { componentOpacity: 0.3 } }
+        },
+        'Fill & Outline': {
+          rest:     { fill: 'default/component/bg-default' },
+          hover:    { fill: 'default/component/bg-hover' },
+          pressed:  { fill: 'default/component/bg-pressed' },
+          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 } },
+          focus:    { fill: 'default/component/bg-default',
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { fill: 'default/component/bg-default',
+                      wrapper: { stroke: 'default/component/outline-default', strokeWeight: 1, componentOpacity: 0.3 } },
+          wrapperBase: { stroke: 'default/component/outline-default', strokeWeight: 1 }
+        }
+      }
+    },
+
+    'Brand': {
+      types: ['Primary', 'Secondary', 'Tertiary', 'Ghost'],
+      t3Mode: 'brand',
+      typeSpecs: {
+        'Primary': {
+          rest:     { fill: { t3: 'component/bg-default' }, text: { t3: 'oncomponent-content/default' }, icon: { t3: 'oncomponent-content/default' } },
+          hover:    { fill: { t3: 'component/bg-hover' },   text: { t3: 'oncomponent-content/default' }, icon: { t3: 'oncomponent-content/default' } },
+          pressed:  { fill: { t3: 'component/bg-pressed' }, text: { t3: 'oncomponent-content/default' }, icon: { t3: 'oncomponent-content/default' } },
+          focus:    { fill: { t3: 'component/bg-default' }, text: { t3: 'oncomponent-content/default' }, icon: { t3: 'oncomponent-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { fill: { t3: 'component/bg-default' }, text: { t3: 'oncomponent-content/default' }, icon: { t3: 'oncomponent-content/default' },
+                      wrapper: { componentOpacity: 0.3 } }
+        },
+        'Secondary': {
+          rest:     { text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
+          hover:    { fill: { t3: 'container/bg' },    text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
+          pressed:  { fill: { t3: 'container/hover' }, text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
+          focus:    { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1, componentOpacity: 0.3 } },
+          wrapperBase: { stroke: { t3: 'component/outline-default' }, strokeWeight: 1 }
+        },
+        'Tertiary': {
+          rest:     { fill: { t3: 'container/bg' },     text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
+          hover:    { fill: { t3: 'container/hover' },  text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
+          pressed:  { fill: { t3: 'container/pressed' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
+          focus:    { fill: { t3: 'container/bg' },     text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'container/outline' }, strokeWeight: 2 } },
+          disabled: { fill: { t3: 'container/bg' },     text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { componentOpacity: 0.3 } }
+        },
+        'Ghost': {
+          rest:     { text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
+          hover:    { fill: { t3: 'container/bg' },    text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
+          pressed:  { fill: { t3: 'container/hover' }, text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
+          focus:    { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
+          disabled: { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
+                      wrapper: { componentOpacity: 0.3 } }
+        }
+      }
+    }
+  }
+};
+
 /* ── Component Generator Engine (Two-Tier Architecture) ──── */
 
 /* Resolve a color spec to a Figma variable.
@@ -860,6 +1074,77 @@ function resolveColorSpec(spec, t2Map, t3Map) {
   if (typeof spec === 'string') return t2Map[spec] || null;
   if (spec.t3) return t3Map[spec.t3] || null;
   return null;
+}
+
+/* Strip wrapper-only props from a spec entry, leaving only zone-applicable
+   keys (fill / stroke / strokeWeight / text / icon). */
+function zoneSlice(spec) {
+  if (!spec) return {};
+  var out = {};
+  if (spec.fill         !== undefined) out.fill         = spec.fill;
+  if (spec.stroke       !== undefined) out.stroke       = spec.stroke;
+  if (spec.strokeWeight !== undefined) out.strokeWeight = spec.strokeWeight;
+  if (spec.text         !== undefined) out.text         = spec.text;
+  if (spec.icon         !== undefined) out.icon         = spec.icon;
+  return out;
+}
+
+/* Expand a type's semantic state specs (rest/hover/pressed/selected/focus/disabled)
+   into the 8-state per-zone override matrix used by the variant loop.
+   Result shape: { [type]: { [stateName]: { action, trigger, wrapper } } }. */
+function expandTypeSpecsToZoneOverrides(typeSpecs, stateNames) {
+  var result = {};
+  var typeNames = Object.keys(typeSpecs);
+  for (var ti = 0; ti < typeNames.length; ti++) {
+    var typeName = typeNames[ti];
+    var spec = typeSpecs[typeName];
+    var rest     = zoneSlice(spec.rest);
+    var hover    = zoneSlice(spec.hover);
+    var pressed  = zoneSlice(spec.pressed);
+    var selected = zoneSlice(spec.selected);
+    var focus    = zoneSlice(spec.focus);
+    var disabled = zoneSlice(spec.disabled);
+    /* wrapperBase = type-default wrapper props (e.g. Outlined always
+       has a stroke on the wrapper regardless of state). */
+    var wrapBase = spec.wrapperBase || null;
+    function wrap(stateSpec) {
+      var w = {};
+      if (wrapBase) {
+        if (wrapBase.stroke       !== undefined) w.stroke       = wrapBase.stroke;
+        if (wrapBase.strokeWeight !== undefined) w.strokeWeight = wrapBase.strokeWeight;
+      }
+      if (stateSpec && stateSpec.wrapper) {
+        var sw = stateSpec.wrapper;
+        if (sw.stroke           !== undefined) w.stroke           = sw.stroke;
+        if (sw.strokeWeight     !== undefined) w.strokeWeight     = sw.strokeWeight;
+        if (sw.componentOpacity !== undefined) w.componentOpacity = sw.componentOpacity;
+        if (sw.fill             !== undefined) w.fill             = sw.fill;
+      }
+      return w;
+    }
+    result[typeName] = {
+      'Default':         { action: rest,     trigger: rest,     wrapper: wrap(null) },
+      'Action Hover':    { action: hover,    trigger: rest,     wrapper: wrap(null) },
+      'Action Pressed':  { action: pressed,  trigger: rest,     wrapper: wrap(null) },
+      'Trigger Hover':   { action: rest,     trigger: hover,    wrapper: wrap(null) },
+      'Trigger Pressed': { action: rest,     trigger: pressed,  wrapper: wrap(null) },
+      'Selected':        { action: selected, trigger: selected, wrapper: wrap(spec.selected) },
+      'Focus':           { action: rest,     trigger: rest,     wrapper: wrap(spec.focus) },
+      'Disabled':        { action: rest,     trigger: rest,     wrapper: wrap(spec.disabled) }
+    };
+  }
+  /* Filter out states that have nothing to render (defensive — should not
+     happen given the matrix above always sets something). */
+  for (var tn in result) {
+    if (!result.hasOwnProperty(tn)) continue;
+    var stateMap = result[tn];
+    for (var sn in stateMap) {
+      if (!stateMap.hasOwnProperty(sn)) continue;
+      var st = stateMap[sn];
+      if (!st.action && !st.trigger && !st.wrapper) delete stateMap[sn];
+    }
+  }
+  return result;
 }
 
 async function generateComponentFromBlueprint(blueprint) {
@@ -1134,23 +1419,66 @@ async function generateComponentFromBlueprint(blueprint) {
   }
   await figma.setCurrentPageAsync(page);
 
-  /* ── Step 4: Clean up existing ─────────────────────────── */
+  /* ── Step 4: Clean up existing ───────────────────────────
+     IMPORTANT: only remove things specific to the CURRENT blueprint.
+     For wrapper-with-button-instance kinds (split-button), do NOT touch
+     button-owned items (masters, icon placeholder, button section) —
+     they are dependencies. */
+  var isWrapperKind = (BP.kind === 'wrapper-with-button-instance');
+  /* Set of master names this BP will generate — used to identify
+     section ownership for legacy unprefixed sections. */
+  var ourMasterFullNames = {};
+  var _ourMasterKeys = Object.keys(BP.masters || {});
+  for (var _omk = 0; _omk < _ourMasterKeys.length; _omk++) {
+    ourMasterFullNames['mc / ' + _ourMasterKeys[_omk]] = true;
+  }
+  /* Helper: does a section contain any of our masters? */
+  function sectionOwnedByThisBP(node) {
+    if (!node.findOne) return false;
+    var hit = node.findOne(function(n) {
+      return (n.type === 'COMPONENT' || n.type === 'COMPONENT_SET') && ourMasterFullNames[n.name];
+    });
+    return !!hit;
+  }
   for (var ci2 = page.children.length - 1; ci2 >= 0; ci2--) {
     var child = page.children[ci2];
-    /* Remove DTF sections (contain all presentation) */
-    if ((child.type === 'SECTION' || child.type === 'FRAME') && (child.name.indexOf('DTF /') === 0 || child.name.indexOf(BP.name) === 0)) {
-      child.remove();
-      log('Removed existing section: ' + child.name);
-      continue;
+    /* Remove DTF sections (contain all presentation).
+       For wrapper kinds, only remove sections that mention THIS BP name
+       (avoids deleting the button section that hosts our dependencies).
+       Also catch legacy unprefixed sections (Tier 1 — Masters, Tier 2 —
+       Variants, Icon Primitive) that belong to THIS BP, identified by
+       containing one of our masters. */
+    if ((child.type === 'SECTION' || child.type === 'FRAME')) {
+      var legacyName = (child.name === 'Tier 1 \u2014 Masters' ||
+                        child.name === 'Tier 2 \u2014 Variants' ||
+                        child.name === 'Icon Primitive');
+      var matchesBP = (child.name.indexOf(BP.name) === 0) ||
+                      (child.name.indexOf('DTF / ' + BP.name) === 0) ||
+                      (!isWrapperKind && child.name.indexOf('DTF /') === 0) ||
+                      (legacyName && sectionOwnedByThisBP(child));
+      if (matchesBP) {
+        child.remove();
+        log('Removed existing section: ' + child.name);
+        continue;
+      }
     }
     /* Remove legacy loose nodes from older versions */
     if (child.name === 'Master/ Buttons/ ' + BP.name) {
       child.remove(); continue;
     }
-    if (child.type === 'COMPONENT_SET' && child.name.indexOf('button/') === 0) {
+    if (child.type === 'COMPONENT_SET' && child.name.indexOf(BP.name + ' /') === 0) {
       child.remove(); continue;
     }
-    if (child.type === 'COMPONENT' && (child.name === 'Icon/Placeholder' || child.name === 'DTF/Icon/Placeholder')) {
+    /* Icon placeholder is OWNED by button. Only the button generator
+       (non-wrapper kind) is allowed to remove it. */
+    if (!isWrapperKind && child.type === 'COMPONENT' && (child.name === 'Icon/Placeholder' || child.name === 'DTF/Icon/Placeholder')) {
+      child.remove(); continue;
+    }
+    /* Chevron icon is OWNED by split-button. Only the split-button
+       generator (wrapper kind) is allowed to remove it — keep it across
+       button re-runs so split-button doesn't re-create the same component
+       with a new ID. */
+    if (isWrapperKind && child.type === 'COMPONENT' && child.name === 'Icon/Chevron Down') {
       child.remove(); continue;
     }
     if (child.type === 'TEXT' && (child.name.indexOf('MASTER ') === 0 || child.name.indexOf('VARIANT ') === 0 || child.name === 'Icon Primitive' || child.name.indexOf('DTF-') === 0)) {
@@ -1432,9 +1760,37 @@ async function generateComponentFromBlueprint(blueprint) {
   /* ── Layout cursor — tracks Y position on the page ─────── */
   var PAGE_X = 100;
   var SECTION_GAP = 60;
-  var SECTION_W = 1200;
+  /* Section width adapts to the widest variant set: 8-state split-button
+     needs more room than 6-state button. Formula mirrors the variant grid:
+     ROW_LABEL_WIDTH(100) + padX*2(40) + (colCount-1)*colSpacing(155) + 120
+     extras + innerX*2(80) margin. Round up for headroom. */
+  var _maxStatesForLayout = (BP.states && BP.states.length) || 6;
+  for (var _flk = 0; _flk < Object.keys(BP.families || {}).length; _flk++) {
+    var _flf = BP.families[Object.keys(BP.families)[_flk]];
+    if (_flf.states && _flf.states.length > _maxStatesForLayout) _maxStatesForLayout = _flf.states.length;
+  }
+  var SECTION_W = Math.max(1200, 100 + 40 + (_maxStatesForLayout - 1) * 155 + 120 + 80);
   var CARD_W = SECTION_W - 80; /* card width inside sections */
   var cursorY = 100;
+
+  /* If other content already exists on the page (e.g. a previously
+     generated Button block when generating Split Button), shift this
+     run to the right so the new presentation lands beside the old one
+     instead of overlapping it. Cleanup above only removed sections
+     belonging to THIS blueprint, so anything still present is foreign. */
+  var PAGE_MARGIN = 200;
+  var existingMaxX = null;
+  for (var pcx = 0; pcx < page.children.length; pcx++) {
+    var pc = page.children[pcx];
+    if (pc.type === 'SECTION' || pc.type === 'FRAME' || pc.type === 'COMPONENT' || pc.type === 'COMPONENT_SET') {
+      var rightEdge = (pc.x || 0) + (pc.width || 0);
+      if (existingMaxX === null || rightEdge > existingMaxX) existingMaxX = rightEdge;
+    }
+  }
+  if (existingMaxX !== null && existingMaxX > PAGE_X) {
+    PAGE_X = existingMaxX + PAGE_MARGIN;
+    log('Existing content detected on page (max X = ' + existingMaxX + '). Shifting new layout to X = ' + PAGE_X);
+  }
 
   /* Pre-compute master names for use in hero section stats */
   var masterNames = Object.keys(BP.masters);
@@ -1442,40 +1798,110 @@ async function generateComponentFromBlueprint(blueprint) {
   /* ── Step 5a: Create Icon placeholder component ─────────
      A tiny 20×20 component with a vector child that scales.
      This lives on the page and acts as the INSTANCE_SWAP default.
-     Users swap it with their own icon library components.        */
+     Users swap it with their own icon library components.
+
+     For wrapper-with-button-instance kinds (split-button), reuse the
+     existing placeholder created by the button generator — instances of
+     button masters reference it by ID and we must not orphan them. */
   figma.ui.postMessage({ type: 'gen-progress', text: 'Building icon placeholder…' });
 
-  var iconPlaceholder = figma.createComponent();
-  iconPlaceholder.name = 'Icon/Placeholder';
-  iconPlaceholder.description =
-    'Default icon placeholder used by every Button master as the INSTANCE_SWAP target.\n\n' +
-    'REPLACE THIS with your own icon component (e.g. from Lucide, Phosphor, Material Symbols, ' +
-    'or your in-house icon library). Any component with the same 1:1 frame can be swapped in via ' +
-    'the right-panel "Icon" property on a button instance.\n\n' +
-    'Sizing is controlled by the button\u2019s comp-size variables (icon container) \u2014 the icon ' +
-    'inherits the slot size and color automatically. Use a vector with `constraints: SCALE` so it ' +
-    'fills the swap target cleanly.';
-  iconPlaceholder.resize(20, 20);
-  iconPlaceholder.clipsContent = true;
-  iconPlaceholder.fills = [];
-  /* No auto-layout — matches reference icon component (layoutMode NONE) */
-
-  /* Create a simple vector shape as visual placeholder */
-  var iconStar = figma.createStar();
-  iconStar.name = 'Vector';
-  iconStar.resize(15, 15);
-  iconStar.x = 2.5;
-  iconStar.y = 2.5;
-  iconStar.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
-  /* Fill with content color */
-  var iconContentVar = t2Vars[BP.masterContentColor];
-  if (iconContentVar) {
-    setPaintBoundToVariable(iconStar, 'fills', iconContentVar);
-    stats.bindings++;
+  var iconPlaceholder = null;
+  if (BP.kind === 'wrapper-with-button-instance') {
+    iconPlaceholder = page.findOne(function(n) {
+      return n.type === 'COMPONENT' && (n.name === 'Icon/Placeholder' || n.name === 'DTF/Icon/Placeholder');
+    });
+    if (iconPlaceholder) log('Reusing existing icon placeholder: ' + iconPlaceholder.id);
   }
-  iconPlaceholder.appendChild(iconStar);
-  /* Don't append to page yet — will go inside section */
-  log('Created icon placeholder component: ' + iconPlaceholder.id);
+  if (!iconPlaceholder) {
+    iconPlaceholder = figma.createComponent();
+    iconPlaceholder.name = 'Icon/Placeholder';
+    iconPlaceholder.description =
+      'Default icon placeholder used by every Button master as the INSTANCE_SWAP target.\n\n' +
+      'REPLACE THIS with your own icon component (e.g. from Lucide, Phosphor, Material Symbols, ' +
+      'or your in-house icon library). Any component with the same 1:1 frame can be swapped in via ' +
+      'the right-panel "Icon" property on a button instance.\n\n' +
+      'Sizing is controlled by the button\u2019s comp-size variables (icon container) \u2014 the icon ' +
+      'inherits the slot size and color automatically. Use a vector with `constraints: SCALE` so it ' +
+      'fills the swap target cleanly.';
+    iconPlaceholder.resize(20, 20);
+    iconPlaceholder.clipsContent = true;
+    iconPlaceholder.fills = [];
+    /* No auto-layout — matches reference icon component (layoutMode NONE) */
+
+    /* Create a simple vector shape as visual placeholder */
+    var iconStar = figma.createStar();
+    iconStar.name = 'Vector';
+    iconStar.resize(15, 15);
+    iconStar.x = 2.5;
+    iconStar.y = 2.5;
+    iconStar.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
+    /* Fill with content color */
+    var iconContentVar = t2Vars[BP.masterContentColor];
+    if (iconContentVar) {
+      setPaintBoundToVariable(iconStar, 'fills', iconContentVar);
+      stats.bindings++;
+    }
+    iconPlaceholder.appendChild(iconStar);
+    /* Don't append to page yet — will go inside section */
+    log('Created icon placeholder component: ' + iconPlaceholder.id);
+  }
+
+  /* ── Chevron icon component (split-button only) ──
+     A real chevron-down vector for the trigger zone. Replaces the generic
+     star placeholder so designers see a real menu indicator and can
+     visually verify alignment (especially in pill/rounded variants).
+     Reuses if present from a prior run. */
+  var chevronIcon = null;
+  if (BP.kind === 'wrapper-with-button-instance') {
+    chevronIcon = page.findOne(function(n) {
+      return n.type === 'COMPONENT' && n.name === 'Icon/Chevron Down';
+    });
+    if (!chevronIcon) {
+      chevronIcon = figma.createComponent();
+      chevronIcon.name = 'Icon/Chevron Down';
+      chevronIcon.description = 'Default chevron-down icon used by Split Button triggers. Swap via the "Chevron icon" property.';
+      chevronIcon.resize(20, 20);
+      chevronIcon.clipsContent = true;
+      chevronIcon.fills = [];
+      /* Vector chevron: V-shape pointing down, centered in 20×20.
+         Drawn as a stroked polyline with rounded caps. */
+      try {
+        var chev = figma.createVector();
+        chev.name = 'Vector';
+        chev.x = 0; chev.y = 0;
+        chev.resize(20, 20);
+        chev.constraints = { horizontal: 'SCALE', vertical: 'SCALE' };
+        chev.vectorPaths = [{
+          windingRule: 'NONE',
+          /* Chevron-down V, nudged 1px LEFT of geometric centre.
+             Compensates for the optical illusion in rounded variants
+             where the trigger zone is a D-shape (flat-left, curved-right).
+             Curved corners shift the visual mass leftward; centring the
+             vector geometrically makes it read too far right. */
+          data: 'M 4 7.5 L 9 12.5 L 14 7.5'
+        }];
+        chev.strokes = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }];
+        chev.strokeWeight = 1.75;
+        chev.strokeCap = 'ROUND';
+        chev.strokeJoin = 'ROUND';
+        chev.fills = [];
+        var chevColorVar = t2Vars[BP.masterContentColor];
+        if (chevColorVar) {
+          setPaintBoundToVariable(chev, 'strokes', chevColorVar);
+          stats.bindings++;
+        }
+        chevronIcon.appendChild(chev);
+      } catch (cve) {
+        log('Chevron vector creation failed, falling back to star: ' + cve.message);
+        chevronIcon = null; /* generator will fall back to iconPlaceholder */
+      }
+      if (chevronIcon) log('Created chevron icon component: ' + chevronIcon.id);
+    } else {
+      log('Reusing existing chevron icon: ' + chevronIcon.id);
+    }
+  }
+  /* Resolve which icon to use as the trigger's default child. */
+  var triggerIconComp = chevronIcon || iconPlaceholder;
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      PRESENTATION: Page Header — Hero Card (absolute positioning)
@@ -1518,13 +1944,17 @@ async function generateComponentFromBlueprint(blueprint) {
   heroDivider.x = HERO_PAD; heroDivider.y = hy;
   hy += 16;
 
-  /* Stat badges — aggregate counts across all families. */
+  /* Stat badges — aggregate counts across all families.
+     Tolerate both blueprint shapes: legacy flat (family.states) or
+     wrapper-with-zones (BP.states at root, no family.states). */
   var _famNames = Object.keys(BP.families || {});
   var _totalTypes = 0, _totalStates = 0, _maxStates = 0;
+  var _rootStatesLen = (BP.states && BP.states.length) || 0;
   for (var _fi = 0; _fi < _famNames.length; _fi++) {
     var _f = BP.families[_famNames[_fi]];
-    _totalTypes += _f.types.length;
-    if (_f.states.length > _maxStates) _maxStates = _f.states.length;
+    _totalTypes += (_f.types && _f.types.length) || 0;
+    var _famStLen = (_f.states && _f.states.length) || _rootStatesLen;
+    if (_famStLen > _maxStates) _maxStates = _famStLen;
   }
   _totalStates = _maxStates;
   var statBadges = [
@@ -1647,7 +2077,7 @@ async function generateComponentFromBlueprint(blueprint) {
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      PRESENTATION: Icon Primitive (absolute positioning)
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-  var iconSec = createSection('Icon Primitive', 480);
+  var iconSec = createSection(BP.name + ' — Icon Primitive', 480);
 
   /* Card background */
   var iconCard = figma.createFrame();
@@ -1679,6 +2109,16 @@ async function generateComponentFromBlueprint(blueprint) {
   icPreview.appendChild(iconPlaceholder);
   iconPlaceholder.x = 22; iconPlaceholder.y = 22;
 
+  /* If chevron is a separate component (split-button generation), place it
+     beside the placeholder so it has a home and is visible to designers. */
+  if (chevronIcon && chevronIcon !== iconPlaceholder) {
+    icPreview.appendChild(chevronIcon);
+    chevronIcon.x = 22 + 20 + 24; /* placeholder right edge + gap */
+    chevronIcon.y = 22;
+    /* Widen preview to fit both icons */
+    try { icPreview.resize(20 + 24 + 20 + 22 * 2, icPreview.height); } catch (e) {}
+  }
+
   iconSec.section.appendChild(iconCard);
   iconCard.x = iconSec.innerX;
   iconCard.y = iconSec.innerY;
@@ -1709,7 +2149,7 @@ async function generateComponentFromBlueprint(blueprint) {
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
   figma.ui.postMessage({ type: 'gen-progress', text: 'Building master components…' });
 
-  var masterSec = createSection('Tier 1 — Masters', SECTION_W);
+  var masterSec = createSection(BP.name + ' — Tier 1 / Masters', SECTION_W);
 
   /* Header bar — plain frame with absolute text */
   var mHeaderBar = figma.createFrame();
@@ -1759,10 +2199,182 @@ async function generateComponentFromBlueprint(blueprint) {
   var masterComponents = {};
   /* masterNames already defined before hero section */
 
+  /* Look up existing button masters by name on the Components page.
+     Required for wrapper-with-button-instance kind (split-button reuses
+     button masters as its action zone). Empty when generating button itself. */
+  var buttonMasters = {};
+  if (BP.kind === 'wrapper-with-button-instance') {
+    var pageNodes = page.findAll(function(n) {
+      return n.type === 'COMPONENT' && n.name && n.name.indexOf('mc / ') === 0;
+    });
+    for (var bmi = 0; bmi < pageNodes.length; bmi++) {
+      buttonMasters[pageNodes[bmi].name.replace(/^mc \/ /, '')] = pageNodes[bmi];
+    }
+    log('Found ' + pageNodes.length + ' existing button masters: ' + Object.keys(buttonMasters).join(', '));
+  }
+
   for (var mi = 0; mi < masterNames.length; mi++) {
     var masterName = masterNames[mi];
     var masterCfg = BP.masters[masterName];
     var slots = masterCfg.slots;
+
+    /* ── Wrapper-with-button-instance branch (split-button) ──────
+       Build a wrapper master that hosts a button-master instance + a
+       chevron zone. Skips the slot-based construction below. */
+    if (BP.kind === 'wrapper-with-button-instance') {
+      var btnMasterName = masterCfg.buttonMaster;
+      var btnMaster = buttonMasters[btnMasterName];
+      if (!btnMaster) {
+        var errMsg = 'Cannot build "' + masterName + '": button master "' + btnMasterName + '" not found. Generate Button component first.';
+        log(errMsg);
+        stats.errors.push(errMsg);
+        continue;
+      }
+
+      /* Create wrapper master */
+      var sbMaster = figma.createComponent();
+      sbMaster.name = 'mc / ' + masterName;
+      sbMaster.description = BP.description || '';
+      sbMaster.resize(140, 32);
+      sbMaster.layoutMode = 'HORIZONTAL';
+      sbMaster.counterAxisAlignItems = 'CENTER';
+      sbMaster.primaryAxisAlignItems = 'MIN';
+      sbMaster.layoutSizingHorizontal = 'HUG';
+      sbMaster.layoutSizingVertical = 'FIXED';
+      sbMaster.fills = [];                /* color comes from variant */
+      sbMaster.clipsContent = true;       /* clip inner zones at outer rounded corners (Q4) */
+      sbMaster.itemSpacing = 0;
+      sbMaster.paddingLeft = 0;
+      sbMaster.paddingRight = 0;
+      sbMaster.paddingTop = 0;
+      sbMaster.paddingBottom = 0;
+
+      /* Bind root size variables (height, 4 outer corners) */
+      var sbRootBinds = BP.sizeBindings.root;
+      var sbRootKeys = Object.keys(sbRootBinds);
+      for (var sbrk = 0; sbrk < sbRootKeys.length; sbrk++) {
+        var sbrv = compSizeVars[sbRootBinds[sbRootKeys[sbrk]]];
+        if (sbrv) {
+          await tryBindVar(sbMaster, sbRootKeys[sbrk], sbrv);
+          stats.bindings++;
+        }
+      }
+
+      /* ── Action zone: instance of the existing button master ──
+         Same ordering rule as trigger: append first, then set sizing. */
+      var actionInst = btnMaster.createInstance();
+      actionInst.name = 'Action';
+      /* Strip the button instance's stroke/fill so the wrapper's
+         variant overrides become the visible color (single source). */
+      try { actionInst.fills = []; } catch (e) {}
+      try { actionInst.strokes = []; } catch (e) {}
+      sbMaster.appendChild(actionInst);
+      try { actionInst.layoutSizingHorizontal = 'HUG'; } catch (e) {}
+      try { actionInst.layoutSizingVertical   = 'FIXED'; } catch (e) {}
+
+      /* ── Trigger zone: chevron icon in a small frame with leftStroke = divider ──
+         IMPORTANT: do NOT set layoutSizingVertical/Horizontal here — must be
+         applied AFTER appendChild to parent, otherwise FIXED captures the
+         default 100px height. We also bind 'height' explicitly to the
+         button height token as a defensive measure. */
+      var triggerZone = figma.createFrame();
+      triggerZone.name = 'Trigger';
+      triggerZone.layoutMode = 'HORIZONTAL';
+      triggerZone.counterAxisAlignItems = 'CENTER';
+      triggerZone.primaryAxisAlignItems = 'CENTER';
+      triggerZone.fills = [];
+      triggerZone.itemSpacing = 0;
+      triggerZone.clipsContent = false;
+      /* Pre-resize to button-default height so initial dimensions are sane
+         before sizing modes are applied post-append. */
+      triggerZone.resize(28, 32);
+
+      /* Bind trigger zone padding */
+      var triggerPadVar = compSizeVars[BP.sizeBindings.chevronWrapperPadL];
+      if (triggerPadVar) {
+        await tryBindVar(triggerZone, 'paddingLeft',  triggerPadVar);
+        await tryBindVar(triggerZone, 'paddingRight', triggerPadVar);
+        stats.bindings += 2;
+      }
+
+      /* Divider = 1px LEFT stroke on the trigger zone.
+         Bind to T2 separator at master level. Brand-family variants will
+         REBIND this stroke to the T3 separator at variant time so the
+         divider tracks the variant's palette context. */
+      var sepVar = t2Vars[BP.dividerColor.t2];
+      if (sepVar) {
+        setPaintBoundToVariable(triggerZone, 'strokes', sepVar);
+        triggerZone.strokeWeight = 0;
+        try {
+          triggerZone.strokeLeftWeight   = 1;
+          triggerZone.strokeRightWeight  = 0;
+          triggerZone.strokeTopWeight    = 0;
+          triggerZone.strokeBottomWeight = 0;
+        } catch (e) { log('Per-edge stroke not supported: ' + e.message); }
+        triggerZone.strokeAlign = 'INSIDE';
+        stats.bindings++;
+      }
+
+      /* Chevron icon — instance of the icon placeholder.
+         Same ordering rule: append first, then set FIXED sizing + bind size. */
+      var chevronInst = triggerIconComp.createInstance();
+      chevronInst.name = 'Chevron';
+      triggerZone.appendChild(chevronInst);
+      try { chevronInst.layoutSizingHorizontal = 'FIXED'; } catch (e) {}
+      try { chevronInst.layoutSizingVertical   = 'FIXED'; } catch (e) {}
+      var chevBinds = BP.sizeBindings.chevron;
+      var chevKeys = Object.keys(chevBinds);
+      for (var ck = 0; ck < chevKeys.length; ck++) {
+        var chv = compSizeVars[chevBinds[chevKeys[ck]]];
+        if (chv) {
+          await tryBindVar(chevronInst, chevKeys[ck], chv);
+          stats.bindings++;
+        }
+      }
+
+      /* Append trigger zone to wrapper, THEN apply sizing + bind height. */
+      sbMaster.appendChild(triggerZone);
+      try { triggerZone.layoutSizingHorizontal = 'HUG'; } catch (e) {}
+      try { triggerZone.layoutSizingVertical   = 'FIXED'; } catch (e) {}
+      /* Defensive height bind: ensure trigger height tracks button height
+         even if FIXED sizing somehow captured a stale value. */
+      var btnHeightVar = compSizeVars[BP.sizeBindings.root.height];
+      if (btnHeightVar) {
+        await tryBindVar(triggerZone, 'height', btnHeightVar);
+        stats.bindings++;
+      }
+
+
+      /* Component property: expose chevron as INSTANCE_SWAP so designers can
+         replace it with a different icon (e.g. dots, ellipsis). */
+      try {
+        var chevSwapKey = sbMaster.addComponentProperty('Chevron icon', 'INSTANCE_SWAP', triggerIconComp.id);
+        chevronInst.componentPropertyReferences = { mainComponent: chevSwapKey };
+      } catch (e) { log('Chevron INSTANCE_SWAP property failed: ' + e.message); }
+
+      /* Place into masterFrame and section */
+      masterFrame.appendChild(sbMaster);
+      sbMaster.x = mi * 360;
+      sbMaster.y = 0;
+
+      var sbMasterLabel = createLabel(masterName, 13, true, COLOR_HEADING);
+      masterSec.section.appendChild(sbMasterLabel);
+      sbMasterLabel.x = masterSec.innerX + mi * 360;
+      sbMasterLabel.y = masterSec.innerY + mHeaderBar.height + 24;
+      tryBindFill(sbMasterLabel, t2Vars['default/content/strong']);
+
+      var sbMasterBadge = createBadge('action + chevron', COLOR_CM_BG, COLOR_DIMMED);
+      masterSec.section.appendChild(sbMasterBadge);
+      sbMasterBadge.x = masterSec.innerX + mi * 360 + sbMasterLabel.width + 12;
+      sbMasterBadge.y = masterSec.innerY + mHeaderBar.height + 22;
+      tryBindFill(sbMasterBadge, t2Vars['default/component/bg']);
+      if (sbMasterBadge.children.length > 0) tryBindFill(sbMasterBadge.children[0], t2Vars['default/content/subtle']);
+
+      masterComponents[masterName] = sbMaster;
+      log('Created split-button master: ' + masterName + ' (action=' + btnMasterName + ')');
+      continue; /* skip the slot-based construction below */
+    }
+
 
     /* Create master component */
     var master = figma.createComponent();
@@ -2007,7 +2619,7 @@ async function generateComponentFromBlueprint(blueprint) {
 
   var allComponentSets = [];
 
-  var variantSec = createSection('Tier 2 — Variants', SECTION_W);
+  var variantSec = createSection(BP.name + ' — Tier 2 / Variants', SECTION_W);
 
   /* Header bar — plain frame, absolute children */
   var vHeaderBar = figma.createFrame();
@@ -2059,9 +2671,21 @@ async function generateComponentFromBlueprint(blueprint) {
       var familyName = familyNames[famI];
       var family = BP.families[familyName];
       var famTypes = family.types;
-      var famStates = family.states;
-      var famOverrides = family.stateOverrides;
+      var famStates;          /* state name array */
+      var famOverrides;       /* { type: { state: overridesObj } } */
       var famT3ModeId = (family.t3Mode && t3Modes[family.t3Mode]) ? t3Modes[family.t3Mode] : null;
+
+      /* Two blueprint shapes:
+         - Legacy flat (button): family.states + family.stateOverrides
+         - Wrapper-with-zones (split-button): BP.states + family.typeSpecs
+           Expand typeSpecs to per-zone overrides matching the 8-state axis. */
+      if (BP.kind === 'wrapper-with-button-instance' && family.typeSpecs) {
+        famStates = BP.states;
+        famOverrides = expandTypeSpecsToZoneOverrides(family.typeSpecs, BP.states);
+      } else {
+        famStates = family.states;
+        famOverrides = family.stateOverrides;
+      }
 
       var setDisplayName = BP.name + ' / ' + familyName + ' / ' + mName;
 
@@ -2137,6 +2761,181 @@ async function generateComponentFromBlueprint(blueprint) {
 
           /* ── Apply color overrides on the INSTANCE ── */
 
+          if (BP.kind === 'wrapper-with-button-instance') {
+            /* Per-zone overrides: action zone + trigger zone applied
+               independently. Wrapper-level overrides apply to the instance
+               (which is the wrapper master instance). */
+            var wrapOv    = overrides.wrapper || {};
+            var actionOv  = overrides.action  || {};
+            var triggerOv = overrides.trigger || {};
+
+            /* Wrapper-level componentOpacity → on the variant component */
+            if (wrapOv.componentOpacity !== undefined) {
+              varComp.opacity = wrapOv.componentOpacity;
+            }
+
+            /* Wrapper-level fill (rare — focus-with-fill) → on the instance */
+            if (wrapOv.fill) {
+              var wrapFillVar = resolveColorSpec(wrapOv.fill, t2Vars, t3Vars);
+              if (wrapFillVar) { setPaintBoundToVariable(instance, 'fills', wrapFillVar); stats.bindings++; }
+            } else {
+              try { instance.fills = []; } catch (e) {}
+            }
+
+            /* Wrapper-level stroke (focus ring, outlined types) → on the instance */
+            if (wrapOv.stroke) {
+              var wrapStrokeVar = resolveColorSpec(wrapOv.stroke, t2Vars, t3Vars);
+              if (wrapStrokeVar) {
+                setPaintBoundToVariable(instance, 'strokes', wrapStrokeVar);
+                instance.strokeWeight = wrapOv.strokeWeight || 1;
+                instance.strokeAlign = 'INSIDE';
+                stats.bindings++;
+              }
+            } else {
+              try { instance.strokes = []; } catch (e) {}
+            }
+
+            /* Locate Action and Trigger sub-children inside the wrapper instance */
+            var actionChild  = instance.findOne(function(n) { return n.name === 'Action'; });
+            var triggerChild = instance.findOne(function(n) { return n.name === 'Trigger'; });
+
+            /* ── Zero out the seam corners ──
+               Action zone is the LEFT half — its right corners must be square
+               so it butts cleanly against the trigger. Conversely the trigger
+               zone is the RIGHT half — its left corners must be square. The
+               wrapper's outer corner radii (bound to button/default/radius or
+               radius-rounded) provide the only visible rounding. */
+            if (actionChild) {
+              try {
+                actionChild.topRightRadius    = 0;
+                actionChild.bottomRightRadius = 0;
+              } catch (e) {}
+            }
+            if (triggerChild) {
+              try {
+                triggerChild.topLeftRadius    = 0;
+                triggerChild.bottomLeftRadius = 0;
+                /* Trigger zone never gets outer rounding — the wrapper handles
+                   the right-side rounding via clipsContent. */
+                triggerChild.topRightRadius    = 0;
+                triggerChild.bottomRightRadius = 0;
+              } catch (e) {}
+            }
+
+            /* Helper: apply zone-level overrides to a single zone child */
+            async function applyZoneOverrides(zoneNode, zOv) {
+              if (!zoneNode) return;
+              if (zOv.fill) {
+                var zfv = resolveColorSpec(zOv.fill, t2Vars, t3Vars);
+                if (zfv) { setPaintBoundToVariable(zoneNode, 'fills', zfv); stats.bindings++; }
+              } else {
+                try { zoneNode.fills = []; } catch (e) {}
+              }
+              /* NOTE: do NOT touch the trigger zone's strokes here — those
+                 carry the divider (left-stroke) which is independent of
+                 zone state. Skip stroke overrides for the trigger child. */
+              if (zoneNode === actionChild) {
+                if (zOv.stroke) {
+                  var zsv = resolveColorSpec(zOv.stroke, t2Vars, t3Vars);
+                  if (zsv) {
+                    setPaintBoundToVariable(zoneNode, 'strokes', zsv);
+                    zoneNode.strokeWeight = zOv.strokeWeight || 1;
+                    zoneNode.strokeAlign = 'INSIDE';
+                    stats.bindings++;
+                  }
+                } else {
+                  try { zoneNode.strokes = []; } catch (e) {}
+                }
+              }
+              if (zOv.text) {
+                var ztv = resolveColorSpec(zOv.text, t2Vars, t3Vars);
+                if (ztv) {
+                  var tns = zoneNode.findAll(function(n) { return n.type === 'TEXT'; });
+                  for (var ttx = 0; ttx < tns.length; ttx++) {
+                    setPaintBoundToVariable(tns[ttx], 'fills', ztv);
+                    stats.bindings++;
+                  }
+                }
+              }
+              if (zOv.icon) {
+                var ziv = resolveColorSpec(zOv.icon, t2Vars, t3Vars);
+                if (ziv) {
+                  var ins = zoneNode.findAll(function(n) { return n.name === 'Vector'; });
+                  for (var iix = 0; iix < ins.length; iix++) {
+                    var v = ins[iix];
+                    /* Bind BOTH fills and strokes so the override survives an
+                       INSTANCE_SWAP across icons with different paint types
+                       (filled icons use fills, line icons like chevron use
+                       strokes). Only the paint type the icon component uses
+                       renders visibly; the unused binding is harmless.
+                       Critically, Figma preserves child overrides across
+                       INSTANCE_SWAP only when the child node names match —
+                       we standardize on the name 'Vector' for all icons. */
+                    var hasFills   = v.fills   && v.fills.length   > 0;
+                    var hasStrokes = v.strokes && v.strokes.length > 0;
+                    if (hasFills || !hasStrokes) {
+                      setPaintBoundToVariable(v, 'fills', ziv);
+                      stats.bindings++;
+                    }
+                    if (hasStrokes) {
+                      setPaintBoundToVariable(v, 'strokes', ziv);
+                      stats.bindings++;
+                    }
+                  }
+                }
+              }
+            }
+            await applyZoneOverrides(actionChild,  actionOv);
+            await applyZoneOverrides(triggerChild, triggerOv);
+
+            /* Divider colour: rebind trigger's left-stroke to track the
+               variant's context.
+
+               Strategy:
+               - Selected state: the action+trigger fills become container/bg
+                 (a tinted surface). The default separator no longer reads.
+                 Use container/separator (T3) or default/container/separator (T2)
+                 so the divider stays visible against the selected fill.
+               - Brand-mode families (any non-Selected state): rebind to T3
+                 component/separator so the divider tracks the brand palette.
+               - Neutral non-selected: keep the master-level T2 binding. */
+            if (triggerChild) {
+              var dividerVar = null;
+              var isSelected = (stateName === 'Selected');
+              if (isSelected) {
+                /* Use container-flavoured separator for selected. T3 first
+                   (works for both Neutral with container collection mode and
+                   Brand with brand mode), fall back to T2 if T3 missing. */
+                dividerVar = t3Vars['container/separator']
+                          || t3Vars['oncontainer-content/default']
+                          || t2Vars['default/container/separator']
+                          || t2Vars[BP.dividerColor.t2];
+              } else if (famT3ModeId && BP.dividerColor && BP.dividerColor.t3) {
+                dividerVar = t3Vars[BP.dividerColor.t3];
+              }
+              if (dividerVar) {
+                /* Re-apply because applyZoneOverrides skipped trigger strokes */
+                setPaintBoundToVariable(triggerChild, 'strokes', dividerVar);
+                triggerChild.strokeWeight = 0;
+                try {
+                  triggerChild.strokeLeftWeight   = 1;
+                  triggerChild.strokeRightWeight  = 0;
+                  triggerChild.strokeTopWeight    = 0;
+                  triggerChild.strokeBottomWeight = 0;
+                } catch (e) {}
+                triggerChild.strokeAlign = 'INSIDE';
+                stats.bindings++;
+              }
+            }
+
+          } else {
+          /* ── Legacy flat overrides (button family) ── */
+
+          /* Disabled opacity lives on the COMPONENT (not the instance) */
+          if (overrides.componentOpacity !== undefined) {
+            varComp.opacity = overrides.componentOpacity;
+          }
+
           /* Fill override */
           if (overrides.fill) {
             var fillVar = resolveColorSpec(overrides.fill, t2Vars, t3Vars);
@@ -2183,6 +2982,8 @@ async function generateComponentFromBlueprint(blueprint) {
               }
             }
           }
+          } /* end legacy/wrapper branch */
+
 
           components.push({ component: varComp, type: typeName, state: stateName, rounded: isRounded });
           stats.components++;
@@ -2235,6 +3036,74 @@ async function generateComponentFromBlueprint(blueprint) {
       /* ── Step 8: Wire interactive reactions ── */
       figma.ui.postMessage({ type: 'gen-progress', text: 'Wiring interactions for ' + familyName + '…' });
 
+      if (BP.kind === 'wrapper-with-button-instance') {
+        /* Per-zone reactions: each variant has reactions on its Action and
+           Trigger sub-children. Hovering/pressing a zone navigates the
+           whole component to the corresponding zone-state variant. */
+        for (var rri = 0; rri < roundedValues.length; rri++) {
+          var rRounded = roundedValues[rri];
+          for (var ri = 0; ri < famTypes.length; ri++) {
+            var rType = famTypes[ri];
+
+            /* Build a state→component map for this (type, rounded) */
+            var stateToComp = {};
+            for (var rj = 0; rj < components.length; rj++) {
+              var entry = components[rj];
+              if (entry.type !== rType) continue;
+              if (entry.rounded !== rRounded) continue;
+              stateToComp[entry.state] = entry.component;
+            }
+
+            var actionHover    = stateToComp['Action Hover'];
+            var actionPressed  = stateToComp['Action Pressed'];
+            var triggerHover   = stateToComp['Trigger Hover'];
+            var triggerPressed = stateToComp['Trigger Pressed'];
+
+            var stateNamesForRx = Object.keys(stateToComp);
+            for (var sx = 0; sx < stateNamesForRx.length; sx++) {
+              var srcComp = stateToComp[stateNamesForRx[sx]];
+              if (!srcComp) continue;
+              /* Reach into the wrapper instance to find Action/Trigger children */
+              var srcWrapInst = srcComp.findOne(function(n) { return n.type === 'INSTANCE'; });
+              if (!srcWrapInst) continue;
+              var srcAction  = srcWrapInst.findOne(function(n) { return n.name === 'Action'; });
+              var srcTrigger = srcWrapInst.findOne(function(n) { return n.name === 'Trigger'; });
+
+              if (srcAction && (actionHover || actionPressed)) {
+                var rxA = [];
+                if (actionHover) {
+                  rxA.push({ trigger: { type: 'ON_HOVER' }, actions: [{ type: 'NODE', destinationId: actionHover.id, navigation: 'CHANGE_TO',
+                    transition: { type: 'DISSOLVE', duration: 0.15, easing: { type: 'EASE_IN_AND_OUT' } } }] });
+                  stats.reactions++;
+                }
+                if (actionPressed) {
+                  rxA.push({ trigger: { type: 'ON_PRESS' }, actions: [{ type: 'NODE', destinationId: actionPressed.id, navigation: 'CHANGE_TO',
+                    transition: { type: 'DISSOLVE', duration: 0.05, easing: { type: 'EASE_IN_AND_OUT' } } }] });
+                  stats.reactions++;
+                }
+                try { await srcAction.setReactionsAsync(rxA); }
+                catch (re) { log('Action reactions failed (' + familyName + '/' + rType + '/' + stateNamesForRx[sx] + '): ' + re.message); }
+              }
+
+              if (srcTrigger && (triggerHover || triggerPressed)) {
+                var rxT = [];
+                if (triggerHover) {
+                  rxT.push({ trigger: { type: 'ON_HOVER' }, actions: [{ type: 'NODE', destinationId: triggerHover.id, navigation: 'CHANGE_TO',
+                    transition: { type: 'DISSOLVE', duration: 0.15, easing: { type: 'EASE_IN_AND_OUT' } } }] });
+                  stats.reactions++;
+                }
+                if (triggerPressed) {
+                  rxT.push({ trigger: { type: 'ON_PRESS' }, actions: [{ type: 'NODE', destinationId: triggerPressed.id, navigation: 'CHANGE_TO',
+                    transition: { type: 'DISSOLVE', duration: 0.05, easing: { type: 'EASE_IN_AND_OUT' } } }] });
+                  stats.reactions++;
+                }
+                try { await srcTrigger.setReactionsAsync(rxT); }
+                catch (re) { log('Trigger reactions failed (' + familyName + '/' + rType + '/' + stateNamesForRx[sx] + '): ' + re.message); }
+              }
+            }
+          }
+        }
+      } else {
       for (var ri = 0; ri < famTypes.length; ri++) {
         var rType = famTypes[ri];
         for (var rri = 0; rri < roundedValues.length; rri++) {
@@ -2286,6 +3155,8 @@ async function generateComponentFromBlueprint(blueprint) {
           }
         }
       }
+      } /* end legacy/wrapper reactions branch */
+
 
       allComponentSets.push(componentSet);
 
@@ -2304,7 +3175,9 @@ async function generateComponentFromBlueprint(blueprint) {
       setHeadingCard.counterAxisAlignItems = 'CENTER';
       setHeadingCard.itemSpacing = 12;
       setHeadingCard.appendChild(createLabel(familyName + ' · ' + mName, 14, true, COLOR_HEADING));
-      var slotBadge = createBadge(BP.masters[mName].slots.join(' + '), COLOR_CM_BG, COLOR_DIMMED);
+      var slotLabel = (BP.masters[mName].slots && BP.masters[mName].slots.join(' + '))
+                   || (BP.masters[mName].buttonMaster ? 'action + chevron' : '');
+      var slotBadge = createBadge(slotLabel, COLOR_CM_BG, COLOR_DIMMED);
       setHeadingCard.appendChild(slotBadge);
       variantSec.section.appendChild(setHeadingCard);
       setHeadingCard.x = variantSec.innerX;
@@ -2423,8 +3296,8 @@ async function generateComponentFromBlueprint(blueprint) {
     masterFrameId: masterFrame.id,
     generatedAt: new Date().toISOString(),
     families: Object.keys(BP.families || {}),
-    types: (function(){ var n=0; var ks=Object.keys(BP.families||{}); for (var i=0;i<ks.length;i++) n += BP.families[ks[i]].types.length; return n; })(),
-    states: (function(){ var m=0; var ks=Object.keys(BP.families||{}); for (var i=0;i<ks.length;i++) if (BP.families[ks[i]].states.length>m) m=BP.families[ks[i]].states.length; return m; })(),
+    types: (function(){ var n=0; var ks=Object.keys(BP.families||{}); for (var i=0;i<ks.length;i++) { var f=BP.families[ks[i]]; n += (f.types&&f.types.length)||0; } return n; })(),
+    states: (function(){ var rs=(BP.states&&BP.states.length)||0; var m=0; var ks=Object.keys(BP.families||{}); for (var i=0;i<ks.length;i++) { var f=BP.families[ks[i]]; var L=(f.states&&f.states.length)||rs; if (L>m) m=L; } return m; })(),
     totalComponents: stats.components,
     architecture: 'two-tier-master-instance'
   };
@@ -2437,7 +3310,8 @@ async function generateComponentFromBlueprint(blueprint) {
 /* ── Available blueprints registry ───────────────────────── */
 
 var COMPONENT_BLUEPRINTS = {
-  button: BUTTON_BLUEPRINT
+  button: BUTTON_BLUEPRINT,
+  'split-button': SPLIT_BUTTON_BLUEPRINT
 };
 
 /* ── Message handler ─────────────────────────────────────── */
@@ -2551,6 +3425,14 @@ figma.ui.onmessage = async function(msg) {
   if (msg.type === 'generate-components') {
     try {
       var requested = msg.components || ['button'];
+      /* Ensure dependencies are generated first. Split-button instances the
+         button master, so button must run earlier in the same dispatch. */
+      var depOrder = { 'button': 0, 'split-button': 1 };
+      requested.sort(function(a, b) {
+        var oa = depOrder[a.toLowerCase()]; if (oa === undefined) oa = 99;
+        var ob = depOrder[b.toLowerCase()]; if (ob === undefined) ob = 99;
+        return oa - ob;
+      });
       var allStats = { components: 0, bindings: 0, reactions: 0, errors: [] };
 
       for (var gci = 0; gci < requested.length; gci++) {

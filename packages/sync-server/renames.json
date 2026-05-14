@@ -52,6 +52,8 @@
     "prim/custom-1/800": "prim/secondary/800",
     "prim/custom-1/850": "prim/secondary/850",
     "prim/custom-1/900": "prim/secondary/900",
-    "prim/custom-1/black": "prim/secondary/black"
+    "prim/custom-1/black": "prim/secondary/black",
+    "split-button/trigger/padding-x": "split-button/chevron/padding",
+    "split-button/chevron/padding-x": "split-button/chevron/padding"
   }
 }

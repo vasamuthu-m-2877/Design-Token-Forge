@@ -128,16 +128,16 @@
         huge     14      10
         mega     16      10
         ultra    20      12 */
-  --split-btn-trigger-padding-x-micro:  var(--spacing-2);
-  --split-btn-trigger-padding-x-tiny:   var(--spacing-4);
-  --split-btn-trigger-padding-x-small:  var(--spacing-4);
-  --split-btn-trigger-padding-x-base:   var(--spacing-6);
-  --split-btn-trigger-padding-x-medium: var(--spacing-6);
-  --split-btn-trigger-padding-x-large:  var(--spacing-8);
-  --split-btn-trigger-padding-x-big:    var(--spacing-8);
-  --split-btn-trigger-padding-x-huge:   var(--spacing-10);
-  --split-btn-trigger-padding-x-mega:   var(--spacing-10);
-  --split-btn-trigger-padding-x-ultra:  var(--spacing-12);
+  --split-btn-chevron-padding-micro:  var(--spacing-2);
+  --split-btn-chevron-padding-tiny:   var(--spacing-2);
+  --split-btn-chevron-padding-small:  var(--spacing-3);
+  --split-btn-chevron-padding-base:   var(--spacing-3);
+  --split-btn-chevron-padding-medium: var(--spacing-4);
+  --split-btn-chevron-padding-large:  var(--spacing-4);
+  --split-btn-chevron-padding-big:    var(--spacing-5);
+  --split-btn-chevron-padding-huge:   var(--spacing-6);
+  --split-btn-chevron-padding-mega:   var(--spacing-7);
+  --split-btn-chevron-padding-ultra:  var(--spacing-8);
 
   /* Width model */
   --split-btn-max-width: none;
@@ -353,16 +353,16 @@
      A smaller chevron preserves the visual hierarchy: action label is
      primary; chevron is a secondary affordance. Without this, large
      sizes (huge/mega/ultra) get an oversized chevron that dominates. */
-  --split-btn-chevron-size-micro:  var(--spacing-10);
-  --split-btn-chevron-size-tiny:   var(--spacing-12);
-  --split-btn-chevron-size-small:  var(--spacing-12);
-  --split-btn-chevron-size-base:   var(--spacing-14);
-  --split-btn-chevron-size-medium: var(--spacing-14);
-  --split-btn-chevron-size-large:  var(--spacing-16);
-  --split-btn-chevron-size-big:    var(--spacing-16);
-  --split-btn-chevron-size-huge:   var(--spacing-18);
-  --split-btn-chevron-size-mega:   var(--spacing-20);
-  --split-btn-chevron-size-ultra:  var(--spacing-22);
+  --split-btn-chevron-size-micro:  var(--spacing-8);
+  --split-btn-chevron-size-tiny:   var(--spacing-10);
+  --split-btn-chevron-size-small:  var(--spacing-10);
+  --split-btn-chevron-size-base:   var(--spacing-12);
+  --split-btn-chevron-size-medium: var(--spacing-12);
+  --split-btn-chevron-size-large:  var(--spacing-14);
+  --split-btn-chevron-size-big:    var(--spacing-14);
+  --split-btn-chevron-size-huge:   var(--spacing-16);
+  --split-btn-chevron-size-mega:   var(--spacing-16);
+  --split-btn-chevron-size-ultra:  var(--spacing-18);
 
   --split-btn-icon-color:       var(--btn-icon-color);
   --split-btn-icon-color-hover: var(--btn-icon-color-hover);

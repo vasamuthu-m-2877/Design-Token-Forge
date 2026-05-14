@@ -555,6 +555,7 @@ function scopeForCompSizeVar(varName) {
   if (varName.includes('font-size')) return ['FONT_SIZE'];
   if (varName.includes('icon container') || varName.includes('icon-size'))
     return ['WIDTH_HEIGHT'];
+  if (varName.includes('chevron'))   return ['WIDTH_HEIGHT'];
   return ['GAP'];  // safe default for spacing-like values
 }
 
@@ -647,6 +648,28 @@ function buildCompSize(extrasCollection) {
       { propCSS: 'padding-x',      propFigma: 'text wrapper padding R' },
     ];
     variables.push(...buildComponentGroup('btn', 'button', btnTokens, extrasVarSet, btnProps));
+  }
+
+  // ── Split Button ──────────────────────────────────────────
+  // Split-button INHERITS design tokens (height, radius, padding, font-size, icon-size)
+  // from --btn-* per multi-zone-model.md (Q6). The Figma plugin binds split-button
+  // variants directly to button/* comp-size vars for those properties.
+  //
+  // Only STRUCTURAL tokens (owned by split-button) are exposed here:
+  //   - trigger/padding-x : chevron zone padding (narrower than action zone)
+  //   - chevron/size      : chevron icon container (smaller than action icon)
+  //
+  // The divider is rendered as a 1px LEFT-edge stroke on the trigger zone
+  // (using Figma's per-edge strokeLeftWeight). Color comes from an existing
+  // separator color token. No dedicated thickness var is needed.
+  const sbtnFile = path.join(COMP_DIR, 'split-button/split-button.tokens.css');
+  if (fs.existsSync(sbtnFile)) {
+    const sbtnTokens = parseComponentTokens(sbtnFile);
+    const sbtnProps = [
+      { propCSS: 'chevron-padding', propFigma: 'chevron/padding' },
+      { propCSS: 'chevron-size',    propFigma: 'chevron/size' },
+    ];
+    variables.push(...buildComponentGroup('split-btn', 'split-button', sbtnTokens, extrasVarSet, sbtnProps));
   }
 
   return {
@@ -780,6 +803,32 @@ function startWatching() {
     } catch (e) {
       console.error(`  ✗ Cannot watch ${file}: ${e.message}`);
     }
+  }
+
+  // Watch component CSS files too — they feed comp-size variables
+  // (button, split-button, etc.) and were previously silently ignored,
+  // requiring server restarts to pick up changes.
+  try {
+    const compEntries = fs.readdirSync(COMP_DIR, { withFileTypes: true });
+    for (const ent of compEntries) {
+      if (!ent.isDirectory()) continue;
+      const tokenFile = path.join(COMP_DIR, ent.name, `${ent.name}.tokens.css`);
+      if (!fs.existsSync(tokenFile)) continue;
+      const rel = `components/${ent.name}/${ent.name}.tokens.css`;
+      fs.watchFile(tokenFile, { interval: 500 }, () => {
+        pendingFiles.add(rel);
+        if (pending) clearTimeout(pending);
+        pending = setTimeout(() => {
+          const files = [...pendingFiles];
+          pendingFiles.clear();
+          pending = null;
+          rebuildTokens('filechange', files);
+        }, debounceMs);
+      });
+      if (VERBOSE) console.log(`  👁  Watching: ${rel}`);
+    }
+  } catch (e) {
+    console.error(`  ✗ Cannot watch component tokens: ${e.message}`);
   }
 }
 

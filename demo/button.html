@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Design Token Forge &#8212; Button Explorer</title>
-<link rel="stylesheet" href="../packages/tokens/src/index.css?v=20260513a">
-<link rel="stylesheet" href="../packages/components/src/button/button.tokens.css?v=20260513a">
-<link rel="stylesheet" href="../packages/components/src/button/button.css?v=20260513a">
-<link rel="stylesheet" href="shared.css?v=20260513a">
+<link rel="stylesheet" href="../packages/tokens/src/index.css?v=20260514a">
+<link rel="stylesheet" href="../packages/components/src/button/button.tokens.css?v=20260514a">
+<link rel="stylesheet" href="../packages/components/src/button/button.css?v=20260514a">
+<link rel="stylesheet" href="shared.css?v=20260514a">
 </head>
 <body>
 
@@ -84,6 +84,14 @@
     <div class="pill-bar" id="roundedBar" role="radiogroup" aria-label="Rounded toggle">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-rounded="false" type="button">Default</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-rounded="true" type="button">Rounded</button>
+    </div>
+  </div>
+  <div class="control-divider"></div>
+  <div class="control-group">
+    <label>Icon Detail</label>
+    <div class="pill-bar" id="iconDetailBar" role="radiogroup" aria-label="Icon detail toggle">
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-icon-detail="default" type="button">Default · 16</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-icon-detail="high" type="button">High · 20</button>
     </div>
   </div>
 </nav>
@@ -379,7 +387,7 @@
     neutral: {filled:'Dismiss',outlined:'Close',soft:'Options',ghost:'More'}
   };
 
-  var curStruct = 'filled', curRole = 'brand', curS = 'base', curRounded = false;
+  var curStruct = 'filled', curRole = 'brand', curS = 'base', curRounded = false, curIconDetail = 'default';
 
   function makeBtn(struct, role, s, label, o) {
     o = o || {};
@@ -393,6 +401,7 @@
     if (o.disabled) b.disabled = true;
     if (o.loading) b.dataset.loading = '';
     if (curRounded && !o.noRounded) b.dataset.rounded = '';
+    if (curIconDetail === 'high' && !o.noIconDetail) b.dataset.iconDetail = 'high';
     if (o.iconStart) { var i=document.createElement('span'); i.className='btn__icon'; i.innerHTML=o.iconStartSvg||ICON_PLUS; b.appendChild(i); }
     if (label !== false) { var l=document.createElement('span'); l.className='btn__label'; l.textContent=label||'Button'; b.appendChild(l); }
     if (o.iconEnd) { var e=document.createElement('span'); e.className='btn__icon'; e.innerHTML=o.iconEndSvg||ICON_ARROW; b.appendChild(e); }
@@ -517,6 +526,7 @@
       ['--btn-gap-'+s, BTN_TOKENS.gap[s], cs.gap],
       ['--btn-font-size-'+s, BTN_TOKENS.fs[s], cs.fontSize],
       ['--btn-icon-size-'+s, BTN_TOKENS.iconSize[s], cs.getPropertyValue('--_btn-icon-size').trim()||'\u2014'],
+      (curIconDetail==='high' ? ['--btn-icon-size-detail-high', '--spacing-20', cs.getPropertyValue('--_btn-icon-size').trim()] : null),
       ['--btn-min-width-'+s, BTN_TOKENS.minW[s], cs.minWidth],
       ['--btn-'+tg+'-bg', isN?'--surface-base-cm-bg':'--'+rp+'-component-bg-default', cs.backgroundColor],
       ['--btn-'+tg+'-fg', isN?'--surface-base-ct-default':(tg==='brand'?'--'+rp+'-on-component':'--'+rp+'-content-default'), cs.color],
@@ -527,7 +537,7 @@
     ];
     var ins=document.getElementById('heroInspector');
     ins.innerHTML='<div class="inspector-title">Resolved Tokens ('+curStruct+' / '+curRole+' / '+s+')</div>'+
-      rows.map(function(t){return '<div class="inspector-row"><span class="token-name">'+t[0]+'</span><span class="token-val">'+t[2]+(t[1]!=='\u2014'?'<br><span style="opacity:0.5;font-size:9px">\u2192 '+t[1]+'</span>':'')+'</span></div>';}).join('');
+      rows.filter(Boolean).map(function(t){return '<div class="inspector-row"><span class="token-name">'+t[0]+'</span><span class="token-val">'+t[2]+(t[1]!=='\u2014'?'<br><span style="opacity:0.5;font-size:9px">\u2192 '+t[1]+'</span>':'')+'</span></div>';}).join('');
   }
 
   /* ── Apply Global Controls ──────────────────────────────── */
@@ -538,6 +548,7 @@
       if(curRole!=='brand'||curStruct==='ghost'){hb.dataset.role=curRole;}else{delete hb.dataset.role;}
       hb.dataset.size=curS;
       if(curRounded)hb.dataset.rounded='';else delete hb.dataset.rounded;
+      if(curIconDetail==='high')hb.dataset.iconDetail='high';else delete hb.dataset.iconDetail;
     }
     document.querySelectorAll('.a11y-grid .synced-btn').forEach(function(b){
       if(!b.dataset.role||b.dataset.role!=='danger'){
@@ -546,6 +557,7 @@
       }
       b.dataset.size=curS;
       if(curRounded)b.dataset.rounded='';else delete b.dataset.rounded;
+      if(curIconDetail==='high')b.dataset.iconDetail='high';else delete b.dataset.iconDetail;
     });
     renderStructGallery(); renderRoleGallery(); renderDensity(); renderStates();
     renderSurface(); renderRadius(); renderShadows(); renderSlots(); renderMotion();
@@ -564,6 +576,7 @@
   wirePill('roleBar','ctrlRole',function(v){curRole=v;applyGlobals();});
   wirePill('sizeBar','ctrlSize',function(v){curS=v;applyGlobals();});
   wirePill('roundedBar','ctrlRounded',function(v){curRounded=v==='true';applyGlobals();});
+  wirePill('iconDetailBar','ctrlIconDetail',function(v){curIconDetail=v;applyGlobals();});
 
   window.DTF.onThemeChange = updateInspector;
   applyGlobals();

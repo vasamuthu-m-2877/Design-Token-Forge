@@ -141,7 +141,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-base);
   --_sb-py: var(--split-btn-padding-y-base);
   --_sb-gap: var(--split-btn-gap-base);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-base);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-base);
   --_sb-radius: var(--split-btn-radius-base);
   --_sb-fs: var(--split-btn-font-size-base);
   --_sb-icon-size: var(--split-btn-icon-size-base);
@@ -153,7 +153,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-micro);
   --_sb-py: var(--split-btn-padding-y-micro);
   --_sb-gap: var(--split-btn-gap-micro);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-micro);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-micro);
   --_sb-radius: var(--split-btn-radius-micro);
   --_sb-fs: var(--split-btn-font-size-micro);
   --_sb-icon-size: var(--split-btn-icon-size-micro);
@@ -165,7 +165,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-tiny);
   --_sb-py: var(--split-btn-padding-y-tiny);
   --_sb-gap: var(--split-btn-gap-tiny);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-tiny);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-tiny);
   --_sb-radius: var(--split-btn-radius-tiny);
   --_sb-fs: var(--split-btn-font-size-tiny);
   --_sb-icon-size: var(--split-btn-icon-size-tiny);
@@ -177,7 +177,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-small);
   --_sb-py: var(--split-btn-padding-y-small);
   --_sb-gap: var(--split-btn-gap-small);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-small);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-small);
   --_sb-radius: var(--split-btn-radius-small);
   --_sb-fs: var(--split-btn-font-size-small);
   --_sb-icon-size: var(--split-btn-icon-size-small);
@@ -189,7 +189,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-medium);
   --_sb-py: var(--split-btn-padding-y-medium);
   --_sb-gap: var(--split-btn-gap-medium);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-medium);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-medium);
   --_sb-radius: var(--split-btn-radius-medium);
   --_sb-fs: var(--split-btn-font-size-medium);
   --_sb-icon-size: var(--split-btn-icon-size-medium);
@@ -201,7 +201,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-large);
   --_sb-py: var(--split-btn-padding-y-large);
   --_sb-gap: var(--split-btn-gap-large);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-large);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-large);
   --_sb-radius: var(--split-btn-radius-large);
   --_sb-fs: var(--split-btn-font-size-large);
   --_sb-icon-size: var(--split-btn-icon-size-large);
@@ -213,7 +213,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-big);
   --_sb-py: var(--split-btn-padding-y-big);
   --_sb-gap: var(--split-btn-gap-big);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-big);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-big);
   --_sb-radius: var(--split-btn-radius-big);
   --_sb-fs: var(--split-btn-font-size-big);
   --_sb-icon-size: var(--split-btn-icon-size-big);
@@ -225,7 +225,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-huge);
   --_sb-py: var(--split-btn-padding-y-huge);
   --_sb-gap: var(--split-btn-gap-huge);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-huge);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-huge);
   --_sb-radius: var(--split-btn-radius-huge);
   --_sb-fs: var(--split-btn-font-size-huge);
   --_sb-icon-size: var(--split-btn-icon-size-huge);
@@ -237,7 +237,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-mega);
   --_sb-py: var(--split-btn-padding-y-mega);
   --_sb-gap: var(--split-btn-gap-mega);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-mega);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-mega);
   --_sb-radius: var(--split-btn-radius-mega);
   --_sb-fs: var(--split-btn-font-size-mega);
   --_sb-icon-size: var(--split-btn-icon-size-mega);
@@ -249,7 +249,7 @@
   --_sb-action-px: var(--split-btn-action-padding-x-ultra);
   --_sb-py: var(--split-btn-padding-y-ultra);
   --_sb-gap: var(--split-btn-gap-ultra);
-  --_sb-trigger-px: var(--split-btn-trigger-padding-x-ultra);
+  --_sb-trigger-px: var(--split-btn-chevron-padding-ultra);
   --_sb-radius: var(--split-btn-radius-ultra);
   --_sb-fs: var(--split-btn-font-size-ultra);
   --_sb-icon-size: var(--split-btn-icon-size-ultra);

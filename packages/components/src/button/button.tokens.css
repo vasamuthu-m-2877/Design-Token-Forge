@@ -369,6 +369,16 @@
   --btn-icon-size-huge: var(--spacing-24);
   --btn-icon-size-mega: var(--spacing-32);
   --btn-icon-size-ultra: var(--spacing-32);
+
+  /* Icon DETAIL tier — opt-in larger glyph for icons that need more drawing scope
+     (filters, branded marks, multi-stroke). Apply via:
+       • data-icon-detail="high"   → bumps --_btn-icon-size to --btn-icon-size-detail-high
+       • --btn-icon-size at instance/product level → overrides any size mapping
+     Guardrail: detail="high" is suppressed on sizes ≤ small (would crowd to <4px breathing room).
+     Padding-side is auto-compensated when detail="high" is active. */
+  --btn-icon-size-detail-default: var(--spacing-16);
+  --btn-icon-size-detail-high: var(--spacing-20);
+
   --btn-icon-color: currentColor;
   --btn-icon-color-hover: currentColor;
 
