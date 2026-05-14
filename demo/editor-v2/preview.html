@@ -16,17 +16,40 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0}
     body{font-family:var(--font-family-sans,system-ui);background:var(--surface-base-bg);color:var(--surface-base-ct-default);padding:24px;line-height:1.5}
-    .pv-section{margin-bottom:24px}
-    .pv-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--surface-base-ct-faint);margin-bottom:10px}
+    .pv-section{margin-bottom:24px;padding:14px;border-radius:8px;border:1px solid transparent;transition:border-color 160ms,background 160ms}
+    .pv-section[data-active="true"]{border-color:var(--brand-component-outline-default,#6593fe);background:var(--brand-container-bg,transparent)}
+    .pv-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--surface-base-ct-faint);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .pv-label-tag{font-size:9px;background:var(--surface-base-subtle);padding:2px 6px;border-radius:3px;font-weight:600;letter-spacing:.04em;color:var(--surface-base-ct-faint)}
     .pv-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
     .pv-stack{display:flex;flex-direction:column;gap:8px}
-    /* Style override slot — the editor injects a <style id="ev2-overrides"> here */
+    /* Inline alert mock built from role container tokens */
+    .pv-alert{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:8px;border:1px solid;font-size:13px;line-height:1.45}
+    .pv-alert[data-role="brand"]   {background:var(--brand-container-bg);border-color:var(--brand-container-outline);color:var(--brand-on-container)}
+    .pv-alert[data-role="danger"]  {background:var(--danger-container-bg);border-color:var(--danger-container-outline);color:var(--danger-on-container)}
+    .pv-alert[data-role="success"] {background:var(--success-container-bg);border-color:var(--success-container-outline);color:var(--success-on-container)}
+    .pv-alert[data-role="warning"] {background:var(--warning-container-bg);border-color:var(--warning-container-outline);color:var(--warning-on-container)}
+    .pv-alert[data-role="info"]    {background:var(--info-container-bg);border-color:var(--info-container-outline);color:var(--info-on-container)}
+    .pv-alert-title{font-weight:700;margin-bottom:2px}
+    /* Text card to demo content tokens */
+    .pv-card{padding:14px 16px;border-radius:8px;border:1px solid var(--surface-base-outline);background:var(--surface-base-bg)}
+    .pv-card .pv-h{font-size:14px;font-weight:700;margin-bottom:6px}
+    .pv-card .pv-h[data-role="brand"]   {color:var(--brand-content-strong)}
+    .pv-card .pv-h[data-role="danger"]  {color:var(--danger-content-strong)}
+    .pv-card .pv-h[data-role="success"] {color:var(--success-content-strong)}
+    .pv-card .pv-h[data-role="warning"] {color:var(--warning-content-strong)}
+    .pv-card .pv-h[data-role="info"]    {color:var(--info-content-strong)}
+    .pv-card .pv-p{font-size:12.5px;color:var(--surface-base-ct-subtle);margin-bottom:6px}
+    .pv-card .pv-link[data-role="brand"]   {color:var(--brand-content-default)}
+    .pv-card .pv-link[data-role="danger"]  {color:var(--danger-content-default)}
+    .pv-card .pv-link[data-role="success"] {color:var(--success-content-default)}
+    .pv-card .pv-link[data-role="warning"] {color:var(--warning-content-default)}
+    .pv-card .pv-link[data-role="info"]    {color:var(--info-content-default)}
   </style>
 </head>
 <body>
 
-  <div class="pv-section">
-    <div class="pv-label">Buttons</div>
+  <div class="pv-section" data-pv-shows="fill" data-pv-role="brand">
+    <div class="pv-label">Buttons <span class="pv-label-tag">component-bg</span></div>
     <div class="pv-row">
       <button class="btn" data-variant="filled" data-role="brand">Save</button>
       <button class="btn" data-variant="outlined" data-role="brand">Cancel</button>
@@ -41,8 +64,8 @@
     </div>
   </div>
 
-  <div class="pv-section">
-    <div class="pv-label">Badges</div>
+  <div class="pv-section" data-pv-shows="fill" data-pv-role="brand">
+    <div class="pv-label">Badges <span class="pv-label-tag">component-bg</span></div>
     <div class="pv-row">
       <span class="badge" data-variant="filled" data-role="brand">Brand</span>
       <span class="badge" data-variant="outlined" data-role="brand">Brand</span>
@@ -53,12 +76,55 @@
     </div>
   </div>
 
-  <div class="pv-section">
-    <div class="pv-label">Input</div>
+  <div class="pv-section" data-pv-shows="container" data-pv-role="brand">
+    <div class="pv-label">Alerts <span class="pv-label-tag">container-bg + on-container</span></div>
+    <div class="pv-stack">
+      <div class="pv-alert" data-role="brand">
+        <div><div class="pv-alert-title">Heads up</div>Brand container with text on top. Try Container softness Whisper / Light / Tinted.</div>
+      </div>
+      <div class="pv-alert" data-role="danger">
+        <div><div class="pv-alert-title">Something went wrong</div>Could not save your changes. Please try again.</div>
+      </div>
+      <div class="pv-alert" data-role="success">
+        <div><div class="pv-alert-title">Saved</div>All changes were saved to draft.</div>
+      </div>
+      <div class="pv-alert" data-role="warning">
+        <div><div class="pv-alert-title">Heads up</div>You have unsynced edits.</div>
+      </div>
+      <div class="pv-alert" data-role="info">
+        <div><div class="pv-alert-title">Did you know?</div>You can press ⌘S to save.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section" data-pv-shows="content" data-pv-role="brand">
+    <div class="pv-label">Text card <span class="pv-label-tag">content-strong + content-default</span></div>
+    <div class="pv-card">
+      <div class="pv-h" data-role="brand">Brand strong heading</div>
+      <div class="pv-p">Body text uses surface-content tokens. The link below uses brand-content-default.</div>
+      <a href="#" class="pv-link" data-role="brand">Read documentation →</a>
+    </div>
+  </div>
+
+  <div class="pv-section" data-pv-shows="fill" data-pv-role="brand">
+    <div class="pv-label">Input <span class="pv-label-tag">component-outline</span></div>
     <div class="pv-stack" style="max-width:320px">
       <input class="input" type="text" placeholder="Brand-tinted focus ring" id="pv-input">
     </div>
   </div>
+
+  <script>
+    // Listen for messages from the editor to highlight the relevant pv-section.
+    window.addEventListener('message', function (e) {
+      var d = e.data || {};
+      if (d.type !== 'ev2-focus') return;
+      var lever = d.lever || null; // 'fill' | 'content' | 'container' | null
+      document.querySelectorAll('.pv-section').forEach(function (s) {
+        var shows = s.getAttribute('data-pv-shows');
+        s.setAttribute('data-active', String(lever && shows === lever));
+      });
+    });
+  </script>
 
 </body>
 </html>

@@ -95,10 +95,37 @@
     // Disclosure open-state persists across role / tier swaps.
     // Keyed by 'tierId:discId' so each tier can have its own pattern.
     disclosure: { 't0:steps': false, 't0:affects': false, 't1:slots': false, 't1:affects': false },
+    focusedLever: null,
     lastSavedAt: null
   };
 
   var DRAFT_KEY = 'dtf-editor-v2-draft-v1';
+  var UI_KEY    = 'dtf-editor-v2-ui-v1';
+
+  /* ── UI state persistence (separate from draft — it survives Discard) ── */
+  function saveUIState() {
+    try {
+      localStorage.setItem(UI_KEY, JSON.stringify({
+        v: 1,
+        activeTier: State.activeTier,
+        activeRole: State.activeRole,
+        anchor:     State.anchor,
+        disclosure: State.disclosure,
+        mode: document.documentElement.getAttribute('data-theme') || 'light',
+        showCss: !!document.body.classList.contains('ev2-show-css'),
+        focusedLever: State.focusedLever || null
+      }));
+    } catch (e) {}
+  }
+  function loadUIState() {
+    try {
+      var raw = localStorage.getItem(UI_KEY);
+      if (!raw) return null;
+      var d = JSON.parse(raw);
+      if (!d || d.v !== 1) return null;
+      return d;
+    } catch (e) { return null; }
+  }
 
   var $listTitle = document.getElementById('listTitle');
   var $listSub   = document.getElementById('listSub');
@@ -313,6 +340,8 @@
   function ladderHTML(role) {
     var steps = stepsFor(role).filter(function(s){ return s.name !== 'white' && s.name !== 'black'; });
     var baseSteps = baselineStepsFor(role);
+    var roleObj = ROLES.find(function (r) { return r.id === role; });
+    var prefix = roleObj ? roleObj.prefix : role;
     return steps.map(function (s) {
       var b = baseSteps.find(function(x){ return x.name === s.name; });
       var diff = b && b.hex.toUpperCase() !== s.hex.toUpperCase();
@@ -322,6 +351,7 @@
         + '<div class="ev2-step-meta">'
           + '<div class="ev2-step-name">' + s.name + '</div>'
           + '<div class="ev2-step-hex">' + s.hex.replace('#','') + '</div>'
+          + '<div class="ev2-step-css">--prim-' + prefix + '-' + s.name + '</div>'
         + '</div>'
       + '</div>';
     }).join('');
@@ -403,6 +433,7 @@
     document.querySelectorAll('[data-role-tab]').forEach(function (b) {
       b.addEventListener('click', function () {
         State.activeRole = b.getAttribute('data-role-tab');
+        saveUIState();
         renderT0();
       });
     });
@@ -414,6 +445,7 @@
         if (nowOpen) disc.setAttribute('data-open', '');
         else disc.removeAttribute('data-open');
         if (key) State.disclosure[key] = nowOpen;
+        saveUIState();
       });
     });
     document.querySelectorAll('[data-anchor]').forEach(function (b) {
@@ -424,6 +456,7 @@
         renderT0();
         refreshChangeBar();
         scheduleAutosave();
+        saveUIState();
       });
     });
 
@@ -507,22 +540,33 @@
 
     var leversHTML = T1_LEVERS.map(function (lever) {
       var current = t1[lever.id];
-      return '<div class="ev2-lever-block">'
+      return '<div class="ev2-lever-block" data-lever="' + lever.id + '">'
         + '<div class="ev2-lever-head">'
           + '<span class="ev2-lever-title">' + lever.label + '</span>'
           + '<span class="ev2-lever-sub">' + lever.sub + '</span>'
         + '</div>'
-        + '<div class="ev2-seg" role="radiogroup" aria-label="' + lever.label + '">'
+        + '<div class="ev2-seg ev2-seg-' + lever.id + '" role="radiogroup" aria-label="' + lever.label + '">'
           + lever.options.map(function (opt) {
               var isSel = opt.id === current;
+              var step  = ({fill:T1_PRESETS.fill, content:T1_PRESETS.content, container:T1_PRESETS.container})[lever.id][opt.id];
+              var hex   = stepHexByName(role.id, step) || '#000';
+              var preview = renderLeverPreview(lever.id, hex);
               return '<button class="ev2-seg-btn" role="radio" '
                 + 'aria-checked="' + isSel + '" '
                 + 'data-t1-lever="' + lever.id + '" data-t1-value="' + opt.id + '" '
                 + 'data-tip="' + opt.hint + '">'
-                + opt.label
+                + '<span class="ev2-seg-preview">' + preview + '</span>'
+                + '<span class="ev2-seg-label">' + opt.label + '</span>'
+                + '<span class="ev2-seg-css">step ' + step + ' \u2022 ' + hex.toUpperCase().replace('#','') + '</span>'
                 + '</button>';
             }).join('')
         + '</div>'
+        + '<div class="ev2-lever-css">--' + role.id + '-' + leverSlotHint(lever.id) + '<span> = </span>'
+          + (function () {
+              var step = ({fill:T1_PRESETS.fill, content:T1_PRESETS.content, container:T1_PRESETS.container})[lever.id][current];
+              return (stepHexByName(role.id, step) || '#000').toUpperCase();
+            })()
+          + '</div>'
       + '</div>';
     }).join('');
 
@@ -606,6 +650,7 @@
     document.querySelectorAll('[data-role-tab]').forEach(function (b) {
       b.addEventListener('click', function () {
         State.activeRole = b.getAttribute('data-role-tab');
+        saveUIState();
         renderT1();
       });
     });
@@ -617,6 +662,18 @@
         if (nowOpen) disc.setAttribute('data-open', '');
         else disc.removeAttribute('data-open');
         if (key) State.disclosure[key] = nowOpen;
+        saveUIState();
+      });
+    });
+    document.querySelectorAll('.ev2-lever-block').forEach(function (block) {
+      block.addEventListener('mouseenter', function () {
+        var lever = block.getAttribute('data-lever');
+        State.focusedLever = lever;
+        focusPreview(lever);
+      });
+      block.addEventListener('mouseleave', function () {
+        State.focusedLever = null;
+        focusPreview(null);
       });
     });
     document.querySelectorAll('[data-t1-lever]').forEach(function (b) {
@@ -630,6 +687,26 @@
         renderT1();
       });
     });
+  }
+
+  function leverSlotHint(leverId) {
+    if (leverId === 'fill') return 'component-bg-default';
+    if (leverId === 'content') return 'content-default';
+    return 'container-bg';
+  }
+  function renderLeverPreview(leverId, hex) {
+    if (leverId === 'fill') {
+      return '<span class="ev2-pv-fill" style="background:' + hex + '"></span>';
+    }
+    if (leverId === 'content') {
+      return '<span class="ev2-pv-content" style="color:' + hex + '">Aa</span>';
+    }
+    return '<span class="ev2-pv-container" style="background:' + hex + ';border-color:' + hex + '"></span>';
+  }
+  function focusPreview(leverId) {
+    try {
+      $frame.contentWindow.postMessage({ type: 'ev2-focus', lever: leverId }, '*');
+    } catch (e) {}
   }
 
   function renderActiveTier() {
@@ -647,6 +724,7 @@
       document.querySelectorAll('.ev2-tier').forEach(function (b) { b.removeAttribute('aria-current'); });
       btn.setAttribute('aria-current', 'true');
       State.activeTier = btn.getAttribute('data-tier');
+      saveUIState();
       renderActiveTier();
     });
   });
@@ -662,11 +740,13 @@
         var doc = $frame.contentDocument;
         if (doc && doc.documentElement) doc.documentElement.setAttribute('data-theme', mode);
       } catch (e) {}
+      saveUIState();
     });
   });
 
   document.getElementById('showCssNames').addEventListener('change', function (e) {
     document.body.classList.toggle('ev2-show-css', e.target.checked);
+    saveUIState();
   });
 
   $discard.addEventListener('click', function () {
@@ -711,6 +791,31 @@
     if (!window.PaletteEngine) { setTimeout(boot, 30); return; }
     readBaseline();
     var hadDraft = loadDraftFromStorage();
+    var ui = loadUIState();
+    if (ui) {
+      if (ui.activeTier) State.activeTier = ui.activeTier;
+      if (ui.activeRole) State.activeRole = ui.activeRole;
+      if (ui.anchor === 'exact' || ui.anchor === 'normalized') State.anchor = ui.anchor;
+      if (ui.disclosure && typeof ui.disclosure === 'object') {
+        Object.keys(ui.disclosure).forEach(function (k) { State.disclosure[k] = !!ui.disclosure[k]; });
+      }
+      if (ui.mode === 'light' || ui.mode === 'dark') {
+        document.documentElement.setAttribute('data-theme', ui.mode);
+        document.querySelectorAll('.ev2-mode').forEach(function (b) {
+          b.setAttribute('aria-checked', String(b.getAttribute('data-mode') === ui.mode));
+        });
+      }
+      if (ui.showCss) {
+        document.body.classList.add('ev2-show-css');
+        var cb = document.getElementById('showCssNames');
+        if (cb) cb.checked = true;
+      }
+      // Reflect activeTier in the rail aria-current
+      document.querySelectorAll('.ev2-tier').forEach(function (b) {
+        if (b.getAttribute('data-tier') === State.activeTier) b.setAttribute('aria-current', 'true');
+        else b.removeAttribute('aria-current');
+      });
+    }
     $frame.src = './preview.html';
     renderActiveTier();
     refreshChangeBar();

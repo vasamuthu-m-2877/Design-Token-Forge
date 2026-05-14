@@ -505,6 +505,11 @@ body{
   border-radius:var(--radius-md,8px);
   padding:12px 14px;
   background:var(--surface-base-bg);
+  transition:border-color 140ms,box-shadow 140ms;
+}
+.ev2-lever-block:hover{
+  border-color:var(--brand-component-outline-default,#6593fe);
+  box-shadow:0 0 0 3px rgba(99,147,254,.10);
 }
 .ev2-lever-head{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
 .ev2-lever-title{font-size:12.5px;font-weight:700;color:var(--surface-base-ct-strong);letter-spacing:-.005em}
@@ -516,20 +521,71 @@ body{
   border:1px solid var(--surface-base-outline);
 }
 .ev2-seg-btn{
-  padding:7px 10px;border:none;background:transparent;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:9px 8px 7px;border:none;background:transparent;
   font:inherit;font-size:12px;font-weight:600;
   color:var(--surface-base-ct-subtle);
   border-radius:calc(var(--radius-sm,6px) - 2px);
   cursor:pointer;transition:all 120ms ease;
   position:relative;
 }
-.ev2-seg-btn:hover{color:var(--surface-base-ct-strong)}
+.ev2-seg-btn:hover{color:var(--surface-base-ct-strong);background:rgba(0,0,0,.025)}
 .ev2-seg-btn[aria-checked="true"]{
   background:var(--surface-base-bg);
   color:var(--surface-base-ct-strong);
   box-shadow:0 1px 2px rgba(0,0,0,.06), 0 0 0 1px var(--surface-base-outline);
 }
 .ev2-seg-btn:focus-visible{outline:2px solid var(--brand-component-bg-default,#3366f0);outline-offset:2px}
+.ev2-seg-preview{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:20px;
+}
+.ev2-pv-fill{
+  display:block;width:100%;height:100%;
+  border-radius:4px;
+  border:1px solid rgba(0,0,0,.10);
+}
+.ev2-pv-content{
+  font-family:var(--font-family-sans,system-ui);
+  font-size:14px;font-weight:700;letter-spacing:-.02em;line-height:1;
+}
+.ev2-pv-container{
+  display:block;width:100%;height:100%;
+  border-radius:4px;border:1px solid;
+  /* uses bg + border tinted same step */
+  position:relative;opacity:.55;
+}
+.ev2-seg-label{display:block}
+.ev2-seg-css{
+  display:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:9px;font-weight:500;
+  color:var(--surface-base-ct-faint);
+  letter-spacing:.02em;
+}
+.ev2-show-css .ev2-seg-css{display:block}
+.ev2-lever-css{
+  display:none;
+  margin-top:8px;
+  padding:6px 8px;
+  background:var(--surface-base-subtle);
+  border-radius:4px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10px;
+  color:var(--surface-base-ct-strong);
+}
+.ev2-lever-css span{color:var(--surface-base-ct-faint)}
+.ev2-show-css .ev2-lever-css{display:block}
+
+/* CSS-name line under T0 step swatches */
+.ev2-step-css{
+  display:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:8.5px;color:var(--surface-base-ct-faint);
+  margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ev2-show-css .ev2-step-css{display:block}
 
 .ev2-slots{display:flex;flex-direction:column;gap:2px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10.5px}
 .ev2-slot-row{
