@@ -6,7 +6,7 @@
 
 figma.showUI(__html__, { width: 480, height: 560 });
 
-var CODE_VERSION = '2026-05-14-v40';
+var CODE_VERSION = '2026-05-14-v41';
 log('code.js loaded — version ' + CODE_VERSION);
 
 /* ── URL migration via clientStorage (reliable, not blocked like localStorage) ── */
@@ -1059,7 +1059,9 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     { text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
           hover:    { fill: { t3: 'container/bg' },    text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
           pressed:  { fill: { t3: 'container/hover' }, text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
-          selected: { fill: { t3: 'container/hover' }, text: { t3: 'content/default' }, icon: { t3: 'content/default' },
+          /* Selected = rest baseline + 2px ring. Don't shift the fill
+             (would collide with divider since both zones share the token). */
+          selected: { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
                       wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
                       wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
@@ -1071,8 +1073,9 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     { fill: { t3: 'container/bg' },     text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
           hover:    { fill: { t3: 'container/hover' },  text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
           pressed:  { fill: { t3: 'container/pressed' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' } },
-          selected: { fill: { t3: 'container/pressed' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
-                      wrapper: { stroke: { t3: 'container/outline' }, strokeWeight: 2 } },
+          /* Selected = rest baseline + 2px ring (avoids divider collision). */
+          selected: { fill: { t3: 'container/bg' }, text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
+                      wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { fill: { t3: 'container/bg' },     text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
                       wrapper: { stroke: { t3: 'container/outline' }, strokeWeight: 2 } },
           disabled: { fill: { t3: 'container/bg' },     text: { t3: 'oncontainer-content/default' }, icon: { t3: 'oncontainer-content/default' },
@@ -1082,7 +1085,8 @@ var SPLIT_BUTTON_BLUEPRINT = {
           rest:     { text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
           hover:    { fill: { t3: 'container/bg' },    text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
           pressed:  { fill: { t3: 'container/hover' }, text: { t3: 'content/default' }, icon: { t3: 'content/default' } },
-          selected: { fill: { t3: 'container/hover' }, text: { t3: 'content/default' }, icon: { t3: 'content/default' },
+          /* Selected = rest baseline (transparent) + 2px ring. */
+          selected: { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
                       wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
           focus:    { text: { t3: 'content/default' }, icon: { t3: 'content/default' },
                       wrapper: { stroke: { t3: 'component/outline-default' }, strokeWeight: 2 } },
