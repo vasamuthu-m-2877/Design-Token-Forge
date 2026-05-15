@@ -144,7 +144,7 @@ body{
 /* ── Workspace (3-pane grid) ──────────────────────────── */
 .ev2-workspace{
   display:grid;
-  grid-template-columns:240px minmax(360px,1fr) minmax(420px,1.1fr);
+  grid-template-columns:240px var(--ev2-list-w, minmax(360px,1fr)) 6px minmax(420px,1.1fr);
   height:calc(100vh - 52px);
   min-height:0;
 }
@@ -152,6 +152,30 @@ body{
 /* Visible vertical dividers between panes */
 .ev2-rail{border-right:1px solid var(--surface-base-outline)}
 .ev2-list{border-right:1px solid var(--surface-base-outline)}
+
+/* Drag handle between list and preview. Sits in its own grid track. */
+.ev2-resizer{
+  position:relative;
+  background:transparent;
+  cursor:col-resize;
+  user-select:none;
+  z-index:5;
+}
+.ev2-resizer::before{
+  content:'';
+  position:absolute;inset:0;
+  margin-inline:auto;
+  width:1px;background:var(--surface-base-outline);
+  transition:background 120ms,width 120ms;
+}
+.ev2-resizer:hover::before,
+.ev2-resizer[data-dragging="true"]::before,
+.ev2-resizer:focus-visible::before{
+  width:3px;background:var(--brand-component-bg-default,#3366f0);
+}
+.ev2-resizer:focus-visible{outline:none}
+body[data-pane-dragging="true"]{cursor:col-resize}
+body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
 
 /* ── LEFT: tier rail ──────────────────────────────────── */
 .ev2-rail{
@@ -993,7 +1017,7 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
 
 /* ── Responsive guard rails (no full responsive layout in v2 step 1) ── */
 @media (max-width: 1100px){
-  .ev2-workspace{grid-template-columns:200px 1fr 1fr}
+  .ev2-workspace{grid-template-columns:200px 1fr 6px 1fr}
 }
 @media (max-width: 880px){
   .ev2-workspace{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr;height:auto}
@@ -1001,6 +1025,7 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
   .ev2-rail-nav{flex-direction:row;flex-wrap:wrap}
   .ev2-rail-foot{display:none}
   .ev2-list,.ev2-preview{border-right:0;border-bottom:1px solid var(--surface-base-outline)}
+  .ev2-resizer{display:none}
 }
 
 /* ── Deploy summary dialog ────────────────────────────── */

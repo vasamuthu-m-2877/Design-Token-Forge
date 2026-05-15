@@ -60,9 +60,15 @@
         container: { whisper: '50',  light: '75',  tinted: '100' }
       },
       dark: {
-        fill:      { soft: '500', standard: '550', bold: '600' },
+        // Dark-mode aesthetic: lift fills to luminous mid-tones (the
+        // saturated-on-near-black "bruise" look is replaced with a
+        // softer glow). Containers lift off pure black (was 800-900,
+        // nearly invisible) so alerts read as distinct surfaces.
+        // Auto-pair will flip on-component to black for the brighter
+        // fills where white loses contrast.
+        fill:      { soft: '400', standard: '450', bold: '500' },
         content:   { subtle: '200', standard: '150', strong: '100' },
-        container: { whisper: '900', light: '850', tinted: '800' }
+        container: { whisper: '850', light: '800', tinted: '700' }
       }
     },
     bold: {
@@ -72,9 +78,9 @@
         container: { whisper: '25',  light: '75',  tinted: '150' }
       },
       dark: {
-        fill:      { soft: '400', standard: '500', bold: '700' },
+        fill:      { soft: '350', standard: '450', bold: '550' },
         content:   { subtle: '250', standard: '150', strong: '50'  },
-        container: { whisper: '900', light: '800', tinted: '700' }
+        container: { whisper: '850', light: '750', tinted: '600' }
       }
     }
   };
@@ -105,7 +111,10 @@
           container: { whisper: '25', light: '50', tinted: '75' }
         },
         dark: {
-          fill: { soft: '550', standard: '600', bold: '700' }
+          // Lift success greens off near-black for the same reason as base —
+          // step 600 was visually heavy. 450/500/550 reads as a clear
+          // luminous green pill on dark.
+          fill: { soft: '450', standard: '500', bold: '550' }
         }
       },
       bold: {
@@ -114,13 +123,16 @@
           content: { subtle: '550', standard: '700', strong: '800' },
           container: { whisper: '25', light: '50', tinted: '100' }
         },
-        dark: { fill: { soft: '500', standard: '600', bold: '750' } }
+        dark: { fill: { soft: '400', standard: '500', bold: '600' } }
       }
     },
     warning: {
       subtle: {
         light: { fill: { soft: '550', standard: '600', bold: '700' } },
-        dark:  { fill: { soft: '550', standard: '600', bold: '700' } }
+        // Warning's amber needs to stay on the darker side in dark mode
+        // (lighter amber → near-yellow, loses warning semantic). Keep
+        // close to the base lift (450/500/550) but shifted one cooler.
+        dark:  { fill: { soft: '500', standard: '550', bold: '600' } }
       }
     },
     info: {
@@ -1598,8 +1610,82 @@
     } else {
       refreshDraftStatus('idle');
     }
+    initPaneResizer();
   }
   // Boot runs at the very bottom, after all helpers are defined.
+
+  /* ══════════════════════════════════════════════════════
+     Pane resizer (drag divider between list and preview)
+     ══════════════════════════════════════════════════════ */
+  function initPaneResizer() {
+    var resizer  = document.getElementById('paneResizer');
+    var workspace = document.querySelector('.ev2-workspace');
+    if (!resizer || !workspace) return;
+
+    var RAIL_W = 240;          // matches CSS first column
+    var RESIZER_W = 6;         // matches CSS resizer track
+    var MIN_LIST = 320;
+    var MIN_PREVIEW = 380;
+    var STORAGE_KEY = 'ev2-list-width';
+
+    function applyWidth(px) {
+      var totalAvail = workspace.clientWidth - RAIL_W - RESIZER_W;
+      if (totalAvail <= MIN_LIST + MIN_PREVIEW) return; // viewport too narrow
+      var maxList = totalAvail - MIN_PREVIEW;
+      var clamped = Math.max(MIN_LIST, Math.min(maxList, px));
+      workspace.style.setProperty('--ev2-list-w', clamped + 'px');
+    }
+
+    // Restore saved width
+    var saved = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+    if (saved > 0) applyWidth(saved);
+
+    var dragging = false;
+    function onPointerDown(e) {
+      dragging = true;
+      resizer.setAttribute('data-dragging', 'true');
+      document.body.setAttribute('data-pane-dragging', 'true');
+      try { resizer.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    }
+    function onPointerMove(e) {
+      if (!dragging) return;
+      var rect = workspace.getBoundingClientRect();
+      var newListW = e.clientX - rect.left - RAIL_W - (RESIZER_W / 2);
+      applyWidth(newListW);
+    }
+    function onPointerUp(e) {
+      if (!dragging) return;
+      dragging = false;
+      resizer.removeAttribute('data-dragging');
+      document.body.removeAttribute('data-pane-dragging');
+      try { resizer.releasePointerCapture(e.pointerId); } catch (_) {}
+      // Persist current width
+      var cs = workspace.style.getPropertyValue('--ev2-list-w').trim();
+      var px = parseInt(cs, 10);
+      if (px > 0) localStorage.setItem(STORAGE_KEY, String(px));
+    }
+    resizer.addEventListener('pointerdown', onPointerDown);
+    resizer.addEventListener('pointermove', onPointerMove);
+    resizer.addEventListener('pointerup', onPointerUp);
+    resizer.addEventListener('pointercancel', onPointerUp);
+    // Double-click to reset
+    resizer.addEventListener('dblclick', function () {
+      workspace.style.removeProperty('--ev2-list-w');
+      localStorage.removeItem(STORAGE_KEY);
+    });
+    // Keyboard a11y: arrow keys nudge by 16px
+    resizer.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      var current = parseInt(getComputedStyle(workspace).gridTemplateColumns.split(' ')[1], 10) || 480;
+      var delta = e.key === 'ArrowLeft' ? -16 : 16;
+      applyWidth(current + delta);
+      var cs = workspace.style.getPropertyValue('--ev2-list-w').trim();
+      var px = parseInt(cs, 10);
+      if (px > 0) localStorage.setItem(STORAGE_KEY, String(px));
+      e.preventDefault();
+    });
+  }
 
   /* ══════════════════════════════════════════════════════
      Project widget + switch guard

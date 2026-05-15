@@ -15,10 +15,10 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=27">
+  <link rel="stylesheet" href="./editor-v2.css?v=28">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
-  <script src="../palette-engine.js?v=27" defer></script>
+  <script src="../palette-engine.js?v=28" defer></script>
 </head>
 <body>
 
@@ -126,6 +126,9 @@
       </div>
     </section>
 
+    <!-- Drag-to-resize divider between list and preview -->
+    <div class="ev2-resizer" id="paneResizer" role="separator" aria-orientation="vertical" aria-label="Resize list and preview panes" tabindex="0"></div>
+
     <!-- RIGHT: Live preview -->
     <section class="ev2-preview" aria-label="Live preview">
       <header class="ev2-preview-head">
@@ -212,6 +215,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=27" defer></script>
+  <script src="./editor-v2.js?v=28" defer></script>
 </body>
 </html>
