@@ -1780,9 +1780,11 @@
       var r = el.getBoundingClientRect();
       var vw = window.innerWidth, vh = window.innerHeight;
       var cx = r.left + r.width / 2;
-      var place = 'top';
-      var top = r.top - th - 10;
-      if (top < 8) { place = 'bottom'; top = r.bottom + 10; }
+      /* Prefer below the trigger so tips never cover the swatch /
+         ratio they describe. Flip above only when there isn't room. */
+      var place = 'bottom';
+      var top = r.bottom + 10;
+      if (top + th > vh - 8) { place = 'top'; top = r.top - th - 10; }
       var left = Math.round(cx - tw / 2);
       left = Math.max(8, Math.min(vw - tw - 8, left));
       tip.style.top = Math.round(top) + 'px';

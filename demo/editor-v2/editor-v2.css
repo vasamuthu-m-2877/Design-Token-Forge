@@ -753,6 +753,9 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
   font-style:normal;font-size:10.5px;font-weight:600;
   color:#C2392B;
   cursor:help;
+  text-decoration:underline dotted;
+  text-underline-offset:2px;
+  text-decoration-color:rgba(194,57,43,.45);
 }
 
 /* T1 Roles — lever blocks + segmented controls + slots table */
@@ -986,7 +989,7 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
   background:var(--surface-base-bg);
 }
 .ev2-pairs-head{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
-.ev2-pairs-title{font-size:12px;font-weight:700;color:var(--surface-base-ct-strong);letter-spacing:.02em}
+.ev2-pairs-title{font-size:12px;font-weight:700;color:var(--surface-base-ct-strong);letter-spacing:.02em;cursor:help;text-decoration:underline dotted;text-underline-offset:3px;text-decoration-color:var(--surface-base-cm-outline)}
 .ev2-pairs-sub{font-size:11px;color:var(--surface-base-ct-faint)}
 .ev2-pairs-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:10px}
 .ev2-pair{
@@ -1022,6 +1025,9 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
   border-left:1px solid var(--surface-base-separator);
   padding-left:6px;
   cursor:help;
+  text-decoration:underline dotted;
+  text-underline-offset:2px;
+  text-decoration-color:var(--surface-base-cm-outline);
 }
 .ev2-pair[data-wcag-grade="fail"] .ev2-pair-ratio strong{color:#D61D20}
 .ev2-pair[data-wcag-grade="aaa"] .ev2-pair-ratio strong{color:#0B8D28}
