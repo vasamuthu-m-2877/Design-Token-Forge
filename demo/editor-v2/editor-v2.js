@@ -482,13 +482,6 @@
     try {
       win.postMessage({ type: 'ev2-active-role', role: State.activeRole }, '*');
     } catch (e) {}
-    // Tell the preview which roles have unsaved edits so the Compare
-    // panel can ring them. Sent on every push so it stays in sync with
-    // hover-preview / discard / spread / individual lever picks.
-    try {
-      var dirty = ROLES.filter(function (r) { return isRoleDirty(r.id); }).map(function (r) { return r.id; });
-      win.postMessage({ type: 'ev2-dirty-roles', roles: dirty }, '*');
-    } catch (e) {}
   }
 
   function refreshChangeBar() {

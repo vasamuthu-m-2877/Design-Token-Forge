@@ -114,21 +114,6 @@
     .pv-spotlight-cap{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--surface-base-ct-faint);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
     .pv-spotlight-cap-tag{font-size:9px;background:var(--surface-base-subtle);padding:2px 6px;border-radius:3px;font-weight:600;letter-spacing:.04em}
     .pv-spotlight-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-
-    /* Dirty-role highlight — applied by ev2-dirty-roles message.
-       A subtle dashed outline tells the designer "this role has been
-       edited from baseline" without distorting any visual tokens. */
-    [data-role][data-dirty="true"]{
-      position:relative;
-      outline:1px dashed var(--brand-component-bg-default,#3366f0);
-      outline-offset:3px;
-      border-radius:6px;
-    }
-    /* Suppress the marker on the spotlight (it's already framed) and
-       on text-card children where the dashed ring would clash with
-       the surrounding card border. */
-    .pv-spotlight [data-role][data-dirty="true"],
-    .pv-card [data-role][data-dirty="true"]{outline:none}
   </style>
 </head>
 <body>
@@ -305,17 +290,13 @@
         if (link) link.setAttribute('data-role', roleId);
         return;
       }
-      // Dirty-roles list — mark every [data-role="X"] element with
-      // data-dirty="true" so CSS can paint a subtle "edited" ring.
-      // Lets the Compare-across-roles panel surface at-a-glance which
-      // roles the designer has touched in this draft.
-      if (d.type === 'ev2-dirty-roles' && Array.isArray(d.roles)) {
-        var dirty = {};
-        d.roles.forEach(function (r) { dirty[r] = true; });
-        document.querySelectorAll('[data-role]').forEach(function (el) {
-          var r = el.getAttribute('data-role');
-          if (dirty[r]) el.setAttribute('data-dirty', 'true');
-          else el.removeAttribute('data-dirty');
+      // Dirty-roles list — noop. Kept the message branch so older
+      // editor builds posting it don't trigger a fall-through into
+      // ev2-focus handling. The dashed-ring UX was removed because
+      // per-role badge + change counter already convey the same info.
+      if (d.type === 'ev2-dirty-roles') {
+        document.querySelectorAll('[data-dirty]').forEach(function (el) {
+          el.removeAttribute('data-dirty');
         });
         return;
       }
