@@ -312,70 +312,36 @@
   }
 
   /* ── WCAG contrast helpers ───────────────────────────── */
-  function _hexToRgb(h) {
-    h = (h || '').replace('#','').trim();
-    if (h.length === 3) h = h.split('').map(function (c) { return c+c; }).join('');
-    if (h.length !== 6) return { r:0, g:0, b:0 };
-    return { r: parseInt(h.slice(0,2),16), g: parseInt(h.slice(2,4),16), b: parseInt(h.slice(4,6),16) };
+  /* All math lives in DTFSolver (./solver.js). These thin shims
+     keep the existing call sites readable and let us swap the
+     engine without touching every callsite. */
+  function contrastRatio(a, b)              { return DTFSolver.contrastRatio(a, b); }
+  function wcagJudge(ratio, isLargeText)    { return DTFSolver.wcagJudge(ratio, isLargeText); }
+  function surfaceBgFor(mode)               { return DTFSolver.surfaceBgFor(mode); }
+
+  /* Build the role's ladder (name → hex map) for the solver. */
+  function ladderFor(roleId) {
+    return DTFSolver.ladderFromSteps(stepsFor(roleId));
   }
-  function _relLum(hex) {
-    var c = _hexToRgb(hex);
-    var f = function (v) { v = v / 255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); };
-    return 0.2126*f(c.r) + 0.7152*f(c.g) + 0.0722*f(c.b);
-  }
-  function contrastRatio(a, b) {
-    var L1 = _relLum(a), L2 = _relLum(b);
-    var hi = Math.max(L1, L2), lo = Math.min(L1, L2);
-    return (hi + 0.05) / (lo + 0.05);
-  }
-  // Returns { grade: 'AAA'|'AA'|'AA-Large'|'Fail', ratio, pass }
-  function wcagJudge(ratio, isLargeText) {
-    if (ratio >= 7) return { grade: 'AAA', ratio: ratio, pass: true };
-    if (ratio >= 4.5) return { grade: 'AA', ratio: ratio, pass: true };
-    if (ratio >= 3 && isLargeText) return { grade: 'AA Large', ratio: ratio, pass: true };
-    return { grade: 'Fail', ratio: ratio, pass: false };
-  }
-  // Mode-aware page surface for content checks
-  function surfaceBgFor(mode) { return mode === 'dark' ? '#0A0A0A' : '#FFFFFF'; }
+
   // Auto-pair: pick black or white text for a filled component fill,
-  // whichever has higher WCAG contrast. Fixes warning amber where
-  // hardcoded white silently fails.
+  // whichever has higher WCAG contrast.
   function onComponentColor(roleId, mode) {
     if (!roleId) return '#FFFFFF'; // legacy callers (preserved for safety)
     var t = State.t1[mode || State.editingMode][roleId];
     var P = presetsFor(roleId, mode || State.editingMode);
     var fillHex = stepHexByName(roleId, P.fill[t.fill]) || '#000';
-    var rWhite = contrastRatio(fillHex, '#FFFFFF');
-    var rBlack = contrastRatio(fillHex, '#0A0A0A');
-    return rBlack > rWhite ? '#0A0A0A' : '#FFFFFF';
+    return DTFSolver.deriveOnComponent(fillHex);
   }
   // Auto-pair: pick the ladder step (closest to the user's chosen
   // content-default) that passes AA against the active container.
-  // Walks outward (one step darker, one lighter, two darker, two
-  // lighter, ...) so we land near the user's intent.
   function onContainerColor(roleId, mode) {
     mode = mode || State.editingMode;
     var t = State.t1[mode][roleId];
     var P = presetsFor(roleId, mode);
-    var containerHex = stepHexByName(roleId, P.container[t.container]) || surfaceBgFor(mode);
-    var startStep = P.content[t.content];
-    var startIdx = ALL_STEPS.indexOf(startStep);
-    if (startIdx < 0) startIdx = ALL_STEPS.indexOf('600');
-    // Search order: start, +1, -1, +2, -2, ...
-    var order = [startIdx];
-    for (var d = 1; d < ALL_STEPS.length; d++) {
-      if (startIdx + d < ALL_STEPS.length) order.push(startIdx + d);
-      if (startIdx - d >= 0) order.push(startIdx - d);
-    }
-    var bestHex = null, bestRatio = 0;
-    for (var i = 0; i < order.length; i++) {
-      var hex = stepHexByName(roleId, ALL_STEPS[order[i]]);
-      if (!hex) continue;
-      var r = contrastRatio(hex, containerHex);
-      if (r >= 4.5) return hex; // first AA pass closest to content-default wins
-      if (r > bestRatio) { bestRatio = r; bestHex = hex; }
-    }
-    return bestHex || stepHexByName(roleId, startStep) || '#000';
+    var ladder = ladderFor(roleId);
+    var containerHex = ladder[P.container[t.container]] || surfaceBgFor(mode);
+    return DTFSolver.deriveOnContainer(ladder, P.content[t.content], containerHex).hex;
   }
 
   /* Aggregate contrast for the 3 currently-picked levers of a role */
@@ -383,78 +349,21 @@
     mode = mode || State.editingMode;
     var t = State.t1[mode][roleId];
     var P = presetsFor(roleId, mode);
-    var pageBg = surfaceBgFor(mode);
-    var fillHex      = stepHexByName(roleId, P.fill[t.fill])           || '#000';
-    var contentHex   = stepHexByName(roleId, P.content[t.content])     || '#000';
-    var containerHex = stepHexByName(roleId, P.container[t.container]) || pageBg;
-    var onComp       = onComponentColor(roleId, mode);
-    var onCont       = onContainerColor(roleId, mode);
-    var checks = [
-      (function () { var r = contrastRatio(fillHex, onComp);
-        var j = wcagJudge(r, false); return { label:'On-component on Fill', ratio:r, grade:j.grade, pass:j.pass }; })(),
-      (function () { var r = contrastRatio(contentHex, pageBg);
-        var j = wcagJudge(r, false); return { label:'Content on page', ratio:r, grade:j.grade, pass:j.pass }; })(),
-      (function () { var r = contrastRatio(contentHex, containerHex);
-        var j = wcagJudge(r, false); return { label:'Content on container', ratio:r, grade:j.grade, pass:j.pass }; })(),
-      (function () { var r = contrastRatio(onCont, containerHex);
-        var j = wcagJudge(r, false); return { label:'On-container on container', ratio:r, grade:j.grade, pass:j.pass }; })()
-    ];
-    return { checks: checks, onComp: onComp, onCont: onCont };
+    var ev = DTFSolver.evaluate(ladderFor(roleId), t, P, mode);
+    return { checks: ev.checks, onComp: ev.onComp, onCont: ev.onCont };
   }
 
   /* Walk to the nearest in-options pick that satisfies AA for each lever.
-  /* Auto-fix walks each lever to a passing pick using minimum-disturbance:
-     1. If the user's current pick passes, keep it.
-     2. Else prefer Standard (the visual "default" emphasis).
-     3. Else try Soft, then Bold — pick the first that passes.
-     4. If none pass, pick the highest-ratio option.
-     This avoids over-correcting (e.g. jumping straight to Bold/Strong
-     when Standard would also pass), keeping the role visually
-     consistent with the rest of the family. */
+     Delegates to DTFSolver.autoFix; this shim writes back into State.t1
+     so existing call sites that rely on side-effects keep working. */
   function autoFixT1ToAA(roleId) {
     var mode = State.editingMode;
     var t = State.t1[mode][roleId];
     var P = presetsFor(roleId, mode);
-    var pageBg = surfaceBgFor(mode);
-
-    function pickMinDisturbance(lever, currentId, evaluator) {
-      // Walk order: current → standard/light → soft/whisper → bold/tinted
-      var optionIds = lever.options.map(function (o) { return o.id; });
-      var preferred = (lever.id === 'container')
-        ? ['light', 'whisper', 'tinted']
-        : ['standard', 'soft', 'bold', 'subtle', 'strong'];
-      var order = [];
-      function push(id) { if (optionIds.indexOf(id) >= 0 && order.indexOf(id) < 0) order.push(id); }
-      push(currentId);
-      preferred.forEach(push);
-      optionIds.forEach(push); // safety net
-
-      var best = null;
-      for (var i = 0; i < order.length; i++) {
-        var id = order[i];
-        var step = P[lever.id][id];
-        var hex = stepHexByName(roleId, step) || '#000';
-        var ratio = evaluator(hex);
-        if (ratio >= 4.5) return id; // first pass wins (= least disturbance)
-        if (!best || ratio > best.ratio) best = { id: id, ratio: ratio };
-      }
-      return best ? best.id : currentId;
-    }
-
-    var fillLever      = T1_LEVERS.find(function (l) { return l.id === 'fill'; });
-    var contentLever   = T1_LEVERS.find(function (l) { return l.id === 'content'; });
-    var containerLever = T1_LEVERS.find(function (l) { return l.id === 'container'; });
-
-    t.fill    = pickMinDisturbance(fillLever,    t.fill,    function (hex) {
-      // Match the on-component derivation: pick whichever of black/white
-      // wins, then evaluate against that. So warning fills get judged
-      // against black (which is correct), not against white.
-      var rW = contrastRatio(hex, '#FFFFFF'), rB = contrastRatio(hex, '#0A0A0A');
-      return Math.max(rW, rB);
-    });
-    t.content = pickMinDisturbance(contentLever, t.content, function (hex) { return contrastRatio(hex, pageBg); });
-    var newContentHex = stepHexByName(roleId, P.content[t.content]) || '#000';
-    t.container = pickMinDisturbance(containerLever, t.container, function (hex) { return contrastRatio(newContentHex, hex); });
+    var newPicks = DTFSolver.autoFix(ladderFor(roleId), t, P, mode, T1_LEVERS);
+    t.fill      = newPicks.fill;
+    t.content   = newPicks.content;
+    t.container = newPicks.container;
   }
 
   /* Apply auto-AA fix across every role × mode where the picks fail.
