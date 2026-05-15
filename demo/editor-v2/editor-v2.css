@@ -1018,6 +1018,36 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
 .ev2-pair-badge[data-grade="aaa"]{background:rgba(11,141,40,.15);color:#0B8D28}
 .ev2-pair-badge[data-grade="aa"]{background:rgba(11,141,40,.10);color:#0B8D28}
 .ev2-pair-badge[data-grade="fail"]{background:rgba(214,29,32,.12);color:#D61D20}
+
+/* Inline ± stepper for border / separator overrides. Lets the user
+   walk the auto-derived step lighter or darker without opening a
+   full lever picker. Reset chevron only appears when a custom step
+   is in effect. */
+.ev2-pair-stepper{
+  display:inline-flex;align-items:center;gap:0;
+  margin-left:auto;
+  border:1px solid var(--surface-base-outline);
+  border-radius:999px;
+  background:var(--surface-base-bg);
+  overflow:hidden;
+}
+.ev2-pair[data-kind="surface"] .ev2-pair-ratio{margin-left:0}
+.ev2-pair-stepper button{
+  width:22px;height:22px;
+  border:0;background:transparent;
+  font:inherit;font-size:13px;font-weight:700;line-height:1;
+  color:var(--surface-base-ct-default);
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:background 100ms ease;
+}
+.ev2-pair-stepper button + button{border-left:1px solid var(--surface-base-outline)}
+.ev2-pair-stepper button:hover{background:var(--surface-base-cm-bg)}
+.ev2-pair-stepper button:focus-visible{
+  outline:2px solid var(--brand-component-outline-default);
+  outline-offset:1px;
+}
+.ev2-pair-stepper [data-step-reset]{color:var(--surface-base-ct-faint);font-size:11px}
 @media (max-width: 700px) { .ev2-pairs-grid{grid-template-columns:1fr} }
 
 /* ── Responsive guard rails (no full responsive layout in v2 step 1) ── */

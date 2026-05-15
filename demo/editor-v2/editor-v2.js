@@ -54,6 +54,26 @@
     i = Math.max(0, Math.min(ALL_STEPS.length - 1, i + delta));
     return ALL_STEPS[i];
   }
+  /* In dark mode, the visible "away from container" direction is
+     LIGHTER (smaller idx in ALL_STEPS). In light mode, it's DARKER
+     (larger idx). Use this multiplier wherever a delta should track
+     surface luminance. Without it, a step-850 dark container would
+     auto-derive a step-900 border that's INVISIBLE on the container. */
+  function tonalDir(mode) { return mode === 'dark' ? -1 : 1; }
+  /* Resolve the auto-derived border/separator step for a role+mode.
+     Honors a user override stored in State.t1[mode][roleId][key];
+     otherwise computes the default offset from the container pick
+     in the mode-correct direction. */
+  function resolveBorderStep(roleId, mode) {
+    var t = State.t1[mode][roleId];
+    if (t.borderStep && ALL_STEPS.indexOf(t.borderStep) >= 0) return t.borderStep;
+    return stepRel(t.container, 6 * tonalDir(mode));
+  }
+  function resolveSeparatorStep(roleId, mode) {
+    var t = State.t1[mode][roleId];
+    if (t.separatorStep && ALL_STEPS.indexOf(t.separatorStep) >= 0) return t.separatorStep;
+    return stepRel(t.container, 2 * tonalDir(mode));
+  }
 
   /* Per-role per-mode default step picks. Hand-tuned so every role
      ships AA-clean out of the box — derived from the prior preset
@@ -211,7 +231,8 @@
     var t = State.t1[mode][roleId];
     var b = (State.t1Baseline && State.t1Baseline[mode] && State.t1Baseline[mode][roleId])
          || defaultT1ForRole(roleId, mode);
-    return t.fill !== b.fill || t.content !== b.content || t.container !== b.container;
+    return t.fill !== b.fill || t.content !== b.content || t.container !== b.container
+        || !!t.borderStep || !!t.separatorStep;
   }
   function isT1Changed(roleId) {
     return isT1ChangedInMode(roleId, 'light') || isT1ChangedInMode(roleId, 'dark');
@@ -354,11 +375,12 @@
     lines.push('  --' + p + '-content-subtle: '  + get(stepRel(contentStep, -2)) + ';');
     lines.push('  --' + p + '-content-faint: '   + get(stepRel(contentStep, -3)) + ';');
     // Container family
+    var dir = tonalDir(mode);
     lines.push('  --' + p + '-container-bg: '       + get(containerStep) + ';');
-    lines.push('  --' + p + '-container-hover: '    + get(stepRel(containerStep, 1)) + ';');
-    lines.push('  --' + p + '-container-pressed: '  + get(stepRel(containerStep, 2)) + ';');
-    lines.push('  --' + p + '-container-outline: ' + get(stepRel(containerStep, 6)) + ';');
-    lines.push('  --' + p + '-container-separator: ' + get(stepRel(containerStep, 2)) + ';');
+    lines.push('  --' + p + '-container-hover: '    + get(stepRel(containerStep, 1 * dir)) + ';');
+    lines.push('  --' + p + '-container-pressed: '  + get(stepRel(containerStep, 2 * dir)) + ';');
+    lines.push('  --' + p + '-container-outline: ' + get(resolveBorderStep(roleId, mode)) + ';');
+    lines.push('  --' + p + '-container-separator: ' + get(resolveSeparatorStep(roleId, mode)) + ';');
     lines.push('  --' + p + '-component-separator: ' + get(stepRel(fillStep, -4)) + ';');
     lines.push('  --' + p + '-on-container: ' + onContainerColor(roleId, mode) + ';');
     return lines;
@@ -767,14 +789,17 @@
     var pairOnContJudge = wcagJudge(pairOnContRatio, false);
     var pairOnCompName  = pairOnComp.toUpperCase() === '#FFFFFF' ? 'White' : 'Black';
     /* Border + Separator are auto-derived from the container pick
-       (see semanticVarsFor: container-outline = +6 steps, separator
-       = +2 steps). Surface them inside the same card so designers
-       see every axis accounted for without adding a new lever. */
+       and walk in the mode-correct direction (lighter in dark mode,
+       darker in light mode) so they remain visible. Users can
+       override the step via the ± controls below — honored by
+       resolveBorderStep / resolveSeparatorStep. */
     var containerStep = t1.container;
-    var borderStep    = stepRel(containerStep, 6);
-    var separatorStep = stepRel(containerStep, 2);
+    var borderStep    = resolveBorderStep(role.id, mode);
+    var separatorStep = resolveSeparatorStep(role.id, mode);
     var borderHex     = stepHexByName(role.id, borderStep) || pairedContainerHex;
     var separatorHex  = stepHexByName(role.id, separatorStep) || pairedContainerHex;
+    var borderOverridden    = !!t1.borderStep;
+    var separatorOverridden = !!t1.separatorStep;
     function pairBadge(j) {
       var cls = j.pass ? (j.grade === 'AAA' ? 'aaa' : 'aa') : 'fail';
       var txt = j.pass ? j.grade : 'Fail';
@@ -823,16 +848,30 @@
           + '<div class="ev2-pair-label">border</div>'
           + '<div class="ev2-pair-swatch" style="background:' + pairedContainerHex + ';border:2px solid ' + borderHex + ';color:transparent">—</div>'
           + '<div class="ev2-pair-meta">'
-            + '<span class="ev2-pair-pick">step ' + borderStep + ' on container</span>'
+            + '<span class="ev2-pair-pick">step ' + borderStep + ' on container'
+              + (borderOverridden ? ' <em class="ev2-pair-fallback" data-tip="You overrode the auto-derived step. Click Reset to return to the default.">· custom</em>' : '')
+            + '</span>'
             + '<span class="ev2-pair-ratio">container-outline</span>'
+          + '</div>'
+          + '<div class="ev2-pair-stepper" role="group" aria-label="Border step">'
+            + '<button type="button" data-step-walk="border" data-dir="-1" data-tip="Walk one step lighter">\u2212</button>'
+            + '<button type="button" data-step-walk="border" data-dir="1"  data-tip="Walk one step darker">+</button>'
+            + (borderOverridden ? '<button type="button" data-step-reset="border" data-tip="Reset to mode default">\u21BA</button>' : '')
           + '</div>'
         + '</div>'
         + '<div class="ev2-pair" data-kind="surface">'
           + '<div class="ev2-pair-label">separator</div>'
           + '<div class="ev2-pair-swatch" style="background:' + pairedContainerHex + ';color:transparent;position:relative"><span style="position:absolute;left:6px;right:6px;top:50%;height:2px;background:' + separatorHex + ';transform:translateY(-50%);display:block"></span>—</div>'
           + '<div class="ev2-pair-meta">'
-            + '<span class="ev2-pair-pick">step ' + separatorStep + ' on container</span>'
+            + '<span class="ev2-pair-pick">step ' + separatorStep + ' on container'
+              + (separatorOverridden ? ' <em class="ev2-pair-fallback" data-tip="You overrode the auto-derived step. Click Reset to return to the default.">· custom</em>' : '')
+            + '</span>'
             + '<span class="ev2-pair-ratio">container-separator</span>'
+          + '</div>'
+          + '<div class="ev2-pair-stepper" role="group" aria-label="Separator step">'
+            + '<button type="button" data-step-walk="separator" data-dir="-1" data-tip="Walk one step lighter">\u2212</button>'
+            + '<button type="button" data-step-walk="separator" data-dir="1"  data-tip="Walk one step darker">+</button>'
+            + (separatorOverridden ? '<button type="button" data-step-reset="separator" data-tip="Reset to mode default">\u21BA</button>' : '')
           + '</div>'
         + '</div>'
       + '</div>'
@@ -1049,6 +1088,33 @@
     var fix = e.target && e.target.closest && e.target.closest('#ev2WcagAutoFix');
     if (!fix) return;
     autoFixT1ToAA(State.activeRole);
+    pushPreview();
+    refreshChangeBar();
+    scheduleAutosave();
+    renderT1();
+  });
+
+  /* Delegated handlers for the border / separator step controls.
+     Lets the user walk the auto-derived step or reset to the
+     mode-default direction. Persisted in t1[mode][roleId]. */
+  document.addEventListener('click', function (e) {
+    var walk  = e.target && e.target.closest && e.target.closest('[data-step-walk]');
+    var reset = e.target && e.target.closest && e.target.closest('[data-step-reset]');
+    if (!walk && !reset) return;
+    var key   = (walk || reset).getAttribute(walk ? 'data-step-walk' : 'data-step-reset');
+    var which = key === 'border' ? 'borderStep' : 'separatorStep';
+    var t = t1For(State.activeRole);
+    if (reset) {
+      delete t[which];
+    } else {
+      var current = which === 'borderStep'
+        ? resolveBorderStep(State.activeRole, State.editingMode)
+        : resolveSeparatorStep(State.activeRole, State.editingMode);
+      var dir = parseInt(walk.getAttribute('data-dir'), 10) || 1;
+      var next = stepRel(current, dir);
+      if (next === current) return; // clamped at edge
+      t[which] = next;
+    }
     pushPreview();
     refreshChangeBar();
     scheduleAutosave();
