@@ -809,9 +809,9 @@
       return '<span class="ev2-pair-badge" data-grade="' + cls + '">'
         + (j.pass ? '\u2713 ' : '\u26A0 ') + txt + '</span>';
     }
-    var pairedHTML = '<div class="ev2-pairs" data-tip="These slots are auto-derived from your fill / content / container picks. Change the underlying levers to adjust them.">'
+    var pairedHTML = '<div class="ev2-pairs">'
       + '<div class="ev2-pairs-head">'
-        + '<span class="ev2-pairs-title">Auto-derived from picks</span>'
+        + '<span class="ev2-pairs-title" data-tip="These slots are auto-derived from your fill / content / container picks. Change the underlying levers to adjust them.">Auto-derived from picks</span>'
         + '<span class="ev2-pairs-sub">On-pair text, borders and separators — always coherent with the levers above</span>'
       + '</div>'
       + '<div class="ev2-pairs-grid">'
