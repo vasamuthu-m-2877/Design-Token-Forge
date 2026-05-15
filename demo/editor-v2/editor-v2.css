@@ -87,20 +87,9 @@ body{
 .ev2-proj-row-check{width:14px;height:14px;color:var(--brand-content-default,#286CE5);flex-shrink:0}
 .ev2-proj-empty{padding:14px;text-align:center;font-size:12px;color:var(--surface-base-ct-subtle)}
 
-/* UI theme toggle (top bar, segmented) — controls editor chrome only */
-.ev2-mode-toggle{
-  display:inline-flex;align-items:center;
-  padding:3px;
-  border:1px solid var(--surface-base-outline);
-  border-radius:999px;
-  background:var(--surface-base-subtle);
-  gap:2px;
-}
-.ev2-mode-label{
-  padding:0 8px 0 10px;
-  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--surface-base-ct-faint);
-}
+/* (Top-bar UI/editing-mode toggle removed — single source of truth
+   is the in-panel "Editing" toggle inside each role card head.
+   See .ev2-edit-toggle below.) */
 .ev2-mode{
   padding:5px 14px;
   border:0;
