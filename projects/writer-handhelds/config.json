@@ -11,12 +11,12 @@
     "success": "#16A34A",
     "greyscale": "#747474",
     "desaturated": "#71747C",
-    "secondary": "#000205"
+    "neutral": "#000205"
   },
   "customRoles": [
     {
-      "id": "secondary",
-      "label": "Secondary",
+      "id": "neutral",
+      "label": "Neutral",
       "keyHex": "#000205"
     }
   ],
@@ -36,7 +36,7 @@
       "container-bg": "50",
       "container-hover": "75",
       "container-pressed": "100",
-      "container-outline": "200",
+      "container-outline": "100",
       "container-separator": "100",
       "on-component": "fixed-white",
       "on-container": "600"
@@ -411,15 +411,15 @@
     }
   },
   "surfacePaletteSrc": {
-    "bright": "secondary",
-    "base": "secondary",
-    "dim": "secondary",
-    "deep": "secondary",
-    "accent": "primary",
-    "container": "secondary",
-    "over-container": "secondary",
-    "float": "secondary",
-    "inverse": "secondary"
+    "bright": "neutral",
+    "base": "neutral",
+    "dim": "neutral",
+    "deep": "neutral",
+    "accent": "brand",
+    "container": "neutral",
+    "over-container": "neutral",
+    "float": "neutral",
+    "inverse": "neutral"
   },
   "owner": "sridhar-ravi-2917",
   "paletteAnchor": "exact"
