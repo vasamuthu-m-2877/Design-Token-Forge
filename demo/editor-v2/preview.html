@@ -16,8 +16,8 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0}
     body{font-family:var(--font-family-sans,system-ui);background:var(--surface-base-bg);color:var(--surface-base-ct-default);padding:24px;line-height:1.5}
-    .pv-section{margin-bottom:24px;padding:14px;border-radius:8px;border:1px solid transparent;transition:border-color 160ms,background 160ms}
-    .pv-section[data-active="true"]{border-color:var(--brand-component-outline-default,#6593fe);background:var(--brand-container-bg,transparent)}
+    .pv-section{position:relative;margin-bottom:24px;padding:14px;border-radius:8px;border:1px solid transparent;transition:box-shadow 200ms,background 200ms}
+    .pv-section[data-active="true"]{box-shadow:0 0 0 2px var(--brand-component-outline-default,#6593fe), 0 6px 20px -8px rgba(60,90,200,.25);background:transparent}
     .pv-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--surface-base-ct-faint);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
     .pv-label-tag{font-size:9px;background:var(--surface-base-subtle);padding:2px 6px;border-radius:3px;font-weight:600;letter-spacing:.04em;color:var(--surface-base-ct-faint)}
     .pv-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -115,19 +115,37 @@
 
   <script>
     // Listen for messages from the editor to highlight the relevant pv-section.
+    var clearTimer = null;
+    var flashing = false;
     window.addEventListener('message', function (e) {
       var d = e.data || {};
       if (d.type !== 'ev2-focus') return;
-      var lever = d.lever || null; // 'fill' | 'content' | 'container' | null
+      var lever = d.lever || null;
+      // While a click-flash is in flight, ignore hover messages so the auto-clear schedule survives.
+      if (flashing && !d.scroll) return;
       var match = null;
       document.querySelectorAll('.pv-section').forEach(function (s) {
         var shows = s.getAttribute('data-pv-shows');
         var on = !!(lever && shows === lever);
         s.setAttribute('data-active', String(on));
-        if (on && !match) match = s; // first match wins for scroll target
+        if (on && !match) match = s;
       });
       if (match && d.scroll) {
-        match.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var rect = match.getBoundingClientRect();
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        var fullyVisible = rect.top >= 0 && rect.bottom <= vh;
+        if (!fullyVisible) match.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      if (d.scroll && lever) {
+        if (clearTimer) clearTimeout(clearTimer);
+        flashing = true;
+        clearTimer = setTimeout(function () {
+          document.querySelectorAll('.pv-section[data-active="true"]').forEach(function (s) {
+            s.setAttribute('data-active', 'false');
+          });
+          flashing = false;
+          clearTimer = null;
+        }, 1400);
       }
     });
   </script>
