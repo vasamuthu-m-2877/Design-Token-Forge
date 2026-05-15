@@ -797,7 +797,21 @@
           + '<div class="ev2-pair-label">on-container</div>'
           + '<div class="ev2-pair-swatch" style="background:' + pairedContainerHex + ';color:' + pairOnCont + '">Aa</div>'
           + '<div class="ev2-pair-meta">'
-            + '<span class="ev2-pair-pick">step ' + (function(){var s=ALL_STEPS,h=pairOnCont;for(var i=0;i<s.length;i++){if((stepHexByName(role.id,s[i])||'').toLowerCase()===h.toLowerCase())return s[i];}return '?';})() + ' on container</span>'
+            + (function () {
+                /* Find which ladder step corresponds to the auto-derived
+                   on-container hex, then surface a fallback note when it
+                   differs from the user's content pick. Keeps the auto-
+                   derived card honest about the silent step-walk. */
+                var s = ALL_STEPS, h = pairOnCont, derivedStep = '?';
+                for (var i = 0; i < s.length; i++) {
+                  if ((stepHexByName(role.id, s[i]) || '').toLowerCase() === h.toLowerCase()) { derivedStep = s[i]; break; }
+                }
+                var walked = derivedStep !== t1.content;
+                var pick = walked
+                  ? 'step ' + derivedStep + ' on container <em class="ev2-pair-fallback" data-tip="Your content pick (step ' + t1.content + ') doesn\'t pass AA on this container, so the on-container token auto-walked to step ' + derivedStep + '.">· fallback from step ' + t1.content + '</em>'
+                  : 'step ' + derivedStep + ' on container';
+                return '<span class="ev2-pair-pick">' + pick + '</span>';
+              })()
             + '<span class="ev2-pair-ratio">' + pairOnContRatio.toFixed(2) + ':1</span>'
             + pairBadge(pairOnContJudge)
           + '</div>'
@@ -884,15 +898,9 @@
     var wcagHTML = _wp.wcagHTML;
     var pairedHTML = _wp.pairedHTML;
 
-    var modeBanner = '<div class="ev2-edit-scope" data-mode="' + mode + '" '
-      + 'title="You are editing the ' + mode + ' theme. Use the Light\u2009/\u2009Dark toggle in the top bar to switch.">'
-      + '<span class="ev2-edit-scope-dot" aria-hidden="true"></span>'
-      + '<span class="ev2-edit-scope-label">Editing <strong>' + (mode === 'dark' ? 'Dark' : 'Light') + ' mode</strong> tokens</span>'
-      + '<span class="ev2-edit-scope-meta">Picks below apply to ' + mode + ' theme only</span>'
-    + '</div>';
-
     $body.innerHTML =
       '<div class="ev2-roles" role="tablist">'
+
         + ROLES.map(function (r) {
             var current = r.id === role.id;
             var diffs = summarizeRoleChanges(r.id);
@@ -909,19 +917,15 @@
               + '</button>';
           }).join('')
       + '</div>'
-      + modeBanner
       + '<div class="ev2-intent">'
         + '<div class="ev2-intent-head">'
-          + '<div class="ev2-intent-titlewrap">'
-            + '<span class="ev2-intent-title">' + role.label + ' role</span>'
-            + '<span class="ev2-intent-sub">How prominently should ' + role.label.toLowerCase() + ' appear across surfaces, content and containers?</span>'
-          + '</div>'
+          + '<span class="ev2-intent-mode" data-mode="' + mode + '" data-tip="You are editing the ' + mode + ' theme. Use the Light / Dark toggle in the top bar to switch.">' + (mode === 'dark' ? 'Dark' : 'Light') + '</span>'
           + (changed ? '<span class="ev2-intent-changed">Changed</span>' : '')
           + '<button type="button" class="ev2-role-reset" data-role-reset="' + role.id + '"'
             + (changed ? '' : ' disabled')
-            + ' data-tip="Reset ' + role.label + ' to project defaults — anchor color, fill / content / container picks, and step interval. Other roles are untouched.">'
+            + ' data-tip="Reset ' + role.label + ' to project defaults. Other roles are untouched.">'
             + '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>'
-            + '<span>Reset ' + role.label + '</span>'
+            + '<span>Reset</span>'
           + '</button>'
         + '</div>'
         + '<div class="ev2-intent-body">'

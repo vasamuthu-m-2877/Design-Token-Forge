@@ -202,10 +202,14 @@
     var containerHex = ladder[picks.container] || pageBg;
     var onComp = deriveOnComponent(fillHex);
     var onCont = deriveOnContainer(ladder, picks.content, containerHex);
+    /* Three real-world checks. "Content on container" is intentionally
+       NOT a separate check — components never render content-default
+       directly on container-bg; they always use the auto-derived
+       on-container token. Including it would double-count and conflict
+       with what the container picker now reports. */
     var checks = [
       { label: 'On-component on Fill',        ratio: contrastRatio(fillHex,    onComp)       },
       { label: 'Content on page',             ratio: contrastRatio(contentHex, pageBg)       },
-      { label: 'Content on container',        ratio: contrastRatio(contentHex, containerHex) },
       { label: 'On-container on container',   ratio: contrastRatio(onCont.hex, containerHex) }
     ].map(function (c) {
       var j = wcagJudge(c.ratio, false);
@@ -222,8 +226,11 @@
   }
 
   /* Per-lever AA judge for a candidate step. Pure: no state.
-       lever ∈ 'fill' | 'content' | 'container'. For 'container'
-       the judge needs the currently-picked content step. */
+       lever ∈ 'fill' | 'content' | 'container'. The container case
+       judges using deriveOnContainer — i.e. "can SOME on-container
+       step in the ladder pass AA on this container?" — because that
+       reflects what real components emit (always on-container, never
+       raw content-default-on-container). */
   function judgeStepForLever(ladder, lever, step, picks, mode) {
     var hex = ladder[step]; if (!hex) return { ratio: 0, pass: false, grade: 'Fail' };
     var ratio;
@@ -233,8 +240,9 @@
     } else if (lever === 'content') {
       ratio = contrastRatio(hex, surfaceBgFor(mode));
     } else { // container
-      var contentHex = ladder[picks.content] || '#000';
-      ratio = contrastRatio(contentHex, hex);
+      // Use the same derivation the on-container card uses so the
+      // picker badge and the auto-derived card always agree.
+      ratio = deriveOnContainer(ladder, picks.content, hex).ratio;
     }
     return wcagJudge(ratio, false);
   }

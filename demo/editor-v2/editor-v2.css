@@ -358,14 +358,26 @@ body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
   margin-bottom:14px;
 }
 .ev2-intent-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px;
-  gap:12px;
+  display:flex;align-items:center;
+  padding:8px 12px;
+  gap:10px;
   border-bottom:1px solid var(--surface-base-outline);
 }
-.ev2-intent-titlewrap{display:flex;flex-direction:column;line-height:1.2;min-width:0}
-.ev2-intent-title{font-size:14px;font-weight:700;color:var(--surface-base-ct-strong)}
-.ev2-intent-sub{font-size:11px;color:var(--surface-base-ct-faint);margin-top:2px}
+/* Compact "Light" / "Dark" mode chip — replaces the old full-width
+   banner. The Light/Dark toggle in the top bar is the source of truth;
+   this chip just confirms scope inside the role card. */
+.ev2-intent-mode{
+  display:inline-flex;align-items:center;
+  padding:3px 8px;
+  border-radius:999px;
+  background:var(--surface-base-cm-bg);
+  color:var(--surface-base-ct-default);
+  font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid var(--surface-base-outline);
+}
+.ev2-intent-mode[data-mode="light"]{color:#704E10;border-color:#E0B062;background:#FFF6E6}
+.ev2-intent-mode[data-mode="dark"]{color:#1f4ad8;border-color:#a4baf3;background:#EAF2FF}
+.ev2-role-reset{margin-left:auto}
 .ev2-intent-changed{
   display:inline-flex;align-items:center;gap:5px;
   padding:3px 8px;
@@ -704,22 +716,15 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
 .ev2-seg-wcag[data-grade="aa"]{background:#2F8049;color:#fff}
 .ev2-seg-wcag[data-grade="fail"]{background:#C2392B;color:#fff}
 
-/* Editing-mode scope banner (top of T1 panel) */
-.ev2-edit-scope{
-  display:flex;align-items:center;gap:10px;
-  padding:8px 12px;margin:0 0 14px;
-  border:1px solid var(--surface-base-outline);
-  border-left-width:3px;
-  border-radius:var(--radius-md,8px);
-  background:var(--surface-base-subtle);
-  font-size:12px;
+/* Auto-derived "fallback" marker on the on-container card label.
+   Surfaces when the on-container token had to walk away from the
+   user's content step to find an AA-passing companion. */
+.ev2-pair-fallback{
+  margin-left:6px;
+  font-style:normal;font-size:10.5px;font-weight:600;
+  color:#C2392B;
+  cursor:help;
 }
-.ev2-edit-scope[data-mode="light"]{border-left-color:var(--warning-component-bg-default,#f0a83a)}
-.ev2-edit-scope[data-mode="dark"]{border-left-color:var(--info-component-bg-default,#3366f0)}
-.ev2-edit-scope-dot{width:8px;height:8px;border-radius:50%;background:var(--warning-component-bg-default,#f0a83a)}
-.ev2-edit-scope[data-mode="dark"] .ev2-edit-scope-dot{background:var(--info-component-bg-default,#3366f0)}
-.ev2-edit-scope-label{color:var(--surface-base-ct-strong)}
-.ev2-edit-scope-meta{margin-left:auto;color:var(--surface-base-ct-subtle);font-size:11px}
 
 /* T1 Roles — lever blocks + segmented controls + slots table */
 .ev2-levers{display:flex;flex-direction:column;gap:10px}
