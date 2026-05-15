@@ -577,7 +577,7 @@
             + '<span class="ev2-intent-title">' + role.label + ' key color</span>'
             + '<span class="ev2-intent-sub">One color. 20 steps recompute. Every component using ' + role.label.toLowerCase() + ' updates.</span>'
           + '</div>'
-          + (changedThisRole ? '<span class="ev2-intent-changed">Changed</span>' : '')
+          + (changedThisRole ? '<span class="ev2-intent-hint">Edited from defaults</span>' : '')
         + '</div>'
         + '<div class="ev2-intent-body">'
           + '<div class="ev2-lever">'
@@ -707,9 +707,12 @@
     // Toggle "Changed" pill
     var head = document.querySelector('.ev2-intent-head');
     if (head) {
-      var pill = head.querySelector('.ev2-intent-changed');
+      var pill = head.querySelector('.ev2-intent-hint');
+      var resetBtn = head.querySelector('.ev2-role-reset');
       if (isChanged(role) && !pill) {
-        head.insertAdjacentHTML('beforeend', '<span class="ev2-intent-changed">Changed</span>');
+        var hint = '<span class="ev2-intent-hint">Edited from defaults</span>';
+        if (resetBtn) resetBtn.insertAdjacentHTML('beforebegin', hint);
+        else head.insertAdjacentHTML('beforeend', hint);
       } else if (!isChanged(role) && pill) {
         pill.remove();
       }
@@ -920,7 +923,7 @@
       + '<div class="ev2-intent">'
         + '<div class="ev2-intent-head">'
           + '<span class="ev2-intent-mode" data-mode="' + mode + '" data-tip="You are editing the ' + mode + ' theme. Use the Light / Dark toggle in the top bar to switch.">' + (mode === 'dark' ? 'Dark' : 'Light') + '</span>'
-          + (changed ? '<span class="ev2-intent-changed">Changed</span>' : '')
+          + (changed ? '<span class="ev2-intent-hint">Edited from defaults</span>' : '')
           + '<button type="button" class="ev2-role-reset" data-role-reset="' + role.id + '"'
             + (changed ? '' : ' disabled')
             + ' data-tip="Reset ' + role.label + ' to project defaults. Other roles are untouched.">'

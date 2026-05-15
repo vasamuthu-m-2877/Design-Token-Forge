@@ -377,15 +377,12 @@ body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
 }
 .ev2-intent-mode[data-mode="light"]{color:#704E10;border-color:#E0B062;background:#FFF6E6}
 .ev2-intent-mode[data-mode="dark"]{color:#1f4ad8;border-color:#a4baf3;background:#EAF2FF}
-.ev2-role-reset{margin-left:auto}
-.ev2-intent-changed{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:3px 8px;
-  border-radius:999px;
-  background:var(--brand-container-bg,#EAF2FF);
-  color:var(--brand-content-default,#286CE5);
-  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+.ev2-intent-hint{
+  font-size:11px;font-weight:500;font-style:italic;
+  color:var(--surface-base-ct-faint);
+  margin-left:2px;
 }
+.ev2-role-reset{margin-left:auto}
 .ev2-role-reset{
   display:inline-flex;align-items:center;gap:5px;
   padding:5px 9px;
