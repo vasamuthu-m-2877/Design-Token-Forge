@@ -1280,4 +1280,76 @@
 
   // Boot now — all helpers + DOM refs are in scope.
   boot();
+
+  /* ── Portal tooltip ───────────────────────────────────
+     CSS-only [data-tip] tooltips get clipped by any ancestor with
+     overflow:auto/hidden (workspace scroll container, intent card, etc.).
+     This portal renders into <body> with position:fixed so it always
+     sits on top of every container. */
+  (function initTipPortal() {
+    var tip = document.createElement('div');
+    tip.className = 'ev2-tip-portal';
+    tip.setAttribute('role', 'tooltip');
+    document.body.appendChild(tip);
+    document.documentElement.classList.add('ev2-tip-js');
+
+    var current = null;
+    function hide() {
+      tip.removeAttribute('data-show');
+      current = null;
+    }
+    function show(el) {
+      var text = el.getAttribute('data-tip');
+      if (!text) return;
+      current = el;
+      tip.textContent = text;
+      tip.setAttribute('data-show', '1');
+      // Force layout to read final size after content swap
+      var tw = tip.offsetWidth, th = tip.offsetHeight;
+      var r = el.getBoundingClientRect();
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var cx = r.left + r.width / 2;
+      var place = 'top';
+      var top = r.top - th - 10;
+      if (top < 8) { place = 'bottom'; top = r.bottom + 10; }
+      var left = Math.round(cx - tw / 2);
+      left = Math.max(8, Math.min(vw - tw - 8, left));
+      tip.style.top = Math.round(top) + 'px';
+      tip.style.left = left + 'px';
+      tip.setAttribute('data-place', place);
+      // Position the arrow horizontally relative to the anchor
+      var arrowX = Math.max(10, Math.min(tw - 10, cx - left));
+      tip.style.setProperty('--ev2-tip-arrow', arrowX + 'px');
+      // Override the ::after left to match arrowX
+      tip.style.cssText = tip.style.cssText; // no-op; arrow position via inline style below
+      tip.style.setProperty('--ev2-arrow-x', arrowX + 'px');
+    }
+
+    function findTipAncestor(node) {
+      while (node && node !== document.body) {
+        if (node.nodeType === 1 && node.hasAttribute && node.hasAttribute('data-tip')) return node;
+        node = node.parentNode;
+      }
+      return null;
+    }
+
+    document.addEventListener('mouseover', function (e) {
+      var el = findTipAncestor(e.target);
+      if (el && el !== current) show(el);
+    });
+    document.addEventListener('mouseout', function (e) {
+      if (!current) return;
+      var to = e.relatedTarget;
+      if (to && (to === current || (current.contains && current.contains(to)))) return;
+      hide();
+    });
+    document.addEventListener('focusin', function (e) {
+      var el = findTipAncestor(e.target);
+      if (el) show(el);
+    });
+    document.addEventListener('focusout', function () { hide(); });
+    window.addEventListener('scroll', hide, true);
+    window.addEventListener('resize', hide);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  })();
 })();

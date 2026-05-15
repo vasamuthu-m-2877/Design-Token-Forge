@@ -375,7 +375,14 @@ body{
   color:var(--surface-base-ct-strong);
 }
 
-/* Tooltip on anchor (and any element with data-tip) */
+/* Tooltip on anchor (and any element with data-tip).
+   Pseudo-element-only fallback (used until JS-managed portal tip activates).
+   Note: pseudo tips get clipped by any ancestor overflow — the JS portal in
+   editor-v2.js (#ev2-tip-portal) is what users actually see. We hide the
+   pseudo tip when JS has taken over to avoid double tooltips. */
+html.ev2-tip-js [data-tip]::after,
+html.ev2-tip-js [data-tip]::before { content:none !important; display:none !important; }
+
 [data-tip]{position:relative}
 [data-tip]:hover::after,[data-tip]:focus-visible::after{
   content:attr(data-tip);
@@ -391,7 +398,7 @@ body{
   text-transform:none;letter-spacing:0;
   box-shadow:var(--shadow-lg,0 8px 24px rgba(0,0,0,.18));
   pointer-events:none;
-  z-index:400;
+  z-index:9999;
   white-space:normal;
 }
 [data-tip]:hover::before,[data-tip]:focus-visible::before{
@@ -401,9 +408,40 @@ body{
   transform:translateX(-50%) rotate(45deg);
   width:8px;height:8px;
   background:var(--surface-strong-bg,#1F2330);
-  z-index:400;
+  z-index:9999;
   pointer-events:none;
 }
+
+/* JS-managed portal tooltip (escapes all overflow clipping) */
+.ev2-tip-portal{
+  position:fixed;
+  z-index:10000;
+  padding:8px 10px;
+  max-width:280px;
+  border-radius:var(--radius-md,6px);
+  background:var(--surface-strong-bg,#1F2330);
+  color:#fff;
+  font-size:11px;font-weight:500;line-height:1.4;
+  text-transform:none;letter-spacing:0;
+  box-shadow:var(--shadow-lg,0 8px 24px rgba(0,0,0,.22));
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(2px);
+  transition:opacity 90ms ease,transform 90ms ease;
+  white-space:normal;
+  word-break:break-word;
+}
+.ev2-tip-portal[data-show="1"]{opacity:1;transform:translateY(0)}
+.ev2-tip-portal::after{
+  content:'';
+  position:absolute;
+  left:var(--ev2-arrow-x,50%);
+  width:8px;height:8px;
+  background:inherit;
+  transform:translateX(-50%) rotate(45deg);
+}
+.ev2-tip-portal[data-place="top"]::after{bottom:-3px}
+.ev2-tip-portal[data-place="bottom"]::after{top:-3px}
 
 /* Modal */
 .ev2-modal{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center}
