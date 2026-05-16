@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=114">
+  <link rel="stylesheet" href="./editor-v2.css?v=115">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
   <script src="../palette-engine.js?v=85" defer></script>
@@ -39,6 +39,16 @@
           <span class="ev2-proj-label">Project</span>
           <span class="ev2-proj-name" id="projName">…</span>
           <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l3 3 3-3"/></svg>
+        </button>
+        <button class="ev2-proj-action" id="projRenameBtn" type="button" aria-label="Rename active project" data-tip="Rename active project">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11.5 2.5l2 2L5 13H3v-2l8.5-8.5z"/>
+          </svg>
+        </button>
+        <button class="ev2-proj-action ev2-proj-action-danger" id="projDeleteBtn" type="button" aria-label="Delete active project" data-tip="Delete active project">
+          <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 4h10M12 4v9a1.5 1.5 0 01-1.5 1.5h-5A1.5 1.5 0 014 13V4m2 0V3a1 1 0 011-1h2a1 1 0 011 1v1"/>
+          </svg>
         </button>
         <div class="ev2-proj-panel" id="projPanel" role="listbox" hidden></div>
       </div>
@@ -335,6 +345,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=122" defer></script>
+  <script src="./editor-v2.js?v=123" defer></script>
 </body>
 </html>

@@ -4133,6 +4133,7 @@
      null-sha tree entry). */
   function ghMultiCommit(owner, files, message, branch, _retry) {
     branch = branch || 'main';
+    _retry = _retry || 0;
     return ghFetch('/repos/' + owner + '/' + GH_REPO_NAME + '/git/ref/heads/' + branch)
       .then(function (ref) {
         var commitSha = ref.object.sha;
@@ -4168,8 +4169,16 @@
           });
       })
       .catch(function (err) {
-        if (!_retry && err.message && /fast.?forward/i.test(err.message)) {
-          return ghMultiCommit(owner, files, message, branch, true);
+        // Race: someone (Pages bot, another tab, parallel commit)
+        // moved the branch between our read and our PATCH. Re-read
+        // and rebuild from the new tip. Up to 4 attempts total.
+        var raceable = err && err.message && /fast.?forward|sha.*does not match|reference does not exist/i.test(err.message);
+        if (raceable && _retry < 3) {
+          // Small backoff (0, 250, 500ms) to avoid hot-spinning if
+          // a CI job is actively pushing.
+          var delay = _retry * 250;
+          return new Promise(function (resolve) { setTimeout(resolve, delay); })
+            .then(function () { return ghMultiCommit(owner, files, message, branch, _retry + 1); });
         }
         throw err;
       });
@@ -4671,6 +4680,8 @@
   var $projBtn   = document.getElementById('projBtn');
   var $projName  = document.getElementById('projName');
   var $projPanel = document.getElementById('projPanel');
+  var $projRenameBtn = document.getElementById('projRenameBtn');
+  var $projDeleteBtn = document.getElementById('projDeleteBtn');
 
   function getActiveProjectId() {
     return localStorage.getItem('dtf-active-project') || '';
@@ -4961,6 +4972,24 @@
         $projBtn.setAttribute('aria-expanded', 'false');
       }
     });
+
+    // Topbar icon-button actions for the active project.
+    if ($projRenameBtn) {
+      $projRenameBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = getActiveProjectId();
+        if (!id) { if (window.ev2Toast) window.ev2Toast('No active project to rename', 'warn'); return; }
+        attemptProjectRename(id);
+      });
+    }
+    if ($projDeleteBtn) {
+      $projDeleteBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = getActiveProjectId();
+        if (!id) { if (window.ev2Toast) window.ev2Toast('No active project to delete', 'warn'); return; }
+        attemptProjectDelete(id);
+      });
+    }
   }
 
   function syncProjLabel() {
@@ -4982,17 +5011,12 @@
         + (current
             ? '<svg class="ev2-proj-row-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.5 3.5L13 5"/></svg>'
             : '')
-        + '<button class="ev2-proj-row-del" type="button" data-proj-del="' + p.id + '" aria-label="Delete project \u201C' + (p.name || p.id) + '\u201D" title="Delete project">'
-          + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>'
-        + '</button>'
         + '</div>';
     }).join('');
     $projPanel.innerHTML = rowsHtml;
 
     $projPanel.querySelectorAll('[data-proj-id]').forEach(function (row) {
-      row.addEventListener('click', function (e) {
-        // Ignore clicks on the delete button — it has its own handler.
-        if (e.target.closest('[data-proj-del]')) return;
+      row.addEventListener('click', function () {
         var id = row.getAttribute('data-proj-id');
         if (id === getActiveProjectId()) {
           $projPanel.setAttribute('hidden', '');
@@ -5003,13 +5027,6 @@
       });
       row.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); row.click(); }
-      });
-    });
-    $projPanel.querySelectorAll('[data-proj-del]').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var id = btn.getAttribute('data-proj-del');
-        attemptProjectDelete(id);
       });
     });
   }
@@ -5085,6 +5102,71 @@
         if (window.ev2Toast) window.ev2Toast('Delete failed: ' + msg, 'err');
         // eslint-disable-next-line no-console
         console.error('[project-delete]', err);
+      });
+    }).catch(function () {
+      if (window.ev2Toast) window.ev2Toast('GitHub authentication cancelled', 'warn');
+    });
+  }
+
+  /* Rename a project's display name only (id/folder unchanged).
+     Edits projects.json and projects/<id>/config.json in a single
+     commit. Safe across in-flight publishes thanks to ghMultiCommit
+     retry. */
+  function attemptProjectRename(id) {
+    var current = projectName(id);
+    var next = window.prompt('Rename project\nNew name for \u201C' + current + '\u201D:', current);
+    if (next == null) return; // user cancelled
+    next = String(next).trim();
+    if (!next) { if (window.ev2Toast) window.ev2Toast('Name cannot be empty', 'warn'); return; }
+    if (next === current) return; // nothing to do
+    if (next.length > 80) { if (window.ev2Toast) window.ev2Toast('Name too long (max 80 chars)', 'warn'); return; }
+    performProjectRename(id, next);
+  }
+
+  function performProjectRename(id, newName) {
+    if (window.ev2Toast) window.ev2Toast('Connecting to GitHub\u2026', 'ok');
+    ensureGhCredentials().then(function (cred) {
+      var owner = cred.user;
+      var branch = 'main';
+      // Pull both files we need to rewrite in parallel.
+      return Promise.all([
+        ghFetch('/repos/' + owner + '/' + GH_REPO_NAME + '/contents/projects.json?ref=' + branch),
+        ghFetch('/repos/' + owner + '/' + GH_REPO_NAME + '/contents/projects/' + id + '/config.json?ref=' + branch)
+          .catch(function () { return null; }) // config.json may not exist on legacy projects
+      ]).then(function (results) {
+        var idxRes = results[0];
+        var cfgRes = results[1];
+        var listRaw;
+        try { listRaw = JSON.parse(decodeURIComponent(escape(atob(idxRes.content.replace(/\n/g,''))))); }
+        catch (e) { throw new Error('Could not parse projects.json from fork'); }
+        var nextList = Array.isArray(listRaw) ? listRaw.map(function (p) {
+          if (p && p.id === id) { return Object.assign({}, p, { name: newName }); }
+          return p;
+        }) : [];
+        var files = [
+          { path: 'projects.json', content: JSON.stringify(nextList, null, 2) + '\n' }
+        ];
+        if (cfgRes && cfgRes.content) {
+          var cfg;
+          try { cfg = JSON.parse(decodeURIComponent(escape(atob(cfgRes.content.replace(/\n/g,''))))); }
+          catch (e) { cfg = null; }
+          if (cfg && typeof cfg === 'object') {
+            cfg.name = newName;
+            files.push({ path: 'projects/' + id + '/config.json', content: JSON.stringify(cfg, null, 2) + '\n' });
+          }
+        }
+        return ghMultiCommit(owner, files, 'project(' + id + '): rename to "' + newName + '"', branch)
+          .then(function () { return nextList; });
+      }).then(function (nextList) {
+        try { localStorage.setItem('dtf-known-projects', JSON.stringify(nextList)); } catch (e) {}
+        if (window.ev2Toast) window.ev2Toast('Renamed to \u201C' + newName + '\u201D', 'ok');
+        syncProjLabel();
+        renderProjPanel();
+      }).catch(function (err) {
+        var msg = (err && err.message) ? err.message : String(err);
+        if (window.ev2Toast) window.ev2Toast('Rename failed: ' + msg, 'err');
+        // eslint-disable-next-line no-console
+        console.error('[project-rename]', err);
       });
     }).catch(function () {
       if (window.ev2Toast) window.ev2Toast('GitHub authentication cancelled', 'warn');

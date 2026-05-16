@@ -83,7 +83,7 @@ body{
 .ev2-title-main{font-size:13px;font-weight:600;color:var(--ev2-chrome-ct-strong)}
 .ev2-title-sub{font-size:10px;font-weight:500;color:var(--ev2-chrome-ct-faint);text-transform:uppercase;letter-spacing:.06em}
 
-.ev2-project{margin-left:8px;font-size:12px;color:var(--ev2-chrome-ct-subtle);position:relative}
+.ev2-project{margin-left:8px;font-size:12px;color:var(--ev2-chrome-ct-subtle);position:relative;display:inline-flex;align-items:center;gap:2px}
 .ev2-proj-btn{
   display:inline-flex;align-items:center;gap:8px;
   padding:5px 10px 5px 12px;
@@ -126,21 +126,39 @@ body{
 .ev2-proj-row-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ev2-proj-row-id{font-size:10px;color:var(--ev2-chrome-ct-faint);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .ev2-proj-row-check{width:14px;height:14px;color:var(--brand-content-default,#286CE5);flex-shrink:0}
-.ev2-proj-row-del{
-  width:22px;height:22px;flex-shrink:0;
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:0;border:0;border-radius:var(--radius-xs,3px);
-  background:transparent;color:var(--ev2-chrome-ct-faint);
-  cursor:pointer;transition:background 120ms ease,color 120ms ease,opacity 120ms ease;
-  opacity:0;
-}
-.ev2-proj-row-del svg{width:13px;height:13px}
-.ev2-proj-row:hover .ev2-proj-row-del,
-.ev2-proj-row:focus-within .ev2-proj-row-del{opacity:1}
-.ev2-proj-row-del:hover{background:var(--danger-container-bg,#FEE2E2);color:var(--danger-content-default,#DC2626)}
-.ev2-proj-row-del:focus-visible{outline:2px solid var(--danger-component-outline-default,#DC2626);outline-offset:1px;opacity:1}
 .ev2-proj-empty{padding:14px;text-align:center;font-size:12px;color:var(--ev2-chrome-ct-subtle)}
 .ev2-proj-foot{display:none}
+
+/* Topbar icon-button actions for the active project (rename / delete).
+   Sit immediately right of the project picker dropdown. */
+.ev2-proj-action{
+  width:26px;height:26px;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0;
+  border:1px solid transparent;
+  border-radius:var(--radius-sm,4px);
+  background:transparent;
+  color:var(--ev2-chrome-ct-faint);
+  cursor:pointer;
+  transition:background 120ms ease,color 120ms ease,border-color 120ms ease;
+}
+.ev2-proj-action:hover{
+  background:var(--ev2-chrome-subtle);
+  color:var(--ev2-chrome-ct-strong);
+  border-color:var(--ev2-chrome-outline);
+}
+.ev2-proj-action:focus-visible{
+  outline:2px solid var(--brand-component-outline-default,#286CE5);
+  outline-offset:1px;
+}
+.ev2-proj-action-danger:hover{
+  background:var(--danger-container-bg,#FEE2E2);
+  color:var(--danger-content-default,#DC2626);
+  border-color:var(--danger-component-outline-default,#DC2626);
+}
+.ev2-proj-action-danger:focus-visible{
+  outline-color:var(--danger-component-outline-default,#DC2626);
+}
 
 /* (Top-bar UI/editing-mode toggle removed — single source of truth
    is the in-panel "Editing" toggle inside each role card head.
