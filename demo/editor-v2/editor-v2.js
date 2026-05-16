@@ -3939,10 +3939,7 @@
         + '</button>'
         + '</div>';
     }).join('');
-    $projPanel.innerHTML = rowsHtml
-      + '<div class="ev2-proj-foot"><span>Manage projects</span>'
-      + '<a href="../editor-legacy.html" title="Open legacy editor for project create/rename">Legacy editor \u2192</a>'
-      + '</div>';
+    $projPanel.innerHTML = rowsHtml;
 
     $projPanel.querySelectorAll('[data-proj-id]').forEach(function (row) {
       row.addEventListener('click', function (e) {

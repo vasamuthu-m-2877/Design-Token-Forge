@@ -128,25 +128,19 @@ body{
 .ev2-proj-row-check{width:14px;height:14px;color:var(--brand-content-default,#286CE5);flex-shrink:0}
 .ev2-proj-row-del{
   width:22px;height:22px;flex-shrink:0;
-  display:none;align-items:center;justify-content:center;
+  display:inline-flex;align-items:center;justify-content:center;
   padding:0;border:0;border-radius:var(--radius-xs,3px);
   background:transparent;color:var(--ev2-chrome-ct-faint);
-  cursor:pointer;transition:background 120ms ease,color 120ms ease;
+  cursor:pointer;transition:background 120ms ease,color 120ms ease,opacity 120ms ease;
+  opacity:0;
 }
 .ev2-proj-row-del svg{width:13px;height:13px}
 .ev2-proj-row:hover .ev2-proj-row-del,
-.ev2-proj-row:focus-within .ev2-proj-row-del{display:inline-flex}
+.ev2-proj-row:focus-within .ev2-proj-row-del{opacity:1}
 .ev2-proj-row-del:hover{background:var(--danger-container-bg,#FEE2E2);color:var(--danger-content-default,#DC2626)}
-.ev2-proj-row-del:focus-visible{outline:2px solid var(--danger-component-outline-default,#DC2626);outline-offset:1px;display:inline-flex}
+.ev2-proj-row-del:focus-visible{outline:2px solid var(--danger-component-outline-default,#DC2626);outline-offset:1px;opacity:1}
 .ev2-proj-empty{padding:14px;text-align:center;font-size:12px;color:var(--ev2-chrome-ct-subtle)}
-.ev2-proj-foot{
-  margin-top:4px;padding:8px 10px 4px;
-  border-top:1px solid var(--ev2-chrome-separator);
-  font-size:11px;color:var(--ev2-chrome-ct-faint);
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-}
-.ev2-proj-foot a{color:var(--ev2-chrome-ct-subtle);text-decoration:none;font-weight:500}
-.ev2-proj-foot a:hover{color:var(--brand-content-default,#286CE5);text-decoration:underline}
+.ev2-proj-foot{display:none}
 
 /* (Top-bar UI/editing-mode toggle removed — single source of truth
    is the in-panel "Editing" toggle inside each role card head.
