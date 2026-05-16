@@ -146,67 +146,72 @@
       background:var(--surface-base-subtle);
       color:var(--surface-base-ct-default);
     }
-    .pv-canvas-body{padding:14px}
-    .pv-canvas-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
+    .pv-canvas-body{padding:10px;display:flex;flex-direction:column;gap:8px}
+    .pv-canvas-grid{display:contents}
     .pv-canvas-tile{
-      padding:10px 12px;border-radius:6px;
-      font-size:11px;
-      display:flex;flex-direction:column;gap:6px;
-      min-height:64px;
+      padding:8px 10px;border-radius:6px;
+      display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+      min-height:36px;
     }
     .pv-canvas-tile-name{
       font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
       font-size:10px;font-weight:600;opacity:.85;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .pv-canvas-tile-val{font-size:12px}
+    .pv-canvas-tile-val{font-size:10.5px;opacity:.75;text-align:right;white-space:nowrap}
     /* Tint regions */
     .pv-canvas-tile.t-bg     {background:var(--surface-base-bg);     color:var(--surface-base-ct-default); border:1px solid var(--surface-base-outline)}
     .pv-canvas-tile.t-subtle {background:var(--surface-base-subtle); color:var(--surface-base-ct-default)}
     .pv-canvas-tile.t-strong {background:var(--surface-base-strong); color:var(--surface-base-ct-default)}
     /* Content sample */
     .pv-canvas-text{
-      grid-column:1 / -1;
-      padding:12px;border-radius:6px;
+      padding:10px;border-radius:6px;
       background:var(--surface-base-bg);
       border:1px dashed var(--surface-base-outline);
-      display:flex;flex-direction:column;gap:4px;
+      display:flex;flex-direction:column;gap:3px;
     }
-    .pv-canvas-text .l1{font-size:14px;font-weight:700;color:var(--surface-base-ct-strong)}
-    .pv-canvas-text .l2{font-size:12.5px;color:var(--surface-base-ct-default)}
-    .pv-canvas-text .l3{font-size:11.5px;color:var(--surface-base-ct-subtle)}
-    .pv-canvas-text .l4{font-size:11px;color:var(--surface-base-ct-faint)}
+    .pv-canvas-text-cap{
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:9.5px;font-weight:600;opacity:.7;margin-bottom:4px;
+      color:var(--surface-base-ct-default);
+    }
+    .pv-canvas-text .l1{font-size:13px;font-weight:700;color:var(--surface-base-ct-strong);line-height:1.25}
+    .pv-canvas-text .l2{font-size:11.5px;color:var(--surface-base-ct-default);line-height:1.3}
+    .pv-canvas-text .l3{font-size:10.5px;color:var(--surface-base-ct-subtle);line-height:1.3}
+    .pv-canvas-text .l4{font-size:10px;color:var(--surface-base-ct-faint);line-height:1.3}
     /* Component-on-surface mini */
     .pv-canvas-comp{
-      grid-column:1 / -1;
-      display:flex;align-items:center;gap:10px;
-      padding:12px;border-radius:6px;
+      display:flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:6px;
       background:var(--surface-base-cm-bg);
       border:1px solid var(--surface-base-cm-outline);
+      min-width:0;
     }
     .pv-canvas-comp-dot{
-      width:24px;height:24px;border-radius:50%;
+      flex:0 0 auto;
+      width:18px;height:18px;border-radius:50%;
       background:var(--surface-base-cm-bg-hover);
       border:1px solid var(--surface-base-cm-outline-hover);
     }
-    .pv-canvas-comp-txt{font-size:11.5px;color:var(--surface-base-ct-default)}
+    .pv-canvas-comp-txt{font-size:10.5px;color:var(--surface-base-ct-default);min-width:0;overflow:hidden}
+    .pv-canvas-comp-txt strong{font-size:11px;display:block;color:var(--surface-base-ct-strong)}
     .pv-canvas-comp-txt code{
       font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-      font-size:10px;padding:1px 5px;border-radius:3px;
+      font-size:9.5px;padding:1px 4px;border-radius:3px;
       background:var(--surface-base-subtle);
     }
     /* Separator demo */
-    .pv-canvas-sep{
-      height:1px;background:var(--surface-base-separator);
-      grid-column:1 / -1;
+    .pv-canvas-sep{height:1px;background:var(--surface-base-separator)}
+    .pv-canvas-cm-sep{height:1px;background:var(--surface-base-cm-separator)}
+    .pv-canvas-sep-row{
+      display:flex;align-items:center;gap:8px;
+      font-size:9.5px;opacity:.7;
+      color:var(--surface-base-ct-faint);
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
     }
-    .pv-canvas-cm-sep{
-      height:1px;background:var(--surface-base-cm-separator);
-      margin-block:6px;
-    }
+    .pv-canvas-sep-row > span{flex:0 0 auto}
+    .pv-canvas-sep-row > .pv-canvas-sep,
+    .pv-canvas-sep-row > .pv-canvas-cm-sep{flex:1}
   </style>
 </head>
 <body>
@@ -224,39 +229,34 @@
       <span style="font-size:9px;opacity:.7">repaints as you edit</span>
     </div>
     <div class="pv-canvas-body">
-      <div class="pv-canvas-grid">
-        <div class="pv-canvas-tile t-bg">
-          <span class="pv-canvas-tile-name">--…-bg</span>
-          <span class="pv-canvas-tile-val">Page background</span>
-        </div>
-        <div class="pv-canvas-tile t-subtle">
-          <span class="pv-canvas-tile-name">--…-subtle</span>
-          <span class="pv-canvas-tile-val">Soft tint region</span>
-        </div>
-        <div class="pv-canvas-tile t-strong" style="grid-column:1/-1">
-          <span class="pv-canvas-tile-name">--…-strong</span>
-          <span class="pv-canvas-tile-val">Emphasized tint region</span>
-        </div>
-        <div class="pv-canvas-text">
-          <span class="pv-canvas-tile-name">--…-ct-strong / -default / -subtle / -faint</span>
-          <div class="l1">Strong heading on this surface</div>
-          <div class="l2">Default body text — primary reading tone.</div>
-          <div class="l3">Subtle line — secondary metadata.</div>
-          <div class="l4">Faint line — tertiary captions.</div>
-        </div>
-        <div class="pv-canvas-comp">
-          <div class="pv-canvas-comp-dot"></div>
-          <div class="pv-canvas-comp-txt">
-            <div><strong>Component on surface</strong></div>
-            <div><code>--…-cm-bg</code> + <code>--…-cm-outline</code></div>
-          </div>
-        </div>
-        <div class="pv-canvas-sep"></div>
-        <div style="grid-column:1/-1;font-size:10px;color:var(--surface-base-ct-faint);text-align:center">
-          ↑ separator above · cm-separator below ↓
-        </div>
-        <div class="pv-canvas-cm-sep" style="grid-column:1/-1"></div>
+      <div class="pv-canvas-tile t-bg">
+        <span class="pv-canvas-tile-name">--…-bg</span>
+        <span class="pv-canvas-tile-val">page</span>
       </div>
+      <div class="pv-canvas-tile t-subtle">
+        <span class="pv-canvas-tile-name">--…-subtle</span>
+        <span class="pv-canvas-tile-val">soft tint</span>
+      </div>
+      <div class="pv-canvas-tile t-strong">
+        <span class="pv-canvas-tile-name">--…-strong</span>
+        <span class="pv-canvas-tile-val">strong tint</span>
+      </div>
+      <div class="pv-canvas-text">
+        <div class="pv-canvas-text-cap">--…-ct-strong / default / subtle / faint</div>
+        <div class="l1">Strong heading</div>
+        <div class="l2">Default body text on this surface.</div>
+        <div class="l3">Subtle metadata line.</div>
+        <div class="l4">Faint caption line.</div>
+      </div>
+      <div class="pv-canvas-comp">
+        <div class="pv-canvas-comp-dot"></div>
+        <div class="pv-canvas-comp-txt">
+          <strong>Component on surface</strong>
+          <code>--…-cm-bg</code> + <code>--…-cm-outline</code>
+        </div>
+      </div>
+      <div class="pv-canvas-sep-row"><span>separator</span><div class="pv-canvas-sep"></div></div>
+      <div class="pv-canvas-sep-row"><span>cm-separator</span><div class="pv-canvas-cm-sep"></div></div>
     </div>
   </section>
 
