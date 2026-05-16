@@ -1291,9 +1291,9 @@
     $body.innerHTML =
       '<div class="ev2-t0-subs" role="tablist" aria-label="T0 sub-view">'
         + '<button class="ev2-t0-sub" role="tab" data-t0-sub="roles" '
-          + 'aria-selected="' + (State.activeT0 === 'roles') + '">By role</button>'
+          + 'aria-selected="' + (State.activeT0 === 'roles') + '">Key colors</button>'
         + '<button class="ev2-t0-sub" role="tab" data-t0-sub="palettes" '
-          + 'aria-selected="' + (State.activeT0 === 'palettes') + '">By palette</button>'
+          + 'aria-selected="' + (State.activeT0 === 'palettes') + '">Palette library</button>'
       + '</div>'
       + (State.activeT0 === 'palettes' ? renderT0Palettes() : renderT0Roles());
 
