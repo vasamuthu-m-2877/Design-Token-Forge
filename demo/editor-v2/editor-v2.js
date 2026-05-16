@@ -5151,53 +5151,43 @@
     // Close the dropdown so the confirm modal isn't visually crowded.
     $projPanel.setAttribute('hidden', '');
     $projBtn.setAttribute('aria-expanded', 'false');
+    var expectedUser = getGhUser();
     openModal({
       title: 'Delete \u201C' + name + '\u201D?',
       body: 'This removes the project\u2019s tokens, palette, and config from your GitHub fork and updates projects.json. '
-        + 'The change is committed to your repository and cannot be undone from here.\n\n'
-        + 'You\u2019ll be asked to re-enter your GitHub Personal Access Token (PAT) to authorize this destructive change \u2014 even if one is already saved.',
-      confirmLabel: 'Continue to PAT step',
+        + 'The change is committed to your repository and cannot be undone from here.',
+      confirmLabel: 'Delete project',
       cancelLabel: 'Keep project',
       kind: 'danger',
-      onConfirm: function () { promptPatThenDelete(id, name); }
-    });
-  }
-
-  /* Destructive ops re-prompt for PAT even if one is cached, so a
-     stolen browser session (or a left-open laptop) can\u2019t silently
-     nuke a project. We don\u2019t persist the entered PAT unless GitHub
-     accepts it AND it matches the logged-in user. */
-  function promptPatThenDelete(id, name) {
-    var entered = window.prompt(
-      'Confirm delete of \u201C' + name + '\u201D\n\n'
-      + 'Re-enter your GitHub Personal Access Token (\u201Crepo\u201D scope) to authorize this destructive change. '
-      + 'The token is verified against your GitHub account before any files are removed.'
-    );
-    if (entered == null) return; // user hit Cancel
-    entered = (entered || '').trim();
-    if (!entered) {
-      if (window.ev2Toast) window.ev2Toast('Delete cancelled \u2014 no token entered', 'warn');
-      return;
-    }
-    var expectedUser = getGhUser();
-    showBusy('Verifying token\u2026', 'Confirming your PAT before delete.');
-    // Temporarily swap PAT so ghFetch uses what the user just typed.
-    var prevPat = getGhPat();
-    localStorage.setItem('dtf-gh-pat', entered);
-    ghFetch('/user').then(function (u) {
-      if (!u || !u.login) throw new Error('GitHub didn\u2019t recognize that token.');
-      if (expectedUser && u.login !== expectedUser) {
-        throw new Error('Token belongs to @' + u.login + ' but the active project is on @' + expectedUser + '\u2019s fork.');
-      }
-      // PAT good \u2014 keep it cached (the user explicitly re-authorized).
-      localStorage.setItem('dtf-gh-user', u.login);
-      performProjectDelete(id, name);
-    }).catch(function (err) {
-      // Restore the previous PAT (the new one was rejected or wrong account).
-      if (prevPat) localStorage.setItem('dtf-gh-pat', prevPat);
-      else localStorage.removeItem('dtf-gh-pat');
-      hideBusy();
-      if (window.ev2Toast) window.ev2Toast('Delete cancelled: ' + (err && err.message || err), 'err', 6000);
+      input: {
+        label: 'GitHub Personal Access Token',
+        type: 'password',
+        placeholder: 'ghp_\u2026',
+        hint: 'Re-enter your PAT (\u201Crepo\u201D scope) to authorize this destructive change. '
+          + 'Verified against your GitHub account before any files are removed.'
+      },
+      validate: function (pat) {
+        pat = (pat || '').trim();
+        if (!pat) return 'Token required to authorize delete.';
+        // Temporarily swap PAT so ghFetch uses the just-entered one.
+        // Restored on error so a wrong token doesn\u2019t clobber the
+        // cached good one.
+        var prevPat = getGhPat();
+        localStorage.setItem('dtf-gh-pat', pat);
+        return ghFetch('/user').then(function (u) {
+          if (!u || !u.login) {
+            if (prevPat) localStorage.setItem('dtf-gh-pat', prevPat); else localStorage.removeItem('dtf-gh-pat');
+            throw new Error('GitHub didn\u2019t recognize that token.');
+          }
+          if (expectedUser && u.login !== expectedUser) {
+            if (prevPat) localStorage.setItem('dtf-gh-pat', prevPat); else localStorage.removeItem('dtf-gh-pat');
+            throw new Error('Token belongs to @' + u.login + ' but the project is on @' + expectedUser + '\u2019s fork.');
+          }
+          // PAT good \u2014 keep it cached (the user explicitly re-authorized).
+          localStorage.setItem('dtf-gh-user', u.login);
+        });
+      },
+      onConfirm: function () { performProjectDelete(id, name); }
     });
   }
 
@@ -5391,22 +5381,73 @@
      it first and openModal would replace the \u00d7 glyph with the
      cancelLabel text. Use .ev2-modal-actions to skip the close-X. */
   var $modalCancel  = $modal.querySelector('.ev2-modal-actions [data-modal-action="cancel"]');
+  var $modalField    = document.getElementById('ev2ModalField');
+  var $modalInput    = document.getElementById('ev2ModalInput');
+  var $modalInputLbl = document.getElementById('ev2ModalInputLabel');
+  var $modalInputHint = document.getElementById('ev2ModalInputHint');
   var modalOnConfirm = null;
+  var modalValidate  = null; // (value) -> string err or '' / null
 
   function openModal(opts) {
     $modalTitle.textContent = opts.title || 'Confirm';
     $modalBody.textContent = opts.body || '';
+    // Body supports \n by collapsing into <br> via white-space:pre-line
+    $modalBody.style.whiteSpace = (opts.body && opts.body.indexOf('\n') !== -1) ? 'pre-line' : '';
     $modalConfirm.textContent = opts.confirmLabel || 'Confirm';
     $modalCancel.textContent = opts.cancelLabel || 'Cancel';
     $modalConfirm.classList.toggle('ev2-modal-btn-danger', opts.kind === 'danger');
     $modalConfirm.classList.toggle('ev2-modal-btn-primary', opts.kind !== 'danger');
     modalOnConfirm = opts.onConfirm || null;
+    modalValidate  = opts.validate  || null;
+
+    // Optional input field (used by destructive ops that re-prompt
+    // for PAT inline instead of via window.prompt).
+    if (opts.input) {
+      $modalField.hidden = false;
+      $modalInputLbl.textContent = opts.input.label || 'Value';
+      $modalInput.type = opts.input.type || 'text';
+      $modalInput.value = '';
+      $modalInput.placeholder = opts.input.placeholder || '';
+      $modalInput.removeAttribute('data-invalid');
+      if (opts.input.hint) {
+        $modalInputHint.textContent = opts.input.hint;
+        $modalInputHint.hidden = false;
+        $modalInputHint.removeAttribute('data-error');
+      } else {
+        $modalInputHint.hidden = true;
+      }
+    } else {
+      $modalField.hidden = true;
+      $modalInput.value = '';
+    }
+
     $modal.removeAttribute('hidden');
-    setTimeout(function () { $modalConfirm.focus(); }, 10);
+    setTimeout(function () {
+      if (opts.input) $modalInput.focus();
+      else $modalConfirm.focus();
+    }, 10);
   }
   function closeModal() {
     $modal.setAttribute('hidden', '');
     modalOnConfirm = null;
+    modalValidate  = null;
+    $modalField.hidden = true;
+    $modalInput.value = '';
+    $modalInput.removeAttribute('data-invalid');
+    $modalInputHint.removeAttribute('data-error');
+  }
+  function setModalInputError(msg) {
+    $modalInput.setAttribute('data-invalid', '');
+    $modalInputHint.textContent = msg;
+    $modalInputHint.setAttribute('data-error', '');
+    $modalInputHint.hidden = false;
+    $modalInput.focus();
+    $modalInput.select();
+  }
+  function setModalBusy(busy, label) {
+    $modalConfirm.disabled = !!busy;
+    $modalCancel.disabled  = !!busy;
+    if (busy && label) $modalConfirm.textContent = label;
   }
 
   /* Busy overlay — blocks all interaction (and signals "don't
@@ -5428,8 +5469,43 @@
   function hideBusy() { if ($busy) $busy.setAttribute('hidden', ''); }
   $modalConfirm.addEventListener('click', function () {
     var fn = modalOnConfirm;
+    var validate = modalValidate;
+    var value = $modalField.hidden ? undefined : $modalInput.value;
+
+    // No input \u2014 classic confirm flow.
+    if (!validate) {
+      closeModal();
+      if (fn) fn(value);
+      return;
+    }
+
+    // Inline validate (may return Promise). On error we keep the
+    // dialog open and show a hint instead of closing+toasting.
+    var result;
+    try { result = validate(value); }
+    catch (e) { setModalInputError((e && e.message) || String(e)); return; }
+
+    if (result && typeof result.then === 'function') {
+      setModalBusy(true, 'Verifying\u2026');
+      result.then(function () {
+        setModalBusy(false);
+        closeModal();
+        if (fn) fn(value);
+      }).catch(function (err) {
+        setModalBusy(false);
+        setModalInputError((err && err.message) || String(err) || 'Invalid value');
+      });
+      return;
+    }
+
+    if (result) { setModalInputError(result); return; }
     closeModal();
-    if (fn) fn();
+    if (fn) fn(value);
+  });
+  // Submit-on-Enter when the input is focused (the input lives
+  // outside any <form> so we wire this explicitly).
+  $modalInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); $modalConfirm.click(); }
   });
   $modalCancel.addEventListener('click', closeModal);
   $modal.querySelector('.ev2-modal-backdrop').addEventListener('click', closeModal);

@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=116">
+  <link rel="stylesheet" href="./editor-v2.css?v=117">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
   <script src="../palette-engine.js?v=85" defer></script>
@@ -195,6 +195,11 @@
       <button class="ev2-modal-close" type="button" data-modal-action="cancel" aria-label="Close dialog">&times;</button>
       <h3 class="ev2-modal-title" id="ev2ModalTitle">Title</h3>
       <p class="ev2-modal-body" id="ev2ModalBody">Body</p>
+      <div class="ev2-modal-field" id="ev2ModalField" hidden>
+        <label class="ev2-modal-field-label" for="ev2ModalInput" id="ev2ModalInputLabel">Value</label>
+        <input class="ev2-modal-field-input" id="ev2ModalInput" type="text" autocomplete="off" spellcheck="false">
+        <div class="ev2-modal-field-hint" id="ev2ModalInputHint" hidden></div>
+      </div>
       <div class="ev2-modal-actions">
         <button class="ev2-modal-btn" data-modal-action="cancel" type="button">Cancel</button>
         <button class="ev2-modal-btn ev2-modal-btn-danger" data-modal-action="confirm" type="button">Confirm</button>
@@ -354,6 +359,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=130" defer></script>
+  <script src="./editor-v2.js?v=131" defer></script>
 </body>
 </html>

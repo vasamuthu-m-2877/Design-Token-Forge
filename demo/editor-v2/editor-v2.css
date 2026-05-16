@@ -770,7 +770,30 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
 .ev2-modal-close:hover{background:var(--ev2-chrome-subtle);color:var(--ev2-chrome-ct-strong);border-color:var(--ev2-chrome-outline)}
 .ev2-modal-close:focus-visible{outline:2px solid var(--brand-component-bg-default,#3366f0);outline-offset:2px}
 .ev2-modal-btn-danger{background:var(--danger-component-bg-default,#D61D20);border-color:var(--danger-component-bg-default,#D61D20);color:#fff}
-.ev2-modal-btn-danger:hover{filter:brightness(0.92)}
+.ev2-modal-btn-danger:hover{background:var(--danger-component-bg-hover,#B81618);border-color:var(--danger-component-bg-hover,#B81618);color:#fff}
+.ev2-modal-btn-danger:active{background:var(--danger-component-bg-pressed,#9E1314);border-color:var(--danger-component-bg-pressed,#9E1314)}
+.ev2-modal-btn-danger:focus-visible{outline:2px solid var(--danger-component-bg-default,#D61D20);outline-offset:2px}
+.ev2-modal-btn:focus-visible{outline:2px solid var(--brand-component-bg-default,#3366f0);outline-offset:2px}
+.ev2-modal-btn:disabled,.ev2-modal-btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* Optional input field inside confirm modal (used by destructive
+   actions that need PAT re-entry). Kept hidden unless openModal()
+   asks for it. */
+.ev2-modal-field{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.ev2-modal-field-label{font-size:12px;font-weight:600;color:var(--ev2-chrome-ct-strong)}
+.ev2-modal-field-input{
+  padding:8px 10px;
+  border:1px solid var(--ev2-chrome-outline);
+  border-radius:var(--radius-md,6px);
+  background:var(--ev2-chrome-bg);
+  color:var(--ev2-chrome-ct-strong);
+  font:inherit;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  letter-spacing:.02em;
+}
+.ev2-modal-field-input:focus{outline:2px solid var(--brand-component-bg-default,#3366f0);outline-offset:1px;border-color:var(--brand-component-bg-default,#3366f0)}
+.ev2-modal-field-input[data-invalid]{border-color:var(--danger-component-outline-default,#D61D20)}
+.ev2-modal-field-hint{font-size:11px;line-height:1.4;color:var(--ev2-chrome-ct-faint)}
+.ev2-modal-field-hint[data-error]{color:var(--danger-content-default,#D61D20);font-weight:500}
 
 /* Disclosure rows (steps + affects) */
 .ev2-disc{
