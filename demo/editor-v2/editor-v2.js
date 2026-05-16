@@ -5154,11 +5154,50 @@
     openModal({
       title: 'Delete \u201C' + name + '\u201D?',
       body: 'This removes the project\u2019s tokens, palette, and config from your GitHub fork and updates projects.json. '
-        + 'The change is committed to your repository and cannot be undone from here.',
-      confirmLabel: 'Delete project',
+        + 'The change is committed to your repository and cannot be undone from here.\n\n'
+        + 'You\u2019ll be asked to re-enter your GitHub Personal Access Token (PAT) to authorize this destructive change \u2014 even if one is already saved.',
+      confirmLabel: 'Continue to PAT step',
       cancelLabel: 'Keep project',
       kind: 'danger',
-      onConfirm: function () { performProjectDelete(id, name); }
+      onConfirm: function () { promptPatThenDelete(id, name); }
+    });
+  }
+
+  /* Destructive ops re-prompt for PAT even if one is cached, so a
+     stolen browser session (or a left-open laptop) can\u2019t silently
+     nuke a project. We don\u2019t persist the entered PAT unless GitHub
+     accepts it AND it matches the logged-in user. */
+  function promptPatThenDelete(id, name) {
+    var entered = window.prompt(
+      'Confirm delete of \u201C' + name + '\u201D\n\n'
+      + 'Re-enter your GitHub Personal Access Token (\u201Crepo\u201D scope) to authorize this destructive change. '
+      + 'The token is verified against your GitHub account before any files are removed.'
+    );
+    if (entered == null) return; // user hit Cancel
+    entered = (entered || '').trim();
+    if (!entered) {
+      if (window.ev2Toast) window.ev2Toast('Delete cancelled \u2014 no token entered', 'warn');
+      return;
+    }
+    var expectedUser = getGhUser();
+    showBusy('Verifying token\u2026', 'Confirming your PAT before delete.');
+    // Temporarily swap PAT so ghFetch uses what the user just typed.
+    var prevPat = getGhPat();
+    localStorage.setItem('dtf-gh-pat', entered);
+    ghFetch('/user').then(function (u) {
+      if (!u || !u.login) throw new Error('GitHub didn\u2019t recognize that token.');
+      if (expectedUser && u.login !== expectedUser) {
+        throw new Error('Token belongs to @' + u.login + ' but the active project is on @' + expectedUser + '\u2019s fork.');
+      }
+      // PAT good \u2014 keep it cached (the user explicitly re-authorized).
+      localStorage.setItem('dtf-gh-user', u.login);
+      performProjectDelete(id, name);
+    }).catch(function (err) {
+      // Restore the previous PAT (the new one was rejected or wrong account).
+      if (prevPat) localStorage.setItem('dtf-gh-pat', prevPat);
+      else localStorage.removeItem('dtf-gh-pat');
+      hideBusy();
+      if (window.ev2Toast) window.ev2Toast('Delete cancelled: ' + (err && err.message || err), 'err', 6000);
     });
   }
 
