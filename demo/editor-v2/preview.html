@@ -774,6 +774,44 @@
         if (__ev2OverrideStyle.textContent !== d.css) __ev2OverrideStyle.textContent = d.css;
         return;
       }
+      // Custom palette injection from the T0 Palettes manager.
+      // Each palette is wrapped in marker comments so rename /
+      // remove messages can splice it out by id without nuking
+      // other custom palettes.
+      if (d.type === 'ev2-custom-palette' && typeof d.css === 'string' && d.id) {
+        var pStyle = document.getElementById('ev2-custom-palettes');
+        if (!pStyle) {
+          pStyle = document.createElement('style');
+          pStyle.id = 'ev2-custom-palettes';
+          document.head.appendChild(pStyle);
+        }
+        pStyle.textContent += '\n/* @ev2-custom-palette:' + d.id + ' */\n'
+          + d.css + '\n/* @ev2-custom-palette-end:' + d.id + ' */\n';
+        return;
+      }
+      if (d.type === 'ev2-custom-palette-remove' && d.id) {
+        var rStyle = document.getElementById('ev2-custom-palettes');
+        if (rStyle) {
+          var rs = rStyle.textContent;
+          var rStart = rs.indexOf('/* @ev2-custom-palette:' + d.id + ' */');
+          var rMark = '/* @ev2-custom-palette-end:' + d.id + ' */';
+          var rEnd = rs.indexOf(rMark);
+          if (rStart >= 0 && rEnd >= 0) {
+            rStyle.textContent = rs.slice(0, rStart) + rs.slice(rEnd + rMark.length);
+          }
+        }
+        return;
+      }
+      if (d.type === 'ev2-custom-palette-rename' && d.oldId && d.newId) {
+        var mStyle = document.getElementById('ev2-custom-palettes');
+        if (mStyle) {
+          mStyle.textContent = mStyle.textContent
+            .replace(new RegExp('@ev2-custom-palette:' + d.oldId, 'g'), '@ev2-custom-palette:' + d.newId)
+            .replace(new RegExp('@ev2-custom-palette-end:' + d.oldId, 'g'), '@ev2-custom-palette-end:' + d.newId)
+            .replace(new RegExp('--prim-' + d.oldId + '-', 'g'), '--prim-' + d.newId + '-');
+        }
+        return;
+      }
       // Theme swap (parent can't write to our documentElement under file://).
       if (d.type === 'ev2-theme' && d.mode) {
         document.documentElement.setAttribute('data-theme', d.mode);

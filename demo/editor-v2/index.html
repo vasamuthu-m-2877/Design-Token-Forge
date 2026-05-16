@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=98">
+  <link rel="stylesheet" href="./editor-v2.css?v=99">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
   <script src="../palette-engine.js?v=85" defer></script>
@@ -168,6 +168,49 @@
     </div>
   </div>
 
+  <!-- Add custom palette dialog: name + key color picker + live ladder preview -->
+  <div class="ev2-modal ev2-addpal" id="ev2AddPalette" hidden role="dialog" aria-modal="true" aria-labelledby="ev2AddPaletteTitle">
+    <div class="ev2-modal-backdrop" data-addpal-dismiss></div>
+    <div class="ev2-modal-card ev2-addpal-card" role="document">
+      <button class="ev2-modal-close" type="button" data-addpal-dismiss aria-label="Close dialog">&times;</button>
+      <h3 class="ev2-modal-title" id="ev2AddPaletteTitle">Add custom palette</h3>
+      <p class="ev2-modal-body ev2-addpal-intro">Pick a key color &mdash; we&rsquo;ll generate a balanced 22-step ladder you can map to surfaces or roles.</p>
+
+      <div class="ev2-addpal-fields">
+        <label class="ev2-addpal-field">
+          <span class="ev2-addpal-label">Name</span>
+          <input class="ev2-addpal-name" id="ev2AddPalName" type="text" spellcheck="false" autocomplete="off" placeholder="sage, mauve, secondary&hellip;" maxlength="24">
+          <span class="ev2-addpal-hint" id="ev2AddPalNameHint">Lowercase letters, numbers, dashes. Must be unique.</span>
+        </label>
+
+        <div class="ev2-addpal-field">
+          <span class="ev2-addpal-label">Key color</span>
+          <div class="ev2-lever ev2-addpal-lever">
+            <label class="ev2-swatch" id="ev2AddPalSwatch" style="background:#6B7390" title="Pick a color">
+              <input type="color" id="ev2AddPalColor" value="#6B7390">
+            </label>
+            <div class="ev2-lever-fields">
+              <div class="ev2-hex-row">
+                <input class="ev2-hex" id="ev2AddPalHex" type="text" spellcheck="false" value="#6B7390" maxlength="7">
+              </div>
+              <span class="ev2-addpal-hint" id="ev2AddPalHexHint">This becomes step 500. The ladder is derived around it.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ev2-addpal-field">
+          <span class="ev2-addpal-label">Preview ladder &middot; 22 steps</span>
+          <div class="ev2-sp-strip ev2-addpal-strip" id="ev2AddPalStrip"></div>
+        </div>
+      </div>
+
+      <div class="ev2-modal-actions">
+        <button class="ev2-modal-btn" data-addpal-dismiss type="button">Cancel</button>
+        <button class="ev2-modal-btn ev2-modal-btn-primary" id="ev2AddPalConfirm" type="button">Add palette</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Deploy summary dialog: shows every change before pushing to Figma -->
   <div class="ev2-deploy-dialog" id="ev2DeployDialog" hidden role="dialog" aria-modal="true" aria-labelledby="ev2DeployTitle">
     <div class="ev2-modal-backdrop" data-deploy-dismiss></div>
@@ -191,6 +234,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=98" defer></script>
+  <script src="./editor-v2.js?v=99" defer></script>
 </body>
 </html>

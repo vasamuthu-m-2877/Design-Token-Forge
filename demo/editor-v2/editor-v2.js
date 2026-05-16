@@ -609,6 +609,12 @@
     // 'neutral'). Absence means "use the default declared in
     // T2_SURFACES". Validated against SURFACE_PALETTE_OK on load.
     t2SurfacePalette: {},
+    // T0 sub-view selector. 'roles' = key-color editing for the 6
+    // primary roles; 'palettes' = inventory + CRUD for the system
+    // and custom palettes that surfaces consume in T2. Palette
+    // *definition* lives in T0 (here); palette *consumption* lives
+    // in T2 (surface→palette mapping).
+    activeT0: 'roles',
     // Disclosure open-state persists across role / tier swaps.
     // Keyed by 'tierId:discId' so each tier can have its own pattern.
     disclosure: { 't0:steps': false, 't0:affects': false, 't1:slots': false, 't1:affects': false },
@@ -626,6 +632,7 @@
         v: 1,
         activeTier: State.activeTier,
         activeRole: State.activeRole,
+        activeT0:   State.activeT0,
         activeSurface: State.activeSurface,
         anchor:     State.anchor,
         disclosure: State.disclosure,
@@ -1150,34 +1157,84 @@
     if (State.lastSavedAt) { refreshDraftStatus('saved'); refreshAutosaveLabel(); }
   }, 30000);
 
-  function ladderHTML(role) {
-    var steps = stepsFor(role).filter(function(s){ return s.name !== 'white' && s.name !== 'black'; });
-    var baseSteps = baselineStepsFor(role);
-    var roleObj = ROLES.find(function (r) { return r.id === role; });
-    var prefix = roleObj ? roleObj.prefix : role;
-    return steps.map(function (s) {
-      var b = baseSteps.find(function(x){ return x.name === s.name; });
-      var diff = b && b.hex.toUpperCase() !== s.hex.toUpperCase();
-      var tip = diff ? 'Was ' + b.hex.toUpperCase() + ' \u2192 now ' + s.hex.toUpperCase() : s.hex.toUpperCase();
+  /* ── Unified palette ladder ──────────────────────────────
+     Single renderer for every "22-step ladder of swatches" surface
+     in the editor. T0 Roles, T0 System palettes, T0 Custom palettes
+     all share this so a Greyscale ladder reads visually identical to
+     a Brand ladder.
+
+     opts:
+       prefix       — CSS-var prefix ('brand', 'greyscale', 'sage'…)
+                      used to render `--prim-<prefix>-<step>` under
+                      each swatch when "Show CSS names" is on.
+       compareSteps — optional array of {name,hex} to diff against
+                      (T0 Roles uses this to mark changed-from-baseline
+                      tiles with the brand dot).
+       includeBW    — when true, render white + black tiles too
+                      (System / Custom palettes use this; T0 Roles
+                      skips them since white/black are constants). */
+  function paletteLadderHTML(steps, opts) {
+    if (!steps || !steps.length) return '';
+    opts = opts || {};
+    var prefix = opts.prefix || '';
+    var compare = opts.compareSteps || null;
+    var filtered = opts.includeBW
+      ? steps
+      : steps.filter(function (s) { return s.name !== 'white' && s.name !== 'black'; });
+    return filtered.map(function (s) {
+      var b = compare && compare.find(function (x) { return x.name === s.name; });
+      var diff = b && b.hex && b.hex.toUpperCase() !== s.hex.toUpperCase();
+      var tip = diff
+        ? 'Was ' + b.hex.toUpperCase() + ' \u2192 now ' + s.hex.toUpperCase()
+        : s.hex.toUpperCase();
       return '<div class="ev2-step"' + (diff ? ' data-changed="true"' : '') + ' title="' + tip + '">'
         + '<div class="ev2-step-sw" style="background:' + s.hex + '"></div>'
         + '<div class="ev2-step-meta">'
           + '<div class="ev2-step-name">' + s.name + '</div>'
           + '<div class="ev2-step-hex">' + s.hex.replace('#','') + '</div>'
-          + '<div class="ev2-step-css">--prim-' + prefix + '-' + s.name + '</div>'
+          + (prefix ? '<div class="ev2-step-css">--prim-' + prefix + '-' + s.name + '</div>' : '')
         + '</div>'
       + '</div>';
     }).join('');
   }
 
+  function ladderHTML(role) {
+    var roleObj = ROLES.find(function (r) { return r.id === role; });
+    return paletteLadderHTML(stepsFor(role), {
+      prefix: roleObj ? roleObj.prefix : role,
+      compareSteps: baselineStepsFor(role)
+    });
+  }
+
+  /* ── T0 view ──────────────────────────────────────────────
+     Sub-tabs: [ Roles | Palettes ].
+       Roles    — key-color editing for the 6 primary roles
+                  (brand, danger, warning, info, success, neutral).
+       Palettes — inventory + CRUD for the system + custom palettes
+                  that T2 surfaces consume. This is where palettes
+                  are *defined*; T2 is where they're *mapped* to
+                  surfaces. */
   function renderT0() {
+    $body.innerHTML =
+      '<div class="ev2-t0-subs" role="tablist" aria-label="T0 sub-view">'
+        + '<button class="ev2-t0-sub" role="tab" data-t0-sub="roles" '
+          + 'aria-selected="' + (State.activeT0 === 'roles') + '">Roles</button>'
+        + '<button class="ev2-t0-sub" role="tab" data-t0-sub="palettes" '
+          + 'aria-selected="' + (State.activeT0 === 'palettes') + '">Palettes</button>'
+      + '</div>'
+      + (State.activeT0 === 'palettes' ? renderT0Palettes() : renderT0Roles());
+
+    bindT0();
+  }
+
+  function renderT0Roles() {
     var role = ROLES.find(function (r) { return r.id === State.activeRole; });
-    if (!role) return;
+    if (!role) return '';
     var changedThisRole = isChanged(role.id);
     var affects = AFFECTS[role.id] || [];
 
-    $body.innerHTML =
-      '<div class="ev2-roles" role="tablist">'
+    return ''
+      + '<div class="ev2-roles" role="tablist">'
         + ROLES.map(function (r) {
             var current = r.id === role.id;
             return '<button class="ev2-role" role="tab" data-role-tab="' + r.id + '" '
@@ -1237,36 +1294,25 @@
             + '</div>'
           + '</div>'
         + '</div>'
-      + '</div>'
-      + renderSystemPalettesPanel()
-      + renderCustomPalettesPanel();
-
-    bindT0();
+      + '</div>';
   }
 
-  /* ── System palettes panel ──────────────────────────────
-     Auto-derived palettes (greyscale, desaturated) sit outside the
-     primary ROLES list because they're not key colors a designer
-     types a hex into — they're derived from brand's hue with
-     controlled chroma. The panel surfaces them on T0 so designers
-     can SEE what's available before opening the T2 surface picker.
-     Each row shows: label + chroma meta + a compact ladder strip
-     (every step's swatch). No editing controls yet — chroma sliders
-     come in the next pass. */
-  function paletteStripHTML(steps) {
-    if (!steps || !steps.length) return '';
-    return '<div class="ev2-sp-strip">' + steps.map(function (s) {
-      return '<span class="ev2-sp-sw" style="background:' + s.hex
-        + '" title="step ' + s.name + ' \u2014 ' + s.hex.toUpperCase() + '"></span>';
-    }).join('') + '</div>';
+  /* ── T0 Palettes sub-view ───────────────────────────────
+     Two stacked panels: system palettes (greyscale + desaturated,
+     read-only — chroma sliders come later) and custom palettes
+     (project-discovered + session-added, with Rename / Delete +
+     "Add palette" affordance). Each row renders the same ladder
+     component the Roles view uses so all ladders read identical. */
+  function renderT0Palettes() {
+    return ''
+      + renderSystemPalettesPanel()
+      + renderCustomPalettesPanel();
   }
 
   function renderSystemPalettesPanel() {
     var rows = [
-      { id:'greyscale',   label:'Greyscale',   meta:'chroma 0 \u2014 achromatic',
-        desc:'Tracks brand hue but invisible at C=0' },
-      { id:'desaturated', label:'Desaturated', meta:'chroma \u22480.04 \u2014 branded gray',
-        desc:'Low chroma, hue tracks brand' }
+      { id:'greyscale',   label:'Greyscale',   meta:'chroma 0 \u2014 achromatic' },
+      { id:'desaturated', label:'Desaturated', meta:'chroma \u22480.04 \u2014 branded gray' }
     ];
     return '<div class="ev2-sp-panel" data-sp-panel="system">'
       + '<div class="ev2-sp-head">'
@@ -1283,7 +1329,7 @@
                 + '<span class="ev2-sp-name">' + r.label + '</span>'
                 + '<span class="ev2-sp-meta">' + r.meta + '</span>'
               + '</div>'
-              + paletteStripHTML(steps)
+              + '<div class="ev2-ladder">' + paletteLadderHTML(steps, { prefix: r.id, includeBW: true }) + '</div>'
             + '</div>';
           }).join('')
       + '</div>'
@@ -1292,11 +1338,15 @@
 
   function renderCustomPalettesPanel() {
     var customs = discoverCustomPalettes();
+    /* Inline SVG icons \u2014 pencil for rename, trash for delete.
+       Kept inline (no icon font) so the editor stays single-file. */
+    var ICON_EDIT  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>';
+    var ICON_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
     return '<div class="ev2-sp-panel" data-sp-panel="custom">'
       + '<div class="ev2-sp-head">'
         + '<div class="ev2-sp-titlewrap">'
           + '<span class="ev2-sp-title">Custom palettes</span>'
-          + '<span class="ev2-sp-sub">Project-specific palettes available in the T2 surface picker</span>'
+          + '<span class="ev2-sp-sub">Project-specific palettes \u2014 available under T2 source palette</span>'
         + '</div>'
         + '<button type="button" class="ev2-sp-add" data-add-palette>'
           + '<span class="ev2-sp-add-glyph" aria-hidden="true">+</span> Add palette'
@@ -1310,17 +1360,41 @@
                     + '<div class="ev2-sp-rowhead">'
                       + '<span class="ev2-sp-name">' + c.label + '</span>'
                       + '<span class="ev2-sp-meta">--prim-' + c.id + '-*</span>'
+                      + '<span class="ev2-sp-row-actions">'
+                        + '<button type="button" class="ev2-sp-action" data-rename-palette="' + c.id + '" '
+                          + 'title="Rename palette" aria-label="Rename ' + c.label + ' palette">' + ICON_EDIT + '</button>'
+                        + '<button type="button" class="ev2-sp-action" data-danger data-delete-palette="' + c.id + '" '
+                          + 'title="Delete palette" aria-label="Delete ' + c.label + ' palette">' + ICON_TRASH + '</button>'
+                      + '</span>'
                     + '</div>'
-                    + paletteStripHTML(steps)
+                    + '<div class="ev2-ladder">' + paletteLadderHTML(steps, { prefix: c.id, includeBW: true }) + '</div>'
                   + '</div>';
                 }).join('')
             + '</div>'
-          : '<div class="ev2-sp-empty">No custom palettes in this project yet. Add one to surface it in the T2 picker.</div>'
+          : '<div class="ev2-sp-empty">No custom palettes in this project yet. Add one to surface it under T2 source palette.</div>'
         )
     + '</div>';
   }
 
   function bindT0() {
+    /* Sub-tab switching */
+    document.querySelectorAll('[data-t0-sub]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var sub = b.getAttribute('data-t0-sub');
+        if (sub !== 'roles' && sub !== 'palettes') return;
+        State.activeT0 = sub;
+        saveUIState();
+        renderT0();
+      });
+    });
+
+    /* Roles sub-view bindings (the elements only exist on T0 Roles) */
+    if (State.activeT0 === 'roles') bindT0Roles();
+    /* Palettes sub-view bindings (Add / Rename / Delete) */
+    else if (State.activeT0 === 'palettes') bindT0Palettes();
+  }
+
+  function bindT0Roles() {
     document.querySelectorAll('[data-role-tab]').forEach(function (b) {
       b.addEventListener('click', function () {
         State.activeRole = b.getAttribute('data-role-tab');
@@ -1355,8 +1429,8 @@
     var $hex   = document.getElementById('ev2-hex');
     var $reset = document.getElementById('ev2-reset');
 
-    $color.addEventListener('input', function () { setHex($color.value); });
-    $hex.addEventListener('input', function () {
+    if ($color) $color.addEventListener('input', function () { setHex($color.value); });
+    if ($hex) $hex.addEventListener('input', function () {
       var v = $hex.value.trim();
       if (!v.startsWith('#')) v = '#' + v;
       if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
@@ -1366,47 +1440,227 @@
         $hex.setAttribute('data-invalid', '');
       }
     });
-    $reset.addEventListener('click', function () {
+    if ($reset) $reset.addEventListener('click', function () {
       setHex(State.baseline[State.activeRole]);
-      // After reset, refresh tabs/inputs visually
       renderT0();
     });
-
-    /* + Add palette \u2014 prompts for a name + key hex, injects a
-       --prim-<name>-* ladder into the iframe + parent CSS as an
-       inline style block, and re-renders so the new palette
-       appears under Custom palettes AND in the T2 surface picker.
-       This is the MVP for multi-brand support: the palette lives
-       in the current session only. Full persistence (to the
-       project's primitives.css + Figma collection) ships with
-       the broader multi-brand model. */
-    var addBtn = document.querySelector('[data-add-palette]');
-    if (addBtn) addBtn.addEventListener('click', addCustomPalettePrompt);
   }
 
-  function addCustomPalettePrompt() {
-    var rawName = window.prompt('Custom palette name (lowercase, no spaces \u2014 e.g. "sage", "mauve", "secondary")');
-    if (!rawName) return;
-    var name = rawName.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
-    if (!name) { window.ev2Toast && window.ev2Toast('Invalid palette name', 'warn'); return; }
-    if (SYSTEM_PALETTE_IDS[name]) {
-      window.ev2Toast && window.ev2Toast('"' + name + '" is a reserved system palette id', 'warn');
-      return;
+  function bindT0Palettes() {
+    var addBtn = document.querySelector('[data-add-palette]');
+    if (addBtn) addBtn.addEventListener('click', function () { openAddPaletteDialog(); });
+
+    document.querySelectorAll('[data-rename-palette]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        openRenamePaletteDialog(b.getAttribute('data-rename-palette'));
+      });
+    });
+    document.querySelectorAll('[data-delete-palette]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        confirmDeletePalette(b.getAttribute('data-delete-palette'));
+      });
+    });
+  }
+
+  /* ── Add / Rename palette dialog ────────────────────────
+     One <dialog>-style modal scaffolded in index.html
+     (#ev2AddPalette). Reused for both create + rename:
+       mode='add'    \u2192 name + color pickers, live ladder preview,
+                       confirm injects a new custom palette.
+       mode='rename' \u2192 name picker only; color + ladder hidden.
+                       Confirm renames the palette's --prim-<id>-*
+                       block and migrates any t2SurfacePalette refs. */
+  var _addPalState = { mode: 'add', origId: null, hex: '#6B7390' };
+
+  function openAddPaletteDialog() {
+    _addPalState = { mode: 'add', origId: null, hex: '#6B7390' };
+    var modal = document.getElementById('ev2AddPalette');
+    if (!modal) return;
+    document.getElementById('ev2AddPaletteTitle').textContent = 'Add custom palette';
+    document.querySelector('#ev2AddPalConfirm').textContent = 'Add palette';
+    document.getElementById('ev2AddPalName').value = '';
+    document.getElementById('ev2AddPalName').removeAttribute('data-invalid');
+    document.getElementById('ev2AddPalNameHint').removeAttribute('data-error');
+    document.getElementById('ev2AddPalNameHint').textContent = 'Lowercase letters, numbers, dashes. Must be unique.';
+    document.getElementById('ev2AddPalColor').value = _addPalState.hex.toLowerCase();
+    document.getElementById('ev2AddPalHex').value = _addPalState.hex.toUpperCase();
+    document.getElementById('ev2AddPalSwatch').style.background = _addPalState.hex;
+    /* Show color + ladder fields (rename hides them) */
+    var colorField = document.getElementById('ev2AddPalColor').closest('.ev2-addpal-field');
+    var stripField = document.getElementById('ev2AddPalStrip').closest('.ev2-addpal-field');
+    if (colorField) colorField.style.display = '';
+    if (stripField) stripField.style.display = '';
+    renderAddPalettePreview();
+    showAddPaletteModal();
+    setTimeout(function () { document.getElementById('ev2AddPalName').focus(); }, 30);
+  }
+
+  function openRenamePaletteDialog(id) {
+    var customs = discoverCustomPalettes();
+    var existing = customs.find(function (c) { return c.id === id; });
+    if (!existing) return;
+    _addPalState = { mode: 'rename', origId: id, hex: null };
+    var modal = document.getElementById('ev2AddPalette');
+    if (!modal) return;
+    document.getElementById('ev2AddPaletteTitle').textContent = 'Rename palette';
+    document.querySelector('#ev2AddPalConfirm').textContent = 'Rename';
+    document.getElementById('ev2AddPalName').value = id;
+    document.getElementById('ev2AddPalName').removeAttribute('data-invalid');
+    document.getElementById('ev2AddPalNameHint').removeAttribute('data-error');
+    document.getElementById('ev2AddPalNameHint').textContent = 'Lowercase letters, numbers, dashes. Must be unique.';
+    /* Hide color + ladder (rename only changes the id, not the colors) */
+    var colorField = document.getElementById('ev2AddPalColor').closest('.ev2-addpal-field');
+    var stripField = document.getElementById('ev2AddPalStrip').closest('.ev2-addpal-field');
+    if (colorField) colorField.style.display = 'none';
+    if (stripField) stripField.style.display = 'none';
+    validateAddPaletteForm();
+    showAddPaletteModal();
+    setTimeout(function () {
+      var n = document.getElementById('ev2AddPalName');
+      n.focus(); n.select();
+    }, 30);
+  }
+
+  function showAddPaletteModal() {
+    var modal = document.getElementById('ev2AddPalette');
+    if (!modal) return;
+    modal.hidden = false;
+    document.body.classList.add('ev2-modal-open');
+  }
+  function hideAddPaletteModal() {
+    var modal = document.getElementById('ev2AddPalette');
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.classList.remove('ev2-modal-open');
+  }
+
+  /* Live preview re-renders the 22-step ladder strip every time
+     the color picker or hex input changes, so designers SEE what
+     they're about to add before they confirm. */
+  function renderAddPalettePreview() {
+    if (_addPalState.mode !== 'add') return;
+    var strip = document.getElementById('ev2AddPalStrip');
+    if (!strip || !window.PaletteEngine) return;
+    try {
+      var pal = window.PaletteEngine.generatePalette(_addPalState.hex, { anchor: State.anchor || 'normalized' });
+      strip.innerHTML = pal.steps.map(function (s) {
+        return '<span class="ev2-sp-sw" style="background:' + s.hex
+          + '" title="' + s.name + ' \u2014 ' + s.hex.toUpperCase() + '"></span>';
+      }).join('');
+    } catch (e) {
+      strip.innerHTML = '';
     }
-    if (discoverCustomPalettes().some(function (c) { return c.id === name; })) {
-      window.ev2Toast && window.ev2Toast('A palette named "' + name + '" already exists', 'warn');
-      return;
+  }
+
+  function validateAddPaletteForm() {
+    var name = (document.getElementById('ev2AddPalName').value || '').trim().toLowerCase();
+    var hint = document.getElementById('ev2AddPalNameHint');
+    var input = document.getElementById('ev2AddPalName');
+    var confirmBtn = document.getElementById('ev2AddPalConfirm');
+    var ok = true;
+    var msg = 'Lowercase letters, numbers, dashes. Must be unique.';
+    if (!name) {
+      ok = false; msg = 'Name is required.';
+    } else if (!/^[a-z][a-z0-9-]*$/.test(name)) {
+      ok = false; msg = 'Lowercase letters, numbers, dashes \u2014 must start with a letter.';
+    } else if (SYSTEM_PALETTE_IDS[name]) {
+      ok = false; msg = '"' + name + '" is a reserved system palette id.';
+    } else if (_addPalState.mode === 'add'
+               && discoverCustomPalettes().some(function (c) { return c.id === name; })) {
+      ok = false; msg = '"' + name + '" already exists.';
+    } else if (_addPalState.mode === 'rename'
+               && name !== _addPalState.origId
+               && discoverCustomPalettes().some(function (c) { return c.id === name; })) {
+      ok = false; msg = '"' + name + '" already exists.';
     }
-    var rawHex = window.prompt('Key color hex for "' + name + '" (e.g. #6B7390)');
-    if (!rawHex) return;
-    var hex = rawHex.trim();
-    if (!hex.startsWith('#')) hex = '#' + hex;
-    if (!/^#[0-9A-Fa-f]{6}$/.test(hex)) {
-      window.ev2Toast && window.ev2Toast('Invalid hex \u2014 use #RRGGBB', 'warn');
-      return;
+    if (ok) {
+      input.removeAttribute('data-invalid');
+      hint.removeAttribute('data-error');
+    } else {
+      input.setAttribute('data-invalid', '');
+      hint.setAttribute('data-error', '');
     }
-    injectCustomPalette(name, hex.toUpperCase());
-    window.ev2Toast && window.ev2Toast('Added custom palette "' + name + '" \u2014 available under T2 source palette', 'ok');
+    hint.textContent = msg;
+    confirmBtn.disabled = !ok;
+    return ok;
+  }
+
+  /* Bind the dialog's controls once on boot \u2014 markup is static
+     in index.html so wiring happens once, not on each open. */
+  function bindAddPaletteDialog() {
+    var modal = document.getElementById('ev2AddPalette');
+    if (!modal) return;
+    modal.querySelectorAll('[data-addpal-dismiss]').forEach(function (el) {
+      el.addEventListener('click', hideAddPaletteModal);
+    });
+    var name = document.getElementById('ev2AddPalName');
+    var color = document.getElementById('ev2AddPalColor');
+    var hex = document.getElementById('ev2AddPalHex');
+    var confirmBtn = document.getElementById('ev2AddPalConfirm');
+    if (name) name.addEventListener('input', validateAddPaletteForm);
+    if (color) color.addEventListener('input', function () {
+      _addPalState.hex = color.value.toUpperCase();
+      hex.value = _addPalState.hex;
+      hex.removeAttribute('data-invalid');
+      document.getElementById('ev2AddPalSwatch').style.background = _addPalState.hex;
+      renderAddPalettePreview();
+    });
+    if (hex) hex.addEventListener('input', function () {
+      var v = hex.value.trim();
+      if (!v.startsWith('#')) v = '#' + v;
+      if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
+        hex.removeAttribute('data-invalid');
+        _addPalState.hex = v.toUpperCase();
+        color.value = _addPalState.hex.toLowerCase();
+        document.getElementById('ev2AddPalSwatch').style.background = _addPalState.hex;
+        renderAddPalettePreview();
+      } else {
+        hex.setAttribute('data-invalid', '');
+      }
+    });
+    if (confirmBtn) confirmBtn.addEventListener('click', function () {
+      if (!validateAddPaletteForm()) return;
+      var newName = document.getElementById('ev2AddPalName').value.trim().toLowerCase();
+      if (_addPalState.mode === 'add') {
+        injectCustomPalette(newName, _addPalState.hex);
+        hideAddPaletteModal();
+        window.ev2Toast && window.ev2Toast('Added custom palette \u201C' + newName + '\u201D', 'ok');
+      } else if (_addPalState.mode === 'rename') {
+        if (newName === _addPalState.origId) { hideAddPaletteModal(); return; }
+        renameCustomPalette(_addPalState.origId, newName);
+        hideAddPaletteModal();
+        window.ev2Toast && window.ev2Toast('Renamed to \u201C' + newName + '\u201D', 'ok');
+      }
+    });
+    /* Esc closes */
+    modal.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.stopPropagation(); hideAddPaletteModal(); }
+    });
+  }
+
+  function confirmDeletePalette(id) {
+    var customs = discoverCustomPalettes();
+    var c = customs.find(function (x) { return x.id === id; });
+    if (!c) return;
+    /* Count surfaces currently using this palette so the confirm
+       message warns the user that those surfaces will fall back. */
+    var refs = 0;
+    if (State.t2SurfacePalette) {
+      Object.keys(State.t2SurfacePalette).forEach(function (sid) {
+        if (State.t2SurfacePalette[sid] === id) refs++;
+      });
+    }
+    var msg = 'Delete custom palette \u201C' + c.label + '\u201D?';
+    if (refs > 0) msg += ' ' + refs + ' surface' + (refs === 1 ? '' : 's')
+                     + ' will fall back to the default palette.';
+    openModal({
+      title: 'Delete palette',
+      body: msg,
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      kind: 'danger',
+      onConfirm: function () { deleteCustomPalette(id); }
+    });
   }
 
   /* Build a 22-step ladder from a key hex and inject it as a
@@ -1445,6 +1699,75 @@
     delete _systemPaletteCache[id];
     /* Re-render T0 (so the new row appears under Custom palettes)
        and T2 if it's active (so picker shows the new option). */
+    if (State.activeTier === 't0') renderT0();
+    else if (State.activeTier === 't2') renderT2();
+  }
+
+  /* ── Rename a custom palette ────────────────────────────
+     Splices the existing palette block out of the shared <style>
+     and re-injects under the new id. Surfaces using the old id in
+     State.t2SurfacePalette are migrated to the new id so the live
+     preview doesn't fall back. Mirrored to the iframe via
+     postMessage. */
+  function renameCustomPalette(oldId, newId) {
+    var styleEl = document.getElementById('ev2-custom-palettes');
+    if (!styleEl) return;
+    var src = styleEl.textContent;
+    var start = src.indexOf('/* @ev2-custom-palette:' + oldId + ' */');
+    var endMark = '/* @ev2-custom-palette-end:' + oldId + ' */';
+    var endIdx = src.indexOf(endMark);
+    if (start < 0 || endIdx < 0) return;
+    var block = src.slice(start, endIdx + endMark.length);
+    /* Swap the id in the block body */
+    var newBlock = block
+      .replace(new RegExp('@ev2-custom-palette:' + oldId, 'g'), '@ev2-custom-palette:' + newId)
+      .replace(new RegExp('@ev2-custom-palette-end:' + oldId, 'g'), '@ev2-custom-palette-end:' + newId)
+      .replace(new RegExp('--prim-' + oldId + '-', 'g'), '--prim-' + newId + '-');
+    styleEl.textContent = src.slice(0, start) + newBlock + src.slice(endIdx + endMark.length);
+    try {
+      $frame.contentWindow.postMessage({ type: 'ev2-custom-palette-rename', oldId: oldId, newId: newId }, '*');
+    } catch (e) {}
+    /* Migrate surface assignments */
+    if (State.t2SurfacePalette) {
+      Object.keys(State.t2SurfacePalette).forEach(function (sid) {
+        if (State.t2SurfacePalette[sid] === oldId) State.t2SurfacePalette[sid] = newId;
+      });
+    }
+    _customPalettesCache = null;
+    delete _systemPaletteCache[oldId];
+    delete _systemPaletteCache[newId];
+    scheduleAutosave();
+    if (State.activeTier === 't0') renderT0();
+    else if (State.activeTier === 't2') renderT2();
+  }
+
+  /* ── Delete a custom palette ────────────────────────────
+     Splices the block out, drops any surface assignments pointing
+     at it (those surfaces revert to their default palette), and
+     tells the preview to remove the injected block. */
+  function deleteCustomPalette(id) {
+    var styleEl = document.getElementById('ev2-custom-palettes');
+    if (styleEl) {
+      var src = styleEl.textContent;
+      var start = src.indexOf('/* @ev2-custom-palette:' + id + ' */');
+      var endMark = '/* @ev2-custom-palette-end:' + id + ' */';
+      var endIdx = src.indexOf(endMark);
+      if (start >= 0 && endIdx >= 0) {
+        styleEl.textContent = src.slice(0, start) + src.slice(endIdx + endMark.length);
+      }
+    }
+    try {
+      $frame.contentWindow.postMessage({ type: 'ev2-custom-palette-remove', id: id }, '*');
+    } catch (e) {}
+    if (State.t2SurfacePalette) {
+      Object.keys(State.t2SurfacePalette).forEach(function (sid) {
+        if (State.t2SurfacePalette[sid] === id) delete State.t2SurfacePalette[sid];
+      });
+    }
+    _customPalettesCache = null;
+    delete _systemPaletteCache[id];
+    scheduleAutosave();
+    window.ev2Toast && window.ev2Toast('Deleted palette', 'ok');
     if (State.activeTier === 't0') renderT0();
     else if (State.activeTier === 't2') renderT2();
   }
@@ -3108,6 +3431,7 @@
 
   function boot() {
     if (!window.PaletteEngine) { setTimeout(boot, 30); return; }
+    bindAddPaletteDialog();
     // Default: show CSS names ON. Overridden below if UI state has been saved.
     document.body.classList.add('ev2-show-css');
     readBaseline();
@@ -3148,6 +3472,7 @@
     if (ui) {
       if (ui.activeTier) State.activeTier = ui.activeTier;
       if (ui.activeRole) State.activeRole = ui.activeRole;
+      if (ui.activeT0 === 'roles' || ui.activeT0 === 'palettes') State.activeT0 = ui.activeT0;
       if (ui.activeSurface && T2_SURFACES.some(function (s) { return s.id === ui.activeSurface; })) {
         State.activeSurface = ui.activeSurface;
       }

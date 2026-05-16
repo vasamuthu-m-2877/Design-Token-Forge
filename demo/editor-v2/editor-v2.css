@@ -1964,3 +1964,84 @@ body.ev2-modal-open{overflow:hidden}
   outline-offset:2px;
 }
 .ev2-sp-add-glyph{font-size:13px;font-weight:700;line-height:1}
+
+/* ---------- Add / Rename custom palette modal ---------- */
+.ev2-addpal-card{width:min(460px,calc(100vw - 32px));padding:20px 22px 18px}
+.ev2-addpal-intro{margin-bottom:16px}
+.ev2-addpal-fields{display:flex;flex-direction:column;gap:14px;margin-bottom:18px}
+.ev2-addpal-field{display:flex;flex-direction:column;gap:6px}
+.ev2-addpal-label{
+  font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--surface-base-ct-subtle);
+}
+.ev2-addpal-name{
+  padding:8px 12px;
+  border:1px solid var(--surface-base-outline);
+  border-radius:var(--radius-md,6px);
+  background:var(--surface-base-bg);
+  color:var(--surface-base-ct-strong);
+  font:inherit;font-size:13px;font-weight:600;
+}
+.ev2-addpal-name:focus{outline:2px solid var(--brand-component-outline-default);outline-offset:1px;border-color:var(--brand-component-outline-default)}
+.ev2-addpal-name[data-invalid]{border-color:var(--danger-component-outline-default,#D61D20)}
+.ev2-addpal-hint{font-size:11px;color:var(--surface-base-ct-faint);line-height:1.4}
+.ev2-addpal-hint[data-error]{color:var(--danger-component-bg-default,#D61D20);font-weight:500}
+.ev2-addpal-lever{gap:12px}
+.ev2-addpal-strip{height:18px}
+.ev2-modal-btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- Custom palette row action buttons ---------- */
+.ev2-sp-row-actions{display:inline-flex;gap:4px;align-items:center;margin-left:auto}
+.ev2-sp-action{
+  width:24px;height:24px;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0;
+  border:1px solid transparent;
+  border-radius:var(--radius-sm,4px);
+  background:transparent;
+  color:var(--surface-base-ct-subtle);
+  cursor:pointer;
+  transition:background .12s,color .12s,border-color .12s;
+}
+.ev2-sp-action:hover{
+  background:var(--surface-base-subtle);
+  color:var(--surface-base-ct-strong);
+  border-color:var(--surface-base-outline);
+}
+.ev2-sp-action[data-danger]:hover{
+  color:var(--danger-component-bg-default,#D61D20);
+  border-color:var(--danger-component-outline-default,#D61D20);
+}
+.ev2-sp-action:focus-visible{outline:2px solid var(--brand-component-outline-default);outline-offset:1px}
+.ev2-sp-action svg{display:block;width:13px;height:13px}
+
+/* ---------- T0 sub-tabs (Roles | Palettes) ---------- */
+.ev2-t0-subs{
+  display:inline-flex;gap:4px;padding:4px;
+  border:1px solid var(--surface-base-outline);
+  border-radius:999px;
+  background:var(--surface-base-subtle);
+  margin-bottom:14px;
+}
+.ev2-t0-sub{
+  padding:5px 14px;
+  border:0;border-radius:999px;
+  background:transparent;
+  font:inherit;font-size:11px;font-weight:600;letter-spacing:.02em;
+  color:var(--surface-base-ct-subtle);
+  cursor:pointer;
+  transition:all 120ms ease;
+}
+.ev2-t0-sub:hover{color:var(--surface-base-ct-strong)}
+.ev2-t0-sub[aria-selected="true"]{
+  background:var(--surface-base-cm-bg);
+  color:var(--surface-base-ct-strong);
+  box-shadow:var(--shadow-sm,0 1px 3px rgba(0,0,0,.08));
+  outline:1.5px solid var(--brand-component-bg-default,#3366f0);
+  outline-offset:-1.5px;
+}
+.ev2-t0-sub:focus-visible{outline:2px solid var(--brand-component-bg-default,#3366f0);outline-offset:2px}
+
+/* Row-head meta + actions layout for custom palette rows */
+.ev2-sp-row .ev2-sp-rowhead{display:flex;align-items:center;gap:8px}
+.ev2-sp-row .ev2-sp-meta{margin-right:auto}
