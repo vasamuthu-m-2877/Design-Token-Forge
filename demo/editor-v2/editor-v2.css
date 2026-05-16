@@ -150,6 +150,14 @@ body{
 }
 .ev2-proj-foot-refresh:hover{background:var(--ev2-chrome-subtle)}
 .ev2-proj-foot-refresh:disabled{opacity:.5;cursor:not-allowed}
+.ev2-proj-foot-new{
+  font:inherit;font-size:11px;font-weight:600;
+  color:var(--brand-content-default,#286CE5);
+  text-decoration:none;
+  padding:3px 6px;border-radius:var(--radius-sm,4px);
+  transition:background 120ms;
+}
+.ev2-proj-foot-new:hover{background:var(--brand-container-bg,#EAF2FF)}
 
 /* Topbar icon-button actions for the active project (rename / delete).
    Sit immediately right of the project picker dropdown. */

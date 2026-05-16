@@ -5184,6 +5184,7 @@
     }
     var footHtml = '<div class=\"ev2-proj-foot\">'
       + '<span class=\"ev2-proj-foot-status\">' + statusText + '</span>'
+      + '<a class=\"ev2-proj-foot-new\" href=\"../onboard.html\" data-proj-new>+ New project</a>'
       + '<button class=\"ev2-proj-foot-refresh\" data-proj-refresh type=\"button\"' + (_projPanelLoading ? ' disabled' : '') + '>Refresh</button>'
       + '</div>';
     $projPanel.innerHTML = rowsHtml + footHtml;
