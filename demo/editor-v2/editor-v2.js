@@ -180,8 +180,8 @@
     { id:'bg',                 family:'surface',   parent:null,         defaultDelta:  0, level:0 },
     { id:'subtle',             family:'surface',   parent:'bg',         defaultDelta:  1, level:1 },
     { id:'strong',             family:'surface',   parent:'bg',         defaultDelta:  2, level:1 },
-    { id:'outline',            family:'edges',     parent:'bg',         defaultDelta:  3, level:0 },
-    { id:'separator',          family:'edges',     parent:'outline',    defaultDelta:  0, level:1 },
+    { id:'outline',            family:'borders',   parent:'bg',         defaultDelta:  3, level:0 },
+    { id:'separator',          family:'borders',   parent:'outline',    defaultDelta:  0, level:1 },
     { id:'ct-default',         family:'content',   parent:'bg',         defaultDelta: 16, level:0 },
     { id:'ct-strong',          family:'content',   parent:'ct-default', defaultDelta:  3, level:1 },
     { id:'ct-subtle',          family:'content',   parent:'ct-default', defaultDelta: -6, level:1 },
@@ -275,7 +275,7 @@
      anchor reference (parent of the family's root prop) for context. */
   var T2_FAMILIES = [
     { id:'surface',   label:'Surface',   anchorRef:null  /* bg IS the anchor */ },
-    { id:'edges',     label:'Edges',     anchorRef:'bg' },
+    { id:'borders',   label:'Borders',   anchorRef:'bg' },
     { id:'content',   label:'Content',   anchorRef:'bg' },
     { id:'component', label:'Component', anchorRef:'bg' }
   ];
@@ -1084,6 +1084,45 @@
     };
   }
 
+  /* Human-readable WCAG tip for the sentinel chip. Replaces the
+     old "1.29:1 vs --surface-bright-bg (AA large 3:1)" line, which
+     was technically correct but read as a hash to anyone who isn't
+     fluent in WCAG token names. Built dynamically so the message
+     reflects what FAILED, what the threshold is, and what to do. */
+  function wcagTipText(sent, tokenName) {
+    var role = wcagRoleFromToken(tokenName);
+    var threshold = sent.large ? 3 : 4.5;
+    var ratio = sent.ratio.toFixed(2) + ':1';
+    var baselineShort = sent.baseline.replace(/^--surface-[^-]+-/, '');
+    var lead = sent.judge.pass
+      ? 'Passes — '
+      : (sent.ratio >= threshold - 0.5 ? 'Just below — ' : 'Fails — ');
+    var body = role.what + ' has ' + ratio + ' contrast against ' + baselineShort
+             + (sent.judge.pass ? '' : (', under the ' + threshold + ':1 minimum for ' + role.usage + '.'));
+    var hint = '';
+    if (!sent.judge.pass) {
+      hint = '  Try stepping it ' + role.direction + ', or step ' + baselineShort + ' the other way.';
+    }
+    return (lead + body + hint).replace(/"/g, '&quot;');
+  }
+  /* Per-prop short copy used inside wcagTipText, so a fail on
+     `outline` reads "This outline" rather than "This surface-bright-
+     outline cell". Keeps the tip about the user's intent, not the
+     CSS variable name. */
+  function wcagRoleFromToken(tokenName) {
+    var prop = (tokenName || '').replace(/^--surface-[^-]+-/, '');
+    if (prop === 'outline')           return { what:'This outline',      usage:'UI borders (WCAG 1.4.11)', direction:'darker' };
+    if (prop === 'ct-default' || prop === 'ct-strong')
+                                       return { what:'This body text',    usage:'body copy (WCAG 1.4.3)',  direction:'darker' };
+    if (prop === 'ct-subtle' || prop === 'ct-faint')
+                                       return { what:'This support text', usage:'large/secondary text',     direction:'darker' };
+    if (prop === 'cm-bg' || prop === 'cm-bg-hover' || prop === 'cm-bg-pressed')
+                                       return { what:'This component fill', usage:'component surface (WCAG 1.4.11)', direction:'darker or lighter to separate from the page bg' };
+    if (prop === 'cm-outline' || prop === 'cm-outline-hover' || prop === 'cm-outline-pressed')
+                                       return { what:'This component border', usage:'UI borders (WCAG 1.4.11)', direction:'darker' };
+    return { what:'This color', usage:'UI elements', direction:'further away from the baseline' };
+  }
+
   function setT2Step(surfaceId, propId, mode, newStep) {
     if (ALL_STEPS.indexOf(newStep) < 0) return;
     var def = defaultT2Step(surfaceId, propId, mode);
@@ -1159,7 +1198,7 @@
       var grade = sent.judge.pass ? (sent.judge.grade === 'AAA' ? 'aaa' : (sent.large ? 'aa-large' : 'aa')) : 'fail';
       var sym   = sent.judge.pass ? '\u2713' : '\u26A0';
       sentHTML = '<div class="ev2-pc-wcag" data-grade="' + grade + '"'
-        + ' data-tip="' + sent.ratio.toFixed(2) + ':1 vs ' + sent.baseline + ' (' + (sent.large ? 'AA large 3:1' : 'AA 4.5:1') + ')">'
+        + ' data-tip="' + wcagTipText(sent, opts.tokenName) + '">'
         + sym + ' ' + sent.ratio.toFixed(2) + ':1'
       + '</div>';
     }
