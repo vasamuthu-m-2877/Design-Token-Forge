@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=115">
+  <link rel="stylesheet" href="./editor-v2.css?v=116">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
   <script src="../palette-engine.js?v=85" defer></script>
@@ -202,6 +202,15 @@
     </div>
   </div>
 
+  <!-- Busy overlay: blocks UI during long-running GH ops (delete / rename / restore) -->
+  <div class="ev2-busy" id="ev2Busy" hidden role="alertdialog" aria-modal="true" aria-labelledby="ev2BusyTitle" aria-describedby="ev2BusySub">
+    <div class="ev2-busy-card">
+      <div class="ev2-busy-spinner" aria-hidden="true"></div>
+      <div class="ev2-busy-title" id="ev2BusyTitle">Working…</div>
+      <div class="ev2-busy-sub" id="ev2BusySub">Please don’t close this tab.</div>
+    </div>
+  </div>
+
   <!-- Add custom palette dialog: name + key color picker + live ladder preview -->
   <div class="ev2-modal ev2-addpal" id="ev2AddPalette" hidden role="dialog" aria-modal="true" aria-labelledby="ev2AddPaletteTitle">
     <div class="ev2-modal-backdrop" data-addpal-dismiss></div>
@@ -345,6 +354,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=126" defer></script>
+  <script src="./editor-v2.js?v=127" defer></script>
 </body>
 </html>

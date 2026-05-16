@@ -4195,12 +4195,14 @@
       .catch(function (err) {
         // Race: someone (Pages bot, another tab, parallel commit)
         // moved the branch between our read and our PATCH. Re-read
-        // and rebuild from the new tip. Up to 4 attempts total.
+        // and rebuild from the new tip. Up to 6 attempts total —
+        // the deploy-tokens.yml workflow can push 2-3 times in
+        // quick succession after every publish.
         var raceable = err && err.message && /fast.?forward|sha.*does not match|reference does not exist/i.test(err.message);
-        if (raceable && _retry < 3) {
-          // Small backoff (0, 250, 500ms) to avoid hot-spinning if
-          // a CI job is actively pushing.
-          var delay = _retry * 250;
+        if (raceable && _retry < 5) {
+          // Backoff with jitter: 250ms, 500ms, 750ms, 1500ms, 2500ms.
+          var delays = [250, 500, 750, 1500, 2500];
+          var delay = delays[_retry] + Math.floor(Math.random() * 200);
           return new Promise(function (resolve) { setTimeout(resolve, delay); })
             .then(function () { return ghMultiCommit(owner, files, message, branch, _retry + 1); });
         }
@@ -4783,7 +4785,7 @@
           var keyHex = cfg.paletteKeys[roleId];
           if (!keyHex) return;
           try {
-            var pal = window.PaletteEngine.generatePalette(keyHex, {});
+            var pal = window.PaletteEngine.generatePalette(keyHex, { anchor: 'exact' });
             parts.push(window.PaletteEngine.toCss(roleId, pal));
           } catch (e) { /* skip bad role */ }
         });
@@ -5129,10 +5131,11 @@
      project (or send the user back to the project hub when the
      fork has none left). */
   function performProjectDelete(id, name) {
-    if (window.ev2Toast) window.ev2Toast('Connecting to GitHub\u2026', 'ok');
+    showBusy('Deleting \u201C' + name + '\u201D\u2026', 'Talking to GitHub. Don\u2019t close this tab.');
     ensureGhCredentials().then(function (cred) {
       var owner = cred.user;
       var branch = 'main';
+      updateBusy(null, 'Enumerating project files\u2026');
       // 1. Get the current tree to enumerate files under projects/<id>/.
       return ghFetch('/repos/' + owner + '/' + GH_REPO_NAME + '/git/ref/heads/' + branch).then(function (ref) {
         return ghFetch('/repos/' + owner + '/' + GH_REPO_NAME + '/git/trees/' + ref.object.sha + '?recursive=1');
@@ -5150,41 +5153,59 @@
           catch (e) { throw new Error('Could not parse projects.json from fork'); }
           var nextList = Array.isArray(listRaw) ? listRaw.filter(function (p) { return p && p.id !== id; }) : [];
           doomed.push({ path: 'projects.json', content: JSON.stringify(nextList, null, 2) + '\n' });
-          return ghMultiCommit(owner, doomed, 'project(' + id + '): delete via editor v2', branch).then(function () { return nextList; });
+          updateBusy(null, 'Committing ' + doomed.length + ' file' + (doomed.length === 1 ? '' : 's') + ' to your fork\u2026');
+          return ghMultiCommit(owner, doomed, 'project(' + id + '): delete via editor v2', branch).then(function () {
+            // 3. Verify: re-read projects.json and confirm the
+            // entry is actually gone before we switch projects.
+            // The retry loop inside ghMultiCommit usually wins, but
+            // if some other writer beat us we must NOT cheerfully
+            // switch to a project whose folder might still exist.
+            updateBusy(null, 'Verifying delete\u2026');
+            return ghFetch('/repos/' + owner + '/' + GH_REPO_NAME + '/contents/projects.json?ref=' + branch + '&_cb=' + Date.now())
+              .then(function (idx2) {
+                var verifyList;
+                try { verifyList = JSON.parse(decodeURIComponent(escape(atob(idx2.content.replace(/\n/g,''))))); }
+                catch (e) { throw new Error('Delete commit landed but projects.json is unreadable.'); }
+                var stillThere = Array.isArray(verifyList) && verifyList.some(function (p) { return p && p.id === id; });
+                if (stillThere) throw new Error('Delete commit landed but projects.json still lists this project. Try again.');
+                return verifyList;
+              });
+          });
         });
       }).then(function (nextList) {
-        // 3. Update local cache, pick next project, navigate.
+        // 4. Success path — local cleanup + navigation.
         try { localStorage.setItem('dtf-known-projects', JSON.stringify(nextList)); } catch (e) {}
-        // Clear any draft state for the deleted project.
         try { localStorage.removeItem('ev2-draft-' + id); } catch (e) {}
         try { localStorage.removeItem(DRAFT_KEY + '--' + id); } catch (e) {}
-        // Also drop any local-hydration caches stashed by onboard so
-        // a future project that reuses this id starts clean.
         try { localStorage.removeItem('dtf-project-config-' + id); } catch (e) {}
         try { localStorage.removeItem('dtf-project-primitives-' + id); } catch (e) {}
         try { localStorage.removeItem('dtf-color-config-' + id); } catch (e) {}
         var wasActive = (getActiveProjectId() === id);
-        if (window.ev2Toast) window.ev2Toast('Deleted \u201C' + name + '\u201D', 'ok');
+        updateBusy('Deleted \u201C' + name + '\u201D', wasActive ? 'Switching to next project\u2026' : 'Updating list\u2026');
         if (!nextList.length) {
-          // No projects left in this fork \u2014 hand off to the create wizard.
           localStorage.removeItem('dtf-active-project');
-          setTimeout(function () { window.location.href = '../onboard.html'; }, 600);
+          setTimeout(function () { window.location.href = '../onboard.html'; }, 500);
           return;
         }
         if (wasActive) {
-          localStorage.setItem('dtf-active-project', nextList[0].id);
-          setTimeout(function () { window.location.reload(); }, 600);
+          var nextId = nextList[0].id;
+          localStorage.setItem('dtf-active-project', nextId);
+          // Hard reload to fully rebind state to the new project.
+          setTimeout(function () { window.location.href = 'index.html?project=' + encodeURIComponent(nextId); }, 500);
         } else {
-          // Just refresh the dropdown.
+          hideBusy();
+          if (window.ev2Toast) window.ev2Toast('Deleted \u201C' + name + '\u201D', 'ok');
           renderProjPanel();
         }
       }).catch(function (err) {
+        hideBusy();
         var msg = (err && err.message) ? err.message : String(err);
         if (window.ev2Toast) window.ev2Toast('Delete failed: ' + msg, 'err');
         // eslint-disable-next-line no-console
         console.error('[project-delete]', err);
       });
     }).catch(function () {
+      hideBusy();
       if (window.ev2Toast) window.ev2Toast('GitHub authentication cancelled', 'warn');
     });
   }
@@ -5205,7 +5226,7 @@
   }
 
   function performProjectRename(id, newName) {
-    if (window.ev2Toast) window.ev2Toast('Connecting to GitHub\u2026', 'ok');
+    showBusy('Renaming to \u201C' + newName + '\u201D\u2026', 'Talking to GitHub. Don\u2019t close this tab.');
     ensureGhCredentials().then(function (cred) {
       var owner = cred.user;
       var branch = 'main';
@@ -5240,16 +5261,19 @@
           .then(function () { return nextList; });
       }).then(function (nextList) {
         try { localStorage.setItem('dtf-known-projects', JSON.stringify(nextList)); } catch (e) {}
+        hideBusy();
         if (window.ev2Toast) window.ev2Toast('Renamed to \u201C' + newName + '\u201D', 'ok');
         syncProjLabel();
         renderProjPanel();
       }).catch(function (err) {
+        hideBusy();
         var msg = (err && err.message) ? err.message : String(err);
         if (window.ev2Toast) window.ev2Toast('Rename failed: ' + msg, 'err');
         // eslint-disable-next-line no-console
         console.error('[project-rename]', err);
       });
     }).catch(function () {
+      hideBusy();
       if (window.ev2Toast) window.ev2Toast('GitHub authentication cancelled', 'warn');
     });
   }
@@ -5307,6 +5331,24 @@
     $modal.setAttribute('hidden', '');
     modalOnConfirm = null;
   }
+
+  /* Busy overlay — blocks all interaction (and signals "don't
+     navigate") while a long-running GH op is in flight. */
+  var $busy      = document.getElementById('ev2Busy');
+  var $busyTitle = document.getElementById('ev2BusyTitle');
+  var $busySub   = document.getElementById('ev2BusySub');
+  function showBusy(title, sub) {
+    if (!$busy) return;
+    if ($busyTitle) $busyTitle.textContent = title || 'Working\u2026';
+    if ($busySub)   $busySub.textContent   = sub   || 'Please don\u2019t close this tab.';
+    $busy.removeAttribute('hidden');
+  }
+  function updateBusy(title, sub) {
+    if (!$busy || $busy.hasAttribute('hidden')) return;
+    if (title && $busyTitle) $busyTitle.textContent = title;
+    if (sub   && $busySub)   $busySub.textContent   = sub;
+  }
+  function hideBusy() { if ($busy) $busy.setAttribute('hidden', ''); }
   $modalConfirm.addEventListener('click', function () {
     var fn = modalOnConfirm;
     closeModal();

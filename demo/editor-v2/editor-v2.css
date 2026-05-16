@@ -618,8 +618,9 @@ body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
   cursor:pointer;
 }
 .ev2-anchor button[aria-checked="true"]{
-  background:var(--ev2-chrome-cm-bg);
-  color:var(--ev2-chrome-ct-strong);
+  background:var(--brand-component-bg-default,#286CE5);
+  color:var(--brand-on-component,#fff);
+  box-shadow:0 1px 2px rgba(0,0,0,.08);
 }
 
 /* Tooltip on anchor (and any element with data-tip).
@@ -698,6 +699,30 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
 }
 .ev2-tip-portal[data-place="top"]::after{bottom:-3px}
 .ev2-tip-portal[data-place="bottom"]::after{top:-3px}
+
+/* Busy overlay — blocks all interaction while a destructive
+   long-running GH op (delete project, rename, restore) is in
+   flight. Sits above modals so it can be raised mid-confirmation. */
+.ev2-busy{position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;background:rgba(15,18,25,.55);backdrop-filter:blur(3px)}
+.ev2-busy[hidden]{display:none}
+.ev2-busy-card{
+  display:flex;flex-direction:column;align-items:center;gap:14px;
+  padding:24px 32px;
+  border-radius:var(--radius-md,8px);
+  background:var(--ev2-chrome-cm-bg);
+  border:1px solid var(--ev2-chrome-outline);
+  box-shadow:var(--shadow-lg,0 12px 40px rgba(0,0,0,.22));
+  min-width:240px;max-width:380px;text-align:center;
+}
+.ev2-busy-spinner{
+  width:34px;height:34px;border-radius:50%;
+  border:3px solid var(--ev2-chrome-outline);
+  border-top-color:var(--brand-content-default,#286CE5);
+  animation:ev2-spin 800ms linear infinite;
+}
+.ev2-busy-title{font-size:13px;font-weight:600;color:var(--ev2-chrome-ct-strong)}
+.ev2-busy-sub{font-size:11px;color:var(--ev2-chrome-ct-subtle);line-height:1.5}
+@keyframes ev2-spin{to{transform:rotate(360deg)}}
 
 /* Modal */
 .ev2-modal{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center}

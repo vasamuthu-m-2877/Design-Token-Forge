@@ -701,11 +701,11 @@
           Object.keys(allKeys).forEach(function (roleId) {
             var keyHex = allKeys[roleId];
             if (!keyHex) return;
-            var opts = {};
-            // Greyscale + desaturated derive from a fixed key; the engine
-            // handles tone curve internally. Brand/danger/etc. take the
-            // user's key colour as-is.
-            var pal = window.PaletteEngine.generatePalette(keyHex, opts);
+            // Anchor MUST be 'exact' so step-500 is the user's key
+            // colour. Default 'normalized' shifts step-500 onto the
+            // engine's tone curve (e.g. #865A1D -> #976B1E), which
+            // surfaces in the editor as "the key I picked is wrong".
+            var pal = window.PaletteEngine.generatePalette(keyHex, { anchor: 'exact' });
             primParts.push(window.PaletteEngine.toCss(roleId, pal));
           });
           localStorage.setItem('dtf-project-primitives-' + slug, primParts.join('\n'));
