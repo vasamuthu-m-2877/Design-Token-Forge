@@ -486,6 +486,9 @@ window.DTF = window.DTF || { onThemeChange: null };
   /* Helper: apply project tokens by swapping <style> and fetching config */
   var _pendingPid = null; /* guard against rapid switch race conditions */
   function _applyProjectTokens(pid) {
+    // Opt-out for pages like onboard that must render with package
+    // defaults regardless of active project.
+    if (document.documentElement.getAttribute('data-no-project-theme') === '1') return;
     _pendingPid = pid;
     var cached = localStorage.getItem('dtf-saved-tokens-' + pid) || '';
 
@@ -584,6 +587,10 @@ window.DTF = window.DTF || { onThemeChange: null };
 
 /* ── Inject Saved Color Tokens (from Color System page) ── */
 (function(){
+  /* Pages that opt out of project-specific theming (e.g. onboard)
+     must render with package defaults only — otherwise the active
+     project's brand bleeds into wizard chrome. */
+  if (document.documentElement.getAttribute('data-no-project-theme') === '1') return;
   /* Load project-specific tokens if an active project is set, else fall back to global */
   var activeProject = localStorage.getItem('dtf-active-project');
   var savedCSS = null;

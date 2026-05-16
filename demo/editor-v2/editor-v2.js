@@ -1108,18 +1108,13 @@
     try {
       var key = getDraftKey();
       var raw = localStorage.getItem(key);
-      // Legacy fallback: a draft saved before per-project scoping
-      // existed lives at the bare DRAFT_KEY. Only honour it for the
-      // active project (NOT every project) by migrating it to the
-      // project-scoped key on read — prevents one project's draft
-      // from bleeding into every other project.
-      if (!raw && key !== DRAFT_KEY) {
-        var legacy = localStorage.getItem(DRAFT_KEY);
-        if (legacy) {
-          try { localStorage.setItem(key, legacy); } catch (e) {}
-          try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
-          raw = legacy;
-        }
+      // One-shot cleanup: the bare DRAFT_KEY existed before per-
+      // project scoping (4839a09). It cannot be safely migrated to
+      // a specific project because we no longer know which project
+      // it was created for — adopting it would re-pollute whatever
+      // project happens to load next. Just delete it.
+      if (key !== DRAFT_KEY) {
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
       }
       if (!raw) return false;
       var d = JSON.parse(raw);
@@ -4891,6 +4886,17 @@
         var rules;
         try { rules = document.styleSheets[i].cssRules; } catch (e) { continue; }
         if (!rules) continue;
+        // Only count palettes that come from THIS project. Without
+        // this scope check, we'd also pick up every palette declared
+        // in the package defaults (packages/tokens/src/index.css)
+        // and flag a brand-new project as "undeclared palettes
+        // present" — which makes onboard always trigger the
+        // migration banner.
+        var sheetHref = document.styleSheets[i].href || '';
+        var sheetNode = document.styleSheets[i].ownerNode;
+        var isProjectSheet = (sheetNode && sheetNode.id === 'ev2-project-primitives')
+          || /\/projects\/[^/]+\/primitives\.css/.test(sheetHref);
+        if (!isProjectSheet) continue;
         for (var j = 0; j < rules.length; j++) {
           var rule = rules[j];
           if (!rule.style) continue;
