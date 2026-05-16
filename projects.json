@@ -3,7 +3,7 @@
     "id": "desktop-pdf-editor",
     "name": "Desktop PDF Editor",
     "owner": "sridhar-ravi-2917",
-    "description": "Default project ÃÂ¢ÃÂÃÂ the original DTF token set for the Desktop PDF Editor product."
+    "description": "Default project ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ the original DTF token set for the Desktop PDF Editor product."
   },
   {
     "id": "slate-demo",
@@ -16,5 +16,11 @@
     "name": "writer-handhelds",
     "owner": "sridhar-ravi-2917",
     "description": ""
+  },
+  {
+    "id": "choco",
+    "name": "choco",
+    "owner": "sridhar-ravi-2917",
+    "description": "Design tokens for choco"
   }
 ]
