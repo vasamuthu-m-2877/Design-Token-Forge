@@ -63,19 +63,45 @@
      surface luminance. Without it, a step-850 dark container would
      auto-derive a step-900 border that's INVISIBLE on the container. */
   function tonalDir(mode) { return mode === 'dark' ? -1 : 1; }
+  /* Walk `offset` steps from `name` in the mode-default direction,
+     but FLIP direction when there isn't enough headroom that way
+     — otherwise borders/separators on extreme containers (e.g. a
+     pinned-to-black container in light mode) clamp at the ladder
+     edge and become invisible against the container itself.
+     Strategy:
+       1. desiredDir = tonalDir(mode) so light-mode walks darker,
+          dark-mode walks lighter (the canonical "away from page").
+       2. If `idx + offset*desiredDir` is out of bounds (or fewer
+          than `offset` steps fit in that direction), use the
+          opposite direction.
+       3. As a last resort (offset bigger than the ladder itself)
+          fall back to the ladder edge furthest from `name`. */
+  function stepRelToward(name, offset, mode) {
+    var i = ALL_STEPS.indexOf(name);
+    if (i < 0) return name;
+    var dir = tonalDir(mode);
+    var forwardRoom  = dir > 0 ? (ALL_STEPS.length - 1 - i) : i;
+    var backwardRoom = dir > 0 ? i : (ALL_STEPS.length - 1 - i);
+    var useDir;
+    if (forwardRoom >= offset)      useDir =  dir;
+    else if (backwardRoom >= offset) useDir = -dir;
+    else useDir = (forwardRoom >= backwardRoom) ? dir : -dir;
+    var j = Math.max(0, Math.min(ALL_STEPS.length - 1, i + offset * useDir));
+    return ALL_STEPS[j];
+  }
   /* Resolve the auto-derived border/separator step for a role+mode.
      Honors a user override stored in State.t1[mode][roleId][key];
      otherwise computes the default offset from the container pick
-     in the mode-correct direction. */
+     in the direction with headroom. */
   function resolveBorderStep(roleId, mode) {
     var t = State.t1[mode][roleId];
     if (t.borderStep && ALL_STEPS.indexOf(t.borderStep) >= 0) return t.borderStep;
-    return stepRel(t.container, 6 * tonalDir(mode));
+    return stepRelToward(t.container, 6, mode);
   }
   function resolveSeparatorStep(roleId, mode) {
     var t = State.t1[mode][roleId];
     if (t.separatorStep && ALL_STEPS.indexOf(t.separatorStep) >= 0) return t.separatorStep;
-    return stepRel(t.container, 2 * tonalDir(mode));
+    return stepRelToward(t.container, 2, mode);
   }
 
   /* Per-role per-mode default step picks. Hand-tuned so every role
