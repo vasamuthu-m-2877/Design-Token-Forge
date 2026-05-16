@@ -1,0 +1,3767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Token Forge</title>
+<link rel="stylesheet" href="../packages/tokens/src/index.css">
+<link rel="stylesheet" href="../packages/components/src/button/button.tokens.css">
+<link rel="stylesheet" href="../packages/components/src/button/button.css">
+<link rel="stylesheet" href="../packages/components/src/input/input.tokens.css">
+<link rel="stylesheet" href="../packages/components/src/input/input.css">
+<link rel="stylesheet" href="../packages/components/src/toggle/toggle.tokens.css">
+<link rel="stylesheet" href="../packages/components/src/toggle/toggle.css">
+<link rel="stylesheet" href="../packages/components/src/checkbox/checkbox.tokens.css">
+<link rel="stylesheet" href="../packages/components/src/checkbox/checkbox.css">
+<link rel="stylesheet" href="shared.css?v=20260514l">
+<style id="dynamicTokens"></style>
+<style>
+/* ════════════════════════════════════════════════════════════
+   Color System — Multi-Role Unified Page
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Role Rows ────────────────────────────────────────────── */
+.role-list{display:flex;flex-direction:column;gap:0}
+.role-group-label{font-size:var(--font-size-10,10px);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--demo-fg-faint);padding:14px 24px 6px;border-top:1px solid var(--demo-border)}
+.role-group-label:first-child{border-top:none;padding-top:10px}
+.role-row{padding:10px 24px 14px;border-bottom:1px solid var(--demo-border);display:flex;flex-direction:column;gap:6px}
+.role-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.role-label{font-size:var(--font-size-13,13px);font-weight:700;color:var(--demo-fg-strong);min-width:90px}
+.role-label-input{width:110px;padding:3px 8px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);font-size:var(--font-size-12,12px);font-weight:600;color:var(--demo-fg-strong);background:var(--demo-surface);font-family:inherit}
+.role-picker{display:flex;align-items:center;gap:8px}
+.pick-native{width:40px;height:28px;border:2px solid var(--demo-border);border-radius:var(--radius-sm,4px);cursor:pointer;padding:0;background:none}
+.pick-native::-webkit-color-swatch-wrapper{padding:0}
+.pick-native::-webkit-color-swatch{border:none;border-radius:2px}
+.pick-hex{width:80px;padding:4px 8px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);font-family:var(--font-family-mono,monospace);font-size:var(--font-size-12,12px);font-weight:600;color:var(--demo-fg-strong);background:var(--demo-surface);text-transform:uppercase}
+.pick-hex:focus{outline:2px solid var(--brand-component-bg-default);outline-offset:-1px}
+.role-auto-tag{font-size:var(--font-size-10,10px);color:var(--demo-fg-faint);font-style:italic}
+.role-del{width:22px;height:22px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:transparent;color:var(--demo-fg-faint);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:auto;transition:all 120ms;line-height:1}
+.role-del:hover{color:#DC2626;border-color:#DC2626;background:#FEE2E2}
+
+
+.cert-mini{font-size:var(--font-size-10,10px);font-weight:700;padding:2px 8px;border-radius:var(--radius-xs,3px);white-space:nowrap}
+.cert-mini[data-status="CERTIFIED"]{background:#DCFCE7;color:#166534}
+.cert-mini[data-status="CONDITIONAL"]{background:#FEF3C7;color:#92400E}
+.cert-mini[data-status="FAILED"]{background:#FEE2E2;color:#991B1B}
+html[data-theme="dark"] .cert-mini[data-status="CERTIFIED"]{background:#14532D;color:#86EFAC}
+html[data-theme="dark"] .cert-mini[data-status="CONDITIONAL"]{background:#78350F;color:#FCD34D}
+html[data-theme="dark"] .cert-mini[data-status="FAILED"]{background:#7F1D1D;color:#FCA5A5}
+
+.role-strip{display:flex;gap:2px;border-radius:var(--radius-lg,10px);overflow:hidden;height:56px;box-shadow:0 1px 3px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.04)}
+.role-swatch{flex:1;position:relative;cursor:pointer;transition:transform 150ms ease,box-shadow 150ms ease,border-radius 150ms ease}
+.role-swatch:hover{transform:scaleY(1.2) scaleX(1.08);z-index:2;border-radius:4px;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.role-swatch:active{transform:scaleY(1.12) scaleX(1.04)}
+.role-swatch[data-key]{outline:2px solid var(--demo-fg-strong);outline-offset:-2px;z-index:2}
+.role-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--demo-fg-strong);color:var(--demo-bg);font-size:10px;font-family:var(--font-family-mono,monospace);padding:4px 10px;border-radius:var(--radius-sm,4px);white-space:nowrap;z-index:10;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.15);letter-spacing:.02em}
+.role-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--demo-fg-strong)}
+.role-swatch:hover .role-tip{display:block}
+.role-swatch-lbl{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;letter-spacing:.03em;opacity:0;transition:opacity 150ms;pointer-events:none}
+.role-swatch:hover .role-swatch-lbl{opacity:1}
+
+/* Copy feedback toast */
+.copy-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--demo-fg-strong);color:var(--demo-bg);font-size:12px;font-weight:600;font-family:var(--font-family-mono,monospace);padding:8px 20px;border-radius:var(--radius-md,6px);box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:9999;opacity:0;transition:opacity 200ms ease,transform 200ms ease;pointer-events:none}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.add-role-wrap{padding:12px 24px}
+.add-role-btn{width:100%;padding:10px 16px;border:2px dashed var(--demo-border);border-radius:var(--radius-md,6px);background:transparent;color:var(--demo-fg-subtle);font-size:var(--font-size-12,12px);font-weight:600;cursor:pointer;transition:all 120ms;font-family:inherit;text-align:center}
+.add-role-btn:hover{border-color:var(--brand-component-bg-default);color:var(--brand-content-default);background:var(--brand-container-bg)}
+
+/* ── Global Sticky Save Bar ────────────────────────────────── */
+.global-save-bar{position:sticky;bottom:0;z-index:50;display:flex;align-items:center;gap:12px;padding:10px 24px;background:var(--demo-surface);border-top:2px solid var(--demo-border);box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+html[data-theme="dark"] .global-save-bar{box-shadow:0 -4px 16px rgba(0,0,0,.3)}
+.global-save-bar .save-bar-msg{font-size:var(--font-size-10,10px);color:var(--demo-fg-faint);font-style:italic;margin-right:auto}
+.save-btn{padding:7px 18px;border-radius:var(--radius-sm,4px);font-size:var(--font-size-12,12px);font-weight:700;cursor:pointer;border:1px solid #166534;background:#166534;color:#fff;font-family:inherit;transition:all 120ms}
+.save-btn:hover{background:#15803D}
+.save-btn[data-saved]{background:#DCFCE7;color:#166534;border-color:#16A34A}
+.save-bar-ts{font-size:var(--font-size-10,10px);color:var(--demo-fg-faint);white-space:nowrap}
+
+/* ── Section-level Reset Link ─────────────────────────────── */
+.section-reset{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:none;border-radius:var(--radius-sm,4px);background:transparent;color:var(--demo-fg-faint);font-size:var(--font-size-10,10px);font-weight:600;cursor:pointer;font-family:inherit;transition:all 120ms;margin-left:auto;align-self:center;white-space:nowrap}
+.section-reset:hover{color:#991B1B;background:#FEE2E2}
+.section-reset svg{width:12px;height:12px;flex-shrink:0}
+
+/* ── Role Selector ────────────────────────────────────────── */
+.role-select{padding:5px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--demo-fg);font-size:var(--font-size-12,12px);font-weight:500;cursor:pointer;font-family:inherit}
+
+/* ── Token Map ────────────────────────────────────────────── */
+.map-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.map-pane{padding:20px 24px;display:flex;flex-direction:column;gap:0}
+.map-pane--dark{background:#141414;color:#e5e5e5}
+.map-title{font-size:var(--font-size-10,10px);font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--demo-fg-faint);padding:0 0 10px 0;border-bottom:1px solid var(--demo-border)}
+.map-pane--dark .map-title{color:#888;border-color:#333}
+.map-group-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--demo-fg-faint);padding:12px 0 4px 0}
+.map-pane--dark .map-group-label{color:#666}
+.map-row{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:var(--font-size-10,10px);font-family:var(--font-family-mono,monospace)}
+.map-swatch{width:22px;height:14px;border-radius:4px;border:1px solid rgba(128,128,128,.15);flex-shrink:0;cursor:pointer;transition:transform 100ms ease,box-shadow 100ms ease}
+.map-swatch:hover{transform:scale(1.3);box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:1;position:relative}
+.map-name{flex:1;color:var(--demo-fg-subtle);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-pane--dark .map-name{color:#aaa}
+.map-step{color:var(--demo-fg-faint);min-width:36px;text-align:right;font-size:9px}
+.map-pane--dark .map-step{color:#777}
+.map-hex{color:var(--demo-fg-faint);min-width:60px;text-align:right}
+.map-pane--dark .map-hex{color:#888}
+.map-edit-toggle{margin-left:auto;padding:5px 14px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:transparent;color:var(--demo-fg-subtle);font-size:var(--font-size-11,11px);font-weight:600;cursor:pointer;font-family:inherit;transition:all 120ms;white-space:nowrap;align-self:center}
+.map-edit-toggle:hover{border-color:var(--brand-component-bg-default);color:var(--brand-content-default)}
+.map-edit-toggle[aria-pressed="true"]{background:var(--brand-component-bg-default);color:#fff;border-color:var(--brand-component-bg-default)}
+.map-cancel-btn{padding:5px 14px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:transparent;color:var(--demo-fg-subtle);font-size:var(--font-size-11,11px);font-weight:600;cursor:pointer;font-family:inherit;transition:all 120ms;white-space:nowrap;align-self:center}
+.map-cancel-btn:hover{border-color:#991B1B;color:#991B1B;background:#FEF2F2}
+.map-revert-btn{align-self:center}
+
+/* ── Step Picker Button (replaces bare <select>) ──────────── */
+.step-pick{display:inline-flex;align-items:center;gap:6px;padding:3px 8px 3px 4px;border:1px solid var(--demo-border);border-radius:4px;background:var(--demo-surface);cursor:pointer;font-size:9px;font-family:var(--font-family-mono,monospace);color:var(--demo-fg);min-width:100px;position:relative;transition:border-color 120ms}
+.step-pick:hover{border-color:var(--brand-component-bg-default)}
+.step-pick:focus-within{outline:2px solid var(--brand-component-bg-default);outline-offset:-1px}
+.step-pick__swatch{width:18px;height:14px;border-radius:3px;border:1px solid rgba(128,128,128,.2);flex-shrink:0}
+.step-pick__label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step-pick__hex{color:var(--demo-fg-faint);font-size:8px}
+.step-pick__arrow{font-size:7px;color:var(--demo-fg-faint);margin-left:auto;flex-shrink:0}
+.step-pick[data-changed]{border-color:#D97706;background:#FEF3C7}
+.map-pane--dark .step-pick{background:#222;color:#ddd;border-color:#444}
+.map-pane--dark .step-pick[data-changed]{background:#78350F;border-color:#D97706}
+
+/* ── Step Picker Dropdown (popover) ──────────────────────── */
+.step-dropdown{position:absolute;top:calc(100% + 4px);left:0;z-index:100;background:var(--demo-surface);border:1px solid var(--demo-border);border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,.15);max-height:340px;overflow-y:auto;width:200px;display:none;padding:4px 0}
+.step-dropdown.open{display:block}
+.map-pane--dark .step-dropdown{background:#1e1e1e;border-color:#444}
+.step-opt{display:flex;align-items:center;gap:8px;padding:5px 10px;cursor:pointer;transition:background 80ms;font-size:10px;font-family:var(--font-family-mono,monospace)}
+.step-opt:hover{background:var(--demo-surface-alt)}
+.map-pane--dark .step-opt:hover{background:#333}
+.step-opt[data-active]{background:var(--brand-container-bg);font-weight:700}
+.map-pane--dark .step-opt[data-active]{background:#1a3a5c}
+.step-opt__sw{width:22px;height:16px;border-radius:3px;border:1px solid rgba(128,128,128,.2);flex-shrink:0}
+.step-opt__name{flex-shrink:0;min-width:40px;font-weight:600;color:var(--demo-fg-strong)}
+.map-pane--dark .step-opt__name{color:#ddd}
+.step-opt__hex{flex:1;color:var(--demo-fg-subtle);font-size:9px}
+.map-pane--dark .step-opt__hex{color:#999}
+.step-opt__tone{color:var(--demo-fg-faint);font-size:9px;min-width:28px;text-align:right}
+.step-opt--fixed{font-style:italic;color:var(--demo-fg-faint)}
+
+/* ── T2 Surface Tab Bar ──────────────────────────────────── */
+.surf-tabs{display:flex;gap:2px;flex-wrap:wrap;padding:8px 0 0 0}
+.surf-tab{padding:4px 12px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:transparent;color:var(--demo-fg-subtle);font-size:var(--font-size-10,10px);font-weight:600;cursor:pointer;font-family:inherit;transition:all 120ms;text-transform:capitalize}
+.surf-tab:hover{border-color:var(--brand-component-bg-default);color:var(--brand-content-default)}
+.surf-tab[aria-pressed="true"]{background:var(--brand-component-bg-default);color:#fff;border-color:var(--brand-component-bg-default)}
+.surf-table{width:100%;border-collapse:collapse;font-size:var(--font-size-10,10px);font-family:var(--font-family-mono,monospace)}
+.surf-table th{text-align:left;padding:6px 8px;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--demo-fg-faint);border-bottom:1px solid var(--demo-border);position:sticky;top:0;background:var(--demo-surface-alt)}
+.surf-table td{padding:4px 8px;border-bottom:1px solid var(--demo-border);vertical-align:middle}
+.surf-table tr:hover td{background:var(--demo-surface-alt)}
+.surf-prop-label{font-weight:600;color:var(--demo-fg-strong);white-space:nowrap}
+.surf-prop-group{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--demo-fg-faint);padding:10px 8px 3px;border:none}
+.surf-preview{display:flex;gap:2px;align-items:center}
+.surf-preview__bar{height:32px;border-radius:4px;border:1px solid rgba(128,128,128,.1);flex:1;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;overflow:hidden}
+.surf-src-bar{display:flex;align-items:center;gap:8px;padding:4px 0 0 0;font-size:var(--font-size-11,11px)}
+.surf-src-bar label{font-weight:600;color:var(--demo-fg-subtle);white-space:nowrap}
+.surf-src-bar select{padding:3px 8px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);font-size:var(--font-size-11,11px);background:var(--demo-surface);color:var(--demo-fg-strong);font-family:inherit}
+.surf-src-bar .surf-src-swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid rgba(128,128,128,.2);vertical-align:middle;margin-left:4px}
+.surf-contrast-warn{display:inline-block;font-size:8px;font-weight:700;color:#DC2626;margin-left:4px;vertical-align:middle;cursor:help}
+
+/* ── Step Detail Table ────────────────────────────────────── */
+.step-tbl{width:100%;font-size:var(--font-size-11,11px);border-collapse:collapse}
+.step-tbl th{position:sticky;top:0;background:var(--demo-surface-alt);text-align:left;padding:6px 10px;font-size:var(--font-size-10,10px);font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--demo-fg-faint);border-bottom:1px solid var(--demo-border)}
+.step-tbl td{padding:5px 10px;border-bottom:1px solid var(--demo-border);font-family:var(--font-family-mono,monospace);color:var(--demo-fg-subtle)}
+.step-tbl tr:hover td{background:var(--demo-surface-alt)}
+.st-sw{width:28px;height:18px;border-radius:3px;border:1px solid rgba(128,128,128,.2);display:inline-block;vertical-align:middle}
+.st-pass{color:#16A34A;font-weight:700}
+.st-fail{color:#DC2626;font-weight:700}
+.st-name{font-weight:600;color:var(--demo-fg-strong)}
+
+/* ── Live Component Preview ───────────────────────────────── */
+.live-surfaces{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.live-pane{padding:32px 28px;display:flex;flex-direction:column;gap:20px}
+.live-pane--light{background:var(--surface-base-bg)}
+.live-pane--dark{background:#141414;color:#e5e5e5}
+.live-pane-title{font-size:var(--font-size-10,10px);font-weight:700;text-transform:uppercase;letter-spacing:.05em;opacity:.5;margin:0 0 4px 0}
+.live-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.live-row-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;opacity:.5;width:100%;margin:0 0 -8px 0}
+.live-card{background:var(--surface-container-bg);border:1px solid var(--surface-container-outline);border-radius:var(--radius-md,6px);padding:20px;display:flex;flex-direction:column;gap:14px;width:100%}
+.live-pane--dark .live-card{background:#1e1e1e;border-color:#333}
+
+/* ── Trust Certificate ────────────────────────────────────── */
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;padding:16px 20px;border-bottom:1px solid var(--demo-border)}
+.cert-card{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--radius-sm,4px);border:1px solid var(--demo-border);cursor:pointer;transition:all 120ms}
+.cert-card:hover{background:var(--demo-surface-alt)}
+.cert-card[data-active]{border-color:var(--brand-component-bg-default);background:var(--demo-surface-alt)}
+.cert-card-swatch{width:16px;height:16px;border-radius:4px;border:1px solid rgba(128,128,128,.15);flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.cert-card-name{font-size:var(--font-size-11,11px);font-weight:600;color:var(--demo-fg-strong);flex:1}
+.cert-card-badge{font-size:10px}
+.cert-panel{display:flex;flex-direction:column;gap:0}
+.cert-overall{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--demo-border);background:var(--demo-surface-alt)}
+.cert-badge{padding:4px 12px;border-radius:var(--radius-sm,4px);font-size:var(--font-size-12,12px);font-weight:700;letter-spacing:.02em}
+.cert-badge[data-status="CERTIFIED"]{background:#DCFCE7;color:#166534}
+.cert-badge[data-status="CONDITIONAL"]{background:#FEF3C7;color:#92400E}
+.cert-badge[data-status="FAILED"]{background:#FEE2E2;color:#991B1B}
+html[data-theme="dark"] .cert-badge[data-status="CERTIFIED"]{background:#14532D;color:#86EFAC}
+html[data-theme="dark"] .cert-badge[data-status="CONDITIONAL"]{background:#78350F;color:#FCD34D}
+html[data-theme="dark"] .cert-badge[data-status="FAILED"]{background:#7F1D1D;color:#FCA5A5}
+.cert-score{font-size:var(--font-size-11,11px);color:var(--demo-fg-subtle)}
+.cert-test{display:flex;align-items:flex-start;gap:10px;padding:10px 20px;border-bottom:1px solid var(--demo-border)}
+.cert-test:last-child{border-bottom:none}
+.cert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.cert-test-body{flex:1;display:flex;flex-direction:column;gap:2px}
+.cert-test-name{font-size:var(--font-size-12,12px);font-weight:600;color:var(--demo-fg-strong)}
+.cert-test-desc{font-size:var(--font-size-10,10px);color:var(--demo-fg-faint)}
+.cert-test-detail{font-size:var(--font-size-10,10px);font-family:var(--font-family-mono,monospace);color:var(--demo-fg-subtle);padding:2px 0 0 0}
+
+/* ── Export ───────────────────────────────────────────────── */
+.exp-tabs{display:flex;gap:2px;background:var(--demo-cm-bg);padding:2px;border-radius:var(--radius-md,6px);margin:0 0 12px 0;width:fit-content}
+.exp-tab{padding:5px 14px;border-radius:var(--radius-sm,4px);border:none;background:transparent;color:var(--demo-fg-subtle);font-size:var(--font-size-11,11px);font-weight:500;cursor:pointer;transition:all 150ms;font-family:inherit}
+.exp-tab:hover{color:var(--demo-fg)}
+.exp-tab[aria-pressed="true"]{background:var(--demo-surface);color:var(--demo-fg-strong);box-shadow:var(--shadow-xs)}
+.exp-code{background:var(--demo-cm-bg);border-radius:var(--radius-md,6px);padding:16px;font-family:var(--font-family-mono,monospace);font-size:var(--font-size-11,11px);color:var(--demo-fg);overflow-x:auto;white-space:pre;line-height:1.6;max-height:500px;overflow-y:auto}
+.exp-copy{position:absolute;top:8px;right:8px;padding:4px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--demo-fg-subtle);font-size:var(--font-size-10,10px);cursor:pointer;font-family:inherit}
+.exp-copy:hover{background:var(--demo-surface-alt)}
+
+/* ── Deploy to Figma ───────────────────────────────────────── */
+.deploy-btn{padding:7px 18px;border-radius:var(--radius-sm,4px);font-size:var(--font-size-12,12px);font-weight:700;cursor:pointer;border:1px solid #BD22AB;background:#BD22AB;color:#fff;font-family:inherit;transition:all 120ms;margin-left:4px}
+.deploy-btn:hover{background:#9F008F}
+.gh-deploy-panel{padding:12px 24px;border-top:1px solid var(--demo-border);background:var(--demo-surface-alt,#f9f9f9)}
+.gh-deploy-inner{display:flex;flex-direction:column;gap:10px}
+#ghAuthRow{display:block}
+#ghReadyRow{display:none}
+.gh-label{font-size:var(--font-size-11,11px);font-weight:600;color:var(--demo-fg-subtle)}
+#ghAuthRow input{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);font-family:var(--font-family-mono,monospace);font-size:var(--font-size-12,12px)}
+#ghAuthRow input:focus{outline:2px solid #166534;outline-offset:-1px}
+.gh-connect-btn,.gh-commit-btn,.gh-logout-btn{padding:6px 14px;border-radius:var(--radius-sm,4px);font-size:var(--font-size-11,11px);font-weight:700;cursor:pointer;border:1px solid var(--demo-border);font-family:inherit;transition:all 120ms}
+.gh-connect-btn{background:#166534;color:#fff;border-color:#166534}
+.gh-connect-btn:hover{background:#15803D}
+.gh-commit-btn{background:#166534;color:#fff;border-color:#166534;font-size:13px;padding:10px 16px}
+.gh-commit-btn:hover{background:#15803D}
+.gh-commit-btn:disabled{background:#ccc;color:#888;cursor:not-allowed;border-color:#ccc}
+.gh-logout-btn{background:transparent;color:var(--demo-fg-faint);border-color:var(--demo-border)}
+.gh-logout-btn:hover{background:#FEE2E2;color:#991B1B;border-color:#DC2626}
+.gh-help-link{font-size:var(--font-size-10,10px);color:#BD22AB}
+.gh-user{font-size:var(--font-size-11,11px);font-weight:600;color:#166534;background:#DCFCE7;padding:3px 10px;border-radius:var(--radius-sm,4px)}
+.gh-status{font-size:var(--font-size-11,11px);color:var(--demo-fg-subtle);min-height:18px}
+.gh-status.ok{color:#166534}
+.gh-status.err{color:#DC2626}
+.gh-status .gh-spinner{display:inline-block;width:12px;height:12px;border:2px solid #BD22AB33;border-top-color:#BD22AB;border-radius:50%;animation:spin 0.8s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Flow Arrow ───────────────────────────────────────────── */
+.flow-arrow{text-align:center;padding:8px 0;color:var(--demo-fg-faint);font-size:var(--font-size-10,10px);font-weight:600;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;justify-content:center;gap:8px}
+.flow-arrow::before,.flow-arrow::after{content:'';flex:1;height:1px;background:var(--demo-border)}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media(max-width:900px){
+  .page-layout{grid-template-columns:1fr}
+  .sidebar-nav{display:none}
+  .live-surfaces{grid-template-columns:1fr}
+  .map-grid{grid-template-columns:1fr}
+  .demo-main{padding:16px;gap:32px}
+  .cert-grid{grid-template-columns:1fr 1fr}
+}
+
+/* (project bar removed — controls now in nav bar via JS) */
+
+/* ── New Project Dialog ───────────────────────────────────── */
+.proj-dialog-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center}
+.proj-dialog-backdrop.open{display:flex}
+.proj-dialog{position:relative;background:var(--demo-surface);border:1px solid var(--demo-border);border-radius:var(--radius-lg,12px);padding:24px 28px;width:420px;max-width:92vw;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.proj-dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.proj-dialog-head h3{margin:0;font-size:16px;color:var(--demo-fg-strong)}
+.proj-dialog-close{position:absolute;top:16px;right:16px;width:28px;height:28px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--demo-fg-faint);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 120ms;line-height:1}
+.proj-dialog-close:hover{color:var(--demo-fg-strong);border-color:var(--demo-fg-faint);background:var(--demo-surface-alt)}
+.proj-dialog h3{margin:0 0 16px;font-size:16px;color:var(--demo-fg-strong)}
+.proj-dialog .field{margin-bottom:14px}
+.proj-dialog .field label{display:block;font-size:12px;font-weight:600;color:var(--demo-fg-faint);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.proj-dialog .field input,.proj-dialog .field textarea{width:100%;box-sizing:border-box;background:var(--demo-cm-bg);color:var(--demo-fg);border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);padding:8px 10px;font-size:13px;font-family:inherit}
+.proj-dialog .field textarea{resize:vertical;min-height:48px}
+.slug-preview{font-size:11px;color:var(--demo-fg-faint);padding:4px 0;font-family:var(--font-family-mono,monospace)}
+.slug-preview span{color:var(--brand-content-default);font-weight:600}
+.field-error{font-size:11px;color:#ef4444;display:none;margin-top:2px}
+.field-hint{font-size:11px;color:var(--demo-fg-faint,#888);margin-top:2px;display:block}
+.proj-dialog-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.proj-cancel{background:transparent;color:var(--demo-fg-subtle);border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);padding:6px 16px;font-size:13px;cursor:pointer;font-family:inherit;transition:all 150ms ease}
+.proj-cancel:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong)}
+.proj-create{background:var(--brand-component-bg-default);color:var(--brand-on-component);border:none;border-radius:var(--radius-sm,4px);padding:6px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:filter 150ms ease}
+.proj-create:hover{filter:brightness(1.1)}
+.proj-create:disabled{opacity:.4;cursor:not-allowed}
+.proj-gh-warn{background:var(--warning-component-bg-default,#78350f);color:var(--warning-on-component,#fbbf24);padding:8px 12px;border-radius:var(--radius-sm,4px);font-size:12px;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+
+/* ── Admin Auth Gate ───────────────────────────────────────── */
+.auth-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:opacity .3s ease}
+.auth-overlay[hidden]{display:none}
+.auth-card{background:var(--demo-bg,#fff);border-radius:var(--radius-lg,12px);box-shadow:0 24px 64px rgba(0,0,0,.25);padding:36px 40px;width:380px;max-width:90vw;text-align:center;animation:authIn .35s ease}
+@keyframes authIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:none}}
+.auth-card .auth-icon{font-size:40px;margin-bottom:8px;line-height:1}
+.auth-card h2{font-size:18px;font-weight:700;color:var(--demo-fg-strong);margin:0 0 4px}
+.auth-card .auth-sub{font-size:13px;color:var(--demo-fg-subtle);margin:0 0 20px}
+.auth-input-wrap{position:relative;margin-bottom:16px}
+.auth-input{width:100%;padding:10px 14px;padding-right:42px;border:2px solid var(--demo-border);border-radius:var(--radius-md,6px);font-size:14px;font-family:var(--font-family-mono,monospace);background:var(--demo-surface);color:var(--demo-fg-strong);letter-spacing:.08em;box-sizing:border-box;transition:border-color .15s}
+.auth-input:focus{outline:none;border-color:var(--brand-component-bg-default,#286CE5)}
+.auth-input.auth-error{border-color:#DC2626;animation:authShake .4s ease}
+.auth-toggle-vis{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--demo-fg-subtle);padding:4px;line-height:1}
+@keyframes authShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.auth-submit{width:100%;padding:10px;border:none;border-radius:var(--radius-md,6px);background:var(--brand-component-bg-default,#286CE5);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:filter .15s}
+.auth-submit:hover{filter:brightness(1.1)}
+.auth-submit:active{filter:brightness(.95)}
+.auth-err-msg{font-size:12px;color:#DC2626;margin-top:8px;min-height:16px}
+.auth-hint{font-size:11px;color:var(--demo-fg-faint);margin-top:16px;line-height:1.5}
+.auth-hint code{background:var(--demo-surface-alt,#f0f0f0);padding:1px 5px;border-radius:3px;font-size:11px}
+html[data-theme="dark"] .auth-card{background:var(--demo-bg,#1a1a2e)}
+html[data-theme="dark"] .auth-hint code{background:rgba(255,255,255,.08)}
+
+body.auth-locked .page-layout,
+body.auth-locked .demo-header,
+body.auth-locked .global-save-bar{filter:blur(6px);pointer-events:none;user-select:none}
+</style>
+</head>
+<body class="auth-locked">
+
+<!-- ── PAT Auth Gate ── -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-icon">🔒</div>
+    <h2>Sign in with GitHub PAT</h2>
+    <p class="auth-sub">A GitHub Personal Access Token is required to view your projects and edit the Color System.</p>
+    <form id="authForm" autocomplete="off">
+      <div class="auth-input-wrap">
+        <input type="password" class="auth-input" id="authInput" placeholder="ghp_… or github_pat_…" autofocus spellcheck="false">
+        <button type="button" class="auth-toggle-vis" id="authToggleVis" title="Show / hide">👁</button>
+      </div>
+      <button type="submit" class="auth-submit">Unlock</button>
+      <div class="auth-err-msg" id="authErr"></div>
+    </form>
+    <p class="auth-hint">Need a token? <a href="https://github.com/settings/tokens/new?scopes=repo,workflow&description=DTF+Color+Editor" target="_blank" rel="noopener">Create one with <code>repo</code> + <code>workflow</code> scope &rarr;</a></p>
+  </div>
+</div>
+
+<nav class="explorer-nav" aria-label="Site navigation"></nav>
+
+<header class="demo-header">
+  <h1>Color System <span>— Pick &rarr; Generate &rarr; Tokenize &rarr; Render</span></h1>
+  <div class="demo-meta">
+    <span class="demo-badge">CIE L* Tone + OKLCH</span>
+    <span class="demo-badge">4-Tier Token Pipeline</span>
+    <span class="demo-badge">Real-time Component Sync</span>
+  </div>
+</header>
+
+<div class="page-layout">
+<aside class="sidebar-nav" id="sidebarNav" aria-label="Section navigation">
+  <a href="#sec-roles"><span class="sn-num">1</span>Color Roles</a>
+  <a href="#sec-fixed"><span class="sn-num">1b</span>Fixed Colors</a>
+  <a href="#sec-map"><span class="sn-num">2</span>Token Map</a>
+  <a href="#sec-surf"><span class="sn-num">2b</span>Surface Map</a>
+  <a href="#sec-live"><span class="sn-num">3</span>Live Components</a>
+  <a href="#sec-cert"><span class="sn-num">3b</span>Trust Certs</a>
+  <a href="#sec-steps"><span class="sn-num">4</span>Step Details</a>
+  <a href="#sec-export"><span class="sn-num">5</span>Export</a>
+</aside>
+
+<div class="page-content">
+<main class="demo-main">
+
+<!-- ═══════════════ 1. Color Roles ══════════════════════ -->
+<section class="section" id="sec-roles">
+  <div class="section-header">
+    <h2>1. Color Roles</h2>
+    <span class="section-tag">All Palettes</span>
+    <button class="section-reset" id="resetRolesBtn" type="button" title="Reset roles to defaults"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>Reset Roles</button>
+  </div>
+  <p class="section-desc">Each role generates a WCAG-guaranteed 22-step palette from a single key color. Desaturated is auto-derived from the brand hue. Add custom roles for accent or domain-specific colors.</p>
+  <div class="section-body">
+    <div class="role-list" id="rolesList"></div>
+    <div class="add-role-wrap">
+      <button class="add-role-btn" id="addRoleBtn" type="button">+ Add Color Role</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 1b. Fixed / Utility Colors ════════ -->
+<section class="section" id="sec-fixed">
+  <div class="section-header">
+    <h2>1b. Fixed &amp; Utility Colors</h2>
+    <span class="section-tag">4 Tokens &middot; Theme-aware</span>
+  </div>
+  <p class="section-desc">Standard UI colors not tied to any role. <strong>Fixed</strong> tokens stay the same in both themes. <strong>Theme-aware</strong> tokens swap in dark mode.</p>
+  <div class="section-body" style="padding:20px 24px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px" id="fixedColorsGrid"></div>
+  </div>
+</section>
+
+<div class="flow-arrow">T0 primitives feed into T1 semantic roles</div>
+
+<!-- ═══════════════ 2. Token Map ════════════════════════ -->
+<section class="section" id="sec-map">
+  <div class="section-header">
+    <h2>2. T1 &mdash; Semantic Token Map</h2>
+    <span class="section-tag">18 Tokens &times; Light/Dark</span>
+    <button class="map-edit-toggle" id="mapEditToggle" type="button">Edit Mappings</button>
+    <button class="map-cancel-btn" id="mapCancelBtn" type="button" style="display:none">Cancel</button>
+    <button class="section-reset map-revert-btn" id="revertMapBtn" type="button" title="Revert to last deployed mappings" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>Revert to Deployed</button>
+  </div>
+  <p class="section-desc">Each primitive step is assigned a semantic purpose. Select a role to see how its 22-step palette maps to 18 semantic tokens for both light and dark themes. Toggle <strong>Edit Mappings</strong> to customize step assignments.</p>
+  <div style="padding:8px 0 0 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <label for="mapRoleSelect" style="font-size:var(--font-size-11,11px);font-weight:600;color:var(--demo-fg-subtle)">Inspect role:</label>
+    <select class="role-select" id="mapRoleSelect"></select>
+  </div>
+  <div class="section-body">
+    <div class="map-grid" id="mapGrid"></div>
+  </div>
+</section>
+
+<div class="flow-arrow">T1 semantic tokens drive T2 surface contexts</div>
+
+<!-- ═══════════════ 2b. Surface Context Map (T2) ═══════ -->
+<section class="section" id="sec-surf">
+  <div class="section-header">
+    <h2>2b. T2 &mdash; Surface Context Map</h2>
+    <span class="section-tag">9 Surfaces &times; 16 Props</span>
+    <button class="map-edit-toggle" id="surfEditToggle" type="button">Edit Surface Map</button>
+    <button class="map-cancel-btn" id="surfCancelBtn" type="button" style="display:none">Cancel</button>
+    <button class="section-reset map-revert-btn" id="surfRevertBtn" type="button" title="Revert surface maps to last deployed" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 01-9 9 9.75 9.75 0 01-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>Revert to Deployed</button>
+  </div>
+  <p class="section-desc">Each surface resolves its step names against a palette source. Select a surface to view and edit its step assignments &mdash; use the palette source dropdown to switch which role palette feeds the surface.</p>
+  <div style="padding:8px 0 0 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="surf-tabs" id="surfTabs"></div>
+  </div>
+  <div class="surf-src-bar" id="surfSrcBar"></div>
+  <div class="section-body" style="max-height:560px;overflow-y:auto">
+    <table class="surf-table" id="surfTable"><tbody id="surfBody"></tbody></table>
+  </div>
+</section>
+
+<div class="flow-arrow">T2 surface tokens drive T3 component styles</div>
+
+<!-- ═══════════════ 3. Live Components ══════════════════ -->
+<section class="section" id="sec-live">
+  <div class="section-header">
+    <h2>3. Live Components</h2>
+    <span class="section-tag">Real-time Sync</span>
+  </div>
+  <p class="section-desc">Real project components rendered with generated tokens. Change any color above — watch everything update instantly. Zero hardcoded values.</p>
+  <div class="section-body">
+    <div class="live-surfaces">
+      <!-- Light mode pane -->
+      <div class="live-pane live-pane--light" id="liveLight">
+        <div class="live-pane-title">Light Mode</div>
+        <div class="live-row-label">Variants</div>
+        <div class="live-row">
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" type="button"><span class="btn__label">Filled</span></button>
+          <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Outlined</span></button>
+          <button class="btn" data-variant="soft" data-size="base" type="button"><span class="btn__label">Soft</span></button>
+          <button class="btn" data-variant="ghost" data-size="base" type="button"><span class="btn__label">Ghost</span></button>
+        </div>
+        <div class="live-row-label">Status Variants</div>
+        <div class="live-row">
+          <button class="btn" data-variant="filled" data-role="danger" data-size="base" type="button"><span class="btn__label">Danger</span></button>
+          <button class="btn" data-variant="filled" data-role="success" data-size="base" type="button"><span class="btn__label">Success</span></button>
+          <button class="btn" data-variant="filled" data-role="warning" data-size="base" type="button"><span class="btn__label">Warning</span></button>
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" disabled type="button"><span class="btn__label">Disabled</span></button>
+        </div>
+        <div class="live-row-label">Input</div>
+        <div class="live-row">
+          <div class="input-group" data-variant="outline" data-size="base" style="flex:1;max-width:260px">
+            <div class="input-field"><input type="text" placeholder="Type here..."></div>
+          </div>
+          <div class="input-group" data-variant="filled" data-size="base" style="flex:1;max-width:260px">
+            <div class="input-field"><input type="text" placeholder="Filled variant"></div>
+          </div>
+        </div>
+        <div class="live-row-label">Toggle &amp; Checkbox</div>
+        <div class="live-row">
+          <label class="switch-label">
+            <button class="switch" role="switch" aria-checked="true" data-size="base" type="button">
+              <span class="switch__track"><span class="switch__thumb"></span></span>
+            </button>
+            <span class="switch-label__text">On</span>
+          </label>
+          <label class="switch-label">
+            <button class="switch" role="switch" aria-checked="false" data-size="base" type="button">
+              <span class="switch__track"><span class="switch__thumb"></span></span>
+            </button>
+            <span class="switch-label__text">Off</span>
+          </label>
+          <label class="checkbox" data-size="base">
+            <input type="checkbox" class="checkbox__control" checked>
+            <span class="checkbox__box"><svg class="checkbox__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8.5 6.5 13 14 3"/></svg><svg class="checkbox__dash" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="2" y1="8" x2="14" y2="8"/></svg></span>
+            <span class="checkbox__label">Checked</span>
+          </label>
+          <label class="checkbox" data-size="base">
+            <input type="checkbox" class="checkbox__control">
+            <span class="checkbox__box"><svg class="checkbox__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8.5 6.5 13 14 3"/></svg><svg class="checkbox__dash" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="2" y1="8" x2="14" y2="8"/></svg></span>
+            <span class="checkbox__label">Unchecked</span>
+          </label>
+        </div>
+        <div class="live-row-label">On Accent Surface</div>
+        <div class="live-card" style="background:var(--surface-accent-bg);border-color:var(--surface-accent-outline)">
+          <div class="live-row">
+            <button class="btn" data-variant="filled" data-role="brand" data-size="base" type="button"><span class="btn__label">Action</span></button>
+            <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Cancel</span></button>
+            <div class="input-group" data-variant="outline" data-size="base" style="flex:1;max-width:220px">
+              <div class="input-field"><input type="text" placeholder="Search..."></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dark mode pane -->
+      <div class="live-pane live-pane--dark" id="liveDark" data-theme="dark">
+        <div class="live-pane-title">Dark Mode</div>
+        <div class="live-row-label" style="color:#888">Variants</div>
+        <div class="live-row">
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" type="button"><span class="btn__label">Filled</span></button>
+          <button class="btn" data-variant="outlined" data-size="base" type="button"><span class="btn__label">Outlined</span></button>
+          <button class="btn" data-variant="soft" data-size="base" type="button"><span class="btn__label">Soft</span></button>
+          <button class="btn" data-variant="ghost" data-size="base" type="button"><span class="btn__label">Ghost</span></button>
+        </div>
+        <div class="live-row-label" style="color:#888">Status Variants</div>
+        <div class="live-row">
+          <button class="btn" data-variant="filled" data-role="danger" data-size="base" type="button"><span class="btn__label">Danger</span></button>
+          <button class="btn" data-variant="filled" data-role="success" data-size="base" type="button"><span class="btn__label">Success</span></button>
+          <button class="btn" data-variant="filled" data-role="warning" data-size="base" type="button"><span class="btn__label">Warning</span></button>
+          <button class="btn" data-variant="filled" data-role="brand" data-size="base" disabled type="button"><span class="btn__label">Disabled</span></button>
+        </div>
+        <div class="live-row-label" style="color:#888">Input</div>
+        <div class="live-row">
+          <div class="input-group" data-variant="outline" data-size="base" style="flex:1;max-width:260px">
+            <div class="input-field"><input type="text" placeholder="Type here..."></div>
+          </div>
+          <div class="input-group" data-variant="filled" data-size="base" style="flex:1;max-width:260px">
+            <div class="input-field"><input type="text" placeholder="Filled variant"></div>
+          </div>
+        </div>
+        <div class="live-row-label" style="color:#888">Toggle &amp; Checkbox</div>
+        <div class="live-row">
+          <label class="switch-label">
+            <button class="switch" role="switch" aria-checked="true" data-size="base" type="button">
+              <span class="switch__track"><span class="switch__thumb"></span></span>
+            </button>
+            <span class="switch-label__text" style="color:#ccc">On</span>
+          </label>
+          <label class="switch-label">
+            <button class="switch" role="switch" aria-checked="false" data-size="base" type="button">
+              <span class="switch__track"><span class="switch__thumb"></span></span>
+            </button>
+            <span class="switch-label__text" style="color:#ccc">Off</span>
+          </label>
+          <label class="checkbox" data-size="base">
+            <input type="checkbox" class="checkbox__control" checked>
+            <span class="checkbox__box"><svg class="checkbox__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8.5 6.5 13 14 3"/></svg><svg class="checkbox__dash" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="2" y1="8" x2="14" y2="8"/></svg></span>
+            <span class="checkbox__label" style="color:#ccc">Checked</span>
+          </label>
+          <label class="checkbox" data-size="base">
+            <input type="checkbox" class="checkbox__control">
+            <span class="checkbox__box"><svg class="checkbox__check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 8.5 6.5 13 14 3"/></svg><svg class="checkbox__dash" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="2" y1="8" x2="14" y2="8"/></svg></span>
+            <span class="checkbox__label" style="color:#ccc">Unchecked</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 3b. Trust Certificates ═════════════ -->
+<section class="section" id="sec-cert">
+  <div class="section-header">
+    <h2>3. Trust Certificates</h2>
+    <span class="section-tag">7 Tests &times; All Roles</span>
+  </div>
+  <p class="section-desc">Every generated palette is tested against 7 quality checks. Click a role below to see its detailed results.</p>
+  <div class="section-body">
+    <div class="cert-grid" id="certGrid"></div>
+    <div class="cert-panel" id="certPanel"></div>
+  </div>
+</section>
+
+<!-- ═══════════════ 4. Step Details ═════════════════════ -->
+<section class="section" id="sec-steps">
+  <div class="section-header">
+    <h2>4. Step Details</h2>
+    <span class="section-tag">Table</span>
+  </div>
+  <div style="padding:8px 0 0 0;display:flex;align-items:center;gap:10px">
+    <label for="stepRoleSelect" style="font-size:var(--font-size-11,11px);font-weight:600;color:var(--demo-fg-subtle)">Inspect role:</label>
+    <select class="role-select" id="stepRoleSelect"></select>
+  </div>
+  <div class="section-body" style="max-height:480px;overflow-y:auto">
+    <table class="step-tbl">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th></th>
+          <th>Hex</th>
+          <th>Tone (L*)</th>
+          <th>Contrast vs #FFF</th>
+          <th>WCAG Level</th>
+        </tr>
+      </thead>
+      <tbody id="stepBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════ 5. Export ═══════════════════════════ -->
+<section class="section" id="sec-export">
+  <div class="section-header">
+    <h2>5. Export</h2>
+    <span class="section-tag">All Roles</span>
+  </div>
+  <div class="section-body" style="padding:20px 24px">
+    <div class="exp-tabs" id="expTabs">
+      <button class="exp-tab" aria-pressed="true" data-format="css" type="button">CSS</button>
+      <button class="exp-tab" aria-pressed="false" data-format="json" type="button">JSON DTCG</button>
+      <button class="exp-tab" aria-pressed="false" data-format="scss" type="button">SCSS</button>
+    </div>
+    <div style="position:relative">
+      <pre class="exp-code" id="expCode"></pre>
+      <button class="exp-copy" id="expCopy" type="button">Copy</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ── New Project Dialog ─────────────────────────────── -->
+<div class="proj-dialog-backdrop" id="projDialogBackdrop">
+  <div class="proj-dialog" role="dialog" aria-labelledby="projDialogTitle">
+    <div class="proj-dialog-head">
+      <h3 id="projDialogTitle">New Project</h3>
+      <button class="proj-dialog-close" id="projCloseBtn" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="proj-dialog-body">
+      <!-- GitHub connection (inline) -->
+      <div class="proj-gh-section" id="projGhSection">
+        <div class="gh-section-label">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub Connection
+        </div>
+        <div class="proj-gh-inline" id="projGhAuth">
+          <input type="password" id="projGhPatInput" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+          <button type="button" id="projGhConnectBtn">Connect</button>
+        </div>
+        <div class="proj-gh-connected" id="projGhConnected" style="display:none">
+          <span class="gh-check">&#10003;</span>
+          <span id="projGhUser">Connected</span>
+          <a id="projGhDisconnect">Disconnect</a>
+        </div>
+        <div class="proj-gh-help">Requires <code>repo</code> + <code>workflow</code> scope. <a href="https://github.com/settings/tokens/new?scopes=repo,workflow&amp;description=DTF+Color+Editor" target="_blank" rel="noopener">Get a token &rarr;</a></div>
+        <div class="proj-gh-status" id="projGhStatus"></div>
+      </div>
+
+      <div class="field">
+        <label for="projNameInput">Project Name</label>
+        <input type="text" id="projNameInput" placeholder="e.g. Mobile Banking App" maxlength="60" autocomplete="off">
+        <span class="field-hint">Human-readable display name</span>
+      </div>
+      <div class="field">
+        <label for="projSlugInput">Project ID</label>
+        <input type="text" id="projSlugInput" placeholder="e.g. mobile-banking-app" maxlength="40" autocomplete="off">
+        <span class="field-hint">Auto-generated from name. Lowercase, hyphens only.</span>
+        <span class="field-error" id="projSlugError"></span>
+      </div>
+      <div class="slug-preview" id="projSlugPreview">projects/<span id="projSlugPreviewVal">???</span>/config.json</div>
+      <div class="field">
+        <label for="projDescInput">Description <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input type="text" id="projDescInput" placeholder="Brief description of this project" maxlength="120" autocomplete="off">
+      </div>
+    </div>
+    <div class="proj-dialog-actions">
+      <button class="proj-cancel" id="projCancelBtn" type="button">Cancel</button>
+      <button class="proj-create" id="projCreateBtn" type="button" disabled>Create Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Global Sticky Save Bar ──────────────────────────── -->
+<div class="global-save-bar" id="globalSaveBar">
+  <span class="save-bar-msg" id="saveMsg"></span>
+  <span class="save-bar-ts" id="saveTs"></span>
+  <button class="save-btn" id="saveBtn" type="button">Save to Browser</button>
+  <button class="deploy-btn" id="deployBtn" type="button">Deploy to GitHub</button>
+</div>
+
+<!-- ── Deploy Dialog ──────────────────────────────────── -->
+<div class="proj-dialog-backdrop" id="ghDialogBackdrop">
+  <div class="proj-dialog" role="dialog" aria-labelledby="ghDialogTitle" style="width:460px">
+    <div class="proj-dialog-head">
+      <h3 id="ghDialogTitle">Deploy to GitHub</h3>
+      <button class="proj-dialog-close" id="ghDialogClose" type="button" aria-label="Close">&times;</button>
+    </div>
+    <div class="proj-dialog-body">
+      <p style="font-size:12px;color:var(--demo-fg-subtle);margin:0 0 16px;line-height:1.6">Push your color tokens to GitHub. The Figma plugin auto-detects the new tokens from the deployed Pages site.</p>
+      <div id="ghAuthRow">
+        <div class="field">
+          <label for="ghPatInput">Personal Access Token</label>
+          <input type="password" id="ghPatInput" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" style="width:100%;box-sizing:border-box">
+          <span class="field-hint">
+            Needs <code>repo</code> + <code>workflow</code> scope &nbsp;·&nbsp;
+            <a href="https://github.com/settings/tokens/new?scopes=repo,workflow&description=DTF+Color+Editor" target="_blank" rel="noopener" style="color:var(--brand-content-default,#286CE5)">Get a token &rarr;</a>
+          </span>
+        </div>
+        <button class="gh-connect-btn" id="ghConnectBtn" type="button" style="display:block;width:100%;padding:10px;margin-top:8px;font-size:13px;border-radius:6px">Connect</button>
+      </div>
+      <div id="ghReadyRow" style="display:none">
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--demo-cm-bg);border-radius:6px;margin-bottom:12px">
+          <span style="font-size:11px;color:#166534">&#10003;</span>
+          <span id="ghUser" style="font-size:12px;font-weight:600"></span>
+          <span style="flex:1"></span>
+          <button class="gh-logout-btn" id="ghLogoutBtn" type="button" style="font-size:11px;padding:3px 8px">Disconnect</button>
+        </div>
+        <button class="gh-commit-btn" id="ghCommitBtn" type="button" style="display:block;width:100%;padding:10px 16px;font-size:13px;border-radius:6px">Commit &amp; Deploy</button>
+      </div>
+      <div class="gh-status" id="ghStatus" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script src="nav.js"></script>
+<script src="shared.js?v=20260509b"></script>
+<script src="palette-engine.js"></script>
+
+<!-- ── Admin Auth Gate Logic ── -->
+<script>
+(function(){
+  /* SHA-256 hash of the admin passphrase.
+     To change: run  echo -n "YourPhrase" | shasum -a 256  and paste here. */
+  var AUTH_HASH = 'a045390962f70ed19c75381e7363851bc884304040018e4289402be6165c10f5';
+  var SESSION_KEY = 'dtf-admin-auth';
+
+  var overlay  = document.getElementById('authOverlay');
+  var form     = document.getElementById('authForm');
+  var input    = document.getElementById('authInput');
+  var errEl    = document.getElementById('authErr');
+  var toggleVis = document.getElementById('authToggleVis');
+
+  /* Already authenticated this session? */
+  if (sessionStorage.getItem(SESSION_KEY) === AUTH_HASH) {
+    unlock();
+    return;
+  }
+
+  /* Toggle password visibility */
+  toggleVis.addEventListener('click', function() {
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    toggleVis.textContent = show ? '🙈' : '👁';
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var phrase = input.value.trim();
+    if (!phrase) { showErr('Please enter your GitHub PAT'); return; }
+
+    /* PAT-only auth — the legacy DTF-Admin passphrase shortcut has been
+       removed because it allowed anyone who guessed the phrase to unlock
+       the page and enumerate the project list. The only path now is a
+       valid GitHub PAT, and the user identity from /user is what drives
+       the project filter (getVisibleProjects). */
+    if (!(phrase.startsWith('ghp_') || phrase.startsWith('github_pat_'))) {
+      showErr('Token must start with ghp_ or github_pat_');
+      input.classList.add('auth-error');
+      setTimeout(function(){ input.classList.remove('auth-error'); }, 500);
+      return;
+    }
+
+    errEl.textContent = '';
+    var btn = form.querySelector('.auth-submit');
+    btn.textContent = 'Verifying PAT\u2026';
+    btn.disabled = true;
+    fetch('https://api.github.com/user', {
+      headers: { 'Authorization': 'Bearer ' + phrase, 'Accept': 'application/vnd.github+json' }
+    }).then(function(r) {
+      if (!r.ok) throw new Error('Invalid token');
+      return r.json();
+    }).then(function(user) {
+      /* PAT valid — store credentials and unlock */
+      localStorage.setItem('dtf-gh-pat', phrase);
+      localStorage.setItem('dtf-gh-user', user.login);
+      localStorage.setItem('dtf-gh-owner', user.login);
+      sessionStorage.setItem(SESSION_KEY, AUTH_HASH);
+      unlock();
+    }).catch(function() {
+      showErr('Invalid PAT — check scopes (needs repo + workflow)');
+      input.classList.add('auth-error');
+      setTimeout(function(){ input.classList.remove('auth-error'); }, 500);
+    }).finally(function() {
+      btn.textContent = 'Unlock';
+      btn.disabled = false;
+    });
+  });
+
+  function showErr(msg) { errEl.textContent = msg; }
+
+  function unlock() {
+    document.body.classList.remove('auth-locked');
+    overlay.setAttribute('hidden', '');
+  }
+
+  function sha256(str) {
+    var buf = new TextEncoder().encode(str);
+    return crypto.subtle.digest('SHA-256', buf).then(function(hash) {
+      return Array.from(new Uint8Array(hash)).map(function(b) {
+        return b.toString(16).padStart(2, '0');
+      }).join('');
+    });
+  }
+})();
+</script>
+<script>
+/* ── Copy Hex to Clipboard (global for onclick attrs) ──── */
+var _copyToast, _copyTimer=0;
+function copyHex(hex){
+  if(!hex) return;
+  if(!_copyToast) _copyToast=document.getElementById('copyToast');
+  navigator.clipboard.writeText(hex.toUpperCase()).then(function(){
+    _copyToast.textContent='Copied '+hex.toUpperCase();
+    _copyToast.classList.add('show');
+    clearTimeout(_copyTimer);
+    _copyTimer=setTimeout(function(){_copyToast.classList.remove('show')},1500);
+  });
+}
+</script>
+<script>
+/* ════════════════════════════════════════════════════════════
+   Color System — Multi-Role Page Logic
+   ════════════════════════════════════════════════════════════ */
+var PE = window.PaletteEngine;
+
+// ══════════════════════════════════════════════════════════════
+// PROJECT CONFIG — loaded from project config.json
+// ══════════════════════════════════════════════════════════════
+var projectConfig = null;   // full config.json contents
+var projectId = '';          // e.g. 'desktop-pdf-editor'
+var originalPaletteKeys = null; // snapshot for diff
+
+// ══════════════════════════════════════════════════════════════
+// SEMANTIC MAPPING — step indices for each token
+// (defaults — overridden by project config if available)
+// ══════════════════════════════════════════════════════════════
+var DEFAULT_LIGHT_MAP = {
+  'content-default':'550','content-strong':'600','content-subtle':'350','content-faint':'200',
+  'component-bg-default':'500','component-bg-hover':'550','component-bg-pressed':'600',
+  'component-outline-default':'300','component-outline-hover':'350','component-outline-pressed':'450',
+  'component-separator':'100',
+  'container-bg':'50','container-hover':'75','container-pressed':'100','container-outline':'200','container-separator':'100',
+  'on-component':'fixed-white','on-container':'600'
+};
+var DEFAULT_DARK_MAP = {
+  'content-default':'150','content-strong':'100','content-subtle':'200','content-faint':'350',
+  'component-bg-default':'450','component-bg-hover':'350','component-bg-pressed':'300',
+  'component-outline-default':'450','component-outline-hover':'350','component-outline-pressed':'300',
+  'component-separator':'750',
+  'container-bg':'800','container-hover':'750','container-pressed':'700','container-outline':'550','container-separator':'750',
+  'on-component':'fixed-white','on-container':'100'
+};
+var LIGHT_MAP = {};
+var DARK_MAP = {};
+function resetMaps() {
+  LIGHT_MAP = JSON.parse(JSON.stringify(DEFAULT_LIGHT_MAP));
+  DARK_MAP  = JSON.parse(JSON.stringify(DEFAULT_DARK_MAP));
+}
+resetMaps();
+var SEM_GROUPS = [
+  {label:'Content',keys:['content-default','content-strong','content-subtle','content-faint']},
+  {label:'Component',keys:['component-bg-default','component-bg-hover','component-bg-pressed','component-outline-default','component-outline-hover','component-outline-pressed','component-separator']},
+  {label:'Container',keys:['container-bg','container-hover','container-pressed','container-outline','container-separator']},
+  {label:'Contrast Text',keys:['on-component','on-container']}
+];
+
+// Roles that map to actual component semantic tokens
+var TOKEN_ROLES = ['brand','danger','warning','info','success'];
+
+// ══════════════════════════════════════════════════════════════
+// ROLE STATE
+// ══════════════════════════════════════════════════════════════
+var roles = [];
+var palettes = {};
+var certs = {};
+var customCounter = 0;
+var selectedCertRole = 'brand';
+var selectedMapRole = 'brand';
+var selectedStepRole = 'brand';
+var currentFormat = 'css';
+
+var DEFAULT_CUSTOM_COLORS = ['#7C3AED','#EC4899','#F97316','#06B6D4','#8B5CF6','#10B981','#EF4444','#14B8A6'];
+var CUSTOM_NAMES = ['Secondary','Tertiary','Accent','Extra'];
+
+// Reserved role IDs — slug must not collide with these
+var RESERVED_IDS = new Set(['brand','danger','warning','info','success','greyscale','desaturated']);
+function slugifyLabel(label) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'custom';
+}
+function uniqueRoleId(label, excludeId) {
+  var slug = slugifyLabel(label);
+  if (RESERVED_IDS.has(slug)) slug = slug + '-custom';
+  var candidate = slug;
+  var n = 2;
+  while (roles.some(function(r) { return r.id === candidate && r.id !== excludeId; })) {
+    candidate = slug + '-' + n++;
+  }
+  return candidate;
+}
+
+var STORAGE_KEY_TOKENS = 'dtf-saved-tokens';
+var STORAGE_KEY_CONFIG = 'dtf-color-config';
+var STORAGE_KEY_ACTIVE = 'dtf-active-project';
+
+var DEFAULT_ROLES = [
+  {id:'brand',  label:'Brand',  keyHex:'#286CE5', type:'fixed'},
+  {id:'danger',   label:'Danger',   keyHex:'#DC2626', type:'fixed'},
+  {id:'warning',  label:'Warning',  keyHex:'#D97706', type:'fixed'},
+  {id:'info',     label:'Info',     keyHex:'#0EA5E9', type:'fixed'},
+  {id:'success',  label:'Success',  keyHex:'#16A34A', type:'fixed'},
+  {id:'greyscale', label:'Greyscale', keyHex:null, type:'auto', derive:'greyscale'},
+  {id:'desaturated', label:'Desaturated', keyHex:null, type:'auto', derive:'desaturated'},
+];
+
+// Map config.json palette key names → role IDs
+var PALETTE_KEY_TO_ROLE = {
+  brand:'brand', danger:'danger', warning:'warning',
+  info:'info', success:'success', greyscale:'greyscale', desaturated:'desaturated'
+};
+var ROLE_TO_PALETTE_KEY = {};
+Object.keys(PALETTE_KEY_TO_ROLE).forEach(function(k) { ROLE_TO_PALETTE_KEY[PALETTE_KEY_TO_ROLE[k]] = k; });
+
+function initRoles() {
+  roles = DEFAULT_ROLES.map(function(r) { return Object.assign({}, r); });
+  // Override with project config palette keys if available
+  if (projectConfig && projectConfig.paletteKeys) {
+    var pk = projectConfig.paletteKeys;
+    for (var i = 0; i < roles.length; i++) {
+      var key = ROLE_TO_PALETTE_KEY[roles[i].id];
+      if (key && pk[key]) {
+        if (roles[i].type !== 'auto') roles[i].keyHex = pk[key].toUpperCase();
+      }
+    }
+  }
+  // Restore custom roles from config (handles both slug IDs and legacy custom-N IDs)
+  if (projectConfig && projectConfig.customRoles) {
+    projectConfig.customRoles.forEach(function(cr) {
+      // Migrate legacy id/label: primary→brand, secondary→neutral
+      if (cr.id === 'primary')   { cr.id = 'brand';   if (cr.label === 'Primary')   cr.label = 'Brand'; }
+      if (cr.id === 'secondary') { cr.id = 'neutral'; if (cr.label === 'Secondary') cr.label = 'Neutral'; }
+      var id = cr.id;
+      // Migrate legacy custom-N IDs to label-based slugs
+      if (/^custom-\d+$/.test(id) && cr.label) {
+        var newId = slugifyLabel(cr.label);
+        if (RESERVED_IDS.has(newId)) newId = newId + '-custom';
+        // Also migrate surfacePaletteSrc references
+        if (projectConfig.surfacePaletteSrc) {
+          SURF_NAMES.forEach(function(sn) {
+            if (projectConfig.surfacePaletteSrc[sn] === id) projectConfig.surfacePaletteSrc[sn] = newId;
+          });
+        }
+        // Migrate paletteKeys
+        if (projectConfig.paletteKeys && projectConfig.paletteKeys[id]) {
+          projectConfig.paletteKeys[newId] = projectConfig.paletteKeys[id];
+          delete projectConfig.paletteKeys[id];
+        }
+        id = newId;
+      }
+      var exists = roles.some(function(r) { return r.id === id; });
+      if (!exists) {
+        var hex = (projectConfig.paletteKeys && projectConfig.paletteKeys[id]) || cr.keyHex || '#888888';
+        roles.push({ id: id, label: cr.label || id, keyHex: hex.toUpperCase(), type: 'custom' });
+        customCounter++;
+      }
+    });
+  }
+  // Override maps from project config if available
+  if (projectConfig && projectConfig.semanticMap) {
+    if (projectConfig.semanticMap.light) LIGHT_MAP = normalizeSemanticMap(JSON.parse(JSON.stringify(projectConfig.semanticMap.light)));
+    if (projectConfig.semanticMap.dark)  DARK_MAP  = normalizeSemanticMap(JSON.parse(JSON.stringify(projectConfig.semanticMap.dark)));
+  } else {
+    resetMaps();
+  }
+  // Override surface maps from project config if available
+  if (projectConfig && projectConfig.surfaceMap) {
+    if (projectConfig.surfaceMap.light) Object.keys(projectConfig.surfaceMap.light).forEach(function(s) { if (SURF_L[s]) Object.assign(SURF_L[s], projectConfig.surfaceMap.light[s]); });
+    if (projectConfig.surfaceMap.dark) Object.keys(projectConfig.surfaceMap.dark).forEach(function(s) { if (SURF_D[s]) Object.assign(SURF_D[s], projectConfig.surfaceMap.dark[s]); });
+    if (projectConfig.surfaceMap.lightAccent) Object.assign(SURF_LA, projectConfig.surfaceMap.lightAccent);
+    if (projectConfig.surfaceMap.darkAccent) Object.assign(SURF_DA, projectConfig.surfaceMap.darkAccent);
+  }
+  if (projectConfig && projectConfig.surfacePaletteSrc) {
+    SURF_NAMES.forEach(function(sn) { if (projectConfig.surfacePaletteSrc[sn]) SURF_PALETTE_SRC[sn] = projectConfig.surfacePaletteSrc[sn]; });
+  }
+}
+
+function deriveKeyHex(derive) {
+  var primary = roles[0];
+  if (!primary) return '#737373';
+  var oklch = PE.hexToOklch(primary.keyHex);
+  if (derive === 'desaturated') {
+    return PE.oklchToHex(oklch[0], 0.012, oklch[2]);
+  }
+  if (derive === 'greyscale') {
+    return PE.oklchToHex(oklch[0], 0, 0);
+  }
+  return primary.keyHex;
+}
+
+function getRoleById(id) {
+  for (var i = 0; i < roles.length; i++) { if (roles[i].id === id) return roles[i]; }
+  return null;
+}
+
+// ══════════════════════════════════════════════════════════════
+// GENERATE ALL PALETTES
+// ══════════════════════════════════════════════════════════════
+function generateAll() {
+  for (var i = 0; i < roles.length; i++) {
+    var r = roles[i];
+    if (r.type === 'auto') r.keyHex = deriveKeyHex(r.derive);
+    palettes[r.id] = PE.generatePalette(r.keyHex);
+    certs[r.id] = PE.certifyPalette(palettes[r.id]);
+  }
+}
+
+function generateRole(id) {
+  var r = getRoleById(id);
+  if (!r) return;
+  if (r.type === 'auto') r.keyHex = deriveKeyHex(r.derive);
+  palettes[r.id] = PE.generatePalette(r.keyHex);
+  certs[r.id] = PE.certifyPalette(palettes[r.id]);
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER ROLE LIST (Section 1)
+// ══════════════════════════════════════════════════════════════
+var rolesList = document.getElementById('rolesList');
+
+function renderRolesList() {
+  var html = '';
+  html += '<div class="role-group-label">Semantic Roles</div>';
+  for (var i = 0; i < roles.length; i++) {
+    var r = roles[i];
+    if (r.type === 'auto' && i > 0 && roles[i-1].type !== 'auto') {
+      html += '<div class="role-group-label">Auto-derived from Brand</div>';
+    }
+    if (r.type === 'custom' && i > 0 && roles[i-1].type !== 'custom') {
+      html += '<div class="role-group-label">Custom Roles</div>';
+    }
+    html += buildRoleRow(r);
+  }
+  rolesList.innerHTML = html;
+  wireRoleEvents();
+}
+
+function buildRoleRow(r) {
+  var cert = certs[r.id];
+  var certStatus = cert ? cert.overall : '';
+  var certIcon = cert ? (cert.overall === 'CERTIFIED' ? '\u2705' : cert.overall === 'CONDITIONAL' ? '\u26A0\uFE0F' : '\u274C') : '';
+  var certCount = cert ? cert.pass + '/7' : '';
+
+  var h = '<div class="role-row" data-role="' + r.id + '">';
+  h += '<div class="role-head">';
+
+  if (r.type === 'custom') {
+    h += '<input class="role-label-input" data-role-name="' + r.id + '" value="' + escHtml(r.label) + '" spellcheck="false">';
+  } else {
+    h += '<span class="role-label">' + escHtml(r.label) + '</span>';
+  }
+
+  if (r.type !== 'auto') {
+    h += '<div class="role-picker">';
+    h += '<input type="color" class="pick-native" data-role-color="' + r.id + '" value="' + r.keyHex + '">';
+    h += '<input type="text" class="pick-hex" data-role-hex="' + r.id + '" value="' + r.keyHex + '" maxlength="7" spellcheck="false">';
+    h += '</div>';
+  } else {
+    h += '<span class="role-auto-tag">from Brand \u2022 ' + (r.keyHex || '') + '</span>';
+  }
+
+  if (cert) {
+    h += '<span class="cert-mini" data-status="' + certStatus + '">' + certIcon + ' ' + certCount + '</span>';
+  }
+
+  if (r.id !== 'brand' && r.type !== 'auto') {
+    h += '<button class="role-del" data-role-del="' + r.id + '" type="button" title="Remove role">&times;</button>';
+  }
+
+  h += '</div>'; // .role-head
+
+  h += '<div class="role-strip" id="strip-' + r.id + '">';
+  h += buildStripHtml(r.id);
+  h += '</div>';
+
+  h += '</div>'; // .role-row
+  return h;
+}
+
+function buildStripHtml(roleId) {
+  var pal = palettes[roleId];
+  if (!pal) return '';
+  return pal.steps.map(function(s, i) {
+    var tc = s.contrast > 4.5 ? '#FFFFFF' : '#000000';
+    var attr = s.name === '500' ? ' data-key' : '';
+    return '<div class="role-swatch"' + attr + ' data-hex="' + s.hex + '" onclick="copyHex(\'' + s.hex + '\')" style="background:' + s.hex + '">' +
+      '<span class="role-tip">' + s.name + ' ' + s.hex + '</span>' +
+      '<span class="role-swatch-lbl" style="color:' + tc + '">' + s.name + '</span></div>';
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════════════
+// WIRE ROLE EVENTS
+// ══════════════════════════════════════════════════════════════
+function wireRoleEvents() {
+  // Color pickers
+  rolesList.querySelectorAll('[data-role-color]').forEach(function(el) {
+    el.addEventListener('input', function() {
+      var rid = el.getAttribute('data-role-color');
+      var hexEl = rolesList.querySelector('[data-role-hex="' + rid + '"]');
+      if (hexEl) hexEl.value = el.value.toUpperCase();
+      onRoleColorChange(rid, el.value);
+    });
+  });
+  // Hex inputs
+  rolesList.querySelectorAll('[data-role-hex]').forEach(function(el) {
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var v = el.value.trim();
+        if (/^#?[0-9A-Fa-f]{6}$/.test(v)) {
+          var hex = v.startsWith('#') ? v : '#' + v;
+          var rid = el.getAttribute('data-role-hex');
+          var colorEl = rolesList.querySelector('[data-role-color="' + rid + '"]');
+          if (colorEl) colorEl.value = hex;
+          onRoleColorChange(rid, hex);
+        }
+      }
+    });
+    el.addEventListener('blur', function() {
+      var v = el.value.trim();
+      if (/^#?[0-9A-Fa-f]{6}$/.test(v)) {
+        var hex = v.startsWith('#') ? v : '#' + v;
+        var rid = el.getAttribute('data-role-hex');
+        var colorEl = rolesList.querySelector('[data-role-color="' + rid + '"]');
+        if (colorEl) colorEl.value = hex;
+        onRoleColorChange(rid, hex);
+      }
+    });
+  });
+  // Name inputs (custom roles) — renaming also updates the ID
+  rolesList.querySelectorAll('[data-role-name]').forEach(function(el) {
+    el.addEventListener('change', function() {
+      var rid = el.getAttribute('data-role-name');
+      var r = getRoleById(rid);
+      if (!r) return;
+      var newLabel = el.value.trim() || r.label;
+      r.label = newLabel;
+      var newId = uniqueRoleId(newLabel, rid);
+      if (newId !== rid) {
+        // Update all references to the old ID
+        if (palettes[rid]) { palettes[newId] = palettes[rid]; delete palettes[rid]; }
+        if (certs[rid]) { certs[newId] = certs[rid]; delete certs[rid]; }
+        SURF_NAMES.forEach(function(sn) { if (SURF_PALETTE_SRC[sn] === rid) SURF_PALETTE_SRC[sn] = newId; });
+        if (selectedMapRole === rid) selectedMapRole = newId;
+        if (selectedStepRole === rid) selectedStepRole = newId;
+        if (selectedCertRole === rid) selectedCertRole = newId;
+        r.id = newId;
+      }
+      refreshSelectors();
+      renderRolesList();
+      injectSurfaceTokens();
+      renderSurfSrcBar();
+    });
+  });
+  // Delete buttons
+  rolesList.querySelectorAll('[data-role-del]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var rid = el.getAttribute('data-role-del');
+      removeRole(rid);
+    });
+  });
+}
+
+function onRoleColorChange(roleId, hex) {
+  hex = hex.toUpperCase();
+  var r = getRoleById(roleId);
+  if (!r) return;
+  r.keyHex = hex;
+
+  generateRole(roleId);
+
+  // If primary changed, regenerate auto-derived roles
+  if (roleId === 'brand') {
+    for (var i = 0; i < roles.length; i++) {
+      if (roles[i].type === 'auto') {
+        generateRole(roles[i].id);
+        updateRoleStrip(roles[i].id);
+        updateRoleCert(roles[i].id);
+      }
+    }
+  }
+
+  updateRoleStrip(roleId);
+  updateRoleCert(roleId);
+  injectAllTokens();
+  renderMap();
+  renderSurfTable();
+  renderSurfSrcBar();
+  renderCertGrid();
+  renderCertDetail(selectedCertRole);
+  renderSteps();
+  renderExport(currentFormat);
+}
+
+function updateRoleStrip(roleId) {
+  var stripEl = document.getElementById('strip-' + roleId);
+  if (stripEl) stripEl.innerHTML = buildStripHtml(roleId);
+  // Update auto tag text
+  var r = getRoleById(roleId);
+  if (r && r.type === 'auto') {
+    var row = rolesList.querySelector('[data-role="' + roleId + '"]');
+    if (row) {
+      var tag = row.querySelector('.role-auto-tag');
+      if (tag) tag.textContent = 'from Brand \u2022 ' + (r.keyHex || '');
+    }
+  }
+}
+
+function updateRoleCert(roleId) {
+  var cert = certs[roleId];
+  if (!cert) return;
+  var row = rolesList.querySelector('[data-role="' + roleId + '"]');
+  if (!row) return;
+  var mini = row.querySelector('.cert-mini');
+  if (mini) {
+    var icon = cert.overall === 'CERTIFIED' ? '\u2705' : cert.overall === 'CONDITIONAL' ? '\u26A0\uFE0F' : '\u274C';
+    mini.textContent = icon + ' ' + cert.pass + '/7';
+    mini.setAttribute('data-status', cert.overall);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// ADD / REMOVE CUSTOM ROLES
+// ══════════════════════════════════════════════════════════════
+document.getElementById('addRoleBtn').addEventListener('click', function() {
+  var name = customCounter < CUSTOM_NAMES.length ? CUSTOM_NAMES[customCounter] : 'Custom ' + (customCounter - CUSTOM_NAMES.length + 1);
+  var color = DEFAULT_CUSTOM_COLORS[customCounter % DEFAULT_CUSTOM_COLORS.length];
+  customCounter++;
+  var id = uniqueRoleId(name);
+  roles.push({id:id, label:name, keyHex:color, type:'custom'});
+  generateRole(id);
+  renderRolesList();
+  refreshSelectors();
+  injectAllTokens();
+  renderCertGrid();
+  renderExport(currentFormat);
+});
+
+function removeRole(rid) {
+  for (var i = 0; i < roles.length; i++) {
+    if (roles[i].id === rid) { roles.splice(i, 1); break; }
+  }
+  delete palettes[rid];
+  delete certs[rid];
+  if (selectedCertRole === rid) selectedCertRole = 'brand';
+  if (selectedMapRole === rid) selectedMapRole = 'brand';
+  if (selectedStepRole === rid) selectedStepRole = 'brand';
+  renderRolesList();
+  refreshSelectors();
+  injectAllTokens();
+  renderCertGrid();
+  renderCertDetail(selectedCertRole);
+  renderSteps();
+  renderExport(currentFormat);
+}
+
+// ══════════════════════════════════════════════════════════════
+// LIVE TOKEN INJECTION
+// ══════════════════════════════════════════════════════════════
+var dynamicTokens = document.getElementById('dynamicTokens');
+
+function injectSurfaceTokens(rootStyle, darkArr) {
+  var root = rootStyle || document.documentElement.style;
+  var arr = darkArr || [];
+  var needDynamicUpdate = !darkArr;
+  for (var ni = 0; ni < SURF_NAMES.length; ni++) {
+    var sn = SURF_NAMES[ni];
+    var lMap2 = SURF_L[sn] || SURF_LA;
+    var dMap2 = SURF_D[sn] || SURF_DA;
+    if (!lMap2 || !dMap2) continue;
+    for (var pi2 = 0; pi2 < SURF_PROP_ORDER.length; pi2++) {
+      var sp = SURF_PROP_ORDER[pi2];
+      var lh = surfStepHex(lMap2[sp], sn);
+      var dh = surfStepHex(dMap2[sp], sn);
+      root.setProperty('--surface-' + sn + '-' + sp, lh);
+      arr.push('  --surface-' + sn + '-' + sp + ': ' + dh + ';\n');
+    }
+  }
+  if (needDynamicUpdate) {
+    var old = dynamicTokens.textContent;
+    var darkBlock = old.replace(/^[^{]*\{/, '').replace(/\}[^}]*$/, '');
+    darkBlock = darkBlock.replace(/  --surface-[^;]+;\n/g, '');
+    dynamicTokens.textContent = '#liveDark, [data-theme="dark"] {\n' + darkBlock + arr.join('') + '}\n';
+  }
+}
+
+function injectAllTokens() {
+  var root = document.documentElement.style;
+  var darkCSS = '';
+  var darkCSSArr = [];
+
+  // Inject semantic tokens for known roles
+  for (var t = 0; t < TOKEN_ROLES.length; t++) {
+    var roleId = TOKEN_ROLES[t];
+    var pal = palettes[roleId];
+    if (!pal) continue;
+    var steps = pal.steps;
+
+    // T0 primitives (--prim-{role}-{step})
+    for (var s = 0; s < steps.length; s++) {
+      root.setProperty('--prim-' + roleId + '-' + steps[s].name, steps[s].hex);
+    }
+
+    // T1 semantic (light)
+    var lkeys = Object.keys(LIGHT_MAP);
+    for (var j = 0; j < lkeys.length; j++) {
+      var k = lkeys[j];
+      var stepName = LIGHT_MAP[k];
+      root.setProperty('--' + roleId + '-' + k, getStepHex(pal, stepName));
+    }
+
+    // T1 semantic (dark)
+    var dkeys = Object.keys(DARK_MAP);
+    for (var d = 0; d < dkeys.length; d++) {
+      var dk = dkeys[d];
+      var dStep = DARK_MAP[dk];
+      darkCSS += '  --' + roleId + '-' + dk + ': ' + getStepHex(pal, dStep) + ';\n';
+    }
+  }
+
+  // Surface tokens — inject ALL from SURF globals
+  injectSurfaceTokens(root, darkCSSArr);
+  darkCSS += darkCSSArr.join('');
+
+  dynamicTokens.textContent = darkCSS ? '#liveDark, [data-theme="dark"] {\n' + darkCSS + '}\n' : '';
+}
+
+// ══════════════════════════════════════════════════════════════
+// SELECTORS (for Token Map, Steps, Cert)
+// ══════════════════════════════════════════════════════════════
+var mapRoleSelect = document.getElementById('mapRoleSelect');
+var stepRoleSelect = document.getElementById('stepRoleSelect');
+
+function refreshSelectors() {
+  var semanticOpts = roles.filter(function(r) {
+    return r.type !== 'auto';
+  }).map(function(r) {
+    return '<option value="' + r.id + '">' + escHtml(r.label) + '</option>';
+  }).join('');
+  var allOpts = roles.map(function(r) {
+    return '<option value="' + r.id + '">' + escHtml(r.label) + '</option>';
+  }).join('');
+  mapRoleSelect.innerHTML = semanticOpts;
+  stepRoleSelect.innerHTML = allOpts;
+  mapRoleSelect.value = selectedMapRole;
+  stepRoleSelect.value = selectedStepRole;
+}
+
+mapRoleSelect.addEventListener('change', function() {
+  selectedMapRole = mapRoleSelect.value;
+  renderMap();
+});
+
+stepRoleSelect.addEventListener('change', function() {
+  selectedStepRole = stepRoleSelect.value;
+  renderSteps();
+});
+
+// ══════════════════════════════════════════════════════════════
+// RENDER: TOKEN MAP (Section 2) — rich step picker with swatches
+// ══════════════════════════════════════════════════════════════
+var mapGrid = document.getElementById('mapGrid');
+var mapEditToggle = document.getElementById('mapEditToggle');
+var mapCancelBtn = document.getElementById('mapCancelBtn');
+var revertMapBtn = document.getElementById('revertMapBtn');
+var mapEditMode = false;
+var _mapSnapshotLight = null;
+var _mapSnapshotDark = null;
+
+var STEP_OPTIONS = PE.STEP_NAMES.slice(); // ['white','25','50',...,'black']
+
+function enterMapEditMode() {
+  // Snapshot current state so Cancel can restore it
+  _mapSnapshotLight = JSON.parse(JSON.stringify(LIGHT_MAP));
+  _mapSnapshotDark = JSON.parse(JSON.stringify(DARK_MAP));
+  mapEditMode = true;
+  mapEditToggle.setAttribute('aria-pressed', 'true');
+  mapEditToggle.textContent = 'Done';
+  mapCancelBtn.style.display = '';
+  revertMapBtn.style.display = '';
+  renderMap();
+}
+function exitMapEditMode() {
+  mapEditMode = false;
+  _mapSnapshotLight = null;
+  _mapSnapshotDark = null;
+  mapEditToggle.setAttribute('aria-pressed', 'false');
+  mapEditToggle.textContent = 'Edit Mappings';
+  mapCancelBtn.style.display = 'none';
+  revertMapBtn.style.display = 'none';
+  renderMap();
+}
+
+mapEditToggle.addEventListener('click', function() {
+  if (!mapEditMode) {
+    enterMapEditMode();
+  } else {
+    // "Done" — keep changes, exit edit mode
+    exitMapEditMode();
+    injectAllTokens();
+    showSaveMsg('Mappings updated');
+  }
+});
+
+// Cancel — discard edits made during this session
+mapCancelBtn.addEventListener('click', function() {
+  if (_mapSnapshotLight) LIGHT_MAP = JSON.parse(JSON.stringify(_mapSnapshotLight));
+  if (_mapSnapshotDark) DARK_MAP = JSON.parse(JSON.stringify(_mapSnapshotDark));
+  exitMapEditMode();
+  injectAllTokens();
+  showSaveMsg('Edits discarded');
+});
+
+// Revert to Deployed — restore from projectConfig (last pushed state)
+revertMapBtn.addEventListener('click', function() {
+  if (!confirm('Revert mappings to the last deployed version?')) return;
+  if (projectConfig && projectConfig.semanticMap) {
+    if (projectConfig.semanticMap.light) LIGHT_MAP = normalizeSemanticMap(JSON.parse(JSON.stringify(projectConfig.semanticMap.light)));
+    if (projectConfig.semanticMap.dark) DARK_MAP = normalizeSemanticMap(JSON.parse(JSON.stringify(projectConfig.semanticMap.dark)));
+  } else {
+    // No deployed state exists — fall back to factory defaults
+    resetMaps();
+  }
+  injectAllTokens();
+  renderMap();
+  showSaveMsg('Reverted to last deployed mappings');
+});
+
+// Close any open step dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.step-pick')) {
+    document.querySelectorAll('.step-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+  }
+});
+
+function getStepHex(pal, stepName) {
+  if (stepName === 'fixed-white') return '#FFFFFF';
+  if (!pal) return '#000000';
+  for (var i = 0; i < pal.steps.length; i++) {
+    if (pal.steps[i].name === stepName) return pal.steps[i].hex;
+  }
+  return '#000000';
+}
+function getStepTone(stepName) {
+  if (stepName === 'fixed-white') return '100';
+  var si = PE.STEP_NAMES.indexOf(stepName);
+  return si >= 0 ? PE.TONE_SCALE[si] : '?';
+}
+/**
+ * Normalize a semantic map — converts legacy integer indices to step name strings.
+ */
+function normalizeSemanticMap(map) {
+  if (!map) return map;
+  var out = {};
+  var keys = Object.keys(map);
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i], v = map[k];
+    if (typeof v === 'number') {
+      out[k] = v === -1 ? 'fixed-white' : PE.STEP_NAMES[v];
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+function buildPickerButton(pal, map, key, isDark) {
+  var currentStep = map[key];
+  var hex = getStepHex(pal, currentStep);
+  var name = currentStep === 'fixed-white' ? '#FFF' : currentStep;
+  var origMap = isDark
+    ? (projectConfig && projectConfig.semanticMap ? normalizeSemanticMap(projectConfig.semanticMap.dark) : DEFAULT_DARK_MAP)
+    : (projectConfig && projectConfig.semanticMap ? normalizeSemanticMap(projectConfig.semanticMap.light) : DEFAULT_LIGHT_MAP);
+  var changed = (origMap && origMap[key] !== undefined && origMap[key] !== currentStep);
+  var tc = PE.wcagContrast(hex, '#FFFFFF') > 4 ? '#FFFFFF' : '#000000';
+
+  var h = '<div class="step-pick" tabindex="0" data-map-key="' + key + '" data-map-theme="' + (isDark ? 'dark' : 'light') + '"' + (changed ? ' data-changed' : '') + '>';
+  h += '<span class="step-pick__swatch" style="background:' + hex + '"></span>';
+  h += '<span class="step-pick__label">' + name + '</span>';
+  h += '<span class="step-pick__hex">' + hex + '</span>';
+  h += '<span class="step-pick__arrow">\u25BC</span>';
+
+  // Dropdown
+  h += '<div class="step-dropdown">';
+  // Fixed white option
+  h += '<div class="step-opt' + (currentStep === 'fixed-white' ? ' step-opt--fixed" data-active' : ' step-opt--fixed"') + ' data-step="fixed-white">';
+  h += '<span class="step-opt__sw" style="background:#FFFFFF"></span>';
+  h += '<span class="step-opt__name">#FFF</span>';
+  h += '<span class="step-opt__hex">#FFFFFF</span>';
+  h += '<span class="step-opt__tone">100</span>';
+  h += '</div>';
+  // All 22 steps
+  for (var si = 0; si < STEP_OPTIONS.length; si++) {
+    var sHex = pal ? pal.steps[si].hex : '#888';
+    var sName = STEP_OPTIONS[si];
+    var sTone = PE.TONE_SCALE[si];
+    var active = (sName === currentStep) ? ' data-active' : '';
+    h += '<div class="step-opt"' + active + ' data-step="' + sName + '">';
+    h += '<span class="step-opt__sw" style="background:' + sHex + '"></span>';
+    h += '<span class="step-opt__name">' + sName + '</span>';
+    h += '<span class="step-opt__hex">' + sHex + '</span>';
+    h += '<span class="step-opt__tone">L' + sTone + '</span>';
+    h += '</div>';
+  }
+  h += '</div>'; // .step-dropdown
+  h += '</div>'; // .step-pick
+  return h;
+}
+
+function renderMap() {
+  var rid = selectedMapRole;
+  var pal = palettes[rid];
+  if (!pal) { mapGrid.innerHTML = ''; return; }
+  var r = getRoleById(rid);
+  var prefix = (TOKEN_ROLES.indexOf(rid) >= 0) ? rid : (r ? r.label.toLowerCase().replace(/[^a-z0-9]/g,'-') : rid);
+
+  function buildPane(map, title, isDark) {
+    var cls = isDark ? 'map-pane map-pane--dark' : 'map-pane';
+    var html = '<div class="' + cls + '"><div class="map-title">' + title + '</div>';
+    for (var g = 0; g < SEM_GROUPS.length; g++) {
+      var grp = SEM_GROUPS[g];
+      html += '<div class="map-group-label">' + grp.label + '</div>';
+      for (var rr = 0; rr < grp.keys.length; rr++) {
+        var key = grp.keys[rr];
+        var stepName = map[key];
+        var hex = getStepHex(pal, stepName);
+        var stepLabel = stepName === 'fixed-white' ? 'fixed' : stepName;
+        html += '<div class="map-row">' +
+          '<span class="map-swatch" style="background:' + hex + '" onclick="copyHex(\'' + hex + '\')" title="Click to copy"></span>' +
+          '<span class="map-name">--' + prefix + '-' + key + '</span>';
+        if (mapEditMode) {
+          html += buildPickerButton(pal, map, key, isDark);
+        } else {
+          html += '<span class="map-step">\u2190 ' + stepLabel + '</span>';
+        }
+        html += '<span class="map-hex">' + hex + '</span></div>';
+      }
+    }
+    html += '</div>';
+    return html;
+  }
+
+  mapGrid.innerHTML = buildPane(LIGHT_MAP, 'Light Theme', false) + buildPane(DARK_MAP, 'Dark Theme', true);
+
+  // Wire picker events
+  if (mapEditMode) {
+    mapGrid.querySelectorAll('.step-pick').forEach(function(pick) {
+      // Toggle dropdown on click
+      pick.addEventListener('click', function(e) {
+        if (e.target.closest('.step-opt')) return; // handled below
+        var dd = pick.querySelector('.step-dropdown');
+        // Close others
+        mapGrid.querySelectorAll('.step-dropdown.open').forEach(function(d) { if (d !== dd) d.classList.remove('open'); });
+        dd.classList.toggle('open');
+      });
+      // Step selection
+      pick.querySelectorAll('.step-opt').forEach(function(opt) {
+        opt.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var key = pick.getAttribute('data-map-key');
+          var theme = pick.getAttribute('data-map-theme');
+          var newStep = opt.getAttribute('data-step');
+          if (!newStep) return;
+          if (theme === 'dark') DARK_MAP[key] = newStep;
+          else LIGHT_MAP[key] = newStep;
+          injectAllTokens();
+          renderMap();
+        });
+      });
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER: T2 SURFACE CONTEXT MAP (Section 2b)
+// ══════════════════════════════════════════════════════════════
+var SURF_NAMES = ['bright','base','dim','deep','accent','container','over-container','float','inverse'];
+var SURF_PROP_ORDER = ['bg','subtle','strong','outline','separator',
+  'ct-default','ct-strong','ct-subtle','ct-faint',
+  'cm-bg','cm-bg-hover','cm-bg-pressed',
+  'cm-outline','cm-outline-hover','cm-outline-pressed','cm-separator'];
+var SURF_PROP_GROUPS = [
+  {label:'Background',keys:['bg','subtle','strong','outline','separator']},
+  {label:'Content',keys:['ct-default','ct-strong','ct-subtle','ct-faint']},
+  {label:'Component Modifier',keys:['cm-bg','cm-bg-hover','cm-bg-pressed','cm-outline','cm-outline-hover','cm-outline-pressed','cm-separator']}
+];
+
+// Editable surface maps (start as copies of the hardcoded defaults)
+var DEFAULT_SURF_L = {
+  bright:{bg:'white',subtle:'25',strong:'50',outline:'150',separator:'150','ct-default':'900','ct-strong':'black','ct-subtle':'600','ct-faint':'400','cm-bg':'25','cm-bg-hover':'50','cm-bg-pressed':'75','cm-outline':'150','cm-outline-hover':'200','cm-outline-pressed':'250','cm-separator':'150'},
+  base:{bg:'25',subtle:'50',strong:'75',outline:'150',separator:'175','ct-default':'900','ct-strong':'black','ct-subtle':'600','ct-faint':'400','cm-bg':'white','cm-bg-hover':'25','cm-bg-pressed':'50','cm-outline':'150','cm-outline-hover':'200','cm-outline-pressed':'250','cm-separator':'175'},
+  dim:{bg:'50',subtle:'75',strong:'100',outline:'175',separator:'175','ct-default':'900','ct-strong':'black','ct-subtle':'600','ct-faint':'400','cm-bg':'25','cm-bg-hover':'50','cm-bg-pressed':'75','cm-outline':'175','cm-outline-hover':'200','cm-outline-pressed':'300','cm-separator':'175'},
+  deep:{bg:'75',subtle:'100',strong:'150',outline:'175',separator:'200','ct-default':'900','ct-strong':'black','ct-subtle':'600','ct-faint':'450','cm-bg':'50','cm-bg-hover':'75','cm-bg-pressed':'100','cm-outline':'200','cm-outline-hover':'250','cm-outline-pressed':'300','cm-separator':'200'},
+  container:{bg:'white',subtle:'25',strong:'50',outline:'150',separator:'150','ct-default':'900','ct-strong':'black','ct-subtle':'600','ct-faint':'400','cm-bg':'25','cm-bg-hover':'50','cm-bg-pressed':'75','cm-outline':'150','cm-outline-hover':'200','cm-outline-pressed':'250','cm-separator':'150'},
+  'over-container':{bg:'white',subtle:'25',strong:'50',outline:'150',separator:'175','ct-default':'900','ct-strong':'black','ct-subtle':'600','ct-faint':'400','cm-bg':'50','cm-bg-hover':'75','cm-bg-pressed':'100','cm-outline':'175','cm-outline-hover':'200','cm-outline-pressed':'250','cm-separator':'175'},
+  float:{bg:'white',subtle:'25',strong:'50',outline:'150',separator:'175','ct-default':'900','ct-strong':'black','ct-subtle':'550','ct-faint':'400','cm-bg':'50','cm-bg-hover':'75','cm-bg-pressed':'100','cm-outline':'175','cm-outline-hover':'250','cm-outline-pressed':'300','cm-separator':'175'},
+  inverse:{bg:'900',subtle:'850',strong:'800',outline:'700',separator:'700','ct-default':'25','ct-strong':'white','ct-subtle':'250','ct-faint':'400','cm-bg':'850','cm-bg-hover':'800','cm-bg-pressed':'750','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'700'}
+};
+var DEFAULT_SURF_D = {
+  bright:{bg:'850',subtle:'800',strong:'750',outline:'700',separator:'700','ct-default':'50','ct-strong':'white','ct-subtle':'250','ct-faint':'450','cm-bg':'800','cm-bg-hover':'750','cm-bg-pressed':'700','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'700'},
+  base:{bg:'900',subtle:'850',strong:'800',outline:'750',separator:'700','ct-default':'50','ct-strong':'white','ct-subtle':'250','ct-faint':'450','cm-bg':'850','cm-bg-hover':'800','cm-bg-pressed':'750','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'700'},
+  dim:{bg:'900',subtle:'850',strong:'800',outline:'750',separator:'750','ct-default':'75','ct-strong':'white','ct-subtle':'250','ct-faint':'450','cm-bg':'850','cm-bg-hover':'800','cm-bg-pressed':'750','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'750'},
+  deep:{bg:'black',subtle:'900',strong:'850',outline:'800',separator:'750','ct-default':'75','ct-strong':'white','ct-subtle':'300','ct-faint':'450','cm-bg':'900','cm-bg-hover':'850','cm-bg-pressed':'800','cm-outline':'700','cm-outline-hover':'600','cm-outline-pressed':'550','cm-separator':'750'},
+  container:{bg:'850',subtle:'800',strong:'750',outline:'700',separator:'700','ct-default':'50','ct-strong':'white','ct-subtle':'250','ct-faint':'450','cm-bg':'800','cm-bg-hover':'750','cm-bg-pressed':'700','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'700'},
+  'over-container':{bg:'800',subtle:'750',strong:'700',outline:'600',separator:'600','ct-default':'50','ct-strong':'white','ct-subtle':'200','ct-faint':'400','cm-bg':'750','cm-bg-hover':'700','cm-bg-pressed':'600','cm-outline':'550','cm-outline-hover':'500','cm-outline-pressed':'450','cm-separator':'600'},
+  float:{bg:'750',subtle:'700',strong:'600',outline:'550',separator:'550','ct-default':'25','ct-strong':'white','ct-subtle':'200','ct-faint':'300','cm-bg':'700','cm-bg-hover':'600','cm-bg-pressed':'550','cm-outline':'500','cm-outline-hover':'450','cm-outline-pressed':'400','cm-separator':'550'},
+  inverse:{bg:'900',subtle:'850',strong:'800',outline:'700',separator:'700','ct-default':'25','ct-strong':'white','ct-subtle':'250','ct-faint':'400','cm-bg':'850','cm-bg-hover':'800','cm-bg-pressed':'750','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'700'}
+};
+var DEFAULT_SURF_LA = {bg:'25',subtle:'50',strong:'75',outline:'175',separator:'175','ct-default':'800','ct-strong':'900','ct-subtle':'700','ct-faint':'500','cm-bg':'white','cm-bg-hover':'25','cm-bg-pressed':'50','cm-outline':'175','cm-outline-hover':'200','cm-outline-pressed':'250','cm-separator':'175'};
+var DEFAULT_SURF_DA = {bg:'900',subtle:'850',strong:'800',outline:'750',separator:'750','ct-default':'75','ct-strong':'white','ct-subtle':'150','ct-faint':'400','cm-bg':'850','cm-bg-hover':'800','cm-bg-pressed':'750','cm-outline':'600','cm-outline-hover':'550','cm-outline-pressed':'500','cm-separator':'750'};
+
+var SURF_L = JSON.parse(JSON.stringify(DEFAULT_SURF_L));
+var SURF_D = JSON.parse(JSON.stringify(DEFAULT_SURF_D));
+var SURF_LA = JSON.parse(JSON.stringify(DEFAULT_SURF_LA));
+var SURF_DA = JSON.parse(JSON.stringify(DEFAULT_SURF_DA));
+
+var surfTabs = document.getElementById('surfTabs');
+var surfBody = document.getElementById('surfBody');
+var surfEditToggle = document.getElementById('surfEditToggle');
+var surfCancelBtn = document.getElementById('surfCancelBtn');
+var surfRevertBtn = document.getElementById('surfRevertBtn');
+var surfEditMode = false;
+var selectedSurface = 'base';
+var surfSrcBar = document.getElementById('surfSrcBar');
+var _surfSnapshot = null;
+
+// ── Per-surface palette source map ──────────────────────────
+// Default: all non-accent surfaces use 'greyscale', accent uses 'brand'
+var DEFAULT_SURF_SRC = {};
+(function() { for (var i = 0; i < SURF_NAMES.length; i++) DEFAULT_SURF_SRC[SURF_NAMES[i]] = SURF_NAMES[i] === 'accent' ? 'brand' : 'greyscale'; })();
+var SURF_PALETTE_SRC = JSON.parse(JSON.stringify(DEFAULT_SURF_SRC));
+
+function getSurfPalette(surfName) {
+  var roleId = SURF_PALETTE_SRC[surfName] || 'greyscale';
+  return palettes[roleId] || palettes.greyscale;
+}
+
+function renderSurfSrcBar() {
+  var sn = selectedSurface;
+  var src = SURF_PALETTE_SRC[sn] || 'greyscale';
+  var pal = palettes[src];
+  var swHex = pal ? pal.keyHex : '#888';
+  var opts = roles.map(function(r) {
+    return '<option value="' + r.id + '"' + (r.id === src ? ' selected' : '') + '>' + escHtml(r.label) + '</option>';
+  }).join('');
+  surfSrcBar.innerHTML = '<label>Palette source for <strong>' + escHtml(sn) + '</strong>:</label>' +
+    '<select id="surfSrcSelect">' + opts + '</select>' +
+    '<span class="surf-src-swatch" style="background:' + swHex + '"></span>';
+  document.getElementById('surfSrcSelect').addEventListener('change', function() {
+    SURF_PALETTE_SRC[sn] = this.value;
+    injectSurfaceTokens();
+    renderSurfTable();
+    renderSurfSrcBar();
+  });
+}
+
+// Build surface tab bar
+function renderSurfTabs() {
+  surfTabs.innerHTML = SURF_NAMES.map(function(n) {
+    return '<button class="surf-tab" aria-pressed="' + (n === selectedSurface ? 'true' : 'false') + '" data-surf="' + n + '" type="button">' + n + '</button>';
+  }).join('');
+  surfTabs.querySelectorAll('.surf-tab').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      selectedSurface = btn.getAttribute('data-surf');
+      surfTabs.querySelectorAll('.surf-tab').forEach(function(b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+      renderSurfTable();
+      renderSurfSrcBar();
+    });
+  });
+}
+
+surfEditToggle.addEventListener('click', function() {
+  if (!surfEditMode) {
+    // Enter edit mode — snapshot state
+    _surfSnapshot = { L: JSON.parse(JSON.stringify(SURF_L)), D: JSON.parse(JSON.stringify(SURF_D)), LA: JSON.parse(JSON.stringify(SURF_LA)), DA: JSON.parse(JSON.stringify(SURF_DA)), SRC: JSON.parse(JSON.stringify(SURF_PALETTE_SRC)) };
+    surfEditMode = true;
+    surfEditToggle.setAttribute('aria-pressed', 'true');
+    surfEditToggle.textContent = 'Done';
+    surfCancelBtn.style.display = '';
+    surfRevertBtn.style.display = '';
+  } else {
+    // Done — keep changes, exit edit mode
+    surfEditMode = false;
+    _surfSnapshot = null;
+    surfEditToggle.setAttribute('aria-pressed', 'false');
+    surfEditToggle.textContent = 'Edit Surface Map';
+    surfCancelBtn.style.display = 'none';
+    surfRevertBtn.style.display = 'none';
+    injectSurfaceTokens();
+    showSaveMsg('Surface mappings updated');
+  }
+  renderSurfTable();
+});
+
+surfCancelBtn.addEventListener('click', function() {
+  if (_surfSnapshot) {
+    SURF_L = _surfSnapshot.L;
+    SURF_D = _surfSnapshot.D;
+    SURF_LA = _surfSnapshot.LA;
+    SURF_DA = _surfSnapshot.DA;
+    SURF_PALETTE_SRC = _surfSnapshot.SRC;
+  }
+  surfEditMode = false;
+  _surfSnapshot = null;
+  surfEditToggle.setAttribute('aria-pressed', 'false');
+  surfEditToggle.textContent = 'Edit Surface Map';
+  surfCancelBtn.style.display = 'none';
+  surfRevertBtn.style.display = 'none';
+  injectSurfaceTokens();
+  renderSurfTable();
+  renderSurfSrcBar();
+  showSaveMsg('Surface edits discarded');
+});
+
+surfRevertBtn.addEventListener('click', function() {
+  if (!confirm('Revert surface mappings to the last deployed version?')) return;
+  if (projectConfig && projectConfig.surfaceMap) {
+    if (projectConfig.surfaceMap.light) { SURF_L = JSON.parse(JSON.stringify(DEFAULT_SURF_L)); Object.keys(projectConfig.surfaceMap.light).forEach(function(s) { if (SURF_L[s]) Object.assign(SURF_L[s], projectConfig.surfaceMap.light[s]); }); }
+    if (projectConfig.surfaceMap.dark) { SURF_D = JSON.parse(JSON.stringify(DEFAULT_SURF_D)); Object.keys(projectConfig.surfaceMap.dark).forEach(function(s) { if (SURF_D[s]) Object.assign(SURF_D[s], projectConfig.surfaceMap.dark[s]); }); }
+    if (projectConfig.surfaceMap.lightAccent) SURF_LA = JSON.parse(JSON.stringify(projectConfig.surfaceMap.lightAccent));
+    if (projectConfig.surfaceMap.darkAccent) SURF_DA = JSON.parse(JSON.stringify(projectConfig.surfaceMap.darkAccent));
+    if (projectConfig.surfacePaletteSrc) SURF_PALETTE_SRC = JSON.parse(JSON.stringify(projectConfig.surfacePaletteSrc));
+  } else {
+    SURF_L = JSON.parse(JSON.stringify(DEFAULT_SURF_L));
+    SURF_D = JSON.parse(JSON.stringify(DEFAULT_SURF_D));
+    SURF_LA = JSON.parse(JSON.stringify(DEFAULT_SURF_LA));
+    SURF_DA = JSON.parse(JSON.stringify(DEFAULT_SURF_DA));
+    SURF_PALETTE_SRC = JSON.parse(JSON.stringify(DEFAULT_SURF_SRC));
+  }
+  renderSurfTable();
+  renderSurfSrcBar();
+  injectSurfaceTokens();
+  showSaveMsg('Reverted to last deployed surface maps');
+});
+
+// Get hex for a step name using the palette assigned to a surface
+function surfStepHex(stepName, surfName) {
+  var pal = getSurfPalette(surfName);
+  if (!pal) return '#888';
+  if (stepName === 'white') return '#FFFFFF';
+  if (stepName === 'black') return '#000000';
+  for (var i = 0; i < pal.steps.length; i++) {
+    if (pal.steps[i].name === stepName) return pal.steps[i].hex;
+  }
+  return '#888';
+}
+
+function buildSurfStepPicker(surfMap, prop, surfName) {
+  var currentStep = surfMap[prop];
+  var hex = surfStepHex(currentStep, surfName);
+
+  var h = '<div class="step-pick" tabindex="0" data-surf-prop="' + prop + '">';
+  h += '<span class="step-pick__swatch" style="background:' + hex + '"></span>';
+  h += '<span class="step-pick__label">' + currentStep + '</span>';
+  h += '<span class="step-pick__hex">' + hex + '</span>';
+  h += '<span class="step-pick__arrow">\u25BC</span>';
+
+  h += '<div class="step-dropdown">';
+  var pal = getSurfPalette(surfName);
+  if (pal) {
+    for (var si = 0; si < pal.steps.length; si++) {
+      var sName = pal.steps[si].name;
+      var sHex = pal.steps[si].hex;
+      var sTone = PE.TONE_SCALE[si];
+      var active = (sName === currentStep) ? ' data-active' : '';
+      h += '<div class="step-opt"' + active + ' data-step="' + sName + '">';
+      h += '<span class="step-opt__sw" style="background:' + sHex + '"></span>';
+      h += '<span class="step-opt__name">' + sName + '</span>';
+      h += '<span class="step-opt__hex">' + sHex + '</span>';
+      h += '<span class="step-opt__tone">L' + sTone + '</span>';
+      h += '</div>';
+    }
+  }
+  h += '</div>';
+  h += '</div>';
+  return h;
+}
+
+function renderSurfTable() {
+  var n = selectedSurface;
+  var lMap = SURF_L[n] || SURF_LA;
+  var dMap = SURF_D[n] || SURF_DA;
+  if (!lMap || !dMap) { surfBody.innerHTML = ''; return; }
+
+  // Pre-compute bg hex for contrast checks
+  var lBg = surfStepHex(lMap['bg'], n);
+  var dBg = surfStepHex(dMap['bg'], n);
+  var CONTRAST_PROPS = {'ct-default':4.5,'ct-strong':4.5,'ct-subtle':3,'ct-faint':3};
+
+  var html = '<tr><th>Property</th><th colspan="2">Light</th><th colspan="2">Dark</th></tr>';
+
+  for (var g = 0; g < SURF_PROP_GROUPS.length; g++) {
+    var grp = SURF_PROP_GROUPS[g];
+    html += '<tr><td class="surf-prop-group" colspan="5">' + grp.label + '</td></tr>';
+    for (var p = 0; p < grp.keys.length; p++) {
+      var prop = grp.keys[p];
+      var lStep = lMap[prop];
+      var dStep = dMap[prop];
+      var lHex = surfStepHex(lStep, n);
+      var dHex = surfStepHex(dStep, n);
+
+      // Contrast warnings for content tokens
+      var lWarn = '', dWarn = '';
+      if (CONTRAST_PROPS[prop]) {
+        var minC = CONTRAST_PROPS[prop];
+        var lCr = PE.wcagContrast(lHex, lBg);
+        var dCr = PE.wcagContrast(dHex, dBg);
+        if (lCr < minC) lWarn = '<span class="surf-contrast-warn" title="Contrast ' + lCr.toFixed(1) + ':1 vs bg (need ' + minC + ':1)">\u26A0 ' + lCr.toFixed(1) + '</span>';
+        if (dCr < minC) dWarn = '<span class="surf-contrast-warn" title="Contrast ' + dCr.toFixed(1) + ':1 vs bg (need ' + minC + ':1)">\u26A0 ' + dCr.toFixed(1) + '</span>';
+      }
+
+      html += '<tr><td class="surf-prop-label">' + prop + '</td>';
+
+      if (surfEditMode) {
+        html += '<td colspan="2">' + buildSurfStepPicker(lMap, prop, n) + lWarn + '</td>';
+        html += '<td colspan="2">' + buildSurfStepPicker(dMap, prop, n) + dWarn + '</td>';
+      } else {
+        html += '<td><span class="map-swatch" style="background:' + lHex + ';width:18px;height:12px;display:inline-block;border-radius:3px;border:1px solid rgba(128,128,128,.15);vertical-align:middle" onclick="copyHex(\'' + lHex + '\')"></span></td>';
+        html += '<td style="font-family:var(--font-family-mono,monospace);font-size:9px;color:var(--demo-fg-subtle)">' + lStep + ' <span style="color:var(--demo-fg-faint)">' + lHex + '</span>' + lWarn + '</td>';
+        html += '<td><span class="map-swatch" style="background:' + dHex + ';width:18px;height:12px;display:inline-block;border-radius:3px;border:1px solid rgba(128,128,128,.15);vertical-align:middle" onclick="copyHex(\'' + dHex + '\')"></span></td>';
+        html += '<td style="font-family:var(--font-family-mono,monospace);font-size:9px;color:var(--demo-fg-subtle)">' + dStep + ' <span style="color:var(--demo-fg-faint)">' + dHex + '</span>' + dWarn + '</td>';
+      }
+      html += '</tr>';
+    }
+  }
+
+  // Surface preview bar at bottom
+  html += '<tr><td colspan="5" style="padding:12px 8px"><div class="surf-preview">';
+  for (var pi = 0; pi < 5; pi++) {
+    var propN = ['bg','subtle','strong','outline','separator'][pi];
+    var pHex = surfStepHex(lMap[propN], n);
+    var tc2 = PE.wcagContrast(pHex, '#FFFFFF') > 3 ? '#fff' : '#000';
+    html += '<span class="surf-preview__bar" style="background:' + pHex + ';color:' + tc2 + '">' + propN + '</span>';
+  }
+  html += '</div></td></tr>';
+
+  surfBody.innerHTML = html;
+
+  // Wire picker events for T2
+  if (surfEditMode) {
+    surfBody.querySelectorAll('.step-pick').forEach(function(pick) {
+      pick.addEventListener('click', function(e) {
+        if (e.target.closest('.step-opt')) return;
+        var dd = pick.querySelector('.step-dropdown');
+        document.querySelectorAll('.step-dropdown.open').forEach(function(d) { if (d !== dd) d.classList.remove('open'); });
+        dd.classList.toggle('open');
+      });
+      pick.querySelectorAll('.step-opt').forEach(function(opt) {
+        opt.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var prop2 = pick.getAttribute('data-surf-prop');
+          var newStep = opt.getAttribute('data-step');
+          // Validate step name
+          if (PE.STEP_NAMES.indexOf(newStep) === -1) return;
+          // Determine which map (light or dark) — first picker in row = light, second = dark
+          var row = pick.closest('tr');
+          var picks = row.querySelectorAll('.step-pick');
+          var isLight = (picks[0] === pick);
+          var surfName = selectedSurface;
+          if (isLight) {
+            (SURF_L[surfName] || SURF_LA)[prop2] = newStep;
+          } else {
+            (SURF_D[surfName] || SURF_DA)[prop2] = newStep;
+          }
+          renderSurfTable();
+          injectSurfaceTokens();
+        });
+      });
+    });
+  }
+}
+
+// (Surface reset button removed — replaced by Revert to Deployed in edit mode)
+
+renderSurfTabs();
+renderSurfTable();
+renderSurfSrcBar();
+
+// ══════════════════════════════════════════════════════════════
+// RENDER: TRUST CERTIFICATES (Section 4)
+// ══════════════════════════════════════════════════════════════
+var certGrid = document.getElementById('certGrid');
+var certPanel = document.getElementById('certPanel');
+
+function renderCertGrid() {
+  var html = '';
+  for (var i = 0; i < roles.length; i++) {
+    var r = roles[i];
+    var cert = certs[r.id];
+    if (!cert) continue;
+    var icon = cert.overall === 'CERTIFIED' ? '\u2705' : cert.overall === 'CONDITIONAL' ? '\u26A0\uFE0F' : '\u274C';
+    var keyHex = r.keyHex || '#737373';
+    var active = r.id === selectedCertRole ? ' data-active' : '';
+    html += '<div class="cert-card" data-cert-role="' + r.id + '"' + active + '>' +
+      '<span class="cert-card-swatch" style="background:' + keyHex + '"></span>' +
+      '<span class="cert-card-name">' + escHtml(r.label) + '</span>' +
+      '<span class="cert-card-badge">' + icon + ' ' + cert.pass + '/7</span></div>';
+  }
+  certGrid.innerHTML = html;
+
+  // Wire clicks
+  certGrid.querySelectorAll('[data-cert-role]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      selectedCertRole = el.getAttribute('data-cert-role');
+      certGrid.querySelectorAll('.cert-card').forEach(function(c) { c.removeAttribute('data-active'); });
+      el.setAttribute('data-active', '');
+      renderCertDetail(selectedCertRole);
+    });
+  });
+}
+
+function renderCertDetail(roleId) {
+  var cert = certs[roleId];
+  if (!cert) { certPanel.innerHTML = ''; return; }
+  var iconMap = {PASS:'\u2705',WARN:'\u26A0\uFE0F',FAIL:'\u274C'};
+  var statusLabel = cert.overall === 'CERTIFIED' ? 'CERTIFIED \u2705' :
+                    cert.overall === 'CONDITIONAL' ? 'CONDITIONAL \u26A0\uFE0F' : 'FAILED \u274C';
+  var r = getRoleById(roleId);
+  var html = '<div class="cert-overall">' +
+    '<span class="cert-badge" data-status="' + cert.overall + '">' + escHtml(r ? r.label : roleId) + ' \u2014 ' + statusLabel + '</span>' +
+    '<span class="cert-score">' + cert.pass + ' passed, ' + cert.warn + ' warnings, ' + cert.fail + ' failed</span></div>';
+
+  for (var t = 0; t < cert.tests.length; t++) {
+    var test = cert.tests[t];
+    var details = '';
+    if (test.details && test.details.length > 0) {
+      for (var dd = 0; dd < Math.min(test.details.length, 6); dd++) {
+        var d = test.details[dd];
+        if (d.ratio !== undefined) {
+          details += '<div class="cert-test-detail">' + d.label + ': ' + d.ratio + ':1 (need ' + d.threshold + ':1) ' + (d.pass ? '\u2705' : '\u274C') + '</div>';
+        } else if (d.delta !== undefined && d.from) {
+          details += '<div class="cert-test-detail">' + d.from + '\u2192' + d.to + ': \u0394L=' + d.delta + (d.pass === false ? ' \u274C reversal' : ' \u26A0\uFE0F too small') + '</div>';
+        }
+      }
+    }
+    if (test.maxDrift !== undefined) {
+      details += '<div class="cert-test-detail">Max drift: ' + test.maxDrift + '\u00B0, Avg: ' + test.avgDrift + '\u00B0</div>';
+    }
+    if (test.clumps > 0) {
+      details += '<div class="cert-test-detail">Clumped step pairs: ' + test.clumps + '</div>';
+    }
+    html += '<div class="cert-test"><span class="cert-icon">' + (iconMap[test.status] || '?') + '</span>' +
+      '<div class="cert-test-body"><div class="cert-test-name">' + test.name +
+      ' <span style="font-weight:400;color:var(--demo-fg-faint)">(' + test.passed + '/' + test.checked + ')</span></div>' +
+      '<div class="cert-test-desc">' + test.description + '</div>' + details + '</div></div>';
+  }
+  certPanel.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER: STEP DETAILS (Section 5)
+// ══════════════════════════════════════════════════════════════
+var stepBody = document.getElementById('stepBody');
+
+function renderSteps() {
+  var pal = palettes[selectedStepRole];
+  if (!pal) { stepBody.innerHTML = ''; return; }
+  stepBody.innerHTML = pal.steps.map(function(s) {
+    var level = s.contrast >= 7 ? 'AAA' : s.contrast >= 4.5 ? 'AA' : s.contrast >= 3 ? 'AA-lg' : 'Decorative';
+    var cls = s.contrast >= 4.5 ? 'st-pass' : s.contrast >= 3 ? '' : 'st-fail';
+    return '<tr><td class="st-name">' + s.name + '</td>' +
+      '<td><span class="st-sw" style="background:' + s.hex + '"></span></td>' +
+      '<td>' + s.hex + '</td><td>' + s.tone + '</td>' +
+      '<td class="' + cls + '">' + s.contrast.toFixed(2) + ':1</td>' +
+      '<td>' + level + '</td></tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER: EXPORT (Section 6)
+// ══════════════════════════════════════════════════════════════
+var expCode = document.getElementById('expCode');
+var expCopy = document.getElementById('expCopy');
+var expTabs = document.getElementById('expTabs');
+
+function renderExport(format) {
+  var output = '';
+
+  if (format === 'css') {
+    output = ':root {\n';
+    for (var i = 0; i < roles.length; i++) {
+      var r = roles[i];
+      var pal = palettes[r.id];
+      if (!pal) continue;
+      var prefix = rolePrefix(r);
+      output += '\n  /* T0: ' + r.label + ' */\n';
+      pal.steps.forEach(function(s) {
+        output += '  --prim-' + prefix + '-' + s.name + ': ' + s.hex + ';\n';
+      });
+    }
+    // T1 semantic for token roles
+    for (var t = 0; t < TOKEN_ROLES.length; t++) {
+      var rid = TOKEN_ROLES[t];
+      var pal2 = palettes[rid];
+      if (!pal2) continue;
+      output += '\n  /* T1: ' + rid + ' (light) */\n';
+      var lkeys = Object.keys(LIGHT_MAP);
+      for (var j = 0; j < lkeys.length; j++) {
+        var k = lkeys[j];
+        var stepName = LIGHT_MAP[k];
+        output += '  --' + rid + '-' + k + ': ' + getStepHex(pal2, stepName) + ';\n';
+      }
+    }
+    output += '}\n';
+  } else if (format === 'json') {
+    var json = {};
+    for (var i2 = 0; i2 < roles.length; i2++) {
+      var r2 = roles[i2];
+      var pal3 = palettes[r2.id];
+      if (!pal3) continue;
+      var prefix2 = rolePrefix(r2);
+      var tokens = {};
+      pal3.steps.forEach(function(s) { tokens[s.name] = {$type:'color',$value:s.hex}; });
+      json[prefix2] = tokens;
+    }
+    output = JSON.stringify(json, null, 2);
+  } else if (format === 'scss') {
+    for (var i3 = 0; i3 < roles.length; i3++) {
+      var r3 = roles[i3];
+      var pal4 = palettes[r3.id];
+      if (!pal4) continue;
+      var prefix3 = rolePrefix(r3);
+      output += '// ' + r3.label + '\n';
+      pal4.steps.forEach(function(s) {
+        output += '$prim-' + prefix3 + '-' + s.name + ': ' + s.hex + ';\n';
+      });
+      output += '\n';
+    }
+  }
+
+  expCode.textContent = output;
+}
+
+function rolePrefix(r) {
+  if (TOKEN_ROLES.indexOf(r.id) >= 0) return r.id;
+  if (r.id === 'desaturated') return r.id;
+  return r.label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+expTabs.addEventListener('click', function(e) {
+  var tab = e.target.closest('.exp-tab');
+  if (!tab) return;
+  currentFormat = tab.dataset.format;
+  expTabs.querySelectorAll('.exp-tab').forEach(function(t) {
+    t.setAttribute('aria-pressed', t === tab ? 'true' : 'false');
+  });
+  renderExport(currentFormat);
+});
+
+expCopy.addEventListener('click', function() {
+  navigator.clipboard.writeText(expCode.textContent).then(function() {
+    expCopy.textContent = 'Copied!';
+    setTimeout(function() { expCopy.textContent = 'Copy'; }, 1500);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+// TOGGLE SWITCHES
+// ══════════════════════════════════════════════════════════════
+document.querySelectorAll('.switch').forEach(function(sw) {
+  sw.addEventListener('click', function() {
+    var on = sw.getAttribute('aria-checked') === 'true';
+    sw.setAttribute('aria-checked', on ? 'false' : 'true');
+    var txt = sw.closest('.switch-label').querySelector('.switch-label__text');
+    if (txt) txt.textContent = on ? 'Off' : 'On';
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+// SAVE / RESET / LOAD (localStorage)
+// ══════════════════════════════════════════════════════════════
+var saveBtn = document.getElementById('saveBtn');
+var saveMsg = document.getElementById('saveMsg');
+var saveTs  = document.getElementById('saveTs');
+var STORAGE_KEY_SAVE_TS = 'dtf-saved-ts';
+
+function buildSaveableCSS() {
+  // Build a complete CSS string that can be injected on any page
+  var css = '/* DTF Saved Color Tokens */\n:root {\n';
+  var darkCSS = '';
+  for (var i = 0; i < roles.length; i++) {
+    var r = roles[i];
+    var pal = palettes[r.id];
+    if (!pal) continue;
+    var prefix = rolePrefix(r);
+    // T0 primitives
+    for (var s = 0; s < pal.steps.length; s++) {
+      css += '  --prim-' + prefix + '-' + pal.steps[s].name + ': ' + pal.steps[s].hex + ';\n';
+    }
+    // T1 semantic tokens for known roles
+    if (TOKEN_ROLES.indexOf(r.id) >= 0) {
+      var lkeys = Object.keys(LIGHT_MAP);
+      for (var j = 0; j < lkeys.length; j++) {
+        var k = lkeys[j];
+        var stepName = LIGHT_MAP[k];
+        css += '  --' + r.id + '-' + k + ': ' + getStepHex(pal, stepName) + ';\n';
+      }
+      var dkeys = Object.keys(DARK_MAP);
+      for (var d = 0; d < dkeys.length; d++) {
+        var dk = dkeys[d];
+        var dStep = DARK_MAP[dk];
+        darkCSS += '  --' + r.id + '-' + dk + ': ' + getStepHex(pal, dStep) + ';\n';
+      }
+    }
+  }
+  // T2 Surface tokens — inject ALL surfaces using current SURF palette sources
+  for (var ni = 0; ni < SURF_NAMES.length; ni++) {
+    var sn = SURF_NAMES[ni];
+    var lMap2 = SURF_L[sn] || SURF_LA;
+    var dMap2 = SURF_D[sn] || SURF_DA;
+    if (!lMap2 || !dMap2) continue;
+    for (var pi2 = 0; pi2 < SURF_PROP_ORDER.length; pi2++) {
+      var sp = SURF_PROP_ORDER[pi2];
+      css += '  --surface-' + sn + '-' + sp + ': ' + surfStepHex(lMap2[sp], sn) + ';\n';
+      darkCSS += '  --surface-' + sn + '-' + sp + ': ' + surfStepHex(dMap2[sp], sn) + ';\n';
+    }
+  }
+  // Fixed / Utility color tokens
+  css += '  --color-fixed-white: #FFFFFF;\n';
+  css += '  --color-fixed-black: #000000;\n';
+  css += '  --color-white: #FFFFFF;\n';
+  css += '  --color-black: #000000;\n';
+  darkCSS += '  --color-white: #1B1B1B;\n';
+  darkCSS += '  --color-black: #FFFFFF;\n';
+  css += '}\n';
+  if (darkCSS) {
+    css += '[data-theme="dark"] {\n' + darkCSS + '}\n';
+  }
+  return css;
+}
+
+function buildSaveableConfig() {
+  return JSON.stringify({
+    roles: roles.map(function(r) {
+      return {id: r.id, label: r.label, keyHex: r.keyHex, type: r.type, derive: r.derive || null};
+    }),
+    customCounter: customCounter,
+    semanticMap: { light: LIGHT_MAP, dark: DARK_MAP },
+    surfaceMap: { light: SURF_L, dark: SURF_D, lightAccent: SURF_LA, darkAccent: SURF_DA },
+    surfacePaletteSrc: SURF_PALETTE_SRC
+  });
+}
+
+function migrateCustomIds(rolesList, surfPalSrc) {
+  // Migrate legacy role IDs/labels: primary→brand, secondary→neutral
+  // (canonical naming per Figma plugin). Runs before custom-N migration.
+  var LEGACY_ROLE_RENAMES = { primary: 'brand', secondary: 'neutral' };
+  var LEGACY_LABEL_RENAMES = { Primary: 'Brand', Secondary: 'Neutral' };
+  rolesList.forEach(function(r) {
+    if (LEGACY_ROLE_RENAMES[r.id]) {
+      var oldId = r.id;
+      var newId = LEGACY_ROLE_RENAMES[r.id];
+      r.id = newId;
+      if (surfPalSrc) {
+        SURF_NAMES.forEach(function(sn) {
+          if (surfPalSrc[sn] === oldId) surfPalSrc[sn] = newId;
+        });
+      }
+    }
+    if (LEGACY_LABEL_RENAMES[r.label]) r.label = LEGACY_LABEL_RENAMES[r.label];
+  });
+  // Force-migrate any custom-N IDs → label slugs everywhere
+  rolesList.forEach(function(r) {
+    if (r.type === 'custom' && /^custom-\d+$/.test(r.id) && r.label) {
+      var oldId = r.id;
+      var newId = slugifyLabel(r.label);
+      if (RESERVED_IDS.has(newId)) newId = newId + '-custom';
+      r.id = newId;
+      if (surfPalSrc) {
+        SURF_NAMES.forEach(function(sn) {
+          if (surfPalSrc[sn] === oldId) surfPalSrc[sn] = newId;
+        });
+      }
+    }
+  });
+}
+
+function loadSavedConfig() {
+  try {
+    // Try per-project key first, then fall back to global key
+    var raw = projectId ? localStorage.getItem(STORAGE_KEY_CONFIG + '-' + projectId) : null;
+    if (!raw) raw = localStorage.getItem(STORAGE_KEY_CONFIG);
+    if (!raw) return false;
+    var cfg = JSON.parse(raw);
+    if (!cfg.roles || !cfg.roles.length) return false;
+    // Migrate stale custom-N IDs before loading
+    migrateCustomIds(cfg.roles, cfg.surfacePaletteSrc);
+    roles = cfg.roles.map(function(r) { return Object.assign({}, r); });
+    customCounter = cfg.customCounter || 0;
+    if (cfg.surfaceMap) {
+      if (cfg.surfaceMap.light) Object.keys(cfg.surfaceMap.light).forEach(function(s) { if (SURF_L[s]) Object.assign(SURF_L[s], cfg.surfaceMap.light[s]); });
+      if (cfg.surfaceMap.dark) Object.keys(cfg.surfaceMap.dark).forEach(function(s) { if (SURF_D[s]) Object.assign(SURF_D[s], cfg.surfaceMap.dark[s]); });
+      if (cfg.surfaceMap.lightAccent) Object.assign(SURF_LA, cfg.surfaceMap.lightAccent);
+      if (cfg.surfaceMap.darkAccent) Object.assign(SURF_DA, cfg.surfaceMap.darkAccent);
+    }
+    if (cfg.semanticMap) {
+      if (cfg.semanticMap.light) LIGHT_MAP = normalizeSemanticMap(JSON.parse(JSON.stringify(cfg.semanticMap.light)));
+      if (cfg.semanticMap.dark)  DARK_MAP  = normalizeSemanticMap(JSON.parse(JSON.stringify(cfg.semanticMap.dark)));
+    }
+    if (cfg.surfacePaletteSrc) {
+      SURF_NAMES.forEach(function(sn) { if (cfg.surfacePaletteSrc[sn]) SURF_PALETTE_SRC[sn] = cfg.surfacePaletteSrc[sn]; });
+    }
+    return true;
+  } catch(e) { return false; }
+}
+
+function showSaveMsg(text) {
+  saveMsg.textContent = text;
+  setTimeout(function() { saveMsg.textContent = ''; }, 3000);
+}
+
+function updateSaveIndicator() {
+  var key = projectId ? STORAGE_KEY_CONFIG + '-' + projectId : STORAGE_KEY_CONFIG;
+  var hasSaved = !!localStorage.getItem(key);
+  if (hasSaved) {
+    saveMsg.textContent = 'Saved palette active across all pages';
+  } else {
+    saveMsg.textContent = '';
+  }
+  var tsKey = projectId ? STORAGE_KEY_SAVE_TS + '-' + projectId : STORAGE_KEY_SAVE_TS;
+  var ts = localStorage.getItem(tsKey) || localStorage.getItem(STORAGE_KEY_SAVE_TS);
+  if (ts) saveTs.textContent = 'Last saved: ' + ts;
+  else saveTs.textContent = '';
+}
+
+saveBtn.addEventListener('click', function() {
+  var css = buildSaveableCSS();
+  var config = buildSaveableConfig();
+  localStorage.setItem(STORAGE_KEY_TOKENS, css);
+  localStorage.setItem(STORAGE_KEY_CONFIG, config);
+  // Also persist to per-project keys so switchProject can restore later
+  if (projectId) {
+    localStorage.setItem(STORAGE_KEY_TOKENS + '-' + projectId, css);
+    localStorage.setItem(STORAGE_KEY_CONFIG + '-' + projectId, config);
+  }
+  var now = new Date().toLocaleString();
+  localStorage.setItem(STORAGE_KEY_SAVE_TS, now);
+  if (projectId) localStorage.setItem(STORAGE_KEY_SAVE_TS + '-' + projectId, now);
+  saveTs.textContent = 'Last saved: ' + now;
+  saveBtn.setAttribute('data-saved', '');
+  saveBtn.textContent = 'Saved!';
+  showSaveMsg('Saved to this browser \u2014 component pages will use these colors');
+  setTimeout(function() {
+    saveBtn.removeAttribute('data-saved');
+    saveBtn.innerHTML = 'Save to Browser';
+  }, 2000);
+});
+
+// ── Per-section Reset Handlers ────────────────────────────────
+// Reset Roles (Section 1) — revert to default key colors
+document.getElementById('resetRolesBtn').addEventListener('click', function() {
+  customCounter = 0;
+  roles = DEFAULT_ROLES.map(function(r) { return Object.assign({}, r); });
+  generateAll();
+  renderRolesList();
+  refreshSelectors();
+  injectAllTokens();
+  renderMap();
+  renderSurfTable();
+  renderSurfSrcBar();
+  renderCertGrid();
+  renderCertDetail(selectedCertRole);
+  renderSteps();
+  renderExport(currentFormat);
+  showSaveMsg('Color roles reset to defaults');
+});
+
+// (Reset Maps button removed — replaced by Revert to Deployed in edit mode)
+
+// ══════════════════════════════════════════════════════════════
+// DEPLOY TO FIGMA (GitHub Commit)
+// ══════════════════════════════════════════════════════════════
+var GH_REPO_NAME = 'Design-Token-Forge';
+var GH_OWNER = localStorage.getItem('dtf-gh-user') || '';
+var GH_REPO  = GH_REPO_NAME;
+var GH_BRANCH = 'main';
+var GH_API = 'https://api.github.com';
+var ghPat = localStorage.getItem('dtf-gh-pat') || '';
+var ghPatInput = document.getElementById('ghPatInput');
+var ghConnectBtn = document.getElementById('ghConnectBtn');
+var ghReadyRow = document.getElementById('ghReadyRow');
+var ghAuthRow = document.getElementById('ghAuthRow');
+var ghUser = document.getElementById('ghUser');
+var ghCommitBtn = document.getElementById('ghCommitBtn');
+var ghLogoutBtn = document.getElementById('ghLogoutBtn');
+var ghStatusEl = document.getElementById('ghStatus');
+
+// Auto-restore GitHub session from localStorage
+if (ghPat && GH_OWNER) {
+  ghAuthRow.style.display = 'none';
+  ghReadyRow.style.display = 'block';
+  ghUser.textContent = '\u2713 ' + GH_OWNER;
+  ghStatusEl.textContent = 'Ready \u2014 ' + GH_OWNER;
+  ghStatusEl.className = 'gh-status ok';
+}
+
+var ghDialogBackdrop = document.getElementById('ghDialogBackdrop');
+document.getElementById('deployBtn').addEventListener('click', function() {
+  ghDialogBackdrop.classList.add('open');
+});
+document.getElementById('ghDialogClose').addEventListener('click', function() {
+  ghDialogBackdrop.classList.remove('open');
+});
+ghDialogBackdrop.addEventListener('click', function(e) {
+  if (e.target === ghDialogBackdrop) ghDialogBackdrop.classList.remove('open');
+});
+
+function ghFetch(endpoint, opts) {
+  opts = opts || {};
+  var url = endpoint.startsWith('http') ? endpoint : GH_API + endpoint;
+  return fetch(url, {
+    method: opts.method || 'GET',
+    headers: { 'Authorization': 'Bearer ' + ghPat, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  }).then(function(r) {
+    if (!r.ok) return r.json().then(function(d) { throw new Error(d.message || r.status); });
+    return r.json();
+  });
+}
+function ghEncode(str) { return btoa(unescape(encodeURIComponent(str))); }
+
+ghConnectBtn.addEventListener('click', function() {
+  ghPat = ghPatInput.value.trim();
+  if (!ghPat) return;
+  ghConnectBtn.textContent = 'Connecting...';
+  ghConnectBtn.disabled = true;
+  ghFetch('/user').then(function(u) {
+    ghUser.textContent = '\u2713 ' + u.login;
+    ghAuthRow.style.display = 'none';
+    ghReadyRow.style.display = 'block';
+    GH_OWNER = u.login;
+    localStorage.setItem('dtf-gh-user', u.login);
+    localStorage.setItem('dtf-gh-pat', ghPat);
+    GH_REPO = GH_REPO_NAME;
+    populateProjectSelect();
+    ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Checking your repo...';
+    ghStatusEl.className = 'gh-status';
+
+    // 1. Check user's own repo first (own fork or original)
+    return ghFetch('/repos/' + u.login + '/' + GH_REPO_NAME)
+      .then(function(repo) {
+        if (repo.permissions && repo.permissions.push) {
+          GH_OWNER = u.login;
+          GH_REPO = GH_REPO_NAME;
+          localStorage.setItem('dtf-gh-owner', u.login);
+          ghStatusEl.textContent = 'Ready \u2014 deploying to ' + u.login + '/' + GH_REPO_NAME;
+          ghStatusEl.className = 'gh-status ok';
+          return;
+        }
+        throw new Error('no-push');
+      })
+      .catch(function() {
+        // 2. No repo found — fork from upstream and set up Pages
+        ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Setting up your copy (first time, ~15 sec)...';
+        return ghFetch('/repos/sridhar-ravi-2917/' + GH_REPO_NAME + '/forks', {
+          method: 'POST', body: { default_branch_only: true }
+        }).then(function() {
+          // Wait for fork to be ready
+          var attempts = 0;
+          function waitForFork() {
+            return new Promise(function(resolve) { setTimeout(resolve, 2000); })
+              .then(function() { return ghFetch('/repos/' + u.login + '/' + GH_REPO_NAME); })
+              .then(function() {
+                // Fork ready — enable Actions + Pages
+                ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Enabling Actions & Pages...';
+                return ghFetch('/repos/' + u.login + '/' + GH_REPO_NAME + '/actions/permissions', {
+                  method: 'PUT', body: { enabled: true, allowed_actions: 'all' }
+                }).then(function() {
+                  return ghFetch('/repos/' + u.login + '/' + GH_REPO_NAME + '/pages', {
+                    method: 'POST', body: { build_type: 'workflow' }
+                  }).catch(function() { /* Pages may already exist */ });
+                }).then(function() {
+                  // Trigger first deploy
+                  return ghFetch('/repos/' + u.login + '/' + GH_REPO_NAME + '/actions/workflows/deploy-tokens.yml/dispatches', {
+                    method: 'POST', body: { ref: 'main' }
+                  }).catch(function() {});
+                }).then(function() {
+                  GH_OWNER = u.login;
+                  GH_REPO = GH_REPO_NAME;
+                  localStorage.setItem('dtf-gh-owner', u.login);
+                  ghStatusEl.textContent = 'Ready \u2014 deploying to ' + u.login + '/' + GH_REPO_NAME;
+                  ghStatusEl.className = 'gh-status ok';
+                });
+              })
+              .catch(function() {
+                attempts++;
+                if (attempts >= 20) throw new Error('Fork is taking too long. Try again in a minute.');
+                return waitForFork();
+              });
+          }
+          return waitForFork();
+        }).catch(function(err) {
+          ghStatusEl.innerHTML = 'Setup failed: ' + (err.message || err) + '. <a href="https://github.com/sridhar-ravi-2917/' + GH_REPO_NAME + '/fork" target="_blank" rel="noopener" style="color:var(--brand-content-default,#286CE5)">Fork manually \u2192</a>';
+          ghStatusEl.className = 'gh-status err';
+        });
+      });
+  }).catch(function(e) {
+    ghStatusEl.textContent = 'Auth failed: ' + e.message;
+    ghStatusEl.className = 'gh-status err';
+  }).finally(function() {
+    ghConnectBtn.textContent = 'Connect';
+    ghConnectBtn.disabled = false;
+  });
+});
+ghPatInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') ghConnectBtn.click(); });
+
+ghLogoutBtn.addEventListener('click', function() {
+  ghPat = '';
+  GH_OWNER = '';
+  GH_REPO = GH_REPO_NAME;
+  localStorage.removeItem('dtf-gh-user');
+  localStorage.removeItem('dtf-gh-pat');
+  ghAuthRow.style.display = 'block';
+  ghReadyRow.style.display = 'none';
+  ghStatusEl.textContent = '';
+  ghPatInput.value = '';
+  populateProjectSelect();
+});
+
+// ── Ownership Guard ────────────────────────────────────────
+// Returns true if current GitHub user is allowed to modify this project.
+// Projects without an owner field are unrestricted (legacy).
+function isProjectOwner() {
+  // Determine owner from projectConfig or from the knownProjects entry
+  var ownerFromConfig = projectConfig && projectConfig.owner;
+  if (!ownerFromConfig && projectId) {
+    var entry = knownProjects.find(function(p) { return p.id === projectId; });
+    if (entry && entry.owner) ownerFromConfig = entry.owner;
+  }
+  if (!ownerFromConfig) return true; // legacy projects have no owner — allow
+  var user = GH_OWNER || localStorage.getItem('dtf-gh-user') || '';
+  if (!user) return true; // can't verify — allow (delete will prompt for token anyway)
+  // In fork model, user owns their repo — admin check not needed
+  return ownerFromConfig.toLowerCase() === user.toLowerCase();
+}
+
+function showOwnershipError() {
+  var ownerName = (projectConfig && projectConfig.owner) || 'unknown';
+  ghStatusEl.textContent = '\u2717 You cannot modify this project. It belongs to "' + ownerName + '".';
+  ghStatusEl.className = 'gh-status err';
+}
+
+ghCommitBtn.addEventListener('click', function() {
+  if (!ghPat) return;
+
+  // ── OWNERSHIP GATE: Block if not project owner ──
+  if (!isProjectOwner()) { showOwnershipError(); return; }
+
+  // ── WCAG GATE: Block deploy if any palette fails certification ──
+  var failedRoles = [];
+  for (var ci = 0; ci < roles.length; ci++) {
+    var cert = certs[roles[ci].id];
+    if (cert && cert.overall === 'FAILED') failedRoles.push(roles[ci].label);
+  }
+  if (failedRoles.length > 0) {
+    ghStatusEl.textContent = '\u2717 Deploy blocked — palette(s) failed WCAG certification: ' + failedRoles.join(', ');
+    ghStatusEl.className = 'gh-status err';
+    return;
+  }
+
+  // ── PREVIEW DIFF: Show what will change before committing ──
+  if (!ghCommitBtn._diffConfirmed) {
+    var diffHtml = buildPreviewDiff();
+    if (diffHtml) {
+      ghStatusEl.innerHTML = diffHtml;
+      ghStatusEl.className = 'gh-status';
+      ghCommitBtn._diffConfirmed = true;
+      ghCommitBtn.textContent = '\u2705 Confirm Deploy';
+      return;
+    }
+  }
+  ghCommitBtn._diffConfirmed = false;
+
+  ghCommitBtn.disabled = true;
+  ghCommitBtn.textContent = 'Deploying...';
+  ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Building CSS files...';
+  ghStatusEl.className = 'gh-status';
+
+  // Build the CSS content from current palette state
+  var primCSS = buildPrimitivesFileCSS();
+  var semCSS = buildSemanticFileCSS();
+  var surfCSS = buildSurfacesFileCSS();
+
+  var filesToCommit = [
+    { path: 'packages/tokens/src/primitives.css', content: primCSS },
+    { path: 'packages/tokens/src/semantic.css', content: semCSS },
+    { path: 'packages/tokens/src/surfaces.css', content: surfCSS }
+  ];
+
+  // Include extras.css (utility colors) — read from existing file via fetch
+  (function fetchExtrasAndCommit() {
+    var extrasUrl = '../packages/tokens/src/extras.css?_cb=' + Date.now();
+    fetch(extrasUrl).then(function(r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.text();
+    }).then(function(extrasCSS) {
+      filesToCommit.push({ path: 'packages/tokens/src/extras.css', content: extrasCSS });
+    }).catch(function() {
+      /* extras.css not available locally — skip, the repo already has it */
+    }).finally(function() {
+      // Also write per-project CSS so build-static.js copies the right files
+      if (projectId) {
+        filesToCommit.push({ path: 'projects/' + projectId + '/primitives.css', content: primCSS });
+        filesToCommit.push({ path: 'projects/' + projectId + '/semantic.css', content: semCSS });
+        filesToCommit.push({ path: 'projects/' + projectId + '/surfaces.css', content: surfCSS });
+      }
+
+      // Also update project config.json with current palette keys + mappings
+      var configToSave = buildUpdatedConfig();
+      if (configToSave) {
+        filesToCommit.push({ path: 'projects/' + projectId + '/config.json', content: JSON.stringify(configToSave, null, 2) + '\n' });
+      }
+
+      ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Committing ' + filesToCommit.length + ' files to GitHub...';
+
+      ghMultiCommit(filesToCommit, 'Update color tokens via DTF Color Editor')
+        .then(function() {
+          ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Committed! Waiting for deploy...';
+          ghStatusEl.className = 'gh-status ok';
+          // Update baseline for future diffs + sync to localStorage
+          if (configToSave) {
+            originalPaletteKeys = JSON.parse(JSON.stringify(configToSave.paletteKeys));
+            projectConfig = configToSave;
+            // Sync roles to localStorage so next reload doesn't revert
+            if (projectId) {
+              localStorage.setItem(STORAGE_KEY_CONFIG + '-' + projectId, buildSaveableConfig());
+            }
+          }
+          ghPollDeploy();
+        })
+        .catch(function(e) {
+          ghStatusEl.textContent = '\u2717 Commit failed: ' + e.message;
+          ghStatusEl.className = 'gh-status err';
+          ghCommitBtn.disabled = false;
+          ghCommitBtn.textContent = '\uD83D\uDE80 Commit & Deploy';
+        });
+    });
+  })();
+});
+
+// Build preview diff HTML showing what will change
+function buildPreviewDiff() {
+  var changes = [];
+
+  // Check palette key changes
+  if (originalPaletteKeys) {
+    for (var i = 0; i < roles.length; i++) {
+      var r = roles[i];
+      var key = ROLE_TO_PALETTE_KEY[r.id] || (r.type === 'custom' ? r.id : null);
+      if (!key || !originalPaletteKeys[key]) continue;
+      var oldHex = originalPaletteKeys[key].toUpperCase();
+      var newHex = (r.keyHex || '').toUpperCase();
+      if (oldHex !== newHex) {
+        changes.push('<span style="font-weight:600">' + r.label + '</span>: ' +
+          '<span style="color:' + oldHex + ';\u25A0</span> ' + oldHex +
+          ' \u2192 <span style="color:' + newHex + '">\u25A0</span> ' + newHex);
+      }
+    }
+  }
+
+  // Check semantic map changes
+  var mapChanges = 0;
+  if (projectConfig && projectConfig.semanticMap) {
+    var origLight = normalizeSemanticMap(projectConfig.semanticMap.light || {});
+    var origDark  = normalizeSemanticMap(projectConfig.semanticMap.dark || {});
+    Object.keys(LIGHT_MAP).forEach(function(k) { if (origLight[k] !== LIGHT_MAP[k]) mapChanges++; });
+    Object.keys(DARK_MAP).forEach(function(k) { if (origDark[k] !== DARK_MAP[k]) mapChanges++; });
+  }
+  if (mapChanges > 0) changes.push(mapChanges + ' semantic mapping(s) changed');
+
+  // Check surface map changes
+  var surfChanges = 0;
+  if (projectConfig && projectConfig.surfaceMap) {
+    var oSL = projectConfig.surfaceMap.light || {};
+    var oSD = projectConfig.surfaceMap.dark || {};
+    var oSLA = projectConfig.surfaceMap.lightAccent || {};
+    var oSDA = projectConfig.surfaceMap.darkAccent || {};
+    Object.keys(SURF_L).forEach(function(s) { Object.keys(SURF_L[s]).forEach(function(p) { if (!oSL[s] || oSL[s][p] !== SURF_L[s][p]) surfChanges++; }); });
+    Object.keys(SURF_D).forEach(function(s) { Object.keys(SURF_D[s]).forEach(function(p) { if (!oSD[s] || oSD[s][p] !== SURF_D[s][p]) surfChanges++; }); });
+    Object.keys(SURF_LA).forEach(function(p) { if (oSLA[p] !== SURF_LA[p]) surfChanges++; });
+    Object.keys(SURF_DA).forEach(function(p) { if (oSDA[p] !== SURF_DA[p]) surfChanges++; });
+  }
+  if (surfChanges > 0) changes.push(surfChanges + ' surface mapping(s) changed');
+
+  if (changes.length === 0) return null;
+
+  // Count affected tokens
+  var affectedTokens = 0;
+  for (var j = 0; j < roles.length; j++) {
+    var r2 = roles[j];
+    var key2 = ROLE_TO_PALETTE_KEY[r2.id] || (r2.type === 'custom' ? r2.id : null);
+    if (key2 && originalPaletteKeys && originalPaletteKeys[key2]) {
+      var old2 = originalPaletteKeys[key2].toUpperCase();
+      var new2 = (r2.keyHex || '').toUpperCase();
+      if (old2 !== new2) affectedTokens += 22; // 22 steps per palette
+    }
+  }
+  affectedTokens += mapChanges * TOKEN_ROLES.length; // each map change affects all roles
+
+  return '<div style="padding:8px 0;font-size:12px">' +
+    '<strong style="color:#92400E">\u26A0\uFE0F Review changes before deploying:</strong><br>' +
+    changes.map(function(c) { return '\u2022 ' + c; }).join('<br>') +
+    '<br><span style="color:var(--demo-fg-faint)">~' + affectedTokens + ' tokens will be regenerated. Click "Confirm Deploy" to proceed.</span>' +
+    '</div>';
+}
+
+// Build updated config.json with current palette keys + mappings
+function buildUpdatedConfig() {
+  if (!projectId) return null;
+  var cfg = projectConfig ? JSON.parse(JSON.stringify(projectConfig)) : {
+    id: projectId,
+    name: projectId,
+    description: '',
+    created: new Date().toISOString().split('T')[0]
+  };
+
+  // Guard: migrate any stale custom-N IDs in roles before saving
+  migrateCustomIds(roles, SURF_PALETTE_SRC);
+
+  // Update palette keys from current roles (standard + custom)
+  cfg.paletteKeys = {};
+  for (var i = 0; i < roles.length; i++) {
+    var r = roles[i];
+    var key = ROLE_TO_PALETTE_KEY[r.id] || (r.type === 'custom' ? r.id : null);
+    if (key) cfg.paletteKeys[key] = (r.keyHex || '').toUpperCase();
+  }
+
+  // Save custom roles so the editor can reload them (labels, order, etc.)
+  var customRoles = roles.filter(function(r) { return r.type === 'custom'; });
+  if (customRoles.length) {
+    cfg.customRoles = customRoles.map(function(r) {
+      return { id: r.id, label: r.label, keyHex: r.keyHex };
+    });
+  } else {
+    delete cfg.customRoles;
+  }
+
+  // Update semantic maps
+  cfg.semanticMap = { light: JSON.parse(JSON.stringify(LIGHT_MAP)), dark: JSON.parse(JSON.stringify(DARK_MAP)) };
+
+  // Update surface maps
+  cfg.surfaceMap = {
+    light: JSON.parse(JSON.stringify(SURF_L)),
+    dark: JSON.parse(JSON.stringify(SURF_D)),
+    lightAccent: JSON.parse(JSON.stringify(SURF_LA)),
+    darkAccent: JSON.parse(JSON.stringify(SURF_DA))
+  };
+
+  // Update palette sources
+  cfg.surfacePaletteSrc = JSON.parse(JSON.stringify(SURF_PALETTE_SRC));
+
+  return cfg;
+}
+
+function ghMultiCommit(files, message, _retry) {
+  return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/git/ref/heads/' + GH_BRANCH)
+    .then(function(ref) {
+      var commitSha = ref.object.sha;
+      return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/git/commits/' + commitSha)
+        .then(function(commit) {
+          var blobPromises = files.map(function(f) {
+            return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/git/blobs', {
+              method: 'POST', body: { content: ghEncode(f.content), encoding: 'base64' }
+            }).then(function(blob) { return { path: f.path, sha: blob.sha }; });
+          });
+          return Promise.all(blobPromises).then(function(blobs) {
+            var tree = blobs.map(function(b) { return { path: b.path, mode: '100644', type: 'blob', sha: b.sha }; });
+            return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/git/trees', {
+              method: 'POST', body: { base_tree: commit.tree.sha, tree: tree }
+            });
+          }).then(function(newTree) {
+            return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/git/commits', {
+              method: 'POST', body: { message: message, tree: newTree.sha, parents: [commitSha] }
+            });
+          }).then(function(newCommit) {
+            return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/git/refs/heads/' + GH_BRANCH, {
+              method: 'PATCH', body: { sha: newCommit.sha, force: true }
+            });
+          });
+        });
+    })
+    .catch(function(err) {
+      if (!_retry && err.message && err.message.indexOf('fast forward') !== -1) {
+        return ghMultiCommit(files, message, true);
+      }
+      throw err;
+    });
+}
+
+function ghPollDeploy() {
+  var start = Date.now();
+  var noRunsCount = 0;
+  function resetBtn() { ghCommitBtn.disabled = false; ghCommitBtn.textContent = '\uD83D\uDE80 Commit & Deploy'; }
+  var iv = setInterval(function() {
+    ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/actions/runs?branch=' + GH_BRANCH + '&per_page=1')
+      .then(function(data) {
+        if (!data.workflow_runs || !data.workflow_runs.length) {
+          noRunsCount++;
+          if (noRunsCount >= 3) {
+            clearInterval(iv); resetBtn();
+            ghStatusEl.innerHTML = '\u2713 Committed! <span style="opacity:.7">GitHub Pages deploy may need to be enabled in your repo Settings \u2192 Pages.</span>';
+            ghStatusEl.className = 'gh-status ok';
+          }
+          return;
+        }
+        var run = data.workflow_runs[0];
+        if (new Date(run.created_at).getTime() < start - 10000) {
+          noRunsCount++;
+          if (noRunsCount >= 4) {
+            clearInterval(iv); resetBtn();
+            ghStatusEl.innerHTML = '\u2713 Committed! Deploy workflow hasn\u2019t started \u2014 check Actions tab in your repo.';
+            ghStatusEl.className = 'gh-status ok';
+          }
+          return;
+        }
+        var elapsed = Math.round((Date.now() - start) / 1000);
+        if (run.status === 'completed') {
+          clearInterval(iv); resetBtn();
+          if (run.conclusion === 'success') {
+            ghStatusEl.textContent = '\u2713 Deployed! Figma plugin will auto-detect the change. (' + elapsed + 's)';
+            ghStatusEl.className = 'gh-status ok';
+          } else {
+            ghStatusEl.textContent = '\u2717 Deploy failed: ' + run.conclusion;
+            ghStatusEl.className = 'gh-status err';
+          }
+        } else {
+          ghStatusEl.innerHTML = '<span class="gh-spinner"></span>Deploying... (' + elapsed + 's)';
+        }
+      }).catch(function() {
+        noRunsCount++;
+        if (noRunsCount >= 3) {
+          clearInterval(iv); resetBtn();
+          ghStatusEl.innerHTML = '\u2713 Committed successfully! <span style="opacity:.7">Enable GitHub Pages in repo Settings to auto-deploy.</span>';
+          ghStatusEl.className = 'gh-status ok';
+        }
+      });
+    if (Date.now() - start > 120000) { clearInterval(iv); resetBtn(); ghStatusEl.textContent = '\u2713 Committed! Deploy may still be running \u2014 check your repo Actions tab.'; ghStatusEl.className = 'gh-status ok'; }
+  }, 5000);
+}
+
+// Build primitives.css from current palettes
+function buildPrimitivesFileCSS() {
+  var lines = [];
+  lines.push('/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550');
+  lines.push('   Design Token Forge \u2014 T0 Primitives');
+  lines.push('   Generated by DTF Color Editor');
+  lines.push('   ' + new Date().toISOString());
+  lines.push('   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */');
+  lines.push('');
+  lines.push(':root {');
+  lines.push('');
+  // Map role IDs to primitive prefix names
+  var PRIM_PREFIX = { brand:'brand', danger:'danger', warning:'warning', info:'info', success:'success', greyscale:'greyscale', desaturated:'desaturated' };
+  // Emit ALL default role palettes + custom roles
+  var allRoles = DEFAULT_ROLES.map(function(dr) {
+    var active = getRoleById(dr.id);
+    return active || dr;
+  });
+  // Append custom roles that aren't in DEFAULT_ROLES
+  for (var ci = 0; ci < roles.length; ci++) {
+    if (roles[ci].type === 'custom') allRoles.push(roles[ci]);
+  }
+  for (var i = 0; i < allRoles.length; i++) {
+    var r = allRoles[i];
+    var pal = palettes[r.id];
+    // Generate on-the-fly if the role was removed from this project
+    if (!pal) {
+      var kh = r.keyHex;
+      if (r.type === 'auto') kh = deriveKeyHex(r.derive);
+      if (!kh) continue;
+      pal = PE.generatePalette(kh);
+    }
+    var prefix = PRIM_PREFIX[r.id] || r.id;
+    lines.push('  /* \u2500\u2500 ' + r.label + ' (key \u2248 ' + r.keyHex + ') \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */');
+    for (var s = 0; s < pal.steps.length; s++) {
+      lines.push('  --prim-' + prefix + '-' + pal.steps[s].name + ': ' + pal.steps[s].hex + ';');
+    }
+    lines.push('');
+  }
+  // Spacing and typography (fixed tokens — not color-dependent)
+  lines.push('');
+  lines.push('  /* ═══════════════════════════════════════════════════════════');
+  lines.push('     Spacing  (43 tokens, dense in 1–15 px range)');
+  lines.push('     ═══════════════════════════════════════════════════════════ */');
+  var spacingTokens = [
+    'none:0px','1:1px','2:2px','3:3px','4:4px','5:5px','6:6px','8:8px',
+    '10:10px','11:11px','12:12px','13:13px','14:14px','15:15px','16:16px',
+    '18:18px','20:20px','22:22px','24:24px','25:25px','26:26px','28:28px',
+    '30:30px','32:32px','36:36px','40:40px','44:44px','45:45px','48:48px',
+    '50:50px','54:54px','56:56px','60:60px','64:64px','70:70px','72:72px',
+    '80:80px','90:90px','96:96px','100:100px','112:112px','120:120px'
+  ];
+  for (var sp = 0; sp < spacingTokens.length; sp++) {
+    var parts = spacingTokens[sp].split(':');
+    lines.push('  --spacing-' + parts[0] + ': ' + parts[1] + ';');
+  }
+  lines.push('');
+  lines.push('  /* ═══════════════════════════════════════════════════════════');
+  lines.push('     Typography');
+  lines.push('     ═══════════════════════════════════════════════════════════ */');
+  lines.push('  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;');
+  lines.push('  --font-family-sans: var(--font-family);');
+  lines.push('  --font-family-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;');
+  var fontSizes = ['10:10px','11:11px','12:12px','13:13px','14:14px','16:16px','18:18px','20:20px','24:24px','26:26px','28:28px','32:32px','40:40px'];
+  for (var fs2 = 0; fs2 < fontSizes.length; fs2++) {
+    var fp = fontSizes[fs2].split(':');
+    lines.push('  --font-size-' + fp[0] + ': ' + fp[1] + ';');
+  }
+  lines.push('  --font-weight-regular: 400;');
+  lines.push('  --font-weight-medium: 500;');
+  lines.push('  --font-weight-semibold: 600;');
+  lines.push('  --font-weight-bold: 700;');
+  lines.push('  --font-weight-extrabold: 900;');
+  lines.push('  --line-height-tight: 1.25;');
+  lines.push('  --line-height-snug: 1.375;');
+  lines.push('  --line-height-normal: 1.5;');
+  lines.push('  --line-height-relaxed: 1.625;');
+  lines.push('  --line-height-loose: 2;');
+  lines.push('  --letter-spacing-tighter: -0.05em;');
+  lines.push('  --letter-spacing-tight: -0.025em;');
+  lines.push('  --letter-spacing-normal: 0em;');
+  lines.push('  --letter-spacing-wide: 0.025em;');
+  lines.push('  --letter-spacing-wider: 0.05em;');
+  lines.push('  --letter-spacing-widest: 0.1em;');
+  lines.push('}');
+  return lines.join('\n');
+}
+
+// Build semantic.css from current palettes
+function buildSemanticFileCSS() {
+  // Include built-in TOKEN_ROLES + any custom roles that have palettes
+  // Each entry: { prefix: CSS token prefix, palKey: key in palettes{} }
+  var allSemantic = [];
+  for (var ti = 0; ti < TOKEN_ROLES.length; ti++) {
+    allSemantic.push({ prefix: TOKEN_ROLES[ti], palKey: TOKEN_ROLES[ti] });
+  }
+  for (var cr = 0; cr < roles.length; cr++) {
+    var crId = roles[cr].id;
+    if (TOKEN_ROLES.indexOf(crId) < 0 && crId !== 'greyscale' && crId !== 'desaturated' && palettes[crId]) {
+      var crPrefix = roles[cr].label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      allSemantic.push({ prefix: crPrefix, palKey: crId });
+    }
+  }
+
+  var lines = [];
+  lines.push('/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550');
+  lines.push('   Design Token Forge \u2014 T1 Semantic Role Tokens');
+  lines.push('   Generated by DTF Color Editor');
+  lines.push('   ' + new Date().toISOString());
+  lines.push('   \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */');
+  lines.push('');
+  lines.push('/* \u2500\u2500 Light Theme (default) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */');
+  lines.push(':root {');
+  lines.push('');
+  for (var i = 0; i < allSemantic.length; i++) {
+    var rid = allSemantic[i].prefix;
+    var pal = palettes[allSemantic[i].palKey];
+    if (!pal) continue;
+    lines.push('  /* \u2500\u2500 ' + rid.toUpperCase() + ' \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */');
+    var lkeys = Object.keys(LIGHT_MAP);
+    for (var j = 0; j < lkeys.length; j++) {
+      var k = lkeys[j];
+      var stepName = LIGHT_MAP[k];
+      lines.push('  --' + rid + '-' + k + ': ' + getStepHex(pal, stepName) + ';');
+    }
+    lines.push('');
+  }
+  lines.push('}');
+  lines.push('');
+  lines.push('/* \u2500\u2500 Dark Theme \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */');
+  lines.push('[data-theme="dark"] {');
+  lines.push('');
+  for (var i2 = 0; i2 < allSemantic.length; i2++) {
+    var rid2 = allSemantic[i2].prefix;
+    var pal2 = palettes[allSemantic[i2].palKey];
+    if (!pal2) continue;
+    lines.push('  /* \u2500\u2500 ' + rid2.toUpperCase() + ' (dark) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */');
+    var dkeys = Object.keys(DARK_MAP);
+    for (var d = 0; d < dkeys.length; d++) {
+      var dk = dkeys[d];
+      var dStep = DARK_MAP[dk];
+      lines.push('  --' + rid2 + '-' + dk + ': ' + getStepHex(pal2, dStep) + ';');
+    }
+    lines.push('');
+  }
+  lines.push('}');
+  return lines.join('\n');
+}
+
+function rolePrefix(r) {
+  var PRIM_PREFIX = { brand:'brand', danger:'danger', warning:'warning', info:'info', success:'success', greyscale:'greyscale', desaturated:'desaturated' };
+  return PRIM_PREFIX[r.id] || r.id;
+}
+
+// Build surfaces.css from per-surface palette sources
+// Uses the EDITABLE SURF_L / SURF_D / SURF_LA / SURF_DA + SURF_PALETTE_SRC globals
+function buildSurfacesFileCSS() {
+  function resolveHex(stepName, surfName) {
+    if (stepName === 'white') return '#FFFFFF';
+    if (stepName === 'black') return '#000000';
+    var pal = getSurfPalette(surfName);
+    if (!pal) return '#888888';
+    for (var i = 0; i < pal.steps.length; i++) {
+      if (pal.steps[i].name === stepName) return pal.steps[i].hex;
+    }
+    return '#888888';
+  }
+
+  var NAMES = ['bright','base','dim','deep','accent','container','over-container','float','inverse'];
+  var out = [];
+  out.push('/* ════════════════════════════════════════════════════════════════');
+  out.push('   Design Token Forge — T2 Surface Context Tokens');
+  out.push('   Generated by DTF Color Editor');
+  out.push('   ' + new Date().toISOString());
+  out.push('   DO NOT EDIT — regenerated automatically from primitives.');
+  out.push('   ════════════════════════════════════════════════════════════════ */');
+  out.push('');
+  out.push(':root {');
+  for (var ni = 0; ni < NAMES.length; ni++) {
+    var n = NAMES[ni];
+    var map = SURF_L[n] || SURF_LA;
+    if (!map) continue;
+    out.push('  /* ── SURFACE-' + n.toUpperCase() + ' (src: ' + SURF_PALETTE_SRC[n] + ') ── */');
+    for (var pi = 0; pi < SURF_PROP_ORDER.length; pi++) {
+      out.push('  --surface-' + n + '-' + SURF_PROP_ORDER[pi] + ': ' + resolveHex(map[SURF_PROP_ORDER[pi]], n) + ';');
+    }
+  }
+  out.push('}');
+  out.push('');
+  out.push('[data-theme="dark"] {');
+  for (var ni2 = 0; ni2 < NAMES.length; ni2++) {
+    var n2 = NAMES[ni2];
+    var map2 = SURF_D[n2] || SURF_DA;
+    if (!map2) continue;
+    out.push('  /* ── SURFACE-' + n2.toUpperCase() + ' (dark, src: ' + SURF_PALETTE_SRC[n2] + ') ── */');
+    for (var pi2 = 0; pi2 < SURF_PROP_ORDER.length; pi2++) {
+      out.push('  --surface-' + n2 + '-' + SURF_PROP_ORDER[pi2] + ': ' + resolveHex(map2[SURF_PROP_ORDER[pi2]], n2) + ';');
+    }
+  }
+  out.push('}');
+  return out.join('\n');
+}
+
+// ══════════════════════════════════════════════════════════════
+// LOAD PROJECT CONFIG & INITIAL RENDER
+// ══════════════════════════════════════════════════════════════
+
+// ═══════════ Fixed / Utility Colors ═══════════════════════════
+var FIXED_COLORS = [
+  {token:'--color-fixed-white', label:'Fixed White', light:'#FFFFFF', dark:'#FFFFFF', desc:'Always white — theme-immune'},
+  {token:'--color-fixed-black', label:'Fixed Black', light:'#000000', dark:'#000000', desc:'Always black — theme-immune'},
+  {token:'--color-white', label:'White',       light:'#FFFFFF', dark:'#1B1B1B', desc:'White in light → near-black in dark'},
+  {token:'--color-black', label:'Black',       light:'#000000', dark:'#FFFFFF', desc:'Black in light → white in dark'}
+];
+
+function renderFixedColors() {
+  var grid = document.getElementById('fixedColorsGrid');
+  if (!grid) return;
+  var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  grid.innerHTML = '';
+  for (var i = 0; i < FIXED_COLORS.length; i++) {
+    var c = FIXED_COLORS[i];
+    var hex = isDark ? c.dark : c.light;
+    var lum = luminance(hex);
+    var fg = lum > 0.4 ? '#000' : '#FFF';
+    var card = document.createElement('div');
+    card.style.cssText = 'border:1px solid var(--demo-border);border-radius:var(--radius-md,6px);overflow:hidden';
+    card.innerHTML =
+      '<div style="height:56px;background:' + hex + ';display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="copyHex(\'' + hex + '\')" title="Click to copy">' +
+        '<span style="font-size:13px;font-weight:700;font-family:var(--font-family-mono,monospace);color:' + fg + '">' + hex + '</span>' +
+      '</div>' +
+      '<div style="padding:8px 12px">' +
+        '<div style="font-size:12px;font-weight:700;color:var(--demo-fg-strong)">' + c.label + '</div>' +
+        '<div style="font-size:10px;font-family:var(--font-family-mono,monospace);color:var(--demo-fg-subtle);margin-top:2px">' + c.token + '</div>' +
+        '<div style="font-size:10px;color:var(--demo-fg-faint);margin-top:2px">' + c.desc + '</div>' +
+        '<div style="font-size:9px;margin-top:4px;display:flex;gap:8px">' +
+          '<span style="color:var(--demo-fg-faint)">Light: ' + c.light + '</span>' +
+          '<span style="color:var(--demo-fg-faint)">Dark: ' + c.dark + '</span>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  }
+}
+
+function luminance(hex) {
+  var r = parseInt(hex.substr(1,2),16)/255;
+  var g = parseInt(hex.substr(3,2),16)/255;
+  var b = parseInt(hex.substr(5,2),16)/255;
+  r = r <= 0.03928 ? r/12.92 : Math.pow((r+0.055)/1.055, 2.4);
+  g = g <= 0.03928 ? g/12.92 : Math.pow((g+0.055)/1.055, 2.4);
+  b = b <= 0.03928 ? b/12.92 : Math.pow((b+0.055)/1.055, 2.4);
+  return 0.2126*r + 0.7152*g + 0.0722*b;
+}
+
+function doInitialRender() {
+  var didRestore = loadSavedConfig();
+  if (!didRestore) initRoles();
+  generateAll();
+  renderRolesList();
+  refreshSelectors();
+  injectAllTokens();
+  renderMap();
+  renderSurfTabs();
+  renderSurfTable();
+  renderSurfSrcBar();
+  renderCertGrid();
+  renderCertDetail(selectedCertRole);
+  renderSteps();
+  renderExport(currentFormat);
+  renderFixedColors();
+  updateSaveIndicator();
+
+  /* Re-render fixed colors on theme toggle */
+  window.DTF.onThemeChange = renderFixedColors;
+}
+
+// ══════════════════════════════════════════════════════════════
+// PROJECT MANAGEMENT — selector, creation, switching
+// ══════════════════════════════════════════════════════════════
+/* Inject project controls into the nav bar */
+(function(){
+  var nav = document.querySelector('.nav-actions');
+  var toggle = document.getElementById('themeToggle');
+  var wrap = document.createElement('div');
+  wrap.className = 'nav-project';
+  wrap.innerHTML = '<div class="nav-proj-wrap">'
+    + '  <button class="nav-proj-btn" type="button" id="projDropBtn">\u2026</button>'
+    + '  <div class="nav-proj-panel" id="projDropPanel"></div>'
+    + '</div>'
+    + '<button class="nav-project-open" id="projOpenEditorBtn" type="button" title="Open this project in the Token Editor">Open Editor <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></button>'
+    + '<button class="nav-project-action" id="projRenameBtn" type="button" title="Rename project"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></button>'
+    + '<button class="nav-project-action nav-project-del" id="projDeleteBtn" type="button" title="Delete project"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>';
+  if (nav) nav.insertBefore(wrap, nav.firstChild);
+})();
+var projDropBtn = document.getElementById('projDropBtn');
+var projDropPanel = document.getElementById('projDropPanel');
+var projPanelOpen = false;
+var projInfo = null; /* no longer shown — path was low value */
+var projNewBtn = document.getElementById('projNewBtn');
+var projRenameBtn = document.getElementById('projRenameBtn');
+var projDeleteBtn = document.getElementById('projDeleteBtn');
+var projDialogBackdrop = document.getElementById('projDialogBackdrop');
+var projNameInput = document.getElementById('projNameInput');
+var projSlugInput = document.getElementById('projSlugInput');
+var projDescInput = document.getElementById('projDescInput');
+var projSlugPreviewVal = document.getElementById('projSlugPreviewVal');
+var projSlugError = document.getElementById('projSlugError');
+var projCreateBtn = document.getElementById('projCreateBtn');
+var projCancelBtn = document.getElementById('projCancelBtn');
+
+var STORAGE_KEY_PROJECTS = 'dtf-known-projects';
+var STORAGE_KEY_DELETED = 'dtf-deleted-projects';
+var knownProjects = []; // [{id, name}]
+var deletedProjectIds = []; // [string] — projects removed by user, survives discovery
+var depth = (location.pathname.indexOf('/demo/') !== -1) ? '..' : '.';
+
+try { deletedProjectIds = JSON.parse(localStorage.getItem(STORAGE_KEY_DELETED) || '[]'); } catch(e) { deletedProjectIds = []; }
+
+function persistKnownProjects() {
+  localStorage.setItem(STORAGE_KEY_PROJECTS, JSON.stringify(knownProjects));
+}
+
+function mergeKnownProjects(list) {
+  for (var i = 0; i < list.length; i++) {
+    var p = list[i];
+    if (!p || !p.id) continue;
+    if (deletedProjectIds.indexOf(p.id) !== -1) continue;
+    var existing = knownProjects.find(function(k) { return k.id === p.id; });
+    if (!existing) {
+      knownProjects.push(p);
+    } else {
+      // Update missing fields (e.g. owner) from newer data
+      if (p.owner && !existing.owner) existing.owner = p.owner;
+      if (p.name && !existing.name) existing.name = p.name;
+    }
+  }
+}
+
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 40);
+}
+
+function getVisibleProjects() {
+  // Admin (upstream owner) sees all; others see only their own projects
+  var user = (GH_OWNER || localStorage.getItem('dtf-gh-user') || '').toLowerCase();
+  if (!user) return knownProjects;
+  return knownProjects.filter(function(p) {
+    return !p.owner || p.owner.toLowerCase() === user;
+  });
+}
+
+function populateProjectSelect() {
+  var visible = getVisibleProjects();
+  // Update button label
+  var active = visible.find(function(p) { return p.id === projectId; });
+  projDropBtn.textContent = active ? (active.name || active.id) : (projectId || '\u2026');
+  // Render panel items
+  projDropPanel.innerHTML = '';
+  if (!visible.length) {
+    var empty = document.createElement('div');
+    empty.className = 'nav-proj-loading';
+    empty.textContent = 'No projects';
+    projDropPanel.appendChild(empty);
+  } else {
+    visible.forEach(function(p) {
+      var row = document.createElement('button');
+      row.className = 'nav-proj-item';
+      row.type = 'button';
+      if (p.id === projectId) row.setAttribute('data-active', '');
+      var nameEl = document.createElement('span');
+      nameEl.className = 'nav-proj-item-name';
+      nameEl.textContent = p.name || p.id;
+      row.appendChild(nameEl);
+      row.addEventListener('click', function() {
+        closeProjPanel();
+        if (p.id !== projectId) switchProject(p.id);
+      });
+      projDropPanel.appendChild(row);
+    });
+  }
+  // Disable rename/delete when none selected or not the owner
+  var canManage = visible.length > 0 && projectId && isProjectOwner();
+  var canDelete = visible.length > 0 && projectId && isProjectOwner();
+  if (projRenameBtn) projRenameBtn.disabled = !canManage;
+  if (projDeleteBtn) projDeleteBtn.disabled = !canDelete;
+}
+
+function openProjPanel() {
+  projPanelOpen = true;
+  projDropPanel.setAttribute('data-open', '');
+  // Show loading, then fetch fresh
+  projDropPanel.innerHTML = '<div class="nav-proj-loading">Loading\u2026</div>';
+  discoverProjectsLive(function(found) {
+    if (!projPanelOpen) return;
+    if (found && found.length) {
+      // Remote is source of truth — only keep active project if not in remote yet (just-created)
+      var activeLocal = null;
+      if (projectId && !found.some(function(p) { return p.id === projectId; })) {
+        activeLocal = knownProjects.find(function(p) { return p.id === projectId; });
+      }
+      knownProjects = [];
+      mergeKnownProjects(found);
+      if (activeLocal) mergeKnownProjects([activeLocal]);
+      persistKnownProjects();
+    }
+    populateProjectSelect();
+  });
+}
+
+function closeProjPanel() {
+  projPanelOpen = false;
+  projDropPanel.removeAttribute('data-open');
+}
+
+projDropBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  if (projPanelOpen) closeProjPanel();
+  else openProjPanel();
+});
+document.addEventListener('click', function(e) {
+  if (projPanelOpen && !projDropPanel.parentElement.contains(e.target)) closeProjPanel();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && projPanelOpen) closeProjPanel();
+});
+
+// Sync the global localStorage keys so shared.js and other pages pick up the active project's tokens
+function syncGlobalKeys() {
+  var css = buildSaveableCSS();
+  var config = buildSaveableConfig();
+  localStorage.setItem(STORAGE_KEY_TOKENS, css);
+  localStorage.setItem(STORAGE_KEY_CONFIG, config);
+  if (projectId) {
+    localStorage.setItem(STORAGE_KEY_TOKENS + '-' + projectId, css);
+    localStorage.setItem(STORAGE_KEY_CONFIG + '-' + projectId, config);
+  }
+}
+
+// ── Rename Project ───────────────────────────────────────
+function renameProject() {
+  if (!projectId || knownProjects.length === 0) return;
+  if (!isProjectOwner()) { alert('You cannot rename this project. It belongs to "' + (projectConfig && projectConfig.owner || 'another user') + '".'); return; }
+  var proj = knownProjects.find(function(p) { return p.id === projectId; });
+  var currentName = proj ? (proj.name || proj.id) : projectId;
+  var newName = prompt('Rename project:', currentName);
+  if (!newName || !newName.trim() || newName.trim() === currentName) return;
+  newName = newName.trim().substring(0, 60);
+  if (proj) proj.name = newName;
+  persistKnownProjects();
+  populateProjectSelect();
+  showSaveMsg('Project renamed to "' + newName + '"');
+}
+
+// ── Delete Project ───────────────────────────────────────
+
+function deleteProject() {
+  if (!projectId || knownProjects.length <= 1) return;
+  if (!isProjectOwner()) { alert('You cannot delete this project. It belongs to "' + (projectConfig && projectConfig.owner || 'another user') + '".'); return; }
+  var proj = knownProjects.find(function(p) { return p.id === projectId; });
+  var displayName = proj ? (proj.name || proj.id) : projectId;
+
+  // If no token yet, ask for it inline
+  var token = ghPat;
+  if (!token) {
+    token = prompt('To permanently delete "' + displayName + '", enter your GitHub personal access token (repo scope):');
+    if (!token || !token.trim()) return;
+    token = token.trim();
+  }
+
+  var confirmed = confirm('Delete project "' + displayName + '"?\n\nThis will permanently remove the project from the repository for everyone. This cannot be undone.');
+  if (!confirmed) return;
+
+  var delId = projectId;
+  // Remove from knownProjects
+  knownProjects = knownProjects.filter(function(p) { return p.id !== delId; });
+  persistKnownProjects();
+  // Add to deleted-projects exclusion list so discovery won't resurrect it
+  if (deletedProjectIds.indexOf(delId) === -1) deletedProjectIds.push(delId);
+  localStorage.setItem(STORAGE_KEY_DELETED, JSON.stringify(deletedProjectIds));
+  // Clear per-project localStorage
+  localStorage.removeItem(STORAGE_KEY_TOKENS + '-' + delId);
+  localStorage.removeItem(STORAGE_KEY_CONFIG + '-' + delId);
+  localStorage.removeItem(STORAGE_KEY_SAVE_TS + '-' + delId);
+
+  // Immediately redirect/switch — don't wait for API
+  var remaining = getVisibleProjects();
+  if (remaining.length > 0) {
+    switchProject(remaining[0].id);
+  } else {
+    projectId = '';
+    localStorage.removeItem(STORAGE_KEY_ACTIVE);
+    window.location.href = 'onboard.html';
+    return; // page is navigating away
+  }
+
+  // Delete ALL files in the project directory from the UPSTREAM repo (background)
+  var dirPath = '/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects/' + delId;
+  function ghDeleteFetch(endpoint, opts) {
+    opts = opts || {};
+    var url = endpoint.startsWith('http') ? endpoint : GH_API + endpoint;
+    return fetch(url, {
+      method: opts.method || 'GET',
+      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: opts.body ? JSON.stringify(opts.body) : undefined
+    }).then(function(r) {
+      if (!r.ok) return r.json().then(function(d) { throw new Error(d.message || r.status); });
+      return r.json();
+    });
+  }
+
+  ghDeleteFetch(dirPath).then(function(files) {
+    if (!Array.isArray(files)) files = [files];
+    return files.reduce(function(chain, file) {
+      return chain.then(function() {
+        return ghDeleteFetch(dirPath + '/' + file.name, {
+          method: 'DELETE',
+          body: { message: 'Delete project ' + delId + ': ' + file.name + ' [by ' + ghUser + ']', sha: file.sha }
+        });
+      });
+    }, Promise.resolve());
+  }).then(function() {
+    /* Write to deletion log (projects/_log.json) */
+    var logPath = '/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects/_log.json';
+    return ghDeleteFetch(logPath).then(function(file) {
+      var log = [];
+      if (file && file.content) { try { log = JSON.parse(atob(file.content.replace(/\n/g, ''))); } catch(e) {} }
+      log.push({ action: 'delete', project: delId, name: displayName, owner: (proj && proj.owner) || '', deletedBy: ghUser, date: new Date().toISOString() });
+      var body = { message: 'Log deletion of ' + delId + ' by ' + ghUser, content: btoa(JSON.stringify(log, null, 2)), branch: 'main' };
+      if (file && file.sha) body.sha = file.sha;
+      return ghDeleteFetch(logPath, { method: 'PUT', body: body });
+    }).catch(function(e) { console.warn('[DTF] Deletion log write failed:', e); });
+  }).then(function() {
+    /* Remove from projects.json */
+    var idxPath = '/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects.json';
+    return ghDeleteFetch(idxPath + '?ref=main').then(function(file) {
+      if (!file || !file.content) return;
+      var idx = [];
+      try { idx = JSON.parse(atob(file.content.replace(/\n/g, ''))); } catch(e) { return; }
+      var filtered = idx.filter(function(p) { return p.id !== delId; });
+      if (filtered.length === idx.length) return;
+      var body = { message: 'Remove ' + delId + ' from projects.json', content: btoa(unescape(encodeURIComponent(JSON.stringify(filtered, null, 2) + '\n'))), branch: 'main' };
+      if (file.sha) body.sha = file.sha;
+      return ghDeleteFetch(idxPath, { method: 'PUT', body: body });
+    }).catch(function(e) { console.warn('[DTF] projects.json removal failed:', e); });
+  }).catch(function(e) {
+    console.warn('[DTF] GitHub delete failed:', e.message);
+  });
+}
+
+function switchProject(newId) {
+  if (newId === projectId) return;
+  // Persist current state first
+  var css = buildSaveableCSS();
+  var config = buildSaveableConfig();
+  if (projectId) {
+    localStorage.setItem(STORAGE_KEY_TOKENS + '-' + projectId, css);
+    localStorage.setItem(STORAGE_KEY_CONFIG + '-' + projectId, config);
+  }
+
+  // Load new project config
+  projectId = newId;
+  localStorage.setItem(STORAGE_KEY_ACTIVE, newId);
+  projectConfig = null;
+  originalPaletteKeys = null;
+
+  // Reset working state
+  SURF_L = JSON.parse(JSON.stringify(DEFAULT_SURF_L));
+  SURF_D = JSON.parse(JSON.stringify(DEFAULT_SURF_D));
+  SURF_LA = JSON.parse(JSON.stringify(DEFAULT_SURF_LA));
+  SURF_DA = JSON.parse(JSON.stringify(DEFAULT_SURF_DA));
+  SURF_PALETTE_SRC = JSON.parse(JSON.stringify(DEFAULT_SURF_SRC));
+
+  fetch(depth + '/projects/' + newId + '/config.json?_cb=' + Date.now())
+    .then(function(r) {
+      // Fallback: try /{id}/config.json if projects/ path not found
+      if (!r.ok) return fetch(depth + '/' + newId + '/config.json?_cb=' + Date.now());
+      return r;
+    })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .catch(function() { return null; })
+    .then(function(cfg) {
+      if (cfg && cfg.paletteKeys) {
+        projectConfig = cfg;
+        originalPaletteKeys = JSON.parse(JSON.stringify(cfg.paletteKeys));
+      }
+      // Try per-project localStorage
+      var savedKey = STORAGE_KEY_CONFIG + '-' + newId;
+      var savedRaw = localStorage.getItem(savedKey);
+      if (savedRaw) {
+        try {
+          var savedCfg = JSON.parse(savedRaw);
+          if (savedCfg.roles && savedCfg.roles.length) {
+            // Migrate legacy custom-N IDs to label slugs
+            migrateCustomIds(savedCfg.roles, savedCfg.surfacePaletteSrc);
+            roles = savedCfg.roles.map(function(r) { return Object.assign({}, r); });
+            customCounter = savedCfg.customCounter || 0;
+            if (savedCfg.surfaceMap) {
+              if (savedCfg.surfaceMap.light) Object.keys(savedCfg.surfaceMap.light).forEach(function(s) { if (SURF_L[s]) Object.assign(SURF_L[s], savedCfg.surfaceMap.light[s]); });
+              if (savedCfg.surfaceMap.dark) Object.keys(savedCfg.surfaceMap.dark).forEach(function(s) { if (SURF_D[s]) Object.assign(SURF_D[s], savedCfg.surfaceMap.dark[s]); });
+              if (savedCfg.surfaceMap.lightAccent) Object.assign(SURF_LA, savedCfg.surfaceMap.lightAccent);
+              if (savedCfg.surfaceMap.darkAccent) Object.assign(SURF_DA, savedCfg.surfaceMap.darkAccent);
+            }
+            if (savedCfg.semanticMap) {
+              if (savedCfg.semanticMap.light) LIGHT_MAP = JSON.parse(JSON.stringify(savedCfg.semanticMap.light));
+              if (savedCfg.semanticMap.dark)  DARK_MAP  = JSON.parse(JSON.stringify(savedCfg.semanticMap.dark));
+            }
+            if (savedCfg.surfacePaletteSrc) {
+              SURF_NAMES.forEach(function(sn) { if (savedCfg.surfacePaletteSrc[sn]) SURF_PALETTE_SRC[sn] = savedCfg.surfacePaletteSrc[sn]; });
+            }
+            generateAll();
+            fullRerender();
+            populateProjectSelect();
+            return;
+          }
+        } catch(e) {}
+      }
+      // No localStorage — init from project config
+      initRoles();
+      generateAll();
+      fullRerender();
+      populateProjectSelect();
+    });
+}
+
+function fullRerender() {
+  renderRolesList();
+  refreshSelectors();
+  injectAllTokens();
+  renderMap();
+  renderSurfTabs();
+  renderSurfTable();
+  renderSurfSrcBar();
+  renderCertGrid();
+  renderCertDetail(selectedCertRole);
+  renderSteps();
+  renderExport(currentFormat);
+  updateSaveIndicator();
+  syncGlobalKeys();
+}
+
+// Live project discovery — if PAT available use API (always fresh), else static json
+function discoverProjectsLive(callback) {
+  var token = ghPat || localStorage.getItem('dtf-gh-pat') || '';
+  if (!token) {
+    // No PAT — use static projects.json (no rate limit), localStorage merge handles new projects
+    discoverProjects(callback);
+    return;
+  }
+  var headers = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
+  // Fetch projects/ directory listing from Git repo directly
+  fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects?ref=main&_cb=' + Date.now(), { headers: headers })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(dirs) {
+      if (!dirs || !Array.isArray(dirs)) { discoverProjects(callback); return; }
+      // Each dir is a project — fetch its config.json for name/owner
+      var projects = dirs.filter(function(d) { return d.type === 'dir'; });
+      var results = [];
+      var pending = projects.length;
+      if (pending === 0) { callback([]); return; }
+      projects.forEach(function(dir) {
+        fetch('https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects/' + dir.name + '/config.json?ref=main', { headers: headers })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .then(function(file) {
+            if (file && file.content) {
+              try {
+                var cfg = JSON.parse(atob(file.content.replace(/\n/g, '')));
+                results.push({ id: cfg.id || dir.name, name: cfg.name || dir.name, owner: cfg.owner || '' });
+              } catch(e) { results.push({ id: dir.name, name: dir.name, owner: '' }); }
+            }
+          })
+          .catch(function() {})
+          .finally(function() {
+            pending--;
+            if (pending === 0) callback(results);
+          });
+      });
+    })
+    .catch(function() {
+      // Fallback to static projects.json
+      discoverProjects(callback);
+    });
+}
+
+// Discover projects via static projects.json (CDN — may be cached)
+function discoverProjects(callback) {
+  // Always use projects.json as source of truth (includes owner field)
+  fetch(depth + '/projects.json?_cb=' + Date.now(), { cache: 'no-cache' })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .catch(function() { return null; })
+    .then(function(index) {
+      if (index && Array.isArray(index)) {
+        callback(index);
+      } else {
+        // Offline fallback: use current project only
+        var found = [];
+        if (projectId) found.push({id: projectId, name: (projectConfig && projectConfig.name) || projectId, owner: (projectConfig && projectConfig.owner) || ''});
+        callback(found);
+      }
+    });
+}
+
+// ── New Project Dialog ──────────────────────────────────────
+var projGhPatInput = document.getElementById('projGhPatInput');
+var projGhConnectBtn = document.getElementById('projGhConnectBtn');
+var projGhConnected = document.getElementById('projGhConnected');
+var projGhAuth = document.getElementById('projGhAuth');
+var projGhUser = document.getElementById('projGhUser');
+var projGhDisconnect = document.getElementById('projGhDisconnect');
+var projGhStatus = document.getElementById('projGhStatus');
+var projCloseBtn = document.getElementById('projCloseBtn');
+
+function syncDialogGhState() {
+  if (ghPat) {
+    projGhAuth.style.display = 'none';
+    projGhConnected.style.display = 'flex';
+    projGhStatus.className = 'proj-gh-status';
+    projGhStatus.textContent = '';
+  } else {
+    projGhAuth.style.display = 'flex';
+    projGhConnected.style.display = 'none';
+  }
+}
+
+projGhConnectBtn.addEventListener('click', function() {
+  var token = projGhPatInput.value.trim();
+  if (!token) return;
+  projGhConnectBtn.textContent = 'Connecting\u2026';
+  projGhConnectBtn.disabled = true;
+  projGhStatus.className = 'proj-gh-status';
+  projGhStatus.textContent = '';
+  // Temporarily set ghPat for the fetch
+  ghPat = token;
+  ghFetch('/user').then(function(u) {
+    GH_OWNER = u.login;
+    GH_REPO = GH_REPO_NAME;
+    projGhUser.textContent = u.login;
+    syncDialogGhState();
+    // Also sync the Deploy section if visible
+    if (ghAuthRow) ghAuthRow.style.display = 'none';
+    if (ghReadyRow) { ghReadyRow.style.display = 'block'; ghUser.textContent = '\u2713 ' + u.login; }
+    // Re-validate slug
+    projSlugInput.dispatchEvent(new Event('input'));
+  }).catch(function(e) {
+    ghPat = '';
+    projGhStatus.className = 'proj-gh-status err';
+    projGhStatus.textContent = 'Auth failed: ' + e.message;
+  }).finally(function() {
+    projGhConnectBtn.textContent = 'Connect';
+    projGhConnectBtn.disabled = false;
+  });
+});
+
+projGhPatInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') projGhConnectBtn.click(); });
+
+projGhDisconnect.addEventListener('click', function() {
+  ghPat = '';
+  projGhPatInput.value = '';
+  syncDialogGhState();
+  // Sync Deploy section
+  if (ghAuthRow) ghAuthRow.style.display = 'block';
+  if (ghReadyRow) ghReadyRow.style.display = 'none';
+  if (ghPatInput) ghPatInput.value = '';
+  projSlugInput.dispatchEvent(new Event('input'));
+});
+
+function openNewProjectDialog() {
+  projNameInput.value = '';
+  projSlugInput.value = '';
+  projDescInput.value = '';
+  projSlugPreviewVal.textContent = '???';
+  projSlugError.style.display = 'none';
+  projCreateBtn.disabled = true;
+  projGhStatus.className = 'proj-gh-status';
+  projGhStatus.textContent = '';
+  syncDialogGhState();
+  projDialogBackdrop.classList.add('open');
+  setTimeout(function() { projNameInput.focus(); }, 50);
+}
+
+projNewBtn && projNewBtn.addEventListener('click', openNewProjectDialog);
+projRenameBtn.addEventListener('click', renameProject);
+projDeleteBtn.addEventListener('click', deleteProject);
+
+/* Open the active project in the Token Editor (v2).
+   Named-route style: passes ?project=<id> so the editor can deep-link.
+   v2 strips the param from the URL on boot after persisting it. */
+var projOpenEditorBtn = document.getElementById('projOpenEditorBtn');
+if (projOpenEditorBtn) {
+  function syncOpenEditorBtn() {
+    projOpenEditorBtn.disabled = !projectId;
+    projOpenEditorBtn.title = projectId
+      ? 'Open "' + (knownProjects.find(function(p){return p.id===projectId;}) || {name:projectId}).name + '" in the Token Editor'
+      : 'Pick or create a project first';
+  }
+  projOpenEditorBtn.addEventListener('click', function() {
+    if (!projectId) return;
+    var base = (location.pathname.indexOf('/demo/') !== -1) ? './editor-v2/' : './demo/editor-v2/';
+    window.location.href = base + '?project=' + encodeURIComponent(projectId);
+  });
+  /* Re-sync whenever the project list/active changes */
+  var _origRender = (typeof renderProjPanel === 'function') ? renderProjPanel : null;
+  /* Initial */
+  setTimeout(syncOpenEditorBtn, 0);
+  /* Hook into project switch path */
+  var _origSwitch = (typeof switchProject === 'function') ? switchProject : null;
+  if (_origSwitch) {
+    window.switchProject = function() {
+      var r = _origSwitch.apply(this, arguments);
+      syncOpenEditorBtn();
+      return r;
+    };
+  }
+  /* Also sync after a short delay for initial project resolution */
+  setTimeout(syncOpenEditorBtn, 500);
+  setTimeout(syncOpenEditorBtn, 1500);
+}
+
+projCloseBtn.addEventListener('click', function() {
+  projDialogBackdrop.classList.remove('open');
+});
+
+projCancelBtn.addEventListener('click', function() {
+  projDialogBackdrop.classList.remove('open');
+});
+
+projDialogBackdrop.addEventListener('click', function(e) {
+  if (e.target === projDialogBackdrop) projDialogBackdrop.classList.remove('open');
+});
+
+projNameInput.addEventListener('input', function() {
+  var slug = slugify(projNameInput.value);
+  projSlugInput.value = slug;
+  projSlugInput.dispatchEvent(new Event('input'));
+});
+
+projSlugInput.addEventListener('input', function() {
+  var slug = projSlugInput.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+  projSlugInput.value = slug;
+  projSlugPreviewVal.textContent = slug || '???';
+
+  // Validate
+  var err = '';
+  if (slug.length < 2) err = 'Slug must be at least 2 characters';
+  else if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(slug) && slug.length > 1) err = 'Must start and end with letter/number';
+  else if (knownProjects.some(function(p) { return p.id === slug; })) err = 'Project "' + slug + '" already exists';
+
+  if (!err && !ghPat) err = 'Connect GitHub above to create projects';
+  projSlugError.textContent = err;
+  projSlugError.style.display = err ? 'block' : 'none';
+  projCreateBtn.disabled = !!err || slug.length < 2;
+});
+
+projCreateBtn.addEventListener('click', function() {
+  if (projCreateBtn.disabled || !ghPat) return;
+
+  var slug = projSlugInput.value;
+  var name = projNameInput.value.trim() || slug;
+  var desc = projDescInput.value.trim();
+
+  // Build default config for the new project
+  var newConfig = {
+    id: slug,
+    name: name,
+    description: desc,
+    created: new Date().toISOString().split('T')[0],
+    paletteKeys: {
+      brand: '#286CE5',
+      brand: '#E53F28',
+      danger: '#DC2626',
+      warning: '#D97706',
+      info: '#0EA5E9',
+      success: '#16A34A',
+      greyscale: '#747474',
+      desaturated: '#71747C'
+    }
+  };
+
+  projCreateBtn.disabled = true;
+  projCreateBtn.textContent = 'Creating...';
+
+  var filePath = 'projects/' + slug + '/config.json';
+  var fileContent = JSON.stringify(newConfig, null, 2) + '\n';
+
+  // Commit via GitHub API
+  ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/' + filePath, {
+    method: 'PUT',
+    body: {
+      message: 'Create project: ' + name,
+      content: btoa(unescape(encodeURIComponent(fileContent)))
+    }
+  })
+  .then(function() {
+    /* Also update projects.json index so dropdown finds the new project */
+    return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects.json?ref=main')
+      .then(function(idxFile) {
+        var idx = [];
+        var idxSha = idxFile.sha || null;
+        try { idx = JSON.parse(atob(idxFile.content.replace(/\\n/g, ''))); } catch(e) {}
+        if (!idx.some(function(p){ return p.id === slug; })) {
+          idx.push({ id: slug, name: name, owner: GH_OWNER, description: newConfig.description || '' });
+          var body = { message: 'Add ' + slug + ' to projects.json', content: btoa(unescape(encodeURIComponent(JSON.stringify(idx, null, 2) + '\\n'))), branch: 'main' };
+          if (idxSha) body.sha = idxSha;
+          return ghFetch('/repos/' + GH_OWNER + '/' + GH_REPO_NAME + '/contents/projects.json', { method: 'PUT', body: body });
+        }
+      }).catch(function(e) { console.warn('[DTF] projects.json update failed:', e); });
+  })
+  .then(function() {
+    // Success — add to known projects and switch
+    // Clear from deleted list in case this slug was previously deleted
+    deletedProjectIds = deletedProjectIds.filter(function(id) { return id !== slug; });
+    localStorage.setItem(STORAGE_KEY_DELETED, JSON.stringify(deletedProjectIds));
+    knownProjects.push({id: slug, name: name, owner: GH_OWNER});
+    persistKnownProjects();
+    projDialogBackdrop.classList.remove('open');
+    switchProject(slug);
+  })
+  .catch(function(e) {
+    projSlugError.textContent = 'Failed to create: ' + e.message;
+    projSlugError.style.display = 'block';
+  })
+  .finally(function() {
+    projCreateBtn.disabled = false;
+    projCreateBtn.textContent = 'Create Project';
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+// INITIAL LOAD
+// ══════════════════════════════════════════════════════════════
+(function loadProjectAndInit() {
+  // Restore last-active project from localStorage so reload stays on the same project
+  var remembered = localStorage.getItem(STORAGE_KEY_ACTIVE);
+
+  // Try fetching status.json first to get project id, then config.json
+  fetch(depth + '/status.json?_cb=' + Date.now())
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(status) {
+      // Prefer remembered project, then status.json, then fallback
+      var targetId = remembered || (status && status.project && status.project.id) || '';
+      if (targetId) {
+        projectId = targetId;
+        return fetch(depth + '/projects/' + projectId + '/config.json?_cb=' + Date.now())
+          .then(function(r) {
+            if (!r.ok) return fetch(depth + '/' + projectId + '/config.json?_cb=' + Date.now());
+            return r;
+          })
+          .then(function(r) { return r.ok ? r.json() : null; })
+          .catch(function() { return null; });
+      }
+      return fetch(depth + '/projects/desktop-pdf-editor/config.json?_cb=' + Date.now())
+        .then(function(r) {
+          if (r.ok) { projectId = 'desktop-pdf-editor'; return r.json(); }
+          return null;
+        })
+        .catch(function() { return null; });
+    })
+    .then(function(cfg) {
+      if (cfg && cfg.paletteKeys) {
+        projectConfig = cfg;
+        // Only adopt cfg.id when no project was already determined
+        if (!remembered) projectId = cfg.id || projectId;
+        originalPaletteKeys = JSON.parse(JSON.stringify(cfg.paletteKeys));
+        console.log('[DTF] Loaded project config:', projectId, Object.keys(cfg.paletteKeys).length, 'palette keys');
+      }
+    })
+    .catch(function(e) {
+      console.warn('[DTF] Could not load project config:', e.message);
+    })
+    .finally(function() {
+      // Persist active project so reload stays on the same one
+      if (projectId) localStorage.setItem(STORAGE_KEY_ACTIVE, projectId);
+      // Seed knownProjects with current project (shown until remote loads)
+      if (projectId) {
+        mergeKnownProjects([{id: projectId, name: (projectConfig && projectConfig.name) || projectId, owner: (projectConfig && projectConfig.owner) || ''}]);
+      }
+      // Restore any previously-persisted projects from localStorage
+      try {
+        var saved = JSON.parse(localStorage.getItem(STORAGE_KEY_PROJECTS) || '[]');
+        mergeKnownProjects(saved);
+      } catch(e) {}
+
+      // Discover additional projects (async — updates dropdown when done)
+      discoverProjectsLive(function(found) {
+        if (found && found.length) {
+          // Remote is source of truth — only keep active project if not in remote yet (just-created)
+          var activeLocal = null;
+          if (projectId && !found.some(function(p) { return p.id === projectId; })) {
+            activeLocal = knownProjects.find(function(p) { return p.id === projectId; });
+          }
+          knownProjects = [];
+          mergeKnownProjects(found);
+          if (activeLocal) mergeKnownProjects([activeLocal]);
+          // If active project no longer exists, switch to first available
+          var ids = knownProjects.map(function(p) { return p.id; });
+          if (projectId && ids.indexOf(projectId) === -1) {
+            projectId = knownProjects[0].id;
+            localStorage.setItem(STORAGE_KEY_ACTIVE, projectId);
+            switchProject(projectId);
+          }
+        }
+        persistKnownProjects();
+        populateProjectSelect();
+      });
+
+      populateProjectSelect();
+      doInitialRender();
+
+      // Auto-open New Project dialog if linked from another page
+      if (new URLSearchParams(location.search).has('new-project')) {
+        openNewProjectDialog();
+        history.replaceState(null, '', location.pathname);
+      }
+    });
+})();
+</script>
+<div class="copy-toast" id="copyToast"></div>
+</body>
+</html>
