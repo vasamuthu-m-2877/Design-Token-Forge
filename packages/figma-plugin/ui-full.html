@@ -411,8 +411,11 @@
   <div class="log-list" id="logList"></div>
 </details>
 
-<!-- ── Component Builder Section ───────────────────────── -->
-<div id="componentBuilderSection" style="margin-top: 16px; padding-top: 14px; border-top: 2px solid #e5e5e5; display: none;">
+<!-- ── Component Builder Section ─────────────────────────
+     Visible to all plugin users. The legacy `display:none` +
+     `user-info.authorized` gate was removed — the builder is now
+     a first-class feature of the plugin, not an owner-only tool. -->
+<div id="componentBuilderSection" style="margin-top: 16px; padding-top: 14px; border-top: 2px solid #e5e5e5;">
   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
     <div style="width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,#7C3AED,#A855F7);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
       <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#fff" stroke-width="1.5"/></svg>
@@ -1127,13 +1130,12 @@
       syncBtn.textContent = 'Retry Sync';
     }
 
-    /* ── Component Builder messages ────────────────────── */
+    /* ── Component Builder messages ──────────────────────
+       The builder is always visible (see section markup). We keep
+       the user-info hook so a future gate could re-hide it without
+       a UI-structural change. */
     if (msg.type === 'user-info') {
-      /* Show component builder only for authorized user */
-      var builderEl = document.getElementById('componentBuilderSection');
-      if (builderEl && msg.authorized) {
-        builderEl.style.display = '';
-      }
+      /* no-op: builder is always shown */
     }
     if (msg.type === 'gen-progress') {
       genStatus.textContent = msg.text;

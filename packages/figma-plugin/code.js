@@ -25,30 +25,25 @@ log('code.js loaded — version ' + CODE_VERSION);
   } catch (e) { /* clientStorage unavailable — UI will use its own default */ }
 })();
 
-/* ── Component Builder access gate ────────────────────────
-   Only the plugin owner sees the component builder.
-   Uses figma.currentUser (available in plugins with enableProposedApi). */
-var BUILDER_OWNER_ID = null; /* set to a Figma user ID string to restrict, or null to allow all */
-
+/* ── Component Builder access ───────────────────────────
+   The component builder is available to ALL plugin users.
+   We still emit a user-info message (used for telemetry / logging)
+   but `authorized` is always true. Removed the historical owner-id
+   + name-substring gate (kept the plugin private to one developer).
+   Reintroducing a gate? Put the check here and flip `authorized`. */
 function sendUserInfo() {
   try {
-    var currentUser = figma.currentUser;
+    var currentUser = figma.currentUser || null;
+    var name = currentUser && currentUser.name ? currentUser.name : '';
+    var id   = currentUser && currentUser.id   ? currentUser.id   : '';
     if (currentUser) {
-      log('Current user: ' + currentUser.name + ' (id: ' + currentUser.id + ')');
-      /* Authorize if owner ID matches, or if no gate is set */
-      var isOwner = !BUILDER_OWNER_ID || currentUser.id === BUILDER_OWNER_ID;
-      /* Also authorize by name as fallback */
-      if (!isOwner && currentUser.name) {
-        var lname = currentUser.name.toLowerCase();
-        if (lname.indexOf('sridhar') !== -1) isOwner = true;
-      }
-      figma.ui.postMessage({ type: 'user-info', name: currentUser.name, id: currentUser.id, authorized: isOwner });
-    } else {
-      figma.ui.postMessage({ type: 'user-info', name: '', id: '', authorized: false });
+      log('Current user: ' + name + ' (id: ' + id + ')');
     }
+    figma.ui.postMessage({ type: 'user-info', name: name, id: id, authorized: true });
   } catch (e) {
     log('User check failed: ' + e.message);
-    figma.ui.postMessage({ type: 'user-info', name: '', id: '', authorized: false });
+    /* Still authorize — UI gate is no longer a security boundary. */
+    figma.ui.postMessage({ type: 'user-info', name: '', id: '', authorized: true });
   }
 }
 /* Send after a short delay so the UI listener is ready */

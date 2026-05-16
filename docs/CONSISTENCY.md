@@ -162,7 +162,170 @@ grep -nE '\b(Tier ?[0-3]|tier-[0-3])\b' demo/editor-v2/*.{js,css,html}
 
 ---
 
-## 11. Open follow-ups (drift to fix when convenient)
+## 11. Figma plugin (Design Token Forge)
+
+The plugin at `packages/figma-plugin/` is the bridge between editor output and Figma
+variables/components. Drift here is the single most common cause of "tokens look right
+in the editor but broken in Figma" incidents — so the rules below are **hard rules**, not
+suggestions.
+
+### 11.1 What ships, what doesn't
+
+- **Source of truth for the manifest is** `packages/figma-plugin/manifest.json`.
+  `main: "code.js"`, `ui: "ui-full.html"`. The `ui.html` file is a thin remote-loader
+  shell — DO NOT add real plugin UI to it.
+- The plugin Figma actually loads is the one whose `manifest.json` is registered in
+  Figma's "Plugins → Development → Manage plugins in development" list. Always verify
+  the path before debugging "my changes aren't showing up". Stale clones at
+  `~/Design-Token-Forge/` have bitten us repeatedly.
+- The component builder (`#componentBuilderSection` in `ui-full.html`) is now visible
+  to **all** plugin users. Never reintroduce a name-based (`indexOf('sridhar')`) or
+  hardcoded-userId gate. If a real gate is ever needed, put it server-side in the sync
+  server, not in plugin code that ships in the bundle.
+
+### 11.2 Variable & collection naming
+
+- DTF variable names use the same `--{category}-{name}-{scale}` shape as CSS, but with
+  **slashes** for Figma's grouping (e.g. `primitives/color/brand/500`,
+  `semantic/role/brand/fill`, `component/btn/bg-hover`).
+- Collections: `DTF / Primitives`, `DTF / Semantic`, `DTF / Components`, `DTF / Surfaces`.
+  The `DTF / ` prefix is **mandatory** — it's how the plugin finds collections to update
+  and how Figma users distinguish DTF variables from their own.
+- Modes inside a collection: `Light`, `Dark` (Title Case, exactly these two strings).
+  Never `light`/`dark`, never additional modes — surfaces are encoded as variables
+  inside the modes, not as additional modes.
+
+### 11.3 Update strategy — **never delete + recreate**
+
+> **The single most important plugin rule.** Re-read this whenever editing plugin code.
+
+- Figma tracks variables by **internal ID**, not by name. Deleting and re-creating a
+  variable severs every component binding in every Figma file permanently. There is no
+  undo across sessions.
+- The plugin's update path **must** be: find existing variable by name → `setValueForMode()`.
+  Only the user-initiated "Reset & recreate" action is allowed to call
+  `variable.remove()` — and only with a confirmation dialog.
+- Audit the plugin code before every release:
+
+  ```bash
+  # Should return ZERO hits outside the explicit "Reset & recreate" handler.
+  grep -nE '\.(remove|delete)\(\)' packages/figma-plugin/*.js \
+    | grep -viE 'reset[- ]?and[- ]?recreate|userConfirmed'
+  ```
+
+### 11.4 UI vocabulary inside the plugin
+
+Plugin UI strings follow the same rules as the editor (§3, §4, §7), with these
+plugin-specific canonical labels:
+
+| Concept                              | Canonical label                |
+|--------------------------------------|--------------------------------|
+| Manual import of a token JSON        | "Import tokens"                |
+| Push current sync-server tokens      | "Update variables"             |
+| Wipe + rebuild DTF collections       | "Reset & recreate" (danger)    |
+| Build component instances in Figma   | "Generate components"          |
+| Connection state — server reachable  | "Connected" / green dot        |
+| Connection state — server unreachable| "Waiting for server…"          |
+| Connection state — deploying         | "Deploying — please wait"      |
+
+- The component-builder progress chip uses the same `X variants, Y bindings, Z reactions`
+  template — don't reorder or rename those nouns.
+- Error toasts inside the plugin use the same "Sentence case, no trailing period"
+  rule (§7).
+
+## 12. Sync scope (editor → server → plugin → Figma)
+
+The four-hop pipeline is where drift creeps in fastest. Lock its surface area here.
+
+### 12.1 The pipeline
+
+```
+   editor-v2  ──(deploy)──►  GitHub Pages (palette JSON + tokens.css)
+                                   │
+                                   ▼
+                       sync-server (packages/sync-server)
+                                   │  watches files, serves /tokens
+                                   ▼
+                          plugin.js  (poll /tokens)
+                                   │
+                                   ▼
+                              Figma file
+```
+
+### 12.2 Watcher coverage (server side)
+
+- The sync server **must** watch all four token surfaces:
+  1. `packages/tokens/src/primitives*.css`
+  2. `packages/tokens/src/semantic*.css`
+  3. `packages/tokens/src/surfaces*.css`
+  4. `packages/components/src/**/*.tokens.css`
+- A watcher scoped to only `packages/tokens/src/*.css` will **silently** ignore component
+  edits. Verify before every release:
+
+  ```bash
+  # Inspect the watch glob set used at server startup.
+  grep -nE "watch|chokidar|glob" packages/sync-server/src/*.js
+  # Cross-check the running server actually serves the latest value.
+  curl -s http://localhost:9500/tokens | jq '.["--btn-bg-hover"]'
+  # Compare with the source file.
+  grep -n '\-\-btn-bg-hover' packages/components/src/button/button.tokens.css
+  ```
+
+### 12.3 Alias coverage (deploy gate)
+
+- Every component `.tokens.css` value must resolve to a `var(--<primitive>-N)` where the
+  primitive actually exists in the current ladder. A broken alias makes the sync server
+  **silently drop** the variable from `tokens.json` — designers then run "Update
+  variables" and the expected token never appears, with no error anywhere.
+- Pre-deploy gate:
+
+  ```bash
+  pnpm audit:primitives        # scripts/audit-primitive-aliases.cjs
+  pnpm audit:tokens            # scripts/audit-tokens.cjs (orphans + naming)
+  ```
+
+- The spacing ladder is **non-uniform** (skips 7, 9, 17, 19, 21, 23, 27, 29, 31, 33–35,
+  37–39, 41–44, 46–47, 49, 51–53, 55, 57–59, 61–63, 65–69, 71, 73–79, 81–89, 91–95, 97–99,
+  101–111, 113–119, 121+). When picking spacing values for new tokens, **verify the
+  primitive exists first** or the audit will fail.
+
+### 12.4 Override semantics (editor live preview ↔ deploy)
+
+- The editor's "Live preview" must emit the **full ladder + semantic mapping for every
+  role**, dirty or clean. Emitting only dirty roles makes the page paint with the file's
+  hardcoded primitives for clean roles, which can disagree with the editor's labels.
+- "Deploy to Figma" must round-trip the same payload. Audit:
+
+  ```bash
+  # The deployed JSON should contain every role, not just edited ones.
+  curl -s http://localhost:9500/tokens | jq 'keys | length'
+  ```
+
+### 12.5 Cache busting
+
+- Editor assets in `demo/editor-v2/` use a `?v=N` query string. **Bump on every change**
+  that touches `editor-v2.js`, `editor-v2.css`, or `palette-engine.js`. The audit:
+
+  ```bash
+  grep -nE 'editor-v2\.(js|css)\?v=' demo/editor-v2/index.html
+  ```
+
+- The Figma plugin loads `ui-full.html` directly from disk (no cache-busting required),
+  but the **remote loader** (`ui.html` → GitHub Pages) does cache. Bump the deployed
+  version's query string when shipping a plugin-UI change.
+
+### 12.6 Pre-deploy checklist (run all five)
+
+- [ ] `pnpm audit:primitives` — zero broken alias refs
+- [ ] `pnpm audit:tokens` — zero orphans, naming clean
+- [ ] Sync server running, `curl /tokens` returns latest values for all four surfaces
+- [ ] Editor `?v=N` bumped (if any editor-v2 file changed)
+- [ ] No `variable.remove()` calls outside the explicit "Reset & recreate" handler
+      (run grep from §11.3)
+
+---
+
+## 13. Open follow-ups (drift to fix when convenient)
 
 - [ ] Extract editor-chrome fixed pass/fail colors (`#1F6B33`, `#2F8049`, `#C2392B`) into
   `--ev2-fixed-pass-aaa`, `--ev2-fixed-pass-aa`, `--ev2-fixed-fail` so the editor itself
@@ -176,10 +339,12 @@ grep -nE '\b(Tier ?[0-3]|tier-[0-3])\b' demo/editor-v2/*.{js,css,html}
 
 ---
 
-## 12. Decision log
+## 14. Decision log
 
 | Date       | Decision                                                       | Why                                    |
 |------------|----------------------------------------------------------------|----------------------------------------|
 | 2026-05-16 | Initial draft — extracted from post-Step 1.3 consistency audit | Establish baseline before T3 starts    |
 | 2026-05-16 | Keep `to 1` in WCAG aria-label, `:1` elsewhere                 | Screen-reader pronunciation > brevity  |
 | 2026-05-16 | Fixed pass/fail hexes stay hardcoded for now                   | Editor chrome must not depend on user tokens; will tokenize when more chrome moves through the same pattern |
+| 2026-05-16 | Component builder visible to all plugin users                  | Stops being an owner-only tool; gating moves server-side if ever needed |
+| 2026-05-16 | Added §11 Figma plugin + §12 Sync scope to consistency doc     | Plugin / sync drift was the most-repeated source of incidents — pulling rules in-doc so they're checked alongside UI strings |
