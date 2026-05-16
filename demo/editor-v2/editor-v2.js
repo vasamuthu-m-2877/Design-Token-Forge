@@ -1542,17 +1542,16 @@
      ══════════════════════════════════════════════════════ */
   function initPaneResizer() {
     var resizer  = document.getElementById('paneResizer');
-    var workspace = document.querySelector('.ev2-workspace');
+    var workspace = document.querySelector('.ev2-panes');
     if (!resizer || !workspace) return;
 
-    var RAIL_W = 240;          // matches CSS first column
     var RESIZER_W = 6;         // matches CSS resizer track
     var MIN_LIST = 320;
     var MIN_PREVIEW = 380;
     var STORAGE_KEY = 'ev2-list-width';
 
     function applyWidth(px) {
-      var totalAvail = workspace.clientWidth - RAIL_W - RESIZER_W;
+      var totalAvail = workspace.clientWidth - RESIZER_W;
       if (totalAvail <= MIN_LIST + MIN_PREVIEW) return; // viewport too narrow
       var maxList = totalAvail - MIN_PREVIEW;
       var clamped = Math.max(MIN_LIST, Math.min(maxList, px));
@@ -1574,7 +1573,7 @@
     function onPointerMove(e) {
       if (!dragging) return;
       var rect = workspace.getBoundingClientRect();
-      var newListW = e.clientX - rect.left - RAIL_W - (RESIZER_W / 2);
+      var newListW = e.clientX - rect.left - (RESIZER_W / 2);
       applyWidth(newListW);
     }
     function onPointerUp(e) {
@@ -1600,7 +1599,7 @@
     // Keyboard a11y: arrow keys nudge by 16px
     resizer.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      var current = parseInt(getComputedStyle(workspace).gridTemplateColumns.split(' ')[1], 10) || 480;
+      var current = parseInt(getComputedStyle(workspace).gridTemplateColumns.split(' ')[0], 10) || 480;
       var delta = e.key === 'ArrowLeft' ? -16 : 16;
       applyWidth(current + delta);
       var cs = workspace.style.getPropertyValue('--ev2-list-w').trim();

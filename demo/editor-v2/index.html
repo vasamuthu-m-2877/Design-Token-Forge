@@ -15,12 +15,12 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=49">
+  <link rel="stylesheet" href="./editor-v2.css?v=50">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
-  <script src="../palette-engine.js?v=49" defer></script>
+  <script src="../palette-engine.js?v=50" defer></script>
   <!-- Token Solver (pure-function engine, exposes window.DTFSolver) -->
-  <script src="./solver.js?v=49" defer></script>
+  <script src="./solver.js?v=50" defer></script>
 </head>
 <body>
 
@@ -58,49 +58,43 @@
     </div>
   </header>
 
-  <!-- ─── Main 3-pane workspace ─────────────────────────── -->
+  <!-- ─── Main workspace: tier rail (top) + panes ────────── -->
   <main class="ev2-workspace">
 
-    <!-- LEFT: Tier rail -->
-    <aside class="ev2-rail" aria-label="Token tiers">
-      <nav class="ev2-rail-nav">
-        <button class="ev2-tier" data-tier="t0" aria-current="true">
+    <!-- TOP: Tier rail (horizontal). Sets the navigation contract for
+         T1/T2/T3 — see docs/editor-v2-tier-architecture.md §5.1.
+         T0 stays in the rail because palette editing is shipping; it
+         is conceptually upstream of the T1→T3 cascade but lives in the
+         same shell. -->
+    <nav class="ev2-tierbar" aria-label="Token tiers">
+      <div class="ev2-tierbar-segs" role="tablist">
+        <button class="ev2-tier" data-tier="t0" role="tab" aria-current="true">
           <span class="ev2-tier-badge">T0</span>
-          <span class="ev2-tier-text">
-            <span class="ev2-tier-name">Palette</span>
-            <span class="ev2-tier-desc">Raw key colors</span>
-          </span>
+          <span class="ev2-tier-name">Palette</span>
         </button>
-        <button class="ev2-tier" data-tier="t1">
+        <button class="ev2-tier" data-tier="t1" role="tab">
           <span class="ev2-tier-badge">T1</span>
-          <span class="ev2-tier-text">
-            <span class="ev2-tier-name">Roles</span>
-            <span class="ev2-tier-desc">Brand, danger…</span>
-          </span>
+          <span class="ev2-tier-name">Roles</span>
         </button>
-        <button class="ev2-tier" data-tier="t2">
+        <button class="ev2-tier" data-tier="t2" role="tab">
           <span class="ev2-tier-badge">T2</span>
-          <span class="ev2-tier-text">
-            <span class="ev2-tier-name">Surfaces</span>
-            <span class="ev2-tier-desc">Page backgrounds</span>
-          </span>
+          <span class="ev2-tier-name">Surfaces</span>
         </button>
-        <button class="ev2-tier" data-tier="t3">
+        <button class="ev2-tier" data-tier="t3" role="tab">
           <span class="ev2-tier-badge">T3</span>
-          <span class="ev2-tier-text">
-            <span class="ev2-tier-name">Components</span>
-            <span class="ev2-tier-desc">Sizes, spacing</span>
-          </span>
+          <span class="ev2-tier-name">Components</span>
         </button>
-      </nav>
-
-      <div class="ev2-rail-foot">
+      </div>
+      <div class="ev2-tierbar-meta">
         <div class="ev2-draft-status" id="draftStatus">
           <span class="ev2-draft-dot"></span>
           <span class="ev2-draft-text">Loading draft…</span>
         </div>
       </div>
-    </aside>
+    </nav>
+
+    <!-- BOTTOM: list + resizer + preview -->
+    <div class="ev2-panes">
 
     <!-- CENTER: Token list (grouped) -->
     <section class="ev2-list" aria-label="Tokens">
@@ -153,6 +147,8 @@
       </footer>
     </section>
 
+    </div><!-- /.ev2-panes -->
+
   </main>
 
   <!-- Toast slot -->
@@ -195,6 +191,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=49" defer></script>
+  <script src="./editor-v2.js?v=50" defer></script>
 </body>
 </html>

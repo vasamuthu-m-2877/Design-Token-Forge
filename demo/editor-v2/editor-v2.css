@@ -135,16 +135,24 @@ body{
   font-size:10px;font-weight:700;
 }
 
-/* ── Workspace (3-pane grid) ──────────────────────────── */
+/* ── Workspace shell ──────────────────────────────────
+   Top: horizontal tier rail (T0 · T1 · T2 · T3 + draft status).
+   Below: list | resizer | preview grid. The left "items rail" called
+   out in editor-v2-tier-architecture.md §5.1 D1 will land in build
+   step 1 (T1 Property-Card refactor) — this commit only wires the
+   tier-switch navigation contract. */
 .ev2-workspace{
-  display:grid;
-  grid-template-columns:240px var(--ev2-list-w, minmax(360px,1fr)) 6px minmax(420px,1.1fr);
+  display:flex;flex-direction:column;
   height:calc(100vh - 52px);
   min-height:0;
 }
+.ev2-panes{
+  flex:1;min-height:0;
+  display:grid;
+  grid-template-columns:var(--ev2-list-w, minmax(360px,1fr)) 6px minmax(420px,1.1fr);
+}
 
-/* Visible vertical dividers between panes */
-.ev2-rail{border-right:1px solid var(--surface-base-outline)}
+/* Visible vertical divider between list and preview */
 .ev2-list{border-right:1px solid var(--surface-base-outline)}
 
 /* Drag handle between list and preview. Sits in its own grid track. */
@@ -171,54 +179,70 @@ body{
 body[data-pane-dragging="true"]{cursor:col-resize}
 body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
 
-/* ── LEFT: tier rail ──────────────────────────────────── */
-.ev2-rail{
-  display:flex;flex-direction:column;
+/* ── TOP: tier rail (horizontal) ──────────────────────── */
+.ev2-tierbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:8px 16px;
   background:var(--surface-base-bg);
-  min-height:0;
+  border-bottom:1px solid var(--surface-base-outline);
+  flex-shrink:0;
 }
-.ev2-rail-nav{display:flex;flex-direction:column;padding:14px 10px;gap:4px;flex:1;min-height:0;overflow-y:auto}
+.ev2-tierbar-segs{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px;
+  background:var(--surface-base-subtle);
+  border:1px solid var(--surface-base-outline);
+  border-radius:var(--radius-md,8px);
+}
 .ev2-tier{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 12px;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;
   border:1px solid transparent;
-  border-radius:var(--radius-md,6px);
+  border-radius:var(--radius-sm,6px);
   background:transparent;
   text-align:left;cursor:pointer;
   font:inherit;
-  transition:all 120ms ease;
+  color:var(--surface-base-ct-subtle);
+  transition:background 120ms ease, color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 }
-.ev2-tier:hover{background:var(--surface-base-subtle)}
+.ev2-tier:hover{
+  background:var(--surface-base-bg);
+  color:var(--surface-base-ct-strong);
+}
 .ev2-tier[aria-current="true"]{
-  background:var(--surface-base-cm-bg);
+  background:var(--surface-base-bg);
   border-color:var(--surface-base-cm-outline-default);
-  box-shadow:var(--shadow-xs,0 1px 2px rgba(0,0,0,.04));
+  color:var(--surface-base-ct-strong);
+  box-shadow:var(--shadow-xs,0 1px 2px rgba(0,0,0,.05));
+}
+.ev2-tier:focus-visible{
+  outline:2px solid var(--brand-component-bg-default,#3366f0);
+  outline-offset:2px;
 }
 .ev2-tier-badge{
   flex-shrink:0;
   display:inline-flex;align-items:center;justify-content:center;
-  width:30px;height:30px;
-  border-radius:var(--radius-sm,4px);
+  width:22px;height:22px;
+  border-radius:var(--radius-xs,4px);
   background:var(--surface-base-strong);
   color:var(--surface-base-ct-strong);
-  font-size:11px;font-weight:700;
+  font-size:10px;font-weight:700;
   letter-spacing:.02em;
 }
 .ev2-tier[aria-current="true"] .ev2-tier-badge{
   background:var(--brand-component-bg-default);
   color:var(--brand-on-component);
 }
-.ev2-tier-text{display:flex;flex-direction:column;line-height:1.2;min-width:0}
-.ev2-tier-name{font-size:13px;font-weight:600;color:var(--surface-base-ct-strong)}
-.ev2-tier-desc{font-size:11px;color:var(--surface-base-ct-faint);margin-top:2px}
+.ev2-tier-name{font-size:13px;font-weight:600;line-height:1;white-space:nowrap}
 
-.ev2-rail-foot{
-  border-top:1px solid var(--surface-base-outline);
-  padding:12px 14px;
+.ev2-tierbar-meta{
+  display:inline-flex;align-items:center;gap:12px;
+  min-width:0;
 }
 .ev2-draft-status{
   display:flex;align-items:center;gap:8px;
   font-size:11px;color:var(--surface-base-ct-subtle);
+  white-space:nowrap;
 }
 .ev2-draft-dot{
   width:8px;height:8px;border-radius:50%;
@@ -229,6 +253,7 @@ body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
 .ev2-draft-status[data-state="saving"] .ev2-draft-dot{background:var(--warning-component-bg-default,#A66208);animation:ev2-pulse 1s ease-in-out infinite}
 .ev2-draft-status[data-state="error"] .ev2-draft-dot{background:var(--danger-component-bg-default,#D61D20)}
 @keyframes ev2-pulse{50%{opacity:.4}}
+
 
 /* ── CENTER: token list ───────────────────────────────── */
 .ev2-list{
@@ -1072,17 +1097,16 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
 .ev2-pair-stepper [data-step-reset]{color:var(--surface-base-ct-faint);font-size:11px}
 @media (max-width: 700px) { .ev2-pairs-grid{grid-template-columns:1fr} }
 
-/* ── Responsive guard rails (no full responsive layout in v2 step 1) ── */
+/* ── Responsive guard rails (no full responsive layout in v2 step 2) ── */
 @media (max-width: 1100px){
-  .ev2-workspace{grid-template-columns:200px 1fr 6px 1fr}
+  .ev2-panes{grid-template-columns:1fr 6px 1fr}
 }
 @media (max-width: 880px){
-  .ev2-workspace{grid-template-columns:1fr;grid-template-rows:auto 1fr 1fr;height:auto}
-  .ev2-rail{flex-direction:row;border-right:0;border-bottom:1px solid var(--surface-base-outline)}
-  .ev2-rail-nav{flex-direction:row;flex-wrap:wrap}
-  .ev2-rail-foot{display:none}
+  .ev2-workspace{height:auto}
+  .ev2-panes{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
   .ev2-list,.ev2-preview{border-right:0;border-bottom:1px solid var(--surface-base-outline)}
   .ev2-resizer{display:none}
+  .ev2-tierbar{flex-wrap:wrap}
 }
 
 /* ── Deploy summary dialog ────────────────────────────── */
