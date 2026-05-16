@@ -111,6 +111,112 @@
     return { fill: src.fill, content: src.content, container: src.container };
   }
   function t1For(roleId, mode) { return State.t1[mode || State.editingMode][roleId]; }
+
+  /* ── T2 Surfaces intent (data layer) ───────────────────
+     Build step 3: model + state only. No UI is wired here — T2 still
+     renders the placeholder route until step 4. This commit just
+     defines the shape downstream code (renderer, bulk ops, preview,
+     persistence) can rely on. See docs/editor-v2-tier-architecture.md
+     §3.2 (taxonomy) and §11 (build order).
+
+     Each surface has 16 properties grouped into 3 families.
+     A T2 cell is EITHER a step on its source palette (default) OR
+     a "follows" pointer to a T1 role pick (set in step 4). Defaults
+     are derived from per-surface anchor steps + signed offsets that
+     pass through tonalDir(mode) — so dark mode mirrors automatically
+     and no inline `± constant` ever leaks in (decision D4). */
+  var T2_SURFACES = [
+    { id:'bright',    label:'Bright',    palette:'neutral', desc:'Brightest page background' },
+    { id:'base',      label:'Base',      palette:'neutral', desc:'Default page background'   },
+    { id:'dim',       label:'Dim',       palette:'neutral', desc:'Recessed background'       },
+    { id:'deep',      label:'Deep',      palette:'neutral', desc:'Most recessed background'  },
+    { id:'accent',    label:'Accent',    palette:'brand',   desc:'Branded panels'            },
+    { id:'container', label:'Container', palette:'neutral', desc:'Card-on-surface'           },
+    { id:'float',     label:'Float',     palette:'neutral', desc:'Popovers, menus'           },
+    { id:'inverse',   label:'Inverse',   palette:'neutral', desc:'Dark on light, light on dark' }
+  ];
+
+  /* Anchor step for each surface's `bg` per mode. All other props on
+     a surface derive from this via T2_PROP_DEFS[].defaultOffset, in
+     the mode-correct direction. Values are the v0 picks accepted in
+     Q2 of docs §10 \u2014 step-4 render will paint from these, not from
+     the existing surfaces.css output, and the \u00b1 stepper is the
+     escape hatch when a surface needs a different anchor. */
+  var T2_BASE_STEPS = {
+    light: { bright:'25',  base:'50',  dim:'100', deep:'200',
+             accent:'25',  container:'25', float:'25',  inverse:'900' },
+    dark:  { bright:'850', base:'900', dim:'850', deep:'800',
+             accent:'900', container:'850', float:'800', inverse:'25'  }
+  };
+
+  /* The 16 properties per surface. Default offsets are signed in
+     "lighter→darker" steps and get multiplied by tonalDir(mode) at
+     resolve time — so light/dark mirror automatically. Numbers come
+     straight from docs §3.2 "Default offset table". */
+  var T2_PROP_DEFS = [
+    { id:'bg',                 family:'surface',   defaultOffset:  0 },
+    { id:'subtle',             family:'surface',   defaultOffset:  1 },
+    { id:'strong',             family:'surface',   defaultOffset:  2 },
+    { id:'outline',            family:'surface',   defaultOffset:  3 },
+    { id:'separator',          family:'surface',   defaultOffset:  3 },
+    { id:'ct-default',         family:'content',   defaultOffset:-16 },
+    { id:'ct-strong',          family:'content',   defaultOffset:-19 },
+    { id:'ct-subtle',          family:'content',   defaultOffset:-10 },
+    { id:'ct-faint',           family:'content',   defaultOffset: -8 },
+    { id:'cm-bg',              family:'component', defaultOffset: -1 },
+    { id:'cm-bg-hover',        family:'component', defaultOffset:  0 },
+    { id:'cm-bg-pressed',      family:'component', defaultOffset:  1 },
+    { id:'cm-outline',         family:'component', defaultOffset:  3 },
+    { id:'cm-outline-hover',   family:'component', defaultOffset:  4 },
+    { id:'cm-outline-pressed', family:'component', defaultOffset:  4 },
+    { id:'cm-separator',       family:'component', defaultOffset:  3 }
+  ];
+
+  function makeEmptyT2() {
+    var out = {};
+    ['light','dark'].forEach(function (mode) {
+      out[mode] = {};
+      T2_SURFACES.forEach(function (s) { out[mode][s.id] = {}; });
+    });
+    return out;
+  }
+
+  /* Anchor step for a surface's `bg` cell. Honors a user override
+     stored on the bg cell; otherwise returns the per-mode default
+     from T2_BASE_STEPS. This is what all other props on the surface
+     offset from, so an override here cascades family-wide. */
+  function surfaceBaseStep(surfaceId, mode) {
+    var bgOv = State.t2 && State.t2[mode] && State.t2[mode][surfaceId] && State.t2[mode][surfaceId]['bg'];
+    if (bgOv && bgOv.step && ALL_STEPS.indexOf(bgOv.step) >= 0) return bgOv.step;
+    return (T2_BASE_STEPS[mode] && T2_BASE_STEPS[mode][surfaceId]) || '500';
+  }
+  function defaultT2Step(surfaceId, propId, mode) {
+    var prop = T2_PROP_DEFS.find(function (p) { return p.id === propId; });
+    if (!prop) return surfaceBaseStep(surfaceId, mode);
+    if (prop.id === 'bg') return surfaceBaseStep(surfaceId, mode);
+    return stepRel(surfaceBaseStep(surfaceId, mode), prop.defaultOffset * tonalDir(mode));
+  }
+  function resolveT2Step(surfaceId, propId, mode) {
+    var ov = State.t2 && State.t2[mode] && State.t2[mode][surfaceId] && State.t2[mode][surfaceId][propId];
+    if (ov && ov.step && ALL_STEPS.indexOf(ov.step) >= 0) return ov.step;
+    return defaultT2Step(surfaceId, propId, mode);
+  }
+  /* True if any cell in this surface (either mode) carries an
+     override — either a custom step or a follows pointer. */
+  function isT2Changed(surfaceId) {
+    return ['light','dark'].some(function (mode) {
+      var bag = State.t2 && State.t2[mode] && State.t2[mode][surfaceId];
+      if (!bag) return false;
+      return Object.keys(bag).some(function (propId) {
+        var ov = bag[propId];
+        return ov && (ov.step || ov.follows);
+      });
+    });
+  }
+  function totalT2Changes() {
+    return T2_SURFACES.reduce(function (n, s) { return n + (isT2Changed(s.id) ? 1 : 0); }, 0);
+  }
+
   var State = {
     activeTier: 't0',
     activeRole: 'brand',
@@ -160,6 +266,14 @@
         info:    defaultT1ForRole('info',    'dark')
       }
     },
+    // T2 Surfaces override map. Empty objects mean "use defaults for
+    // every property". Step-4 renderer reads via resolveT2Step().
+    // Keyed by [mode][surfaceId][propId] → { step?: '500', follows?: 'role.fill' }.
+    // baseline mirrors t1Baseline: snapshot of overrides considered
+    // "clean" so Discard / dirty-count don't compare against an
+    // empty bag if seeding logic ever lands.
+    t2:         makeEmptyT2(),
+    t2Baseline: makeEmptyT2(),
     // Disclosure open-state persists across role / tier swaps.
     // Keyed by 'tierId:discId' so each tier can have its own pattern.
     disclosure: { 't0:steps': false, 't0:affects': false, 't1:slots': false, 't1:affects': false },
@@ -264,7 +378,9 @@
     }).join('   •   ');
   }
   function totalChanges() {
-    return ROLES.reduce(function (n, r) { return n + (isRoleDirty(r.id) ? 1 : 0); }, 0);
+    var n = ROLES.reduce(function (acc, r) { return acc + (isRoleDirty(r.id) ? 1 : 0); }, 0);
+    n += totalT2Changes();
+    return n;
   }
 
   function stepsFor(roleId) {
@@ -434,6 +550,8 @@
       ROLES.forEach(function (r) { if (isChanged(r.id)) n++; });
     } else if (tierId === 't1') {
       ROLES.forEach(function (r) { if (isT1Changed(r.id)) n++; });
+    } else if (tierId === 't2') {
+      n = totalT2Changes();
     }
     return n;
   }
@@ -442,7 +560,11 @@
     var btn = document.getElementById('sectionResetBtn');
     if (!btn) return;
     var tier = State.activeTier;
-    var supported = (tier === 't0' || tier === 't1');
+    // t2 supported even though the render arrives in step 4 — Reset
+    // section already needs to flush the (currently empty) override
+    // map once step-4 wiring writes to it. Keep t3 unsupported until
+    // its own state lands.
+    var supported = (tier === 't0' || tier === 't1' || tier === 't2');
     var dirty = supported ? sectionDirtyCount(tier) : 0;
     btn.hidden = !supported;
     btn.disabled = dirty === 0;
@@ -490,7 +612,8 @@
           anchor: State.anchor,
           editingMode: State.editingMode,
           proposed: State.proposed,
-          t1: State.t1
+          t1: State.t1,
+          t2: State.t2
         };
         localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
         State.lastSavedAt = payload.ts;
@@ -528,6 +651,31 @@
           adoptT1(State.t1.dark[r.id],  d.t1[r.id]);
         }
       });
+      // T2 adoption \u2014 schema is { mode: { surfaceId: { propId: {step?,follows?} } } }.
+      // We validate each leaf against ALL_STEPS / known surface+prop
+      // ids so a stale or corrupted draft can't poison the override
+      // map. Unknown keys are silently dropped.
+      if (d.t2 && typeof d.t2 === 'object') {
+        var PROP_OK = {};
+        T2_PROP_DEFS.forEach(function (p) { PROP_OK[p.id] = true; });
+        ['light','dark'].forEach(function (mode) {
+          var srcMode = d.t2[mode];
+          if (!srcMode || typeof srcMode !== 'object') return;
+          T2_SURFACES.forEach(function (s) {
+            var srcSurf = srcMode[s.id];
+            if (!srcSurf || typeof srcSurf !== 'object') return;
+            Object.keys(srcSurf).forEach(function (propId) {
+              if (!PROP_OK[propId]) return;
+              var raw = srcSurf[propId];
+              if (!raw || typeof raw !== 'object') return;
+              var clean = {};
+              if (raw.step && STEP_OK[raw.step]) clean.step = raw.step;
+              if (typeof raw.follows === 'string' && raw.follows) clean.follows = raw.follows;
+              if (clean.step || clean.follows) State.t2[mode][s.id][propId] = clean;
+            });
+          });
+        });
+      }
       if (d.editingMode === 'light' || d.editingMode === 'dark') State.editingMode = d.editingMode;
       if (d.anchor === 'exact' || d.anchor === 'normalized') State.anchor = d.anchor;
       State.lastSavedAt = d.ts || null;
@@ -1197,6 +1345,10 @@
       State.t1.light[r.id] = Object.assign({}, State.t1Baseline.light[r.id]);
       State.t1.dark[r.id]  = Object.assign({}, State.t1Baseline.dark[r.id]);
     });
+    // T2 has no "AA-clean baseline" notion yet — every cell defaults
+    // to a deterministic offset from T2_BASE_STEPS, so Discard simply
+    // drops all overrides back to empty.
+    State.t2 = makeEmptyT2();
     State.cachedSteps = {};
     clearDraftFromStorage();
     pushPreview();
@@ -1232,6 +1384,8 @@
         State.t1.light[r.id] = Object.assign({}, State.t1Baseline.light[r.id]);
         State.t1.dark[r.id]  = Object.assign({}, State.t1Baseline.dark[r.id]);
       });
+    } else if (tierId === 't2') {
+      State.t2 = makeEmptyT2();
     }
     scheduleAutosave();
     pushPreview();
