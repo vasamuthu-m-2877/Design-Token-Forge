@@ -15,7 +15,24 @@ window.DTF = window.DTF || { onThemeChange: null };
 (function () {
   try {
     var pid = new URLSearchParams(location.search).get('project');
-    if (pid) localStorage.setItem('dtf-active-project', pid);
+    if (!pid) return;
+    var prev = localStorage.getItem('dtf-active-project');
+    localStorage.setItem('dtf-active-project', pid);
+    // If this browser has never cached this project's tokens, the
+    // "Inject Saved Color Tokens" block below would render with
+    // package defaults forever. Schedule an apply once the selector
+    // IIFE has installed window.DTF.applyProjectTokens.
+    var hasCache = !!localStorage.getItem('dtf-saved-tokens-' + pid);
+    if (!hasCache || prev !== pid) {
+      var tries = 0;
+      var iv = setInterval(function () {
+        tries++;
+        if (window.DTF && typeof window.DTF.applyProjectTokens === 'function') {
+          clearInterval(iv);
+          window.DTF.applyProjectTokens(pid);
+        } else if (tries > 40) { clearInterval(iv); }
+      }, 25);
+    }
   } catch (e) {}
 })();
 
@@ -595,6 +612,11 @@ window.DTF = window.DTF || { onThemeChange: null };
       requestAnimationFrame(window.DTF.onThemeChange);
     }
   }
+
+  // Expose so cross-IIFE bootstrap (URL-param promotion below)
+  // can force a fresh fetch+apply when arriving from another page
+  // for a project this browser has never cached.
+  window.DTF.applyProjectTokens = _applyProjectTokens;
 })();
 
 /* ── Inject Saved Color Tokens (from Color System page) ── */
