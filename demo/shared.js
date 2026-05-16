@@ -704,23 +704,33 @@ window.DTF = window.DTF || { onThemeChange: null };
 (function(){
   var STORAGE_KEY='dtf-theme';
   var html=document.documentElement;
-  var toggle=document.getElementById('themeToggle');
 
-  /* Restore saved preference on load */
+  /* Restore saved preference on load. The toggle button itself is now
+     part of <dtf-topbar> and may not exist yet when this IIFE runs —
+     we look it up again on every state flip via getToggle(). */
   var saved=localStorage.getItem(STORAGE_KEY);
-  if(saved==='dark'){
-    html.setAttribute('data-theme','dark');
-    if(toggle) toggle.textContent='Toggle Light';
-  } else {
-    html.removeAttribute('data-theme');
-    if(toggle) toggle.textContent='Toggle Dark';
-  }
+  if(saved==='dark') html.setAttribute('data-theme','dark');
+  else html.removeAttribute('data-theme');
 
-  if(!toggle) return;
-  toggle.addEventListener('click',function(){
+  function getToggle(){ return document.getElementById('themeToggle'); }
+  function syncAria(){
+    var t=getToggle(); if(!t) return;
     var isDark=html.getAttribute('data-theme')==='dark';
-    if(isDark){html.removeAttribute('data-theme');toggle.textContent='Toggle Dark';localStorage.setItem(STORAGE_KEY,'light');}
-    else{html.setAttribute('data-theme','dark');toggle.textContent='Toggle Light';localStorage.setItem(STORAGE_KEY,'dark');}
+    t.setAttribute('aria-pressed', isDark?'true':'false');
+    t.setAttribute('aria-label', isDark?'Switch to light theme':'Switch to dark theme');
+  }
+  syncAria();
+  // <dtf-topbar> upgrades after this IIFE; re-sync once it lands.
+  document.addEventListener('DOMContentLoaded', syncAria);
+  setTimeout(syncAria, 0);
+
+  document.addEventListener('click', function(e){
+    var t=e.target.closest && e.target.closest('#themeToggle');
+    if(!t) return;
+    var isDark=html.getAttribute('data-theme')==='dark';
+    if(isDark){ html.removeAttribute('data-theme'); localStorage.setItem(STORAGE_KEY,'light'); }
+    else{ html.setAttribute('data-theme','dark'); localStorage.setItem(STORAGE_KEY,'dark'); }
+    syncAria();
     if(typeof window.DTF.onThemeChange==='function'){
       requestAnimationFrame(window.DTF.onThemeChange);
     }

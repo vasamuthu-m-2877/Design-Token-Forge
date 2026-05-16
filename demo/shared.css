@@ -80,8 +80,19 @@ body{
 .nav-project-open:hover{background:var(--brand-component-bg-hover,#1E54B8);border-color:var(--brand-component-bg-hover,#1E54B8)}
 .nav-project-open:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
 .nav-project-open svg{flex-shrink:0}
-.theme-toggle{padding:4px 10px;border-radius:var(--radius-sm,4px);border:1px solid var(--demo-border);background:var(--demo-surface);color:var(--demo-fg-subtle);cursor:pointer;font-size:var(--font-size-11,11px);font-weight:500;transition:all 150ms ease;font-family:inherit}
+.theme-toggle{width:28px;height:28px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-sm,4px);border:1px solid var(--demo-border);background:var(--demo-surface);color:var(--demo-fg-subtle);cursor:pointer;transition:all 150ms ease;font-family:inherit}
 .theme-toggle:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong)}
+.theme-toggle svg{width:14px;height:14px}
+.theme-toggle .theme-icon-moon{display:none}
+html[data-theme="dark"] .theme-toggle .theme-icon-sun{display:none}
+html[data-theme="dark"] .theme-toggle .theme-icon-moon{display:inline-block}
+
+/* ── <dtf-topbar> slot containers ──────────────────────── */
+dtf-topbar{display:block}
+.dtf-topbar-project{display:inline-flex;align-items:center;gap:6px;margin-left:8px}
+.dtf-topbar-project:empty{display:none}
+.dtf-topbar-actions{display:inline-flex;align-items:center;gap:8px}
+.dtf-topbar-actions:empty{display:none}
 
 /* ── Header ────────────────────────────────────────────── */
 .demo-header{padding:24px 32px;border-bottom:1px solid var(--demo-border);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
