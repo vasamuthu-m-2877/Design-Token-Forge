@@ -182,7 +182,9 @@
 
     /* Zone 2 — tint pair: bg shown as the canvas itself, subtle
        and strong as two stacked bars inside the bg with no extra
-       chrome so the user reads the contrast jump. */
+       chrome so the user reads the contrast jump. Edges (outline +
+       separator) belong to the same surface family so they live in
+       this zone too, as their own labelled rows. */
     .pv-z-tints{display:flex;flex-direction:column;gap:4px}
     .pv-z-tint{
       padding:10px 12px;border-radius:6px;
@@ -194,11 +196,22 @@
     .pv-z-tint.t-subtle{background:var(--surface-active-subtle)}
     .pv-z-tint.t-strong{background:var(--surface-active-strong)}
 
-    /* Zone 3 — component: a single button shown in 3 interactive
-       states, separated by cm-separator. Outline and bg are the
-       component tokens; default/hover/pressed map to the cm-bg-*
-       trio. Sits inside a card-like wrapper so cm-outline is
-       visible against the canvas. */
+    /* Surface edges: outline + separator as labelled bars right
+       under the tint stack so they read as part of the same family. */
+    .pv-z-edges{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+    .pv-z-edge-row{
+      display:flex;align-items:center;gap:8px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:9px;color:var(--surface-active-ct-faint);
+    }
+    .pv-z-edge-row > .pv-z-edge-tag{flex:0 0 60px;text-align:right;opacity:.8;font-weight:600}
+    .pv-z-edge-bar{flex:1;height:1px;background:var(--surface-active-separator)}
+    .pv-z-edge-line{flex:1;height:0;border-top:1px solid var(--surface-active-outline)}
+
+    /* Zone 3 — Component family: cm-bg + cm-outline ×3 states, plus
+       cm-separator, all visualised together. Component edges live
+       INSIDE this zone (not mixed with surface edges) so the user
+       sees Component as a self-contained group. */
     .pv-z-cmp{
       display:flex;
       border-radius:8px;overflow:hidden;
@@ -224,120 +237,97 @@
     }
     .pv-z-cmp-cell.s-hover   .pv-z-cmp-dot{border-color:var(--surface-active-cm-outline-hover)}
     .pv-z-cmp-cell.s-pressed .pv-z-cmp-dot{border-color:var(--surface-active-cm-outline-pressed)}
-
-    /* Zone 4 — separators: two thin horizontal lines, one global,
-       one component, labelled inline. */
-    .pv-z-seps{display:flex;flex-direction:column;gap:8px}
-    .pv-z-sep-row{
+    .pv-z-cmp-sep-row{
+      margin-top:6px;
       display:flex;align-items:center;gap:8px;
       font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
       font-size:9px;color:var(--surface-active-ct-faint);
     }
-    .pv-z-sep-row > .pv-z-sep-tag{flex:0 0 60px;text-align:right;opacity:.8;font-weight:600}
-    .pv-z-sep-row > .pv-z-sep-bar{flex:1;height:1px}
-    .pv-z-sep-row.r-sep    > .pv-z-sep-bar{background:var(--surface-active-separator)}
-    .pv-z-sep-row.r-cm-sep > .pv-z-sep-bar{background:var(--surface-active-cm-separator)}
-    .pv-z-sep-row > .pv-z-sep-outline{
-      flex:1;height:0;border-top:1px solid var(--surface-active-outline);
-    }
-    .pv-z-sep-row > .pv-z-sep-cm-outline{
-      flex:1;height:0;border-top:1px solid var(--surface-active-cm-outline);
-    }
+    .pv-z-cmp-sep-row > .pv-z-edge-tag{flex:0 0 60px;text-align:right;opacity:.8;font-weight:600}
+    .pv-z-cmp-sep-bar{flex:1;height:1px;background:var(--surface-active-cm-separator)}
 
-    /* ---- T2 surface-system strip ----
-       Sits ABOVE the active-surface canvas; shows every surface as
-       a small painted tile so the user can see how this surface
-       compares to the rest of the system. Active surface is ringed.
-       Each tile carries content tone + outline so it's an honest
-       miniature, not just a swatch. */
-    .pv-surfaces-strip{
-      margin-bottom:14px;
-      padding:10px;border-radius:10px;
-      border:1px dashed var(--surface-base-outline);
-      background:transparent;
+    /* ---- Interactive try-it section ----
+       Below the static token map: real buttons with real :hover and
+       :active states so the user can FEEL the cm-bg → cm-bg-hover →
+       cm-bg-pressed mapping. Three variants exercise the full token
+       trio (bg+outline+content) in their three interaction states. */
+    .pv-try{
+      margin-top:18px;
+      padding-top:14px;
+      border-top:1px dashed var(--surface-active-separator);
+      display:flex;flex-direction:column;gap:8px;
     }
-    .pv-surfaces-strip-cap{
+    .pv-try-cap{
       font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
-      color:var(--surface-base-ct-faint);
-      margin-bottom:8px;display:flex;justify-content:space-between;
+      color:var(--surface-active-ct-faint);
+      display:flex;align-items:center;gap:8px;
     }
-    .pv-surfaces-strip-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:6px;
-    }
-    .pv-surfaces-strip-tile{
-      display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
-      gap:4px;
-      padding:8px;
-      min-height:54px;
-      border-radius:6px;
-      border:1px solid;
-      transition:transform 120ms,box-shadow 120ms;
-      font-size:10px;font-weight:600;
+    .pv-try-cap-hint{
       font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:9px;font-weight:500;text-transform:none;letter-spacing:0;
+      opacity:.85;
     }
-    .pv-surfaces-strip-tile[data-active="true"]{
-      outline:2px solid var(--brand-component-bg-default,#286CE5);
-      outline-offset:1px;
+    .pv-try-row{
+      display:flex;gap:8px;flex-wrap:wrap;
     }
-    .pv-surfaces-strip-tile-name{font-size:10.5px;font-weight:700}
-    .pv-surfaces-strip-tile-meta{font-size:9px;opacity:.7}
-    /* Each tile fills with its own surface's tokens. Painted via
-       inline custom props so we only need to push the surface table
-       to :root and these auto-update. */
-    .pv-surfaces-strip-tile[data-surface="bright"]   {background:var(--surface-bright-bg);   color:var(--surface-bright-ct-strong);   border-color:var(--surface-bright-outline)}
-    .pv-surfaces-strip-tile[data-surface="base"]     {background:var(--surface-base-bg);     color:var(--surface-base-ct-strong);     border-color:var(--surface-base-outline)}
-    .pv-surfaces-strip-tile[data-surface="dim"]      {background:var(--surface-dim-bg);      color:var(--surface-dim-ct-strong);      border-color:var(--surface-dim-outline)}
-    .pv-surfaces-strip-tile[data-surface="deep"]     {background:var(--surface-deep-bg);     color:var(--surface-deep-ct-strong);     border-color:var(--surface-deep-outline)}
-    .pv-surfaces-strip-tile[data-surface="accent"]   {background:var(--surface-accent-bg);   color:var(--surface-accent-ct-strong);   border-color:var(--surface-accent-outline)}
-    .pv-surfaces-strip-tile[data-surface="container"]{background:var(--surface-container-bg);color:var(--surface-container-ct-strong);border-color:var(--surface-container-outline)}
-    .pv-surfaces-strip-tile[data-surface="float"]    {background:var(--surface-float-bg);    color:var(--surface-float-ct-strong);    border-color:var(--surface-float-outline)}
-    .pv-surfaces-strip-tile[data-surface="inverse"]  {background:var(--surface-inverse-bg);  color:var(--surface-inverse-ct-strong);  border-color:var(--surface-inverse-outline)}
+    .pv-try-btn{
+      flex:1;min-width:0;
+      padding:9px 12px;border-radius:7px;
+      font-size:11.5px;font-weight:600;
+      font-family:inherit;
+      cursor:pointer;
+      transition:background 80ms,border-color 80ms,color 80ms;
+      background:var(--surface-active-cm-bg);
+      border:1px solid var(--surface-active-cm-outline);
+      color:var(--surface-active-ct-strong);
+    }
+    .pv-try-btn:hover{
+      background:var(--surface-active-cm-bg-hover);
+      border-color:var(--surface-active-cm-outline-hover);
+    }
+    .pv-try-btn:active{
+      background:var(--surface-active-cm-bg-pressed);
+      border-color:var(--surface-active-cm-outline-pressed);
+    }
+    /* Variant: ghost — no bg, no outline at rest; cm-bg-hover/pressed
+       fill in on interaction so the user sees the hover/pressed
+       tokens against a transparent baseline. */
+    .pv-try-btn.v-ghost{
+      background:transparent;
+      border-color:transparent;
+      color:var(--surface-active-ct-default);
+    }
+    .pv-try-btn.v-ghost:hover{
+      background:var(--surface-active-cm-bg-hover);
+    }
+    .pv-try-btn.v-ghost:active{
+      background:var(--surface-active-cm-bg-pressed);
+    }
 
     /* ---- Tier gating ----
        When the editor is on T2 the preview becomes a surface-only
        experience: the role spotlight and compare-roles panels (both
        designed for T1 work) collapse out of the layout. The pv-canvas
-       + pv-surfaces-strip take their place as the entire preview.
-       When on T0/T1/T3, those two panels return and the T2 strip
-       hides (the canvas already hides via JS). */
+       takes their place as the entire preview. When on T0/T1/T3,
+       those two panels return and the canvas hides via JS. */
     body[data-active-tier="t2"] .pv-spotlight,
     body[data-active-tier="t2"] .pv-compare{display:none !important}
-    body:not([data-active-tier="t2"]) .pv-surfaces-strip{display:none}
   </style>
 </head>
 <body>
-
-  <!-- T2 surface-system strip: shows every surface as a small tile
-       so the user can see the whole system at a glance and how the
-       one they're editing compares to the rest. Hidden on T0/T1/T3. -->
-  <section class="pv-surfaces-strip" id="pv-surfaces-strip" aria-label="All surfaces">
-    <div class="pv-surfaces-strip-cap">
-      <span>Surface system</span>
-      <span style="opacity:.6;font-weight:500;text-transform:none;letter-spacing:0">8 surfaces · light/dark mirror</span>
-    </div>
-    <div class="pv-surfaces-strip-grid">
-      <div class="pv-surfaces-strip-tile" data-surface="bright"><span class="pv-surfaces-strip-tile-name">Bright</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="base"><span class="pv-surfaces-strip-tile-name">Base</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="dim"><span class="pv-surfaces-strip-tile-name">Dim</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="deep"><span class="pv-surfaces-strip-tile-name">Deep</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="accent"><span class="pv-surfaces-strip-tile-name">Accent</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="container"><span class="pv-surfaces-strip-tile-name">Container</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="float"><span class="pv-surfaces-strip-tile-name">Float</span></div>
-      <div class="pv-surfaces-strip-tile" data-surface="inverse"><span class="pv-surfaces-strip-tile-name">Inverse</span></div>
-    </div>
-  </section>
 
   <!-- Active surface canvas — renders a realistic mini app painted
        entirely with --surface-active-* tokens. The editor aliases
        those to whichever surface the user clicked, so editing any
        T2 token visibly repaints real UI here (buttons, alert, card,
        input, list) instead of abstract swatches. -->
-  <!-- Active-surface canvas — a TOKEN MAP, not a UI mock. Four
-       zones, each labelled with the token it paints, so the user
-       can map color → token at a glance. No app prose, no header
-       (the strip above already shows which surface is active). -->
+  <!-- Active-surface canvas — a TOKEN MAP, not a UI mock. Zones
+       group strictly by family so the user reads Surface vs Component
+       as separate concepts: Surface owns bg/subtle/strong + its own
+       outline/separator; Component owns cm-bg trio + cm-outline trio
+       + cm-separator. A separate Try-it row below lets the user
+       hover/press real buttons to feel the cm-*-hover / cm-*-pressed
+       tokens cycle. -->
   <section class="pv-canvas" id="pv-canvas" hidden aria-label="Active surface token map">
 
     <!-- Zone 1: content tones -->
@@ -363,18 +353,30 @@
       </div>
     </div>
 
-    <!-- Zone 2: tints (bg is the canvas itself) -->
+    <!-- Zone 2: Surface family — tints + its own edges grouped -->
     <div class="pv-zone">
-      <div class="pv-zone-label"><b>Surface</b>bg · subtle · strong</div>
-      <div class="pv-zone-body pv-z-tints">
-        <div class="pv-z-tint t-subtle">subtle</div>
-        <div class="pv-z-tint t-strong">strong</div>
+      <div class="pv-zone-label"><b>Surface</b>bg · subtle · strong · outline · separator</div>
+      <div class="pv-zone-body">
+        <div class="pv-z-tints">
+          <div class="pv-z-tint t-subtle">subtle</div>
+          <div class="pv-z-tint t-strong">strong</div>
+        </div>
+        <div class="pv-z-edges">
+          <div class="pv-z-edge-row">
+            <span class="pv-z-edge-tag">outline</span>
+            <span class="pv-z-edge-line"></span>
+          </div>
+          <div class="pv-z-edge-row">
+            <span class="pv-z-edge-tag">separator</span>
+            <span class="pv-z-edge-bar"></span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Zone 3: component states -->
+    <!-- Zone 3: Component family — cm-bg ×3 states + cm-outline ×3 + cm-separator -->
     <div class="pv-zone">
-      <div class="pv-zone-label"><b>Component</b>cm-bg · cm-outline ×3 states</div>
+      <div class="pv-zone-label"><b>Component</b>cm-bg · cm-outline ×3 · cm-separator</div>
       <div class="pv-zone-body">
         <div class="pv-z-cmp">
           <div class="pv-z-cmp-cell">
@@ -390,29 +392,23 @@
             <span>pressed</span>
           </div>
         </div>
+        <div class="pv-z-cmp-sep-row">
+          <span class="pv-z-edge-tag">cm-sep</span>
+          <span class="pv-z-cmp-sep-bar"></span>
+        </div>
       </div>
     </div>
 
-    <!-- Zone 4: edges -->
-    <div class="pv-zone">
-      <div class="pv-zone-label"><b>Edges</b>outline · separator</div>
-      <div class="pv-zone-body pv-z-seps">
-        <div class="pv-z-sep-row r-sep">
-          <span class="pv-z-sep-tag">separator</span>
-          <span class="pv-z-sep-bar"></span>
-        </div>
-        <div class="pv-z-sep-row r-cm-sep">
-          <span class="pv-z-sep-tag">cm-sep</span>
-          <span class="pv-z-sep-bar"></span>
-        </div>
-        <div class="pv-z-sep-row">
-          <span class="pv-z-sep-tag">outline</span>
-          <span class="pv-z-sep-outline"></span>
-        </div>
-        <div class="pv-z-sep-row">
-          <span class="pv-z-sep-tag">cm-outline</span>
-          <span class="pv-z-sep-cm-outline"></span>
-        </div>
+    <!-- Try-it: real buttons with :hover and :active so the user
+         can feel cm-bg → cm-bg-hover → cm-bg-pressed mapping. -->
+    <div class="pv-try" aria-label="Interactive try-it">
+      <div class="pv-try-cap">
+        <span>Try it</span>
+        <span class="pv-try-cap-hint">hover &amp; press to feel cm-bg / cm-outline cycle</span>
+      </div>
+      <div class="pv-try-row">
+        <button type="button" class="pv-try-btn">Outlined</button>
+        <button type="button" class="pv-try-btn v-ghost">Ghost</button>
       </div>
     </div>
 
@@ -545,18 +541,8 @@
       });
     })();
 
-    // Clicking a tile in the surface-system strip asks the editor to
-    // make that surface the active T2 tab. Editor owns surface state;
-    // preview just announces intent. Parent will reply with a fresh
-    // ev2-active-surface message that flips the alias bridge.
-    document.querySelectorAll('.pv-surfaces-strip-tile').forEach(function (tile) {
-      tile.style.cursor = 'pointer';
-      tile.addEventListener('click', function () {
-        var s = tile.getAttribute('data-surface');
-        if (!s) return;
-        try { window.parent.postMessage({ type: 'ev2-request-active-surface', surface: s }, '*'); } catch (err) {}
-      });
-    });
+    // (Surface picker lives in the editor pane now; preview is a
+    // passive canvas.)
 
     // Listen for messages from the editor to highlight the relevant pv-section.
     var clearTimer = null;
@@ -652,14 +638,8 @@
         // else = role spotlight + compare panels.
         if (d.tier) document.body.setAttribute('data-active-tier', d.tier);
         // Reveal the surface canvas only when the editor is on T2.
-        // On any other tier, hide — the spotlight + compare-roles
-        // panels are the right preview for T0/T1.
         var cnv = document.getElementById('pv-canvas');
         if (cnv) cnv.hidden = (d.tier !== 't2');
-        // Mark the active surface tile in the strip.
-        document.querySelectorAll('.pv-surfaces-strip-tile').forEach(function (t) {
-          t.setAttribute('data-active', String(t.getAttribute('data-surface') === as));
-        });
         return;
       }
       if (d.type !== 'ev2-focus') return;

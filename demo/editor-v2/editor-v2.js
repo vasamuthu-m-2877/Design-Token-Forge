@@ -2039,22 +2039,6 @@
     pushPreview();
   });
 
-  // Preview asks the editor to switch the active T2 surface when the
-  // user clicks a tile in the preview's surface-system strip. Single
-  // source of truth stays in the editor; preview is a dumb mirror.
-  window.addEventListener('message', function (e) {
-    var d = e && e.data || {};
-    if (d.type === 'ev2-request-active-surface' && d.surface) {
-      if (State.activeTier !== 't2') return; // only meaningful on T2
-      if (d.surface === State.activeSurface) return;
-      State.activeSurface = d.surface;
-      __expandedT2 = null;
-      saveUIState();
-      renderT2();
-      pushActiveSurface();
-    }
-  });
-
   var draftStatus = document.getElementById('draftStatus');
 
   var toastEl = document.getElementById('ev2Toast');
