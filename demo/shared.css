@@ -34,7 +34,7 @@ body{
 .nav-home svg{width:16px;height:16px}
 .nav-crumb .nav-sep{color:var(--demo-fg-faint);margin:0 2px;user-select:none}
 .nav-switcher{position:relative}
-.nav-switcher-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--demo-fg-strong);font-size:var(--font-size-12,12px);font-weight:600;cursor:pointer;transition:all 150ms ease;font-family:inherit}
+.nav-switcher-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-md,6px);background:var(--demo-surface);color:var(--demo-fg-strong);font-size:var(--font-size-12,12px);font-weight:600;cursor:pointer;transition:all 120ms ease;font-family:inherit;height:28px;line-height:1}
 .nav-switcher-btn:hover{background:var(--demo-surface-alt);border-color:var(--demo-fg-faint)}
 .nav-switcher-btn svg{width:12px;height:12px;color:var(--demo-fg-faint)}
 .nav-switcher-btn[aria-expanded="true"]{background:var(--demo-surface-alt);border-color:var(--demo-fg-subtle)}
@@ -79,8 +79,8 @@ body{
 .nav-project > .nav-project-action:hover{background:var(--demo-surface-alt)}
 .nav-project > .nav-project-action.nav-project-del:hover{background:#FEE2E2;color:#DC2626}
 
-.nav-project-new{padding:3px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--brand-content-default,#286CE5);font-size:var(--font-size-10,10px);font-weight:600;cursor:pointer;white-space:nowrap;transition:all 150ms ease;font-family:inherit;text-decoration:none}
-.nav-project-new:hover{background:var(--demo-surface-alt);border-color:var(--brand-component-outline-default)}
+.nav-project-new{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--demo-border);border-radius:var(--radius-md,6px);background:transparent;color:var(--demo-fg-subtle);font-size:var(--font-size-11,11px);font-weight:600;cursor:pointer;white-space:nowrap;transition:all 120ms ease;font-family:inherit;text-decoration:none;height:28px;line-height:1}
+.nav-project-new:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong);border-color:var(--demo-fg-faint)}
 .nav-project-action{width:24px;height:24px;border:1px solid var(--demo-border);border-radius:var(--radius-sm,4px);background:var(--demo-surface);color:var(--demo-fg-faint);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 150ms ease;padding:0}
 .nav-project-action:hover{color:var(--demo-fg-strong);border-color:var(--demo-fg-faint);background:var(--demo-surface-alt)}
 .nav-project-action.nav-project-del:hover{color:#DC2626;border-color:#DC2626;background:#FEE2E2}
@@ -89,7 +89,7 @@ body{
 .nav-project-open:hover{background:var(--brand-component-bg-hover,#1E54B8);border-color:var(--brand-component-bg-hover,#1E54B8)}
 .nav-project-open:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
 .nav-project-open svg{flex-shrink:0}
-.theme-toggle{width:28px;height:28px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-sm,4px);border:1px solid var(--demo-border);background:var(--demo-surface);color:var(--demo-fg-subtle);cursor:pointer;transition:all 150ms ease;font-family:inherit}
+.theme-toggle{width:28px;height:28px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius-md,6px);border:1px solid var(--demo-border);background:var(--demo-surface);color:var(--demo-fg-subtle);cursor:pointer;transition:all 120ms ease;font-family:inherit}
 .theme-toggle:hover{background:var(--demo-surface-alt);color:var(--demo-fg-strong)}
 .theme-toggle svg{width:14px;height:14px}
 .theme-toggle .theme-icon-moon{display:none}
@@ -101,6 +101,9 @@ dtf-topbar{display:block}
 .dtf-topbar-project{display:inline-flex;align-items:center;gap:8px;margin-left:12px}
 .dtf-topbar-actions{display:inline-flex;align-items:center;gap:8px}
 .dtf-topbar-actions:empty{display:none}
+.nav-divider{display:inline-block;width:1px;height:22px;background:var(--demo-border);margin:0 4px}
+/* Hide divider when no slotted actions sit to its left */
+.dtf-topbar-actions:empty + .nav-divider{display:none}
 
 /* ── Header ────────────────────────────────────────────── */
 .demo-header{padding:24px 32px;border-bottom:1px solid var(--demo-border);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}

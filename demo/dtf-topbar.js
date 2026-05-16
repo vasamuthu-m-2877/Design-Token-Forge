@@ -143,6 +143,7 @@
       +   '</div>'
       +   '<div class="nav-actions">'
       +     '<div class="dtf-topbar-actions" data-slot="action"></div>'
+      +     '<span class="nav-divider" aria-hidden="true"></span>'
       +     newHtml
       +     themeHtml
       +   '</div>'
