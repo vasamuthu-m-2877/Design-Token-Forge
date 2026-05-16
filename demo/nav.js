@@ -17,7 +17,7 @@
   var onboardLabel = hasProjects ? 'Create Project' : 'Start Your Own Project';
 
   var NAV_ITEMS = [
-    { label: 'Edit Colors',     href: 'index.html',              hint: ''            },
+    { label: 'Edit Colors',     href: 'editor-v2/',              hint: ''            },
     { label: 'Tokens',          href: 'color-tokens.html',       hint: ''            },
     { label: 'Frameworks',      href: 'frameworks.html',         hint: ''            },
     { sep: true },
@@ -66,7 +66,17 @@
       dropdownHtml += '<div class="dd-sep" role="separator"></div>';
     } else {
       var isCurrent = (it.href === filename);
-      dropdownHtml += '<a href="' + it.href + '" role="menuitem"'
+      // Carry the active project across nav. Editor v2 reads ?project=…
+      // and other demo pages already react to the dtf-active-project
+      // localStorage key, so appending the query param keeps the
+      // current project context wherever the user navigates.
+      var activePid = '';
+      try { activePid = localStorage.getItem('dtf-active-project') || ''; } catch (e) {}
+      var href = it.href;
+      if (activePid && !/[?&]project=/.test(href)) {
+        href += (href.indexOf('?') >= 0 ? '&' : '?') + 'project=' + encodeURIComponent(activePid);
+      }
+      dropdownHtml += '<a href="' + href + '" role="menuitem"'
         + (isCurrent ? ' aria-current="page"' : '')
         + '>' + esc(it.label)
         + (it.hint ? ' <span class="dd-hint">' + esc(it.hint) + '</span>' : '')

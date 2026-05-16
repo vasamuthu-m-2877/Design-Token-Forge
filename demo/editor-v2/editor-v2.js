@@ -5144,6 +5144,13 @@
 
   function syncProjLabel() {
     $projName.textContent = projectName(getActiveProjectId());
+    // Mirror the active project onto outbound links so the components
+    // gallery / tokens / frameworks pages keep the same project ctx.
+    var pid = getActiveProjectId();
+    var preview = document.getElementById('previewComponentsLink');
+    if (preview && pid) {
+      preview.setAttribute('href', '../components.html?project=' + encodeURIComponent(pid));
+    }
   }
 
   function renderProjPanel() {

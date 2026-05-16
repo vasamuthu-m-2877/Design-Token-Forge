@@ -7,6 +7,18 @@
 
 window.DTF = window.DTF || { onThemeChange: null };
 
+/* If a ?project=<id> param is on the URL (e.g. the editor's "Preview
+   components" link, or any cross-page nav), promote it to the active
+   project before the selector wires up. Demo pages already react to
+   dtf-active-project on load, so this is enough to make the project
+   travel across pages. */
+(function () {
+  try {
+    var pid = new URLSearchParams(location.search).get('project');
+    if (pid) localStorage.setItem('dtf-active-project', pid);
+  } catch (e) {}
+})();
+
 /* ── Project Selector (injected into nav bar on every page) ── */
 (function(){
   /* index.html has its own dedicated project bar — skip it there */

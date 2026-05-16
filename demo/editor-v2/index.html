@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=123">
+  <link rel="stylesheet" href="./editor-v2.css?v=124">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
   <script src="../palette-engine.js?v=85" defer></script>
@@ -57,6 +57,11 @@
     <div class="ev2-topbar-c"></div>
 
     <div class="ev2-topbar-r">
+      <a class="ev2-preview-link" id="previewComponentsLink" href="../components.html"
+         data-tip="Open the components gallery using this project's published tokens. Drafts are not previewed.">
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4h12v8H2z"/><path d="M5 7h6M5 9h4"/></svg>
+        <span>Preview components</span>
+      </a>
       <label class="ev2-css-toggle">
         <input type="checkbox" id="showCssNames" checked>
         <span>Show CSS names</span>
@@ -365,6 +370,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=142" defer></script>
+  <script src="./editor-v2.js?v=143" defer></script>
 </body>
 </html>

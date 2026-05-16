@@ -235,6 +235,28 @@ body{
 }
 .ev2-history-btn svg{opacity:.8}
 
+/* Mirror .ev2-history-btn density so the preview link reads as a
+   sibling action, not a heavier CTA. text-decoration:none keeps it
+   from looking like an inline link inside the chrome strip. */
+.ev2-preview-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 10px;
+  border:1px solid var(--ev2-chrome-outline);
+  border-radius:var(--radius-md,6px);
+  background:transparent;
+  color:var(--ev2-chrome-ct-subtle);
+  font:inherit;font-size:11px;font-weight:600;
+  text-decoration:none;
+  cursor:pointer;
+  transition:all 120ms ease;
+}
+.ev2-preview-link:hover{
+  color:var(--ev2-chrome-ct-strong);
+  border-color:var(--ev2-chrome-ct-faint);
+  background:var(--ev2-chrome-bg);
+}
+.ev2-preview-link svg{opacity:.8}
+
 .ev2-deploy{
   display:inline-flex;align-items:center;gap:8px;
   padding:7px 14px;
