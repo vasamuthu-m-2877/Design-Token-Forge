@@ -3667,12 +3667,18 @@
       // Reset the push status panel each time we enter step 2
       var statusEl = document.getElementById('ev2FigmaPushStatus');
       if (statusEl) {
-        statusEl.setAttribute('data-state', 'idle');
+        statusEl.setAttribute('data-state', inWizard ? 'success' : 'idle');
         var msgEl = statusEl.querySelector('.ev2-figma-push-msg');
         if (msgEl) {
-          msgEl.textContent = inWizard
-            ? 'Snapshot committed. Open Figma to pull the new tokens.'
-            : 'Ready to refresh the Figma plugin.';
+          var pub = dlg._lastPublished;
+          if (inWizard && pub) {
+            msgEl.innerHTML = 'Snapshot <strong>' + pub.version + '</strong> published to <strong>'
+              + pub.project + '</strong>. Open Figma to pull the new tokens.';
+          } else if (inWizard) {
+            msgEl.textContent = 'Snapshot committed. Open Figma to pull the new tokens.';
+          } else {
+            msgEl.textContent = 'Ready to refresh the Figma plugin.';
+          }
         }
       }
     }
@@ -3729,7 +3735,7 @@
   function openSaveDefaultDialog() { openDialog('save', { wizard: true }); }
   function closeDeployDialog() {
     var dlg = document.getElementById('ev2DeployDialog');
-    if (dlg) { dlg.hidden = true; dlg._wizard = false; }
+    if (dlg) { dlg.hidden = true; dlg._wizard = false; dlg._deployDone = false; dlg._lastPublished = null; }
     document.body.classList.remove('ev2-modal-open');
   }
 
@@ -3930,8 +3936,9 @@
       // Direct-mode (non-wizard) save: just close the dialog.
       var dlg = document.getElementById('ev2DeployDialog');
       if (dlg && dlg._wizard) {
-        // Kick off the deploy step. The user can then either close or
-        // optionally trigger the workflow_dispatch via the "Done" button.
+        // Stash the just-published version so step 2's status pill
+        // can show "Snapshot vX.Y.Z published to <project>".
+        dlg._lastPublished = { version: nextVer, project: projId, name: name };
         openDialog('deploy', { wizard: true });
         // Best-effort: trigger the Pages rebuild workflow so the plugin
         // gets fresh tokens.json sooner. Failures are silent — the on-
@@ -3972,12 +3979,13 @@
       var dlg = document.getElementById('ev2DeployDialog');
       var mode = dlg ? (dlg.getAttribute('data-mode') || 'deploy') : 'deploy';
       var inWizard = !!(dlg && dlg._wizard);
+      var deployDone = !!(dlg && dlg._deployDone);
       if (mode === 'save') {
         saveAsDefault();
-      } else if (inWizard) {
-        // Step 2 of wizard — the snapshot is already committed; the
-        // "Done" button just dismisses the dialog. The push status
-        // panel has already told the user what to do in Figma.
+      } else if (inWizard || deployDone) {
+        // Either we're at wizard step 2 (work already done) or the
+        // standalone deploy has already fired and shown the success
+        // panel — the confirm button is just "Done" / close.
         closeDeployDialog();
       } else {
         // Standalone deploy-to-Figma button on the topbar. We trigger
@@ -3994,8 +4002,37 @@
         btn.disabled = true;
         btn.textContent = 'Triggering rebuild\u2026';
         triggerPagesRebuild().then(function () {
-          closeDeployDialog();
-          if (window.ev2Toast) window.ev2Toast('Pages rebuild queued — refresh the Figma plugin in ~30s', 'ok');
+          // Keep the dialog open with an in-place success panel so
+          // the confirmation isn't a 2.4s toast that flies by. The
+          // user dismisses by clicking Done (renamed from the
+          // disabled-state label).
+          btn.disabled = false;
+          btn.textContent = 'Done';
+          var dlg2 = document.getElementById('ev2DeployDialog');
+          // Switch the dialog body to a success panel — re-use the
+          // same figma-push markup that the wizard step-2 uses so
+          // designers see one consistent confirmation pattern.
+          var body = document.getElementById('ev2DeployBody');
+          var hint = document.getElementById('ev2DeployHint');
+          var title = document.getElementById('ev2DeployTitle');
+          var sub = document.getElementById('ev2DeploySub');
+          var pushPanel = document.getElementById('ev2FigmaPush');
+          title.textContent = 'Rebuild queued';
+          sub.textContent = 'The Figma plugin will see fresh tokens once Pages finishes building.';
+          body.innerHTML = '';
+          if (pushPanel) {
+            pushPanel.hidden = false;
+            var statusEl = document.getElementById('ev2FigmaPushStatus');
+            if (statusEl) {
+              statusEl.setAttribute('data-state', 'success');
+              var msgEl = statusEl.querySelector('.ev2-figma-push-msg');
+              if (msgEl) msgEl.textContent = 'Pages rebuild queued. Designers can refresh the plugin in ~30s.';
+            }
+          }
+          if (hint) hint.innerHTML = 'You can close this dialog \u2014 the rebuild continues in the background.';
+          // Mark the dialog as "post-deploy success" so the next
+          // confirm-click just closes it.
+          if (dlg2) dlg2._deployDone = true;
         }).catch(function (err) {
           btn.disabled = false;
           btn.textContent = 'Deploy to Figma';
