@@ -169,23 +169,6 @@ body{
 }
 .ev2-css-toggle input{margin:0;cursor:pointer}
 
-/* "Save as default" topbar action \u2014 sibling to Deploy. Outlined to
-   read as secondary; Deploy keeps the filled brand surface. */
-.ev2-save-default{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:6px 12px;
-  border:1px solid var(--ev2-chrome-outline);
-  border-radius:var(--radius-md,6px);
-  background:var(--ev2-chrome-bg);
-  color:var(--ev2-chrome-ct-strong);
-  font:inherit;font-size:12px;font-weight:600;
-  cursor:pointer;
-  transition:background 120ms ease,border-color 120ms ease;
-}
-.ev2-save-default:hover{background:var(--ev2-chrome-subtle);border-color:var(--ev2-chrome-ct-faint)}
-.ev2-save-default:focus-visible{outline:2px solid var(--brand-component-outline-default);outline-offset:1px}
-.ev2-save-default svg{color:var(--ev2-chrome-ct-subtle)}
-
 .ev2-deploy{
   display:inline-flex;align-items:center;gap:8px;
   padding:7px 14px;
@@ -1772,70 +1755,73 @@ body.ev2-modal-open{overflow:hidden}
 /* When in save-mode, the title gets a "saving" tone via a data attr */
 .ev2-deploy-dialog[data-mode="save"] .ev2-deploy-section-tag{background:var(--brand-content-default,#286CE5)}
 
-/* ── Wizard stepper (Save → Push to Figma) ──────────────
-   Two numbered pills with a connecting hairline. Active step uses
-   brand fill; completed step gets a check + brand outline; upcoming
-   step is muted. Only renders when the dialog is in wizard mode. */
-.ev2-wizard-steps{
-  list-style:none;margin:0;padding:14px 24px;border-bottom:1px solid var(--ev2-chrome-outline);
-  display:flex;align-items:stretch;gap:0;background:var(--ev2-chrome-subtle);
+/* ── Publish timeline ───────────────────────────────────
+   Inline progress UI that replaces the form during publish.
+   Three steps; each is icon + label + sub. Icon glyph and color
+   are driven by data-state on the <li>. */
+.ev2-publish-timeline{padding:18px 24px;border-bottom:1px solid var(--ev2-chrome-outline)}
+.ev2-tl-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.ev2-tl-steps li{
+  display:grid;grid-template-columns:24px 1fr;column-gap:12px;row-gap:2px;
+  align-items:center;
 }
-.ev2-wizard-steps li{
-  flex:1;display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:6px;
-  font-size:12px;color:var(--ev2-chrome-ct-subtle);position:relative;
-}
-.ev2-wizard-steps li + li::before{
-  content:"";position:absolute;left:-8px;top:50%;width:16px;height:1px;background:var(--ev2-chrome-outline);
-}
-.ev2-wizard-num{
+.ev2-tl-icon{
+  grid-row:span 2;
+  width:22px;height:22px;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;
-  width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;
-  background:var(--ev2-chrome-bg);border:1px solid var(--ev2-chrome-outline);
-  color:var(--ev2-chrome-ct-faint);flex-shrink:0;
+  background:var(--ev2-chrome-subtle);border:1px solid var(--ev2-chrome-outline);
+  color:var(--ev2-chrome-ct-faint);font-size:13px;font-weight:700;
 }
-.ev2-wizard-label{font-weight:600;color:var(--ev2-chrome-ct-strong)}
-.ev2-wizard-hint{font-size:10px;color:var(--ev2-chrome-ct-faint);margin-left:auto}
-.ev2-wizard-steps li[aria-current="step"] .ev2-wizard-num{
+.ev2-tl-label{font-size:13px;font-weight:600;color:var(--ev2-chrome-ct-strong);align-self:end}
+.ev2-tl-sub{font-size:11px;color:var(--ev2-chrome-ct-subtle);align-self:start}
+
+.ev2-tl-steps li[data-state="pending"] .ev2-tl-label,
+.ev2-tl-steps li[data-state="pending"] .ev2-tl-sub{opacity:.55}
+.ev2-tl-steps li[data-state="running"] .ev2-tl-icon{
   background:var(--brand-component-bg-default,#3366f0);color:#fff;border-color:transparent;
+  animation:ev2-pulse 1s ease-in-out infinite;
 }
-.ev2-wizard-steps li[data-state="done"] .ev2-wizard-num{
+.ev2-tl-steps li[data-state="running"] .ev2-tl-icon::after{content:""}
+.ev2-tl-steps li[data-state="ok"] .ev2-tl-icon{
   background:var(--success-component-bg-default,#16A34A);color:#fff;border-color:transparent;
 }
-.ev2-wizard-steps li[data-state="done"] .ev2-wizard-num::before{
-  content:"✓";font-size:13px;
+.ev2-tl-steps li[data-state="ok"] .ev2-tl-icon::after{content:"\2713"}
+.ev2-tl-steps li[data-state="warn"] .ev2-tl-icon{
+  background:var(--warning-component-bg-default,#A66208);color:#fff;border-color:transparent;
 }
-.ev2-wizard-steps li[data-state="done"] .ev2-wizard-num > :not(::before){display:none}
+.ev2-tl-steps li[data-state="warn"] .ev2-tl-icon::after{content:"!"}
+.ev2-tl-steps li[data-state="fail"] .ev2-tl-icon{
+  background:var(--danger-component-bg-default,#D61D20);color:#fff;border-color:transparent;
+}
+.ev2-tl-steps li[data-state="fail"] .ev2-tl-icon::after{content:"\2715"}
 
-/* ── Figma push panel (wizard step 2) ───────────────────
-   Shown after the snapshot is committed. Renders a status pill +
-   a numbered list of the manual steps the user needs to take in
-   Figma. The status pill is driven by data-state from JS. */
-.ev2-figma-push{padding:16px 24px;border-bottom:1px solid var(--ev2-chrome-outline)}
-.ev2-figma-push-status{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;
+.ev2-tl-summary{
+  margin-top:14px;padding:10px 12px;border-radius:6px;
+  background:var(--ev2-chrome-subtle);
+  font-size:12px;line-height:1.5;color:var(--ev2-chrome-ct-default);
+}
+.ev2-deploy-dialog[data-mode="success"] .ev2-tl-summary{
   background:var(--success-container-bg,rgba(22,163,74,.08));
   border:1px solid var(--success-component-outline-default,rgba(22,163,74,.3));
-  margin-bottom:12px;
 }
-.ev2-figma-push-status[data-state="idle"]{
-  background:var(--brand-container-bg,rgba(40,108,229,.08));
-  border-color:var(--brand-component-outline-default,rgba(40,108,229,.3));
+.ev2-deploy-dialog[data-mode="partial"] .ev2-tl-summary{
+  background:var(--warning-container-bg,#FFF3D6);
+  border:1px solid var(--warning-component-outline-default,rgba(166,98,8,.3));
 }
-.ev2-figma-push-status[data-state="error"]{
-  background:var(--danger-container-bg,rgba(220,38,38,.08));
-  border-color:var(--danger-component-outline-default,rgba(220,38,38,.3));
+.ev2-deploy-dialog[data-mode="error"] .ev2-tl-summary{
+  background:var(--danger-container-bg,#FDEAEB);
+  border:1px solid var(--danger-component-outline-default,rgba(214,29,32,.3));
 }
-.ev2-figma-push-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--success-component-bg-default,#16A34A);flex-shrink:0;
+.ev2-tl-summary code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;
+  padding:1px 4px;border-radius:3px;background:rgba(0,0,0,.06);
 }
-.ev2-figma-push-status[data-state="idle"] .ev2-figma-push-dot{background:var(--brand-component-bg-default,#3366f0)}
-.ev2-figma-push-status[data-state="error"] .ev2-figma-push-dot{background:var(--danger-component-bg-default,#DC2626)}
-.ev2-figma-push-msg{font-size:12px;font-weight:600;color:var(--ev2-chrome-ct-strong)}
-.ev2-figma-push-steps{
-  margin:0;padding:0 0 0 20px;font-size:12px;color:var(--ev2-chrome-ct-subtle);line-height:1.55;
-  display:flex;flex-direction:column;gap:6px;
+
+/* Field helper hint below name input. */
+.ev2-save-field-hint{
+  display:block;margin-top:4px;
+  font-size:10.5px;color:var(--ev2-chrome-ct-faint);
 }
-.ev2-figma-push-steps strong{color:var(--ev2-chrome-ct-strong);font-weight:600}
 
 /* ── WCAG sentinel popover ──────────────────────────────
    Click-stable panel anchored under a .ev2-pc-wcag chip. Shows the

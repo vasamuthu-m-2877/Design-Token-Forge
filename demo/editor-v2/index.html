@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=109">
+  <link rel="stylesheet" href="./editor-v2.css?v=110">
 
   <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
   <script src="../palette-engine.js?v=85" defer></script>
@@ -51,13 +51,9 @@
         <input type="checkbox" id="showCssNames" checked>
         <span>Show CSS names</span>
       </label>
-      <button class="ev2-save-default" id="saveDefaultBtn" type="button" data-tip="Snapshot the current mapping, name it, and publish as the project's new default (writes to the repo).">
-        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 2h7l3 3v9a.5.5 0 0 1-.5.5h-9.5a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5z"/><path d="M5 2v4h6V2"/><path d="M5.5 9h5M5.5 11.5h5"/></svg>
-        <span class="ev2-save-default-label">Save as default</span>
-      </button>
-      <button class="ev2-deploy" id="deployBtn" disabled>
-        <span class="ev2-deploy-label">Deploy to Figma</span>
-        <span class="ev2-deploy-count" hidden>0</span>
+      <button class="ev2-deploy" id="deployBtn" type="button" disabled
+        data-tip="Save your changes as the new default for this project. Figma refreshes automatically.">
+        <span class="ev2-deploy-label">Publish</span>
       </button>
     </div>
   </header>
@@ -156,13 +152,13 @@
 
       <footer class="ev2-savebar" id="savebar">
         <div class="ev2-savebar-l">
-          <span class="ev2-changes" id="changeCount">0 changes</span>
-          <span class="ev2-savebar-sep">·</span>
-          <span class="ev2-autosave" id="autosaveStatus">No draft yet</span>
+          <span class="ev2-changes" id="changeCount">No changes</span>
+          <span class="ev2-savebar-sep" hidden>·</span>
+          <span class="ev2-autosave" id="autosaveStatus"></span>
         </div>
         <div class="ev2-savebar-r">
           <button class="ev2-discard" id="discardBtn" disabled
-            data-tip="Discard every unsaved change in this draft — Palette + Roles + Surfaces + Components for both light and dark modes. To reset just one section, use the Reset section button above the token list. To reset just one role, use Reset on the role card.">Discard all</button>
+            data-tip="Revert every unsaved change in this draft — Palette + Roles + Surfaces + Components for both light and dark modes. To reset just one section, use the Reset section button above the token list. To reset just one role, use Reset on the role card.">Discard changes</button>
         </div>
       </footer>
     </section>
@@ -231,82 +227,86 @@
     </div>
   </div>
 
-  <!-- Summary dialog: shared by 'Save as default' (writes to repo)
-       and 'Deploy to Figma' (pushes to plugin). Switches mode at
-       open-time so the title, body sections, and primary CTA all
-       reflect the active intent. -->
-  <div class="ev2-deploy-dialog" id="ev2DeployDialog" hidden role="dialog" aria-modal="true" aria-labelledby="ev2DeployTitle" data-mode="deploy">
+  <!-- Publish dialog. One screen, one verb. The form collects metadata;
+       on submit it morphs into an inline timeline (Saving → Notifying
+       Figma → Done). No standalone "Deploy to Figma" anymore — Figma
+       refresh is the second beat of every Publish. -->
+  <div class="ev2-deploy-dialog" id="ev2DeployDialog" hidden role="dialog" aria-modal="true" aria-labelledby="ev2DeployTitle" data-mode="form">
     <div class="ev2-modal-backdrop" data-deploy-dismiss></div>
     <div class="ev2-deploy-card" role="document">
       <header class="ev2-deploy-head">
         <div class="ev2-deploy-headtxt">
-          <h3 class="ev2-deploy-title" id="ev2DeployTitle">Deploy to Figma</h3>
-          <p class="ev2-deploy-sub" id="ev2DeploySub">Review every change before it hits the Figma file. This action cannot be undone from inside Figma.</p>
+          <h3 class="ev2-deploy-title" id="ev2DeployTitle">Publish</h3>
+          <p class="ev2-deploy-sub" id="ev2DeploySub">Save your changes as the new default for this project. Figma refreshes automatically.</p>
         </div>
         <div class="ev2-deploy-meta" id="ev2DeployMeta"></div>
       </header>
 
-      <!-- Two-step wizard indicator. Hidden until you enter the save flow;
-           the deploy-only path keeps the legacy single-screen look. -->
-      <ol class="ev2-wizard-steps" id="ev2WizardSteps" hidden aria-label="Publish steps">
-        <li data-step="save"   aria-current="step"><span class="ev2-wizard-num">1</span><span class="ev2-wizard-label">Save snapshot</span><span class="ev2-wizard-hint">Commit to your GitHub fork</span></li>
-        <li data-step="deploy"><span class="ev2-wizard-num">2</span><span class="ev2-wizard-label">Push to Figma</span><span class="ev2-wizard-hint">Refresh the plugin</span></li>
-      </ol>
-
-      <!-- Save-mode only: name / description / semver. Hidden in deploy mode. -->
-      <section class="ev2-save-form" id="ev2SaveForm" hidden>
-        <h4 class="ev2-save-form-title">Snapshot details</h4>
-        <p class="ev2-save-form-sub">These are written to the repo so collaborators can see what changed and when.</p>
+      <!-- FORM MODE (data-mode="form"): name + version bump + notes. -->
+      <section class="ev2-save-form" id="ev2SaveForm">
         <div class="ev2-save-form-grid">
           <label class="ev2-save-field ev2-save-field--name">
-            <span class="ev2-save-field-label">Name <em>(prefilled — edit if you want)</em></span>
+            <span class="ev2-save-field-label">Release name</span>
             <input type="text" id="ev2SaveName" maxlength="60" placeholder="e.g. May16 08:57" autocomplete="off" spellcheck="false">
+            <span class="ev2-save-field-hint">Shown in the version history. Auto-filled with today’s date.</span>
           </label>
           <div class="ev2-save-field ev2-save-field--ver">
-            <span class="ev2-save-field-label">Version</span>
+            <span class="ev2-save-field-label">Version bump</span>
             <div class="ev2-save-ver-row">
               <span class="ev2-save-ver-prev" id="ev2SaveVerPrev" title="Previously published version">v—</span>
               <span class="ev2-save-ver-arrow" aria-hidden="true">→</span>
               <div class="ev2-save-ver-bump" role="radiogroup" aria-label="Version bump">
-                <button type="button" data-ver-bump="patch" aria-checked="true" role="radio" data-tip="Patch: tiny tweaks, no semantic shift">Patch</button>
-                <button type="button" data-ver-bump="minor" aria-checked="false" role="radio" data-tip="Minor: meaningful edits, additive">Minor</button>
-                <button type="button" data-ver-bump="major" aria-checked="false" role="radio" data-tip="Major: breaking visual change">Major</button>
+                <button type="button" data-ver-bump="patch" aria-checked="true" role="radio" data-tip="Patch — tweaks, no semantic shift">Patch</button>
+                <button type="button" data-ver-bump="minor" aria-checked="false" role="radio" data-tip="Minor — new tokens, additive">Minor</button>
+                <button type="button" data-ver-bump="major" aria-checked="false" role="radio" data-tip="Major — breaking visual change">Major</button>
               </div>
               <span class="ev2-save-ver-next" id="ev2SaveVerNext">v—</span>
             </div>
           </div>
           <label class="ev2-save-field ev2-save-field--desc">
-            <span class="ev2-save-field-label">Description <em>(optional)</em></span>
-            <textarea id="ev2SaveDesc" rows="2" maxlength="500" placeholder="What changed and why. Markdown OK." spellcheck="true"></textarea>
+            <span class="ev2-save-field-label">What changed <em>(optional)</em></span>
+            <textarea id="ev2SaveDesc" rows="2" maxlength="500" placeholder="One line that helps your team scan the history." spellcheck="true"></textarea>
           </label>
         </div>
       </section>
 
-      <!-- Step 2 only: Figma-push status panel, populated by wizard JS. -->
-      <section class="ev2-figma-push" id="ev2FigmaPush" hidden>
-        <div class="ev2-figma-push-status" id="ev2FigmaPushStatus" data-state="idle">
-          <span class="ev2-figma-push-dot" aria-hidden="true"></span>
-          <span class="ev2-figma-push-msg">Ready to refresh the Figma plugin.</span>
-        </div>
-        <ol class="ev2-figma-push-steps">
-          <li><strong>Open your Figma file</strong> with the Design Token Forge plugin installed.</li>
-          <li>Run the plugin and click <strong>Sync from server</strong> (or close + re-open) to pull the snapshot you just published.</li>
-          <li>If you don’t see your changes yet, give GitHub Pages ~30s to rebuild and try again.</li>
+      <!-- Per-section change summary, only shown in form mode. -->
+      <div class="ev2-deploy-body" id="ev2DeployBody"></div>
+
+      <!-- TIMELINE MODE (data-mode="progress" / "success" / "partial" / "error"):
+           replaces the form during/after publish. Each step has an
+           icon ('.' = pending, '~' = running, 'v' = ok, 'x' = fail). -->
+      <section class="ev2-publish-timeline" id="ev2PublishTimeline" hidden>
+        <ol class="ev2-tl-steps" id="ev2TlSteps">
+          <li data-step="save"   data-state="pending">
+            <span class="ev2-tl-icon" aria-hidden="true"></span>
+            <span class="ev2-tl-label">Save to GitHub</span>
+            <span class="ev2-tl-sub" data-tl-sub>Commits 5 files to your fork</span>
+          </li>
+          <li data-step="figma"  data-state="pending">
+            <span class="ev2-tl-icon" aria-hidden="true"></span>
+            <span class="ev2-tl-label">Notify Figma</span>
+            <span class="ev2-tl-sub" data-tl-sub>Refreshes the plugin within ~1 minute</span>
+          </li>
+          <li data-step="done"   data-state="pending">
+            <span class="ev2-tl-icon" aria-hidden="true"></span>
+            <span class="ev2-tl-label">Done</span>
+            <span class="ev2-tl-sub" data-tl-sub></span>
+          </li>
         </ol>
+        <div class="ev2-tl-summary" id="ev2TlSummary" hidden></div>
       </section>
 
-      <div class="ev2-deploy-body" id="ev2DeployBody"></div>
       <footer class="ev2-deploy-actions">
-        <span class="ev2-deploy-hint" id="ev2DeployHint"></span>
+        <span class="ev2-deploy-hint" id="ev2DeployHint">Writes to your GitHub fork. A Personal Access Token with <code>repo</code> scope is required.</span>
         <div class="ev2-deploy-btns">
-          <button class="ev2-modal-btn" type="button" id="ev2WizardBack" hidden>← Back to snapshot</button>
           <button class="ev2-modal-btn" type="button" data-deploy-dismiss id="ev2WizardCancel">Cancel</button>
-          <button class="ev2-modal-btn ev2-modal-btn-primary" type="button" id="ev2DeployConfirm">Deploy to Figma</button>
+          <button class="ev2-modal-btn ev2-modal-btn-primary" type="button" id="ev2DeployConfirm">Publish</button>
         </div>
       </footer>
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=114" defer></script>
+  <script src="./editor-v2.js?v=116" defer></script>
 </body>
 </html>
