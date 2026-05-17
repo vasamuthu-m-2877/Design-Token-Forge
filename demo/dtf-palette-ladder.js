@@ -16,6 +16,9 @@
      interactive — present: emits 'ladder-pick' on click; absent: click
                    triggers default copy-to-clipboard behavior.
      show-step  — present: always show step labels (default = on hover/selected).
+     layout     — 'strip' (default, compact 36px row) or 'card' (T0-style
+                  rich card with step + hex + CSS-var name stacked below
+                  a 38px swatch — matches the editor's Palette view).
 
    Events:
      ladder-pick → { step, hex } — fired when interactive and a
@@ -50,9 +53,9 @@
   PaletteLadder.prototype.constructor = PaletteLadder;
   Object.setPrototypeOf(PaletteLadder, HTMLElement);
 
-  PaletteLadder.observedAttributes = ['prefix','steps','selected','interactive','show-step'];
+  PaletteLadder.observedAttributes = ['prefix','steps','selected','interactive','show-step','layout'];
   Object.defineProperty(PaletteLadder, 'observedAttributes', {
-    get: function () { return ['prefix','steps','selected','interactive','show-step']; }
+    get: function () { return ['prefix','steps','selected','interactive','show-step','layout']; }
   });
 
   PaletteLadder.prototype.connectedCallback = function () {
@@ -75,11 +78,12 @@
     var selected = this.getAttribute('selected') || '';
     var interactive = this.hasAttribute('interactive');
     var showStep = this.hasAttribute('show-step');
+    var layout = (this.getAttribute('layout') || 'strip').toLowerCase();
 
     var self = this;
-    this.classList.add('dtf-ladder');
+    this.classList.remove('dtf-ladder','dtf-ladder--card','dtf-ladder--show-step');
+    this.classList.add(layout === 'card' ? 'dtf-ladder--card' : 'dtf-ladder');
     if (showStep) this.classList.add('dtf-ladder--show-step');
-    else this.classList.remove('dtf-ladder--show-step');
 
     this.setAttribute('role', interactive ? 'radiogroup' : 'group');
 
@@ -91,22 +95,41 @@
       var checked = step === selected;
       var label = step + (hex ? ' · ' + hex : '');
       var txt = contrastText(hex);
-      html += '<' + (interactive ? 'button' : 'span') + ' class="dtf-ladder-sw"'
-        + (interactive ? ' type="button" role="radio" aria-checked="' + (checked ? 'true' : 'false') + '"' : '')
-        + ' data-step="' + step + '"'
-        + ' data-hex="' + (hex || '') + '"'
-        + ' style="background:' + bg + '"'
-        + ' aria-label="' + label + '">'
-        +   '<span class="dtf-ladder-sw-step" style="color:' + txt + '">' + step + '</span>'
-        +   '<span class="dtf-ladder-sw-tip">' + step + ' · ' + (hex || '—') + '</span>'
-        + '</' + (interactive ? 'button' : 'span') + '>';
+      if (layout === 'card') {
+        /* T0-style card — swatch on top, name + hex + CSS-var beneath.
+           Mirrors .ev2-step from the editor so both pages read identical. */
+        var hexShort = hex ? hex.replace('#','').toUpperCase() : '—';
+        var tag = interactive ? 'button' : 'div';
+        html += '<' + tag + ' class="dtf-pcard"'
+          + (interactive ? ' type="button" role="radio" aria-checked="' + (checked ? 'true' : 'false') + '"' : '')
+          + ' data-step="' + step + '"'
+          + ' data-hex="' + (hex || '') + '"'
+          + ' aria-label="' + label + '">'
+          +   '<div class="dtf-pcard-sw" style="background:' + bg + '"></div>'
+          +   '<div class="dtf-pcard-meta">'
+          +     '<div class="dtf-pcard-name">' + step + '</div>'
+          +     '<div class="dtf-pcard-hex">' + hexShort + '</div>'
+          +     (prefix ? '<div class="dtf-pcard-css">--' + prefix + '-' + step + '</div>' : '')
+          +   '</div>'
+          + '</' + tag + '>';
+      } else {
+        html += '<' + (interactive ? 'button' : 'span') + ' class="dtf-ladder-sw"'
+          + (interactive ? ' type="button" role="radio" aria-checked="' + (checked ? 'true' : 'false') + '"' : '')
+          + ' data-step="' + step + '"'
+          + ' data-hex="' + (hex || '') + '"'
+          + ' style="background:' + bg + '"'
+          + ' aria-label="' + label + '">'
+          +   '<span class="dtf-ladder-sw-step" style="color:' + txt + '">' + step + '</span>'
+          +   '<span class="dtf-ladder-sw-tip">' + step + ' · ' + (hex || '—') + '</span>'
+          + '</' + (interactive ? 'button' : 'span') + '>';
+      }
     }
     this.innerHTML = html;
 
     /* Click handling — interactive emits, read-only copies. */
     if (this._clickHandler) this.removeEventListener('click', this._clickHandler);
     this._clickHandler = function (e) {
-      var sw = e.target.closest && e.target.closest('.dtf-ladder-sw');
+      var sw = e.target.closest && e.target.closest('.dtf-ladder-sw, .dtf-pcard');
       if (!sw || !self.contains(sw)) return;
       var step = sw.getAttribute('data-step');
       var hex = sw.getAttribute('data-hex');
@@ -117,8 +140,8 @@
         }));
       } else if (hex && navigator.clipboard) {
         navigator.clipboard.writeText(hex).catch(function(){});
-        sw.classList.add('dtf-ladder-sw--copied');
-        setTimeout(function () { sw.classList.remove('dtf-ladder-sw--copied'); }, 600);
+        sw.classList.add('dtf-pcard--copied','dtf-ladder-sw--copied');
+        setTimeout(function () { sw.classList.remove('dtf-pcard--copied','dtf-ladder-sw--copied'); }, 600);
       }
     };
     this.addEventListener('click', this._clickHandler);
