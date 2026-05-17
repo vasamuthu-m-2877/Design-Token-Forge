@@ -934,7 +934,7 @@ var openGroups = new Set();      /* expanded group keys */
 /* Build stamp — bump on every UI-affecting change so you can confirm
    the Figma plugin sandbox isn't serving a cached old copy. Shown in
    the empty-state footer + logged once to the plugin console. */
-var BUILD_VERSION = '2026-05-17-p3';
+var BUILD_VERSION = '2026-05-17-p4';
 function log(msg){ console.log('[DTF] ' + msg); }
 log('plugin UI build ' + BUILD_VERSION);
 
@@ -1286,6 +1286,7 @@ function rowHTML(r){
     var fullTip = r.from + '   →   ' + r.to;
     var common = '<span class="ch-alias-common" title="' + esc(fullTip) + '">' + esc(aliasDiff.prefix) + '<span class="ch-alias-mid"><span class="ch-from-mid">' + esc(aliasDiff.fromMid) + '</span><span class="ch-arrow">→</span><span class="ch-to-mid">' + esc(aliasDiff.toMid) + '</span></span>' + esc(aliasDiff.suffix) + '</span>';
     var detail = '<div class="ch-row-detail">'
+      +   (r.mode ? '<div class="ch-row-detail-line"><span class="ch-row-detail-label">Mode</span><code>' + esc(r.mode) + '</code></div>' : '')
       +   '<div class="ch-row-detail-line"><span class="ch-row-detail-label">From</span><code>' + esc(r.from) + '</code></div>'
       +   '<div class="ch-row-detail-line"><span class="ch-row-detail-label">To</span><code>' + esc(r.to) + '</code></div>'
       + '</div>';
@@ -1310,6 +1311,7 @@ function rowHTML(r){
   var arrow    = (r.from && r.to) ? '<span class="ch-arrow">→</span>' : '';
   var literalDetail = (r.from || r.to)
     ? '<div class="ch-row-detail">'
+      +   (r.mode ? '<div class="ch-row-detail-line"><span class="ch-row-detail-label">Mode</span><code>' + esc(r.mode) + '</code></div>' : '')
       +   (r.from ? '<div class="ch-row-detail-line"><span class="ch-row-detail-label">From</span><code>' + esc(r.from) + '</code></div>' : '')
       +   (r.to   ? '<div class="ch-row-detail-line"><span class="ch-row-detail-label">To</span><code>'   + esc(r.to)   + '</code></div>' : '')
       + '</div>'
@@ -1768,12 +1770,30 @@ function handleStaticDiff(current){
         rows.push({ tag:'add', collection: nc.name, name: nv.name, from:'', to: fmtVal(sampleMode != null ? nvVals[sampleMode] : '') });
         continue;
       }
-      /* Compare by mode index: align newModes[i] ↔ existing.modes[i]. */
+      /* Compare by mode NAME, not index. Figma may return modes in
+         a different order than tokens.json (e.g. alphabetised), and
+         a T3 collection that legitimately has 5 modes (brand,
+         success, warning, danger, info) was being aligned
+         positionally against a 2-mode Figma legacy (Light/Dark) —
+         which made every brand-mode alias falsely diff against
+         Figma's first mode value.
+
+         We also build a case-insensitive lookup so 'Light'/'light'
+         and 'Brand'/'brand' don't drift. If neither side has the
+         mode, we ignore that pair (no proof of change). */
+      var existingByMode = {};
+      for (var emi=0; emi<existing.modes.length; emi++){
+        existingByMode[String(existing.modes[emi]).toLowerCase()] = existing.vals[existing.modes[emi]];
+      }
       var firstChange = null;
-      var n = Math.min(newModes.length, existing.modes.length);
-      for (var mi=0; mi<n; mi++){
-        var newRaw = nvVals[newModes[mi]];
-        var oldRaw = existing.vals[existing.modes[mi]];
+      var matchedAnyMode = false;
+      for (var nmi=0; nmi<newModes.length; nmi++){
+        var modeName = newModes[nmi];
+        var key = String(modeName).toLowerCase();
+        if (!(key in existingByMode)) continue;   /* mode doesn't exist in Figma — skip silently */
+        matchedAnyMode = true;
+        var newRaw = nvVals[modeName];
+        var oldRaw = existingByMode[key];
         if (!rawEqual(newRaw, oldRaw)){
           /* Double-guard: even if rawEqual reports a difference,
              refuse to emit a row whose displayed values would render
@@ -1788,8 +1808,24 @@ function handleStaticDiff(current){
             }
             continue;
           }
-          firstChange = { tag:'upd', collection: nc.name, name: nv.name, from: fromTxt, to: toTxt };
+          firstChange = { tag:'upd', collection: nc.name, name: nv.name, from: fromTxt, to: toTxt, mode: modeName };
           break;
+        }
+      }
+      /* If NO mode names overlapped at all, fall back to index
+         alignment so we don't silently miss a real schema change
+         (e.g. user renamed every mode). */
+      if (!matchedAnyMode && existing.modes.length){
+        var n = Math.min(newModes.length, existing.modes.length);
+        for (var mi=0; mi<n; mi++){
+          var nrx = nvVals[newModes[mi]];
+          var orx = existing.vals[existing.modes[mi]];
+          if (!rawEqual(nrx, orx)){
+            var ftx = fmtVal(orx), ttx = fmtVal(nrx);
+            if (normForCompare(ftx) === normForCompare(ttx)) continue;
+            firstChange = { tag:'upd', collection: nc.name, name: nv.name, from: ftx, to: ttx, mode: newModes[mi] };
+            break;
+          }
         }
       }
       if (firstChange){ updatedCount++; rows.push(firstChange); }
