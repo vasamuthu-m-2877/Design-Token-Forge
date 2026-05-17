@@ -2557,15 +2557,21 @@
   // treat that as not-detached so the auto-derivation takes over
   // and the unsafe value is dropped on next save).
   function t1DerivedIsDetached(roleId, derivedId, mode) {
-    var t = State.t1[mode][roleId];
-    if (derivedId === 'border')      return !!t.borderStep;
-    if (derivedId === 'separator')   return !!t.separatorStep;
-    if (derivedId === 'onComponent') {
-      if (!t.onComponent) return false;
-      var allowed = onComponentAllowedSteps(roleId, mode);
-      return allowed.indexOf(t.onComponent) >= 0;
+    /* 'detached' means 'differs from the baseline (last published)',
+       same definition the lever check uses. The previous logic
+       returned true whenever an override existed \u2014 but after a
+       publish that override IS the baseline, so the EDITED chip
+       stayed on forever even with zero unsaved diffs. */
+    var t = State.t1[mode][roleId] || {};
+    var baseEntry = (State.t1Baseline && State.t1Baseline[mode] && State.t1Baseline[mode][roleId])
+                    || defaultT1ForRole(roleId, mode) || {};
+    function neq(a, b){
+      return (a == null ? null : a) !== (b == null ? null : b);
     }
-    if (derivedId === 'onContainer') return !!t.onContainerStep;
+    if (derivedId === 'border')      return neq(t.borderStep,      baseEntry.borderStep);
+    if (derivedId === 'separator')   return neq(t.separatorStep,   baseEntry.separatorStep);
+    if (derivedId === 'onComponent') return neq(t.onComponent,     baseEntry.onComponent);
+    if (derivedId === 'onContainer') return neq(t.onContainerStep, baseEntry.onContainerStep);
     return false;
   }
   // Hex currently painted by a derived id.
@@ -3024,8 +3030,18 @@
     function leverCardHTML(lever) {
       var current = t1[lever.id];
       var curHex  = ladder[current] || '#000';
-      var def     = (defaultT1ForRole(role.id, mode) || {})[lever.id];
-      var detached = current !== def;
+      /* EDITED chip must match what every other 'is this dirty?'
+         check uses: current vs BASELINE (last published), not
+         current vs computed AA-default. If baseline holds a non-
+         default step (which it usually does after the first publish),
+         comparing against the default makes the chip fire forever
+         even when there are zero unsaved changes — contradicting
+         the 'No changes yet' label in the topbar. */
+      var baseEntry = (State.t1Baseline && State.t1Baseline[mode] && State.t1Baseline[mode][role.id])
+                      || defaultT1ForRole(role.id, mode);
+      var baseLever = baseEntry && baseEntry[lever.id];
+      if (baseLever == null) baseLever = (defaultT1ForRole(role.id, mode) || {})[lever.id];
+      var detached = current !== baseLever;
       var hJudge = DTFSolver.judgeStepForLever(ladder, lever.id, current, t1, mode);
       var sentinel = {
         ratio: hJudge.ratio,
