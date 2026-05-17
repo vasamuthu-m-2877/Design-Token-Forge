@@ -2949,6 +2949,10 @@ projectSelect.addEventListener('change', function(){
   if (pollTimer) clearInterval(pollTimer);
   /* Re-scan to refresh documentProject + figmaHash baseline. */
   parent.postMessage({ pluginMessage:{ type:'scan' } }, '*');
+  /* Builder drift pill depends on CURRENT_PROJECT; ping the plugin
+     so the per-row pills + action lines repaint without waiting for
+     the next periodic prereq check. */
+  parent.postMessage({ pluginMessage:{ type:'check-gen-prereqs' } }, '*');
   startPolling();
   log('Switched to project: ' + CURRENT_PROJECT + ' (file is bound to ' + (documentProject || 'none') + ')');
   render();
@@ -3039,7 +3043,12 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
   currentStructureHashes = currentStructureHashes || {};
   currentPrototypeHashes = currentPrototypeHashes || {};
   currentTokensHash      = currentTokensHash || '';
-  currentProject         = currentProject || (typeof CURRENT_PROJECT === 'string' ? CURRENT_PROJECT : '');
+  /* Drift = "the project we'd build against next is not the one we
+     built against last time". The dropdown (CURRENT_PROJECT) is the
+     authoritative source for "next", NOT the file-bound dtf-project
+     pluginData, which only updates after a successful sync. Using
+     the file-bound value here made the drift pill un-fireable. */
+  currentProject         = (typeof CURRENT_PROJECT === 'string' && CURRENT_PROJECT) ? CURRENT_PROJECT : (currentProject || '');
 
   var rows = document.querySelectorAll('.comp-pick label[data-component]');
   builderHasAnyBuild = false;
@@ -3063,7 +3072,7 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
       whenEl && (whenEl.textContent = '');
       actEl.classList.remove('idle');
       actEl.innerHTML = 'Will create variants bound to <span class="nums">' +
-        esc(currentProject || 'this project') + '</span> tokens.';
+        esc(currentProject ? projectDisplayName(currentProject) : 'this project') + '</span> tokens.';
       row.setAttribute('data-tint', '');
       continue;
     }
@@ -3127,8 +3136,8 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
     var action = '';
 
     if (isDrift) {
-      action = 'Built against <span class="nums">' + esc(ranProject) +
-        '</span>. Rebuilding re-targets to <span class="nums">' + esc(currentProject) + '</span>.';
+      action = 'Built against <span class="nums">' + esc(projectDisplayName(ranProject)) +
+        '</span>. Rebuilding re-targets to <span class="nums">' + esc(projectDisplayName(currentProject)) + '</span>.';
     } else if (bindingsChanged && structureChanged && protoChanged) {
       action = 'Adds ' + N(totBindings) + ' bindings, ' + N(totVariants) +
         ' variants, and re-wires ' + N(totReactions) + ' reactions.';
