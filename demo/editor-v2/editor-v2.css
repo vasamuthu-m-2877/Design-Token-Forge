@@ -2133,6 +2133,25 @@ body.ev2-modal-open{overflow:hidden}
   color:var(--ev2-chrome-ct-subtle,#5b6068);
   font-size:11.5px;
 }
+/* "Best available" state — suggestion present but still under
+   threshold (typical for on-component when fills span too much
+   luminance for either white or black to pass AA). Amber framing
+   so it reads as cautionary, not as a green-light fix. */
+.ev2-wcag-pop-fix[data-soft="1"]{
+  background:var(--warning-container-bg,rgba(165,98,7,.06));
+  border-color:var(--warning-content-default,rgba(165,98,7,.28));
+}
+.ev2-wcag-pop-fix[data-soft="1"] .ev2-wcag-pop-fix-title{
+  color:var(--warning-content-default,#A56207);
+}
+.ev2-wcag-pop-fix-note{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid var(--ev2-chrome-outline,rgba(0,0,0,.10));
+  font-size:11.5px;
+  color:var(--ev2-chrome-ct-subtle,#5b6068);
+  line-height:1.45;
+}
 .ev2-wcag-pop-fix-head{
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:8px;

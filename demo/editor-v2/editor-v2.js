@@ -6055,22 +6055,46 @@
             ratio: jr.ratio, judge: jr.judge
           };
           // Suggestion: walk both directions, pick first passing
-          // step in the derived's allowed step set.
+          // step in the derived's allowed step set. For onComponent
+          // (binary white/black) we additionally fall back to the
+          // BETTER worst-state candidate even when neither passes
+          // AA — improvement-without-victory is still actionable,
+          // and the popover copy makes the deeper fix (move the
+          // fill step) explicit.
           (function () {
             var steps = (derivedId === 'onComponent') ? ['white','black'] : ALL_STEPS;
             var threshold = base.large ? 3 : 4.5;
             if (jr.judge.pass) { sug = null; return; }
             var curIdx = steps.indexOf(curStep);
-            function tryIdx(idx) {
-              var j = t1DerivedJudgeStep(roleId, derivedId, mode, steps[idx]);
-              return j.judge.pass ? { step: steps[idx], hex: (derivedId === 'onComponent' ? (steps[idx]==='white'?'#FFFFFF':'#0A0A0A') : ladderFor(roleId)[steps[idx]]), ratio: j.ratio, judge: j.judge } : null;
+            function judgeAt(idx) { return t1DerivedJudgeStep(roleId, derivedId, mode, steps[idx]); }
+            function packAt(idx, j) {
+              return {
+                step:  steps[idx],
+                hex:   (derivedId === 'onComponent'
+                          ? (steps[idx] === 'white' ? '#FFFFFF' : '#0A0A0A')
+                          : ladderFor(roleId)[steps[idx]]),
+                ratio: j.ratio,
+                judge: j.judge
+              };
             }
             var pick = null;
             for (var d = 1; d < steps.length; d++) {
               var fwd = curIdx + d, bwd = curIdx - d;
-              var rF = (fwd < steps.length) ? tryIdx(fwd) : null;
-              var rB = (bwd >= 0) ? tryIdx(bwd) : null;
+              var rF = (fwd < steps.length) ? (function () { var j = judgeAt(fwd); return j.judge.pass ? packAt(fwd, j) : null; })() : null;
+              var rB = (bwd >= 0)            ? (function () { var j = judgeAt(bwd); return j.judge.pass ? packAt(bwd, j) : null; })() : null;
               if (rF || rB) { pick = (rF && rB) ? (rF.ratio >= rB.ratio ? rF : rB) : (rF || rB); break; }
+            }
+            // onComponent fallback: even if no candidate passes,
+            // recommend the OTHER colour when its worst-state
+            // contrast is materially better (≥ +0.3:1). Marks the
+            // pick as `passes:false` so the UI can label it
+            // "Best available" instead of "Suggested fix".
+            if (!pick && derivedId === 'onComponent') {
+              var otherIdx = (curStep === 'white') ? 1 : 0; // 0=white,1=black
+              if (otherIdx !== curIdx) {
+                var jo = judgeAt(otherIdx);
+                if (jo.ratio >= jr.ratio + 0.3) pick = packAt(otherIdx, jo);
+              }
             }
             sug = pick;
           })();
@@ -6128,18 +6152,43 @@
         // empty-fallback copy that pretends no step works.
         sugBlock = '<div class="ev2-wcag-pop-fix ev2-wcag-pop-fix-empty">No change needed \u2014 this pairing already meets the threshold.</div>';
       } else if (sug) {
-        var sugGrade = sug.judge.pass ? (sug.judge.grade === 'AAA' ? 'aaa' : (sent.large ? 'aa-large' : 'aa')) : 'fail';
+        var sugPasses = !!(sug.judge && sug.judge.pass);
+        var sugGrade  = sugPasses ? (sug.judge.grade === 'AAA' ? 'aaa' : (sent.large ? 'aa-large' : 'aa')) : 'fail';
+        var sugTitle  = sugPasses ? 'Suggested fix' : 'Best available';
+        var sugSym    = sugPasses ? '\u2713' : '\u26A0';
+        // onComponent suggestions that don't pass mean BOTH white +
+        // black fail against the worst fill state \u2014 the real fix
+        // is to move the fill step, not flip the on-component pick.
+        // Surface that explicitly so the user isn't misled into
+        // thinking "Apply" makes them AA-compliant.
+        var rootCauseNote = '';
+        if (!sugPasses && propIdHint === 't1d:onComponent') {
+          rootCauseNote = '<div class="ev2-wcag-pop-fix-note">'
+            + 'Neither white nor black reaches AA against your hover/pressed fills. '
+            + 'Move the fill step lighter (Light mode) or darker (Dark mode) to narrow the contrast valley.'
+          + '</div>';
+        }
         sugBlock =
-          '<div class="ev2-wcag-pop-fix">'
+          '<div class="ev2-wcag-pop-fix"' + (sugPasses ? '' : ' data-soft="1"') + '>'
           + '<div class="ev2-wcag-pop-fix-head">'
-            + '<span class="ev2-wcag-pop-fix-title">Suggested fix</span>'
-            + '<span class="ev2-wcag-pop-chip" data-grade="' + sugGrade + '">\u2713 ' + sug.ratio.toFixed(2) + ':1</span>'
+            + '<span class="ev2-wcag-pop-fix-title">' + sugTitle + '</span>'
+            + '<span class="ev2-wcag-pop-chip" data-grade="' + sugGrade + '">' + sugSym + ' ' + sug.ratio.toFixed(2) + ':1</span>'
           + '</div>'
           + '<div class="ev2-wcag-pop-fix-body">'
             + '<span class="ev2-wcag-pop-sw" style="background:' + sug.hex + '"></span>'
             + '<span class="ev2-wcag-pop-fix-txt">Step <strong>' + sug.step + '</strong> (' + sug.hex.toUpperCase() + ')</span>'
             + '<button type="button" class="ev2-wcag-pop-apply" data-pc-wcag-apply' + applyAttrs + ' data-step="' + sug.step + '">Apply</button>'
           + '</div>'
+          + rootCauseNote
+        + '</div>';
+      } else if (propIdHint === 't1d:onComponent') {
+        // Both white and black tested; neither improves materially.
+        // Speak to the real cause (fill step too saturated) instead
+        // of the generic "edit the baseline" copy.
+        sugBlock = '<div class="ev2-wcag-pop-fix ev2-wcag-pop-fix-empty">'
+          + 'No on-component colour reaches AA against this role\u2019s fill states. '
+          + 'The hover/pressed fills are too saturated for either white or black to pass on every state. '
+          + 'Move the fill step toward the surface tone (lighter in Light mode, darker in Dark mode) to fix the root cause.'
         + '</div>';
       } else {
         sugBlock = '<div class="ev2-wcag-pop-fix ev2-wcag-pop-fix-empty">No step in this palette reaches the threshold against ' + sent.baseline.replace(/^--[^-]+-/, '') + '. Try editing the baseline instead.</div>';
