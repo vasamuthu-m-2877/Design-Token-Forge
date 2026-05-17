@@ -575,7 +575,14 @@ function renderPalettes(){
   activePalettes.forEach(function(p){
     var row=document.createElement('div');
     row.className='palette-row';
-    row.innerHTML='<div class="palette-name">'+p.name+' <span class="palette-key">key: '+p.key+'</span></div>';
+    /* The hardcoded p.key is just the FILE's default and goes stale
+       the moment a project overrides --prim-<name>-500. Read the live
+       computed step-500 so the label always matches the swatch the
+       user is actually looking at. Falls back to the hardcoded value
+       only if the var isn't defined (e.g. a custom palette without
+       a 500 step). */
+    var liveKey = hex(p.prefix + '-500') || p.key;
+    row.innerHTML='<div class="palette-name">'+p.name+' <span class="palette-key">key: '+liveKey+'</span></div>';
     var strip=document.createElement('div');
     strip.className='swatch-strip';
     STEPS.forEach(function(step){
