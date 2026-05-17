@@ -1626,11 +1626,25 @@ async function generateComponentFromBlueprint(blueprint) {
     componentSets: []
   };
   try {
-    for (var _psi = 0; _psi < page.children.length; _psi++) {
-      var _psc = page.children[_psi];
-      if (_psc.type === 'COMPONENT_SET' && ownedByThisBP(_psc)) {
-        priorSnapshot.componentSets.push(snapshotComponentSet(_psc));
+    /* W1 fix — walk the WHOLE page tree, not just top-level children.
+       Component-sets are nested inside sections in every real DTF
+       file ("Tier 2 — Variants" section wraps them), so a
+       page.children-only pass missed every set. */
+    var _allSets = [];
+    try {
+      _allSets = page.findAllWithCriteria({ types: ['COMPONENT_SET'] }) || [];
+    } catch (_fwe) { /* fall back to shallow scan */
+      for (var _psk = 0; _psk < page.children.length; _psk++) {
+        if (page.children[_psk].type === 'COMPONENT_SET') _allSets.push(page.children[_psk]);
       }
+    }
+    for (var _psi = 0; _psi < _allSets.length; _psi++) {
+      var _psc = _allSets[_psi];
+      try {
+        if (ownedByThisBP(_psc)) {
+          priorSnapshot.componentSets.push(snapshotComponentSet(_psc));
+        }
+      } catch (_pscErr) { /* stale ref — skip */ }
     }
   } catch (pse) { /* ignore */ }
 
@@ -1689,6 +1703,12 @@ async function generateComponentFromBlueprint(blueprint) {
 
   for (var ci2 = page.children.length - 1; ci2 >= 0; ci2--) {
     var child = page.children[ci2];
+    if (!child) continue;
+    /* Whole-iteration guard. Any access on a stale handle (e.g. a
+       descendant orphaned by a sibling's earlier removal) would throw
+       'in get_name: The node with id "X:Y" does not exist'. Treat
+       any such failure as "not ours, skip". */
+    try {
     /* SHARED PRIMITIVES GUARD — Icon/Placeholder, Icon/Chevron, and the
        'DTF — Primitives' showcase section belong to ALL blueprints.
        Per-BP cleanup must never touch them. Check this FIRST before
@@ -1734,6 +1754,10 @@ async function generateComponentFromBlueprint(blueprint) {
     if (child.type === 'TEXT' && (child.name.indexOf('MASTER ') === 0 || child.name.indexOf('VARIANT ') === 0 || child.name === 'Icon Primitive' || child.name.indexOf('DTF-') === 0) &&
         (ownedByThisBP(child) || child.getPluginData('dtf-generated') === '1')) {
       child.remove(); continue;
+    }
+    } catch (_cleanupErr) {
+      log('Cleanup skipped stale child at index ' + ci2 + ': ' + (_cleanupErr && _cleanupErr.message));
+      continue;
     }
   }
 
