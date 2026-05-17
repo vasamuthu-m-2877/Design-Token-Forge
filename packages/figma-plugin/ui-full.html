@@ -264,6 +264,9 @@
     display: flex; gap: 8px; align-items: center;
   }
   .footer[hidden] { display: none; }
+  /* Builder footer stacks: CTA on top, reassurance footnote below. */
+  #footerBuilder { flex-direction: column; align-items: stretch; gap: 6px; }
+  #footerBuilder .btn { white-space: nowrap; }
 
   /* ── Hero (idle / pending / mismatch / undo / setup) ── */
   .hero {
@@ -1202,11 +1205,20 @@ var prereqsList  = document.getElementById('prereqsList');
 var genStatus    = document.getElementById('genStatus');
 var genInfo      = document.getElementById('genInfo');
 var builderBusy      = document.getElementById('builderBusy');
+var builderBusyTitle = document.getElementById('builderBusyTitle');
 var builderBusySub   = document.getElementById('builderBusySub');
-function setBuilderBusy(on, subText){
+/* setBuilderBusy(on)                   → hide
+   setBuilderBusy(on, subText)          → keep title, set sub
+   setBuilderBusy(on, subText, title)   → set both
+   The Builder mirrors Sync's deploy/syncing states via this so the
+   user doesn't see stale pills while tokens are mid-flight. */
+function setBuilderBusy(on, subText, titleText){
   if (!builderBusy) return;
   builderBusy.setAttribute('aria-hidden', on ? 'false' : 'true');
-  if (on && subText && builderBusySub) builderBusySub.textContent = subText;
+  if (on){
+    if (titleText && builderBusyTitle) builderBusyTitle.textContent = titleText;
+    if (subText   && builderBusySub)   builderBusySub.textContent   = subText;
+  }
 }
 var generateBtn  = document.getElementById('generateBtn');
 
@@ -1307,6 +1319,7 @@ function render(){
     setupForm.hidden = true;
     changesPanel.hidden = true;
     footerSync.hidden = true;
+    setBuilderBusy(false);
     applyFooterForActiveTab();
     return;
   }
@@ -1326,6 +1339,7 @@ function render(){
     if (tbMenuPop) tbMenuPop.classList.add('signed-out');
     if (tbRefresh) tbRefresh.hidden = true;
     setSyncBadge(0);
+    setBuilderBusy(false);
     applyFooterForActiveTab();
     return;
   }
@@ -1405,6 +1419,7 @@ function render(){
     changesPanel.hidden = true;
     footerSync.hidden = true;
     body.dataset.conn = 'error';
+    setBuilderBusy(false);
     applyFooterForActiveTab();
     return;
   }
@@ -1420,6 +1435,7 @@ function render(){
     });
     changesPanel.hidden = true;
     footerSync.hidden = true;
+    setBuilderBusy(true, 'Waiting for GitHub Pages to finish deploying.', 'Deployment in progress…');
     applyFooterForActiveTab();
     return;
   }
@@ -1433,6 +1449,7 @@ function render(){
     });
     changesPanel.hidden = true;
     footerSync.hidden = true;
+    setBuilderBusy(true, 'Updating variables in this Figma file.', 'Syncing…');
     applyFooterForActiveTab();
     return;
   }
@@ -1494,6 +1511,7 @@ function render(){
     if (statusBar.classList.contains('err') && /fetch tokens/.test(statusBar.textContent)){
       setStatus('', '');
     }
+    setBuilderBusy(false);
     applyFooterForActiveTab();
     return;
   }
@@ -1507,6 +1525,7 @@ function render(){
   changesPanel.hidden = true;
   footerSync.hidden = true;
   setSyncBadge(0);
+  setBuilderBusy(false);
   applyFooterForActiveTab();
 }
 
@@ -3129,32 +3148,52 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
     var when = fmtBuiltAgo(v.writtenAt || v.generatedAt);
     whenEl && (whenEl.textContent = when ? ('· ' + when) : '');
 
-    /* Action line copy. Numbers are bolded via .nums.
-       N() wraps an integer for readability. */
-    function N(n){ return '<span class="nums">' + (n|0) + '</span>'; }
+    /* Action line copy. Matches demo/mock-builder.html scenarios.
+       Numbers are bolded via .nums. Clauses with a 0 count are
+       dropped — surfacing "Adds 0 bindings" reads as a bug, not
+       information. The pill above still indicates the cause. */
+    function N(n, noun){
+      return '<span class="nums">' + (n|0) + ' ' + noun + '</span>';
+    }
     var anyChange = bindingsChanged || structureChanged || protoChanged || isDrift;
     var action = '';
 
     if (isDrift) {
       action = 'Built against <span class="nums">' + esc(projectDisplayName(ranProject)) +
         '</span>. Rebuilding re-targets to <span class="nums">' + esc(projectDisplayName(currentProject)) + '</span>.';
-    } else if (bindingsChanged && structureChanged && protoChanged) {
-      action = 'Adds ' + N(totBindings) + ' bindings, ' + N(totVariants) +
-        ' variants, and re-wires ' + N(totReactions) + ' reactions.';
-    } else if (bindingsChanged && structureChanged) {
-      action = 'Adds ' + N(totBindings) + ' bindings and ' + N(totVariants) + ' variants.';
-    } else if (bindingsChanged && protoChanged) {
-      action = 'Adds ' + N(totBindings) + ' bindings and re-wires ' + N(totReactions) + ' reactions.';
-    } else if (structureChanged && protoChanged) {
-      action = 'Adds ' + N(totVariants) + ' variants and re-wires ' + N(totReactions) + ' reactions.';
-    } else if (bindingsChanged) {
-      action = 'Updates ' + N(totBindings) + ' token bindings.';
-    } else if (structureChanged) {
-      action = 'Adds ' + N(totVariants) + ' variants.';
-    } else if (protoChanged) {
-      action = 'Re-wires ' + N(totReactions) + ' reactions.';
     } else {
-      action = 'Up to date.';
+      /* Build clauses in priority order. Skip zero-count ones; if a
+         cause fired without a count (e.g. bindings hash moved but
+         totBindings is 0 in ledger), emit a generic phrase so the
+         row still reads cleanly. */
+      var clauses = [];
+      if (bindingsChanged) {
+        clauses.push(totBindings > 0
+          ? ('Adds ' + N(totBindings, 'new token bindings'))
+          : 'Updates token bindings');
+      }
+      if (structureChanged) {
+        clauses.push(totVariants > 0
+          ? ('Adds ' + N(totVariants, 'new variants'))
+          : 'Adds variants');
+      }
+      if (protoChanged) {
+        /* Reactions are hardcoded in plugin code, not data-driven,
+           so the magnitude is "what" not "how many". */
+        clauses.push('Re-wires <span class="nums">hover \u2192 pressed</span> reactions');
+      }
+
+      if (clauses.length === 0) {
+        action = 'Up to date.';
+      } else if (clauses.length === 1) {
+        action = clauses[0] + '.';
+      } else {
+        var last = clauses.pop();
+        /* Lower-case the leading verb of the last clause so it joins
+           naturally: "Adds X and re-wires Y." */
+        last = last.charAt(0).toLowerCase() + last.slice(1);
+        action = clauses.join(', ') + ' and ' + last + '.';
+      }
     }
 
     pillsEl.innerHTML = pillsHtml;
