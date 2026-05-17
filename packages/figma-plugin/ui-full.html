@@ -3033,7 +3033,8 @@ function updateGenPrereqs(data){
     data.currentStructureHashes || data.currentSpecHashes || {},
     data.currentPrototypeHashes || {},
     data.currentTokensHash || '',
-    data.currentProject || ''
+    data.currentProject || '',
+    data.currentTokensHashes || null  /* V2 per-component map */
   );
 }
 
@@ -3068,10 +3069,11 @@ var builderHasAnyBuild = false;
                  pills are present (see demo/mock-builder.html).
      • tint:     subtle bg on the row of HIGHEST severity
                  (drift > structure > proto > bindings). */
-function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHashes, currentTokensHash, currentProject){
+function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHashes, currentTokensHash, currentProject, currentTokensHashes){
   currentStructureHashes = currentStructureHashes || {};
   currentPrototypeHashes = currentPrototypeHashes || {};
   currentTokensHash      = currentTokensHash || '';
+  currentTokensHashes    = currentTokensHashes || null;
   /* Drift = "the project we'd build against next is not the one we
      built against last time". The dropdown (CURRENT_PROJECT) is the
      authoritative source for "next", NOT the file-bound dtf-project
@@ -3115,8 +3117,14 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
     var ledgerTokens = v.tokensHash    || '';
     var curStruct    = currentStructureHashes[key] || '';
     var curProto     = currentPrototypeHashes[key] || '';
+    /* V2 — prefer per-component tokens hash (only compares IDs this
+       component actually binds). Fall back to the legacy union hash
+       for ledger entries that predate boundIds[]. */
+    var curTokens    = (currentTokensHashes && currentTokensHashes[key] != null)
+                         ? currentTokensHashes[key]
+                         : currentTokensHash;
 
-    var bindingsChanged  = !!(ledgerTokens && currentTokensHash && ledgerTokens !== currentTokensHash);
+    var bindingsChanged  = !!(ledgerTokens && curTokens && ledgerTokens !== curTokens);
     var structureChanged = !!(ledgerStruct && curStruct        && ledgerStruct !== curStruct);
     var protoChanged     = !!(ledgerProto  && curProto         && ledgerProto  !== curProto);
     var ranProject       = v.project || '';
@@ -3220,7 +3228,7 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
     var tip = [
       ledgerStruct ? ('structure ' + ledgerStruct + (structureChanged ? ' → ' + curStruct : '')) : '',
       ledgerProto  ? ('prototype ' + ledgerProto  + (protoChanged     ? ' → ' + curProto  : '')) : '',
-      ledgerTokens ? ('tokens '    + ledgerTokens + (bindingsChanged  ? ' → ' + currentTokensHash : '')) : '',
+      ledgerTokens ? ('tokens '    + ledgerTokens + (bindingsChanged  ? ' → ' + curTokens : '')) : '',
       v.pluginVersion ? ('plugin ' + v.pluginVersion) : '',
       ranProject   ? ('project '   + ranProject) : ''
     ].filter(Boolean).join(' · ');

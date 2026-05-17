@@ -734,6 +734,7 @@ function setPaintBoundToVariable(node, paintField, variable) {
     paint.boundVariables = { color: { type: 'VARIABLE_ALIAS', id: variable.id } };
   }
   node[paintField] = [paint];
+  if (variable && variable.id) _recordBoundVarId(variable.id);
 }
 
 /* Try to bind a variable to a numeric/boolean node property */
@@ -741,11 +742,22 @@ async function tryBindVar(node, field, variable) {
   if (!variable) return false;
   try {
     node.setBoundVariable(field, variable);
+    if (variable.id) _recordBoundVarId(variable.id);
     return true;
   } catch (e) {
     log('bindVar failed: ' + field + ' on ' + node.name + ' — ' + e.message);
     return false;
   }
+}
+
+/* M5/V2 — per-build set of variable IDs we actually bound. Reset at
+   the start of each generateComponentFromBlueprint() invocation; read
+   at Step 9 to record the precise binding surface for THIS component
+   in the ledger. Lets the Builder pill avoid false positives when a
+   sync only added or removed variables this component doesn't use. */
+var _boundIdsForBuild = null;
+function _recordBoundVarId(id){
+  if (_boundIdsForBuild) _boundIdsForBuild[id] = 1;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1267,6 +1279,10 @@ function expandTypeSpecsToZoneOverrides(typeSpecs, stateNames) {
 
 async function generateComponentFromBlueprint(blueprint) {
   var stats = { components: 0, bindings: 0, reactions: 0, errors: [] };
+  /* Reset per-build bound-id collector. setPaintBoundToVariable,
+     tryBindVar, and tryBindStroke push into this; Step 9 hashes
+     it to produce a precise tokensHash for this component only. */
+  _boundIdsForBuild = {};
   var BP = blueprint;
 
   /* M4 — read the safe-rebuild feature flag. When ON, the plugin tries
@@ -1955,6 +1971,7 @@ async function generateComponentFromBlueprint(blueprint) {
         { type: 'SOLID', color: { r: 0.5, g: 0.5, b: 0.5 }, opacity: 1, visible: true },
         'color', varObj
       )];
+      if (varObj.id) _recordBoundVarId(varObj.id);
       return true;
     } catch (e) { return false; }
   }
@@ -3972,21 +3989,15 @@ async function generateComponentFromBlueprint(blueprint) {
     );
   } catch (e) {}
   var tokensHash = '';
+  var boundIds = [];
   try {
-    var ids = [];
-    function _collectIds(map) {
-      if (!map) return;
-      var ks = Object.keys(map);
-      for (var i = 0; i < ks.length; i++) {
-        var v = map[ks[i]];
-        if (v && v.id) ids.push(v.id);
-      }
-    }
-    _collectIds(compSizeVars);
-    _collectIds(t2Vars);
-    _collectIds(t3Vars);
-    ids.sort();
-    tokensHash = dtfHash32(ids.join('|'));
+    /* Only the IDs we ACTUALLY bound this build. Avoids the
+       false-positive "bindings changed" pill that the old behaviour
+       (hash all IDs in csMap+t2Map+t3Map) produced after any unrelated
+       sync touched those collections. */
+    boundIds = Object.keys(_boundIdsForBuild || {});
+    boundIds.sort();
+    tokensHash = dtfHash32(boundIds.join('|'));
   } catch (e) {}
 
   /* Preserve prior hashes so the Builder pill can show "changed since
@@ -4027,6 +4038,7 @@ async function generateComponentFromBlueprint(blueprint) {
     structureHash:    structureHash,
     prototypeHash:    prototypeHash,
     tokensHash:       tokensHash,
+    boundIds:         boundIds,         /* V2 — exact bind surface */
     prevSpecHash:     _priorEntry.specHash      || '',
     prevStructureHash:_priorEntry.structureHash || _priorEntry.specHash || '',
     prevPrototypeHash:_priorEntry.prototypeHash || '',
@@ -4470,17 +4482,66 @@ figma.ui.onmessage = async function(msg) {
         versions = JSON.parse(figma.root.getPluginData('dtf-component-versions') || '{}');
       } catch (e) { /* ignore */ }
 
-      /* M5 — compute current spec + tokens fingerprints so the UI can
-         decide "rebuild needed?" per component WITHOUT the designer
-         clicking Generate. Mirrors the math in
-         generateComponentFromBlueprint Step 9. */
+      /* M5/V2 — per-component bindings status.
+         The OLD behaviour hashed every variable ID in the three
+         collections. That meant any sync that added/removed a single
+         unrelated variable flipped the hash for EVERY built component,
+         producing a false-positive "bindings changed" pill.
+
+         New behaviour:
+           1. Build a Set of all current variable IDs.
+           2. For each existing ledger entry, check whether every ID
+              it actually bound is still present.
+           3. If yes → emit ledger.tokensHash unchanged (UI sees no
+                       diff, no pill).
+              If no → emit a sentinel hash including the missing IDs
+                       (UI sees a diff, bindings pill fires for THIS
+                       component only). */
       var currentTokensHash = '';
+      var currentTokensHashes = {};
       try {
         var _ids = [];
-        function _collect(m){ var ks = Object.keys(m||{}); for (var i=0;i<ks.length;i++){ var v=m[ks[i]]; if (v && v.id) _ids.push(v.id);} }
+        var _idSet = {};
+        function _collect(m){
+          var ks = Object.keys(m||{});
+          for (var i=0;i<ks.length;i++){
+            var v=m[ks[i]];
+            if (v && v.id) { _ids.push(v.id); _idSet[v.id] = 1; }
+          }
+        }
         _collect(csMap); _collect(t2Map); _collect(t3Map);
         _ids.sort();
+        /* Kept for back-compat with UI readers that haven't migrated
+           to the per-component map yet. */
         currentTokensHash = dtfHash32(_ids.join('|'));
+
+        var _vkeys = Object.keys(versions);
+        for (var _vi = 0; _vi < _vkeys.length; _vi++){
+          var _vk = _vkeys[_vi];
+          var _ve = versions[_vk];
+          if (!_ve) continue;
+          var _bound = _ve.boundIds;
+          if (!_bound || !_bound.length) {
+            /* Legacy ledger entry (pre-V2). Fall back to the
+               coarse all-ids hash so the entry isn't silently
+               clean-looking; it'll show "bindings" once after the
+               next build records its boundIds[]. */
+            currentTokensHashes[_vk] = currentTokensHash;
+            continue;
+          }
+          var _missing = [];
+          for (var _bi = 0; _bi < _bound.length; _bi++){
+            if (!_idSet[_bound[_bi]]) _missing.push(_bound[_bi]);
+          }
+          if (_missing.length === 0) {
+            /* All vars Button is bound to still exist → no change. */
+            currentTokensHashes[_vk] = _ve.tokensHash || '';
+          } else {
+            /* Some IDs gone → real rebind needed. Sentinel includes
+               the missing list so the hash genuinely differs. */
+            currentTokensHashes[_vk] = dtfHash32('missing:' + _missing.sort().join('|'));
+          }
+        }
       } catch (e) {}
 
       var currentSpecHashes = {};
@@ -4512,7 +4573,8 @@ figma.ui.onmessage = async function(msg) {
         t2Count: Object.keys(t2Map).length,
         t3Count: Object.keys(t3Map).length,
         versions: versions,
-        currentTokensHash:     currentTokensHash,
+        currentTokensHash:     currentTokensHash,       /* legacy: union of all IDs */
+        currentTokensHashes:   currentTokensHashes,     /* V2: per-component */
         currentSpecHashes:     currentSpecHashes,       /* legacy alias */
         currentStructureHashes:currentStructureHashes,
         currentPrototypeHashes:currentPrototypeHashes,
