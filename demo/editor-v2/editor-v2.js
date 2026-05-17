@@ -643,7 +643,10 @@
     activeT0: 'roles',
     // Disclosure open-state persists across role / tier swaps.
     // Keyed by 'tierId:discId' so each tier can have its own pattern.
-    disclosure: { 't0:steps': false, 't0:affects': false, 't1:slots': false, 't1:affects': false },
+    // 't0:steps' starts OPEN so the 20-step ladder is visible the
+    // moment a role is selected — this is the primary thing the user
+    // came to T0 to see, hiding it behind a disclosure was a paper-cut.
+    disclosure: { 't0:steps': true, 't0:affects': false, 't1:slots': false, 't1:affects': false },
     focusedLever: null,
     lastSavedAt: null
   };
@@ -4592,6 +4595,10 @@
       if (ui.anchor === 'exact' || ui.anchor === 'normalized') State.anchor = ui.anchor;
       if (ui.disclosure && typeof ui.disclosure === 'object') {
         Object.keys(ui.disclosure).forEach(function (k) { State.disclosure[k] = !!ui.disclosure[k]; });
+        // 't0:steps' is the 20-step ladder — the primary T0 surface.
+        // Even if the user collapsed it in a past session, we always
+        // reopen on load so it is visible by default every time.
+        State.disclosure['t0:steps'] = true;
       }
       if (ui.mode === 'light' || ui.mode === 'dark') {
         State.editingMode = ui.mode;
