@@ -1205,6 +1205,7 @@ function renderChangeList(){
     }
   }
   /* Figma-style breakdown: "19 modified · 0 added · 0 removed". */
+  var totalVars = serverStatus && serverStatus.totalVariables ? serverStatus.totalVariables : 0;
   if (total === 0){
     changesCountText.textContent = 'No changes';
   } else {
@@ -1212,7 +1213,10 @@ function renderChangeList(){
     if (nMod) parts.push(nMod + ' modified');
     if (nAdd) parts.push(nAdd + ' added');
     if (nRem) parts.push(nRem + ' removed');
-    changesCountText.textContent = parts.join(' · ');
+    var head = parts.join(' · ');
+    /* DTF-style quiet hint: "of 571 variables" so the diff has context. */
+    if (totalVars) head += ' · of ' + totalVars + ' variables';
+    changesCountText.textContent = head;
   }
 
   /* Mirror the count into the action button so the CTA is concrete. */
@@ -1225,20 +1229,11 @@ function renderChangeList(){
   /* Show search field once we cross 50 total */
   filterSearch.hidden = total < 50;
 
-  /* Filter chips: visible when > 20 changes; otherwise the user can just eyeball */
-  if (total >= 20){
-    filterChips.hidden = false;
-    var chipsHTML = '<button class="chip" data-key="" aria-pressed="' + (activeFilters.size === 0 ? 'true' : 'false') + '">All<span class="chip-count">' + total + '</span></button>';
-    for (var j=0; j<allGroups.length; j++){
-      var g = allGroups[j];
-      var pressed = activeFilters.has(g.key) ? 'true' : 'false';
-      chipsHTML += '<button class="chip" data-key="' + esc(g.key) + '" aria-pressed="' + pressed + '">' + esc(g.key) + '<span class="chip-count">' + g.rows.length + '</span></button>';
-    }
-    filterChips.innerHTML = chipsHTML;
-  } else {
-    filterChips.hidden = true;
-    activeFilters.clear();
-  }
+  /* Per-collection chip filter retired — each group header already
+     shows its name + count, and the search field handles narrowing.
+     The chip bar was loud, redundant, and added cognitive load. */
+  filterChips.hidden = true;
+  activeFilters.clear();
 
   /* Auto-expand heuristic. Goal: when the user opens the plugin they
      SEE the meaningful diff in viewport, not the longest alias list.
