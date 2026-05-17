@@ -604,14 +604,18 @@
     <!-- ─── Sync tab content ───────────────────────── -->
     <div id="paneSync">
 
-      <!-- Project mismatch banner (Sync) -->
-      <div class="mismatch-banner" id="mismatchSync" hidden>
-        <span class="mismatch-glyph">⚠</span>
-        <div>
-          This file is currently linked to <strong id="mismatchSyncDoc">—</strong>.
-          Syncing will <strong>rebind</strong> it to <strong id="mismatchSyncNew">—</strong>
-          and overwrite its variables.
+      <!-- Project rebind card (Sync) -->
+      <div class="rebind-card" id="mismatchSync" hidden>
+        <div class="rebind-head">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1.5L11 10H1L6 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 5v2.5M6 8.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Rebind required
         </div>
+        <div class="rebind-flow">
+          <span class="rebind-chip" title="Currently linked"><span class="rebind-chip-dot"></span><span id="mismatchSyncDoc">—</span></span>
+          <span class="rebind-arrow">→</span>
+          <span class="rebind-chip target" title="Will rebind to"><span class="rebind-chip-dot"></span><span id="mismatchSyncNew">—</span></span>
+        </div>
+        <div class="rebind-caption">Syncing replaces this file’s variables with the new project’s tokens.</div>
       </div>
 
       <!-- Hero: idle / disconnected / undo -->
@@ -647,14 +651,18 @@
 
     <!-- ─── Builder tab content ────────────────────── -->
     <div id="paneBuilder" hidden>
-      <!-- Project mismatch banner (Builder) -->
-      <div class="mismatch-banner" id="mismatchBuilder" hidden>
-        <span class="mismatch-glyph">⚠</span>
-        <div>
-          This file is linked to <strong id="mismatchBuilderDoc">—</strong>.
-          Generating will <strong>rebind &amp; sync</strong> <strong id="mismatchBuilderNew">—</strong>
-          first, then create components against its variables.
+      <!-- Project rebind card (Builder) -->
+      <div class="rebind-card" id="mismatchBuilder" hidden>
+        <div class="rebind-head">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1.5L11 10H1L6 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 5v2.5M6 8.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Rebind required
         </div>
+        <div class="rebind-flow">
+          <span class="rebind-chip"><span class="rebind-chip-dot"></span><span id="mismatchBuilderDoc">—</span></span>
+          <span class="rebind-arrow">→</span>
+          <span class="rebind-chip target"><span class="rebind-chip-dot"></span><span id="mismatchBuilderNew">—</span></span>
+        </div>
+        <div class="rebind-caption">Generating will sync the new project’s variables first, then create components against them.</div>
       </div>
 
       <p class="builder-intro">
