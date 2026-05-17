@@ -68,10 +68,10 @@
     "inverse": "greyscale"
   },
   "latestVersion": {
-    "version": "v0.0.6",
-    "name": "May17 23:43",
+    "version": "v0.0.7",
+    "name": "May18 00:01",
     "description": "",
-    "savedAt": "2026-05-17T18:13:36.060Z",
+    "savedAt": "2026-05-17T18:31:40.383Z",
     "savedBy": "sridhar-ravi-2917"
   },
   "t1Picks": {
@@ -79,7 +79,7 @@
       "brand": {
         "fill": "600",
         "content": "600",
-        "container": "75",
+        "container": "50",
         "borderStep": "450",
         "separatorStep": "350",
         "onComponent": "white",
