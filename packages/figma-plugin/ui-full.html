@@ -3215,9 +3215,11 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
     whenEl && (whenEl.textContent = when ? ('· ' + when) : '');
 
     /* Action line copy. Matches demo/mock-builder.html scenarios.
-       Numbers are bolded via .nums. Clauses with a 0 count are
-       dropped — surfacing "Adds 0 bindings" reads as a bug, not
-       information. The pill above still indicates the cause. */
+       Numbers are bolded via .nums. A rebuild REPLACES the existing
+       component set with a fresh one, so verbs are "rebuilds" /
+       "re-binds" — never "adds" (which reads additive). totVariants
+       and totBindings are snapshot totals of the rebuilt set, not
+       deltas. Clauses with a 0 count fall back to a generic phrase. */
     function N(n, noun){
       return '<span class="nums">' + (n|0) + ' ' + noun + '</span>';
     }
@@ -3235,13 +3237,13 @@ function renderBuilderMeta(versions, currentStructureHashes, currentPrototypeHas
       var clauses = [];
       if (bindingsChanged) {
         clauses.push(totBindings > 0
-          ? ('Adds ' + N(totBindings, 'new token bindings'))
-          : 'Updates token bindings');
+          ? ('Re-binds ' + N(totBindings, 'tokens'))
+          : 'Re-binds tokens');
       }
       if (structureChanged) {
         clauses.push(totVariants > 0
-          ? ('Adds ' + N(totVariants, 'new variants'))
-          : 'Adds variants');
+          ? ('Rebuilds with ' + N(totVariants, 'variants'))
+          : 'Rebuilds variants');
       }
       if (protoChanged) {
         /* Reactions are hardcoded in plugin code, not data-driven,
