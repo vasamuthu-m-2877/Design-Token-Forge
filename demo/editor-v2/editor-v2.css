@@ -1233,7 +1233,7 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
   display:flex;
   flex-wrap:nowrap;
   gap:6px;
-  padding:10px 24px;
+  padding:10px 24px 10px 12px;
   overflow-x:auto;
   scrollbar-width:thin;
   border-bottom:1px solid var(--ev2-chrome-outline);

@@ -160,7 +160,7 @@
     { id:'dim',            label:'Dim',            palette:'greyscale', desc:'Recessed background'                    },
     { id:'deep',           label:'Deep',           palette:'greyscale', desc:'Most recessed background'               },
     { id:'accent',         label:'Accent',         palette:'brand',     desc:'Branded panels'                         },
-    { id:'container',      label:'Container',      palette:'greyscale', desc:'Card-on-surface (cards, panels)'        },
+    { id:'container',      label:'Container',      palette:'greyscale', desc:'Cards and tiles that sit on a surface' },
     { id:'over-container', label:'Over container', palette:'greyscale', desc:'Popovers, top-level dropdowns, modals'  },
     { id:'float',          label:'Float',          palette:'greyscale', desc:'Tooltips, menus, popups'                },
     { id:'inverse',        label:'Inverse',        palette:'greyscale', desc:'Dark on light, light on dark'           }
