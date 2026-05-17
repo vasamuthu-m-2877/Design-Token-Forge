@@ -2565,6 +2565,20 @@
     var ladderHex = ladderFor(roleId);
     var current = t1DerivedStep(roleId, derivedId, mode);
     var def     = t1DerivedDefault(roleId, derivedId, mode);
+    // For onComponent, when neither candidate passes AA, mark the
+    // BETTER worst-state option as "soft" (amber) instead of red
+    // fail \u2014 so the ladder visually agrees with the popover's
+    // "Best available" recommendation. Without this the user sees
+    // two red dots and a recommendation card pointing at one of
+    // them, which reads as contradictory.
+    var softStep = null;
+    if (derivedId === 'onComponent') {
+      var jW = t1DerivedJudgeStep(roleId, derivedId, mode, 'white');
+      var jB = t1DerivedJudgeStep(roleId, derivedId, mode, 'black');
+      if (!jW.judge.pass && !jB.judge.pass) {
+        softStep = jW.ratio >= jB.ratio ? 'white' : 'black';
+      }
+    }
     return '<div class="ev2-pc-ladder" data-pc-ladder-role="' + roleId + '"'
       + ' data-pc-ladder-derived="' + derivedId + '"'
       + (derivedId === 'onComponent' ? ' data-pc-ladder-compact="true"' : '')
@@ -2576,15 +2590,16 @@
           var isCur = step === current;
           var isDef = step === def;
           var jr    = t1DerivedJudgeStep(roleId, derivedId, mode, step);
-          var pass  = jr.judge.pass ? 'true' : 'false';
+          var pass  = jr.judge.pass ? 'true' : (step === softStep ? 'soft' : 'false');
           // For onComponent the ratio is worst-of-3-fills; flag it
           // explicitly so the user understands why a colour can show
           // a lower ratio than they'd expect by eyeballing default.
           var tip;
           if (derivedId === 'onComponent') {
+            var verdict = jr.judge.pass ? jr.judge.grade : (step === softStep ? 'Best available (under AA)' : 'Fail');
             tip = step + ' \u2022 ' + hex.toUpperCase()
                 + ' \u00b7 worst-state ' + jr.ratio.toFixed(2) + ':1 ('
-                + (jr.judge.pass ? jr.judge.grade : 'Fail') + ')'
+                + verdict + ')'
                 + (isDef ? ' \u2022 auto pick' : '')
                 + (isCur ? ' \u2022 selected' : '');
           } else {

@@ -1765,6 +1765,22 @@ html.ev2-tip-js .ev2-pc-ladder-step[data-pass="false"]::before,
   box-shadow:0 0 0 1.5px var(--ev2-chrome-bg, #fff);
   pointer-events:none;
 }
+/* "soft" = best-of-failing for onComponent when neither white nor
+   black reaches AA against the role's worst fill state. Amber dot
+   matches the popover's "Best available" amber framing so the
+   ladder and recommendation agree visually. */
+html.ev2-tip-js .ev2-pc-ladder-step[data-pass="soft"]::before,
+.ev2-pc-ladder-step[data-pass="soft"]::before{
+  content:" " !important;
+  display:block !important;
+  position:absolute;
+  top:1px;right:1px;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--warning-component-bg-default, #c97a06);
+  box-shadow:0 0 0 1.5px var(--ev2-chrome-bg, #fff);
+  pointer-events:none;
+}
 
 /* T1 always-expanded cards: the swatch is decorative (no toggle
    target). Drop the hover scale + cursor so users don't think
