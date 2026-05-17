@@ -742,7 +742,7 @@
   var T1_DERIVED = [
     { id: 'border',       label: 'Container border',    sub: 'Outline drawn around the container surface' },
     { id: 'separator',    label: 'Container separator', sub: 'Dividers inside the container surface' },
-    { id: 'onComponent',  label: 'On-component',        sub: 'Text + icons drawn on the component fill' },
+    { id: 'onComponent',  label: 'On-component',        sub: 'Text + icons on the component fill. Picker shows white, black, and any palette step that passes AA on every fill state.' },
     { id: 'onContainer',  label: 'On-container',        sub: 'Text drawn on the container surface' }
   ];
 
@@ -843,12 +843,19 @@
   // flicker), so the colour must be readable on all of them \u2014
   // testing default alone produces white-on-light-pressed or
   // black-on-dark-pressed failures (Pearl brand caught this).
-  // User override = `t.onComponent` ('white' | 'black') wins.
+  // User override = `t.onComponent` wins. Allowed values:
+  //   'white' / 'black' \u2014 fixed canonical picks (always offered).
+  //   any ALL_STEPS name \u2014 a palette step. Only palette steps that
+  //   AA-pass against ALL three fill states show up in the picker
+  //   (see onComponentAllowedSteps), so an override here is always
+  //   meaningful even if not strictly white/black.
   function onComponentColor(roleId, mode) {
     if (!roleId) return '#FFFFFF';
     var t = State.t1[mode || State.editingMode][roleId];
-    if (t.onComponent === 'white') return '#FFFFFF';
-    if (t.onComponent === 'black') return '#0A0A0A';
+    if (t.onComponent) {
+      var ovHex = onComponentHexFor(roleId, t.onComponent);
+      if (ovHex) return ovHex;
+    }
     var fillStep = t.fill;
     // Fills derived the same way semanticVarsFor() does (stepRel
     // +0, +1, +2) so the AA test sees exactly the values that ship.
@@ -859,6 +866,56 @@
     ].filter(Boolean);
     if (!fills.length) fills = ['#000'];
     return DTFSolver.deriveOnComponent(fills);
+  }
+
+  /* Hex for an on-component step name. 'white' and 'black' are
+     the FIXED canonical picks (#FFFFFF + #0A0A0A, warmer than
+     pure black for OLED) \u2014 they intentionally do NOT come from
+     the role palette so that pinning "white" stays white when
+     the user swaps brand colours. Other step names resolve from
+     the role's own ladder so a designer can pick e.g. brand-50
+     as a tinted on-component if it AA-passes. */
+  function onComponentHexFor(roleId, step) {
+    if (step === 'white') return '#FFFFFF';
+    if (step === 'black') return '#0A0A0A';
+    return stepHexByName(roleId, step) || null;
+  }
+
+  /* Build the set of step names allowed in the on-component picker
+     for this role + mode. Always returns 'white' + 'black' first
+     (familiar canonical picks), then any palette step (25..900)
+     whose WORST-CASE contrast against [default, hover, pressed]
+     fills passes AA 4.5:1. Extra picks are sorted by worst-state
+     ratio descending so the safest tinted options surface first.
+     Why filter rather than show everything: a palette step that
+     fails AA on hover/pressed would silently ship inaccessible
+     text. The picker is the safety rail \u2014 if a step isn't here,
+     it isn't a valid on-component choice for this role's fills. */
+  function onComponentAllowedSteps(roleId, mode) {
+    var base = ['white', 'black'];
+    var t = State.t1[mode][roleId];
+    if (!t) return base;
+    var fills = [
+      stepHexByName(roleId, t.fill),
+      stepHexByName(roleId, stepRel(t.fill, 1)),
+      stepHexByName(roleId, stepRel(t.fill, 2))
+    ].filter(Boolean);
+    if (!fills.length) return base;
+    var ladder = ladderFor(roleId);
+    var extra = [];
+    ALL_STEPS.forEach(function (s) {
+      if (s === 'white' || s === 'black') return;
+      var hex = ladder[s];
+      if (!hex) return;
+      var minR = Infinity;
+      for (var i = 0; i < fills.length; i++) {
+        var r = contrastRatio(hex, fills[i]);
+        if (r < minR) minR = r;
+      }
+      if (minR >= 4.5) extra.push({ step: s, ratio: minR });
+    });
+    extra.sort(function (a, b) { return b.ratio - a.ratio; });
+    return base.concat(extra.map(function (e) { return e.step; }));
   }
   // Auto-pair: pick the ladder step (closest to the user's chosen
   // content-default) that passes AA against the active container.
@@ -2186,7 +2243,12 @@
     var t = t1For(roleId, mode);
     if (!t) return;
     if (derivedId === 'onComponent') {
-      if (newStep !== 'white' && newStep !== 'black') return;
+      // Accept white/black (always offered) OR any palette step
+      // that AA-passes worst-state against the role's fills (the
+      // filtered set shown in the picker). Reject anything else
+      // so a stale state entry can't ship an inaccessible value.
+      var allowed = onComponentAllowedSteps(roleId, mode);
+      if (allowed.indexOf(newStep) < 0) return;
       if (t.onComponent === newStep) return;
       t.onComponent = newStep;
     } else if (derivedId === 'border') {
@@ -2538,7 +2600,7 @@
     var base = t1DerivedBaseline(roleId, derivedId, mode);
     var hex;
     if (derivedId === 'onComponent') {
-      hex = step === 'white' ? '#FFFFFF' : '#0A0A0A';
+      hex = onComponentHexFor(roleId, step) || '#000';
       var t = State.t1[mode][roleId];
       var fills = [
         stepHexByName(roleId, t.fill),
@@ -2557,20 +2619,22 @@
     var r = contrastRatio(hex, base.hex);
     return { ratio: r, judge: wcagJudge(r, base.large) };
   }
-  /* Ladder HTML for a derived card. onComponent gets a tiny
-     2-step "ladder" of just white + black; everything else uses
-     the standard 22-step palette. */
+  /* Ladder HTML for a derived card. onComponent gets a filtered
+     picker (always white + black; plus any palette step that
+     AA-passes worst-state). Everything else uses the standard
+     22-step palette. */
   function t1DerivedLadderHTML(roleId, derivedId, mode) {
-    var steps = (derivedId === 'onComponent') ? ['white', 'black'] : ALL_STEPS;
+    var steps = (derivedId === 'onComponent')
+      ? onComponentAllowedSteps(roleId, mode)
+      : ALL_STEPS;
     var ladderHex = ladderFor(roleId);
     var current = t1DerivedStep(roleId, derivedId, mode);
     var def     = t1DerivedDefault(roleId, derivedId, mode);
-    // For onComponent, when neither candidate passes AA, mark the
-    // BETTER worst-state option as "soft" (amber) instead of red
-    // fail \u2014 so the ladder visually agrees with the popover's
-    // "Best available" recommendation. Without this the user sees
-    // two red dots and a recommendation card pointing at one of
-    // them, which reads as contradictory.
+    // For onComponent, when neither white nor black passes AA,
+    // mark the BETTER worst-state of the two as "soft" (amber)
+    // instead of red. Tinted palette steps in the picker are by
+    // definition AA-passing (filter guarantees it), so they
+    // always render as a normal "true" pass \u2014 no soft mark.
     var softStep = null;
     if (derivedId === 'onComponent') {
       var jW = t1DerivedJudgeStep(roleId, derivedId, mode, 'white');
@@ -2585,7 +2649,7 @@
       + '>'
       + steps.map(function (step) {
           var hex   = (derivedId === 'onComponent')
-            ? (step === 'white' ? '#FFFFFF' : '#0A0A0A')
+            ? (onComponentHexFor(roleId, step) || '#000')
             : (ladderHex[step] || '#000');
           var isCur = step === current;
           var isDef = step === def;
@@ -2597,7 +2661,8 @@
           var tip;
           if (derivedId === 'onComponent') {
             var verdict = jr.judge.pass ? jr.judge.grade : (step === softStep ? 'Best available (under AA)' : 'Fail');
-            tip = step + ' \u2022 ' + hex.toUpperCase()
+            var stepLabel = (step === 'white' || step === 'black') ? step : ('step ' + step);
+            tip = stepLabel + ' \u2022 ' + hex.toUpperCase()
                 + ' \u00b7 worst-state ' + jr.ratio.toFixed(2) + ':1 ('
                 + verdict + ')'
                 + (isDef ? ' \u2022 auto pick' : '')
@@ -3366,11 +3431,21 @@
         var roleId  = card.getAttribute('data-pc-role');
         var derivedId = card.getAttribute('data-pc-derived');
         if (derivedId) {
-          // onComponent is binary — flip between white/black.
+          // onComponent: step through the filtered allowed-set
+          // (white + black + AA-passing palette steps). Stepper
+          // walks the list in order so '+' moves toward darker
+          // visual tone where possible; falls back to the next
+          // index when no palette neighbour qualifies.
           if (derivedId === 'onComponent') {
+            var allowedOC = onComponentAllowedSteps(roleId, State.editingMode);
+            if (allowedOC.length <= 1) return;
             var curOC = t1DerivedStep(roleId, derivedId, State.editingMode);
-            var nxOC = curOC === 'white' ? 'black' : 'white';
-            setT1Derived(roleId, derivedId, State.editingMode, nxOC);
+            var idxOC = allowedOC.indexOf(curOC);
+            if (idxOC < 0) idxOC = 0;
+            var nextIdx = idxOC + (delta > 0 ? 1 : -1);
+            if (nextIdx < 0) nextIdx = allowedOC.length - 1;
+            if (nextIdx >= allowedOC.length) nextIdx = 0;
+            setT1Derived(roleId, derivedId, State.editingMode, allowedOC[nextIdx]);
             return;
           }
           var curD = t1DerivedStep(roleId, derivedId, State.editingMode);
@@ -6069,28 +6144,39 @@
             baselineHex: base.hex, baseline: base.token,
             ratio: jr.ratio, judge: jr.judge
           };
-          // Suggestion: walk both directions, pick first passing
-          // step in the derived's allowed step set. For onComponent
-          // (binary white/black) we additionally fall back to the
-          // BETTER worst-state candidate even when neither passes
-          // AA — improvement-without-victory is still actionable,
-          // and the popover copy makes the deeper fix (move the
-          // fill step) explicit.
+          // Suggestion: walk the allowed set, pick the candidate
+          // with the highest worst-state contrast that PASSES AA.
+          // For onComponent (binary white/black + optional palette
+          // steps), fall back to the BETTER worst-state candidate
+          // even when nothing passes \u2014 the popover labels it as
+          // "Best available" so the user sees an improvement-without-
+          // victory and the deeper fix (move the fill step) reads
+          // explicitly. For non-onComponent derived levers, walk
+          // the standard ladder both directions and take the first
+          // passing step.
           (function () {
-            var steps = (derivedId === 'onComponent') ? ['white','black'] : ALL_STEPS;
-            var threshold = base.large ? 3 : 4.5;
             if (jr.judge.pass) { sug = null; return; }
+            if (derivedId === 'onComponent') {
+              var allowed = onComponentAllowedSteps(roleId, mode);
+              var best = null;
+              for (var i = 0; i < allowed.length; i++) {
+                if (allowed[i] === curStep) continue;
+                var j = t1DerivedJudgeStep(roleId, derivedId, mode, allowed[i]);
+                if (!best || j.ratio > best.ratio) {
+                  best = { step: allowed[i], hex: onComponentHexFor(roleId, allowed[i]), ratio: j.ratio, judge: j.judge };
+                }
+              }
+              // Only surface if the alternative actually helps
+              // (\u2265 +0.3:1) \u2014 otherwise noise.
+              if (best && best.ratio >= jr.ratio + 0.3) sug = best;
+              else sug = null;
+              return;
+            }
+            var steps = ALL_STEPS;
             var curIdx = steps.indexOf(curStep);
             function judgeAt(idx) { return t1DerivedJudgeStep(roleId, derivedId, mode, steps[idx]); }
             function packAt(idx, j) {
-              return {
-                step:  steps[idx],
-                hex:   (derivedId === 'onComponent'
-                          ? (steps[idx] === 'white' ? '#FFFFFF' : '#0A0A0A')
-                          : ladderFor(roleId)[steps[idx]]),
-                ratio: j.ratio,
-                judge: j.judge
-              };
+              return { step: steps[idx], hex: ladderFor(roleId)[steps[idx]], ratio: j.ratio, judge: j.judge };
             }
             var pick = null;
             for (var d = 1; d < steps.length; d++) {
@@ -6098,18 +6184,6 @@
               var rF = (fwd < steps.length) ? (function () { var j = judgeAt(fwd); return j.judge.pass ? packAt(fwd, j) : null; })() : null;
               var rB = (bwd >= 0)            ? (function () { var j = judgeAt(bwd); return j.judge.pass ? packAt(bwd, j) : null; })() : null;
               if (rF || rB) { pick = (rF && rB) ? (rF.ratio >= rB.ratio ? rF : rB) : (rF || rB); break; }
-            }
-            // onComponent fallback: even if no candidate passes,
-            // recommend the OTHER colour when its worst-state
-            // contrast is materially better (≥ +0.3:1). Marks the
-            // pick as `passes:false` so the UI can label it
-            // "Best available" instead of "Suggested fix".
-            if (!pick && derivedId === 'onComponent') {
-              var otherIdx = (curStep === 'white') ? 1 : 0; // 0=white,1=black
-              if (otherIdx !== curIdx) {
-                var jo = judgeAt(otherIdx);
-                if (jo.ratio >= jr.ratio + 0.3) pick = packAt(otherIdx, jo);
-              }
             }
             sug = pick;
           })();
