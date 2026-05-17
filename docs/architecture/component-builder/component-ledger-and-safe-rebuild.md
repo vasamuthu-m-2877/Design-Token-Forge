@@ -377,9 +377,21 @@ Each box is a discrete PR. Cross-link the PR when it ships.
   [ui-full.html L2866-L2949](packages/figma-plugin/ui-full.html#L2866-L2949)
   (`renderBuilderMeta` + `fmtBuiltAgo`). Includes drift badge when the
   file's current project differs from the build's `project` field._
-- [ ] **M4 — Defensive lookup chain.** Switch Build's "find existing
+- [x] **M4 — Defensive lookup chain.** Switch Build's "find existing
   component" path from by-name to the §4 chain. Behind a feature flag
-  initially.
+  initially. _Shipped 2026-05-17 (partial). **Scope: COMPONENT_SET
+  node.id + library `key` preservation only**; variant ids and
+  property-def ids still regenerate (deferred to M5/M6). Flag stored at
+  `figma.root.getPluginData('dtf-safe-rebuild')`, default OFF, toggled
+  via "Safe rebuild" checkbox in Builder tab.
+  See [code.js L1228-L1238](packages/figma-plugin/code.js#L1228-L1238)
+  (flag read),
+  [code.js L1717-L1738](packages/figma-plugin/code.js#L1717-L1738)
+  (`reuseSetByName` lookup via `getNodeByIdAsync`),
+  [code.js L1745-L1755](packages/figma-plugin/code.js#L1745-L1755)
+  (cleanup skip),
+  [code.js L3492-L3537](packages/figma-plugin/code.js#L3492-L3537)
+  (append-into-existing-set instead of `combineAsVariants`)._
 - [ ] **M5 — Diff engine.** Pure-JS, well-tested, returns the §8
   classified plan. Plug into a "Show plan" button in the Builder UI.
   Still doesn't change Apply behaviour.

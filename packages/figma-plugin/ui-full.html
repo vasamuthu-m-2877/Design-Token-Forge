@@ -683,6 +683,27 @@
   .gen-info.visible { display: block; }
   .gen-status { font-size: var(--dtf-fs-11); color: var(--dtf-fg-subtle); margin-top: 6px; min-height: 14px; }
 
+  /* M4 safe-rebuild toggle */
+  .safe-rebuild-toggle {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--dtf-border);
+    border-radius: var(--dtf-radius-md);
+    background: var(--dtf-surface-alt);
+    cursor: pointer;
+    font-size: var(--dtf-fs-11);
+    color: var(--dtf-fg-strong);
+  }
+  .safe-rebuild-toggle:hover { background: var(--dtf-surface); }
+  .safe-rebuild-toggle input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: var(--dtf-brand-bg);
+  }
+  .safe-rebuild-toggle .srt-text { display: flex; flex-direction: column; gap: 2px; line-height: 1.4; }
+  .safe-rebuild-toggle .srt-text strong { font-weight: 600; }
+  .safe-rebuild-toggle .srt-hint { color: var(--dtf-fg-subtle); font-size: var(--dtf-fs-10); }
+
   /* ── Inline status (for sync progress, errors) ───── */
   .status-line {
     display: none;
@@ -1011,8 +1032,19 @@
         </label>
       </div>
 
+      <!-- M4 — safe-rebuild flag toggle (off by default).
+           See docs/architecture/component-builder/
+           component-ledger-and-safe-rebuild.md §10/M4. -->
+      <label class="safe-rebuild-toggle">
+        <input type="checkbox" id="safeRebuildToggle">
+        <span class="srt-text">
+          <strong>Safe rebuild</strong>
+          <span class="srt-hint">Preserve component-set IDs so published library references survive. Experimental.</span>
+        </span>
+      </label>
+
       <div class="gen-status" id="genStatus"></div>
-      <div class="gen-info" id="genInfo"></div>
+      <div class="gen-info" id="genInfo" hidden></div>
     </div>
 
   </div>
@@ -2635,6 +2667,10 @@ window.onmessage = function(event){
     setTimeout(function(){ genStatus.style.color = ''; }, 5000);
   }
   if (msg.type === 'gen-prereqs') updateGenPrereqs(msg);
+  if (msg.type === 'safe-rebuild-state'){
+    var t = document.getElementById('safeRebuildToggle');
+    if (t) t.checked = !!msg.enabled;
+  }
 };
 
 /* Status line */
@@ -2855,8 +2891,8 @@ function updateGenPrereqs(data){
         parts.push(k + ' v' + v.version + ' (' + v.totalComponents + ' variants)');
       }
     }
-    genInfo.classList.add('visible');
-    genInfo.textContent = '✓ Generated: ' + parts.join(', ');
+    /* M3 — per-row pill now carries this info; the legacy summary
+       banner is redundant and was removed in M4. */
   }
 
   /* M3 — per-row timestamp pill. Reads the schemaVersion=1 fields
@@ -2949,6 +2985,21 @@ generateBtn.addEventListener('click', function(){
   genInfo.classList.remove('visible');
   parent.postMessage({ pluginMessage:{ type:'generate-components', components:selected } }, '*');
 });
+
+/* M4 — safe-rebuild flag toggle. State lives in figma.root pluginData
+   so it survives plugin reload. Default OFF. */
+(function wireSafeRebuildToggle(){
+  var t = document.getElementById('safeRebuildToggle');
+  if (!t) return;
+  t.addEventListener('change', function(){
+    parent.postMessage({ pluginMessage:{
+      type: 'set-safe-rebuild',
+      enabled: !!t.checked
+    } }, '*');
+  });
+  /* Ask plugin for current value on tab open. */
+  parent.postMessage({ pluginMessage:{ type: 'get-safe-rebuild' } }, '*');
+})();
 
 /* ════════════════════════════════════════════════════
    START

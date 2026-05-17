@@ -1221,6 +1221,18 @@ async function generateComponentFromBlueprint(blueprint) {
   var stats = { components: 0, bindings: 0, reactions: 0, errors: [] };
   var BP = blueprint;
 
+  /* M4 — read the safe-rebuild feature flag. When ON, the plugin tries
+     to preserve the COMPONENT_SET node id (and therefore its library
+     `key`) across rebuilds by appending new variants into the existing
+     set instead of delete+create. Default OFF for back-compat.
+     See docs/architecture/component-builder/
+     component-ledger-and-safe-rebuild.md §10/M4. */
+  var SAFE_REBUILD = false;
+  try {
+    SAFE_REBUILD = figma.root.getPluginData('dtf-safe-rebuild') === '1';
+  } catch (e) { /* ignore */ }
+  log('Gen mode: ' + (SAFE_REBUILD ? 'SAFE_REBUILD (preserve set ids)' : 'legacy (full recreate)'));
+
   /* ── Step 1: Font loading deferred — see Step 2b below ─── */
   var fontName = null;
   var fontNameBold = null;
@@ -1622,6 +1634,29 @@ async function generateComponentFromBlueprint(blueprint) {
     }
   } catch (pse) { /* ignore */ }
 
+  /* M4 — resolve which prior COMPONENT_SETs are still alive so we can
+     reuse them. Keyed by set name (which is also setDisplayName at
+     rebuild time). Only populated when SAFE_REBUILD is on. */
+  var reuseSetByName = {};
+  if (SAFE_REBUILD) {
+    try {
+      for (var _rsi = 0; _rsi < priorSnapshot.componentSets.length; _rsi++) {
+        var _rs = priorSnapshot.componentSets[_rsi];
+        if (!_rs || !_rs.nodeId) continue;
+        var _resolved = await figma.getNodeByIdAsync(_rs.nodeId);
+        if (_resolved &&
+            !_resolved.removed &&
+            _resolved.type === 'COMPONENT_SET' &&
+            ownedByThisBP(_resolved)) {
+          reuseSetByName[_rs.name] = _resolved;
+        }
+      }
+    } catch (rse) {
+      log('SAFE_REBUILD lookup failed: ' + rse.message);
+    }
+    log('SAFE_REBUILD reusable sets: ' + Object.keys(reuseSetByName).length);
+  }
+
   /* W3 — emit a single warn line per Build summarising what's about
      to be invalidated. Free telemetry for the milestone-2 read path. */
   if (priorSnapshot.componentSets.length > 0) {
@@ -1684,6 +1719,12 @@ async function generateComponentFromBlueprint(blueprint) {
       child.remove(); continue;
     }
     if (child.type === 'COMPONENT_SET' && ownedByThisBP(child)) {
+      /* M4 — skip removal of any set we plan to reuse. Its old children
+         will be pruned later, after the new variants have been appended,
+         so the SET's node.id and library key survive. */
+      if (SAFE_REBUILD && reuseSetByName[child.name] === child) {
+        continue;
+      }
       child.remove(); continue;
     }
     if (child.type === 'TEXT' && (child.name.indexOf('MASTER ') === 0 || child.name.indexOf('VARIANT ') === 0 || child.name === 'Icon Primitive' || child.name.indexOf('DTF-') === 0) &&
@@ -3478,7 +3519,45 @@ async function generateComponentFromBlueprint(blueprint) {
       for (var ai = 0; ai < components.length; ai++) {
         allComps.push(components[ai].component);
       }
-      var componentSet = figma.combineAsVariants(allComps, page);
+
+      var componentSet;
+      var reusedExistingSet = false;
+      var reuseTarget = (SAFE_REBUILD && reuseSetByName[setDisplayName]) || null;
+
+      if (reuseTarget && !reuseTarget.removed) {
+        /* M4 — preserve set node.id and library key. Move new variants
+           into the existing set, then prune any leftover old variants. */
+        try {
+          /* Capture old children so we know what to prune after the move. */
+          var _oldVariants = [];
+          var _existingKids = reuseTarget.children || [];
+          for (var _xi = 0; _xi < _existingKids.length; _xi++) {
+            if (_existingKids[_xi] && _existingKids[_xi].type === 'COMPONENT') {
+              _oldVariants.push(_existingKids[_xi]);
+            }
+          }
+          /* Append every new variant into the existing set. Figma reads
+             the "Prop=Value, Prop=Value" name to wire variant axes. */
+          for (var _mi = 0; _mi < allComps.length; _mi++) {
+            try { reuseTarget.appendChild(allComps[_mi]); }
+            catch (_ae) { log('SAFE_REBUILD append failed: ' + _ae.message); }
+          }
+          /* Prune old variants now that the new ones are in. */
+          for (var _di = 0; _di < _oldVariants.length; _di++) {
+            try { _oldVariants[_di].remove(); }
+            catch (_de) { /* ignore */ }
+          }
+          componentSet = reuseTarget;
+          reusedExistingSet = true;
+          log('SAFE_REBUILD: reused set "' + setDisplayName + '" id=' + reuseTarget.id);
+        } catch (rue) {
+          log('SAFE_REBUILD reuse failed, falling back to combineAsVariants: ' + rue.message);
+          componentSet = figma.combineAsVariants(allComps, page);
+        }
+      } else {
+        componentSet = figma.combineAsVariants(allComps, page);
+      }
+
       componentSet.name = setDisplayName;
       stampOwner(componentSet);
       componentSet.description = (BP.description || '') + ' Family: ' + familyName + '.';
@@ -4261,5 +4340,18 @@ figma.ui.onmessage = async function(msg) {
     } catch (e) {
       figma.ui.postMessage({ type: 'gen-prereqs', compSizeCount: 0, t2Count: 0, t3Count: 0, versions: {} });
     }
+  }
+
+  /* M4 — safe-rebuild flag get/set. Stored in root pluginData. */
+  if (msg.type === 'get-safe-rebuild') {
+    var sr = '';
+    try { sr = figma.root.getPluginData('dtf-safe-rebuild') || ''; } catch (e) {}
+    figma.ui.postMessage({ type: 'safe-rebuild-state', enabled: sr === '1' });
+  }
+  if (msg.type === 'set-safe-rebuild') {
+    try {
+      figma.root.setPluginData('dtf-safe-rebuild', msg.enabled ? '1' : '');
+    } catch (e) { /* ignore */ }
+    figma.ui.postMessage({ type: 'safe-rebuild-state', enabled: !!msg.enabled });
   }
 };
