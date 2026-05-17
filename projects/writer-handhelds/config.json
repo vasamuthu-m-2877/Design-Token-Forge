@@ -411,24 +411,24 @@
     }
   },
   "surfacePaletteSrc": {
-    "bright": "greyscale",
-    "base": "greyscale",
-    "dim": "greyscale",
-    "deep": "greyscale",
+    "bright": "neutral",
+    "base": "neutral",
+    "dim": "neutral",
+    "deep": "neutral",
     "accent": "brand",
-    "container": "greyscale",
-    "over-container": "greyscale",
-    "float": "greyscale",
+    "container": "neutral",
+    "over-container": "neutral",
+    "float": "neutral",
     "inverse": "greyscale"
   },
   "owner": "sridhar-ravi-2917",
   "paletteAnchor": "exact",
   "schemaVersion": 2,
   "latestVersion": {
-    "version": "v1.0.1",
-    "name": "May17 11:48",
-    "description": "",
-    "savedAt": "2026-05-17T06:18:57.334Z",
+    "version": "v1.0.2",
+    "name": "May17 11:56",
+    "description": "Neutral Palette change",
+    "savedAt": "2026-05-17T06:26:40.435Z",
     "savedBy": "sridhar-ravi-2917"
   }
 }
