@@ -2806,7 +2806,18 @@
         + '<button type="button" class="ev2-pc-step-btn" data-pc-step="-1" data-tip="Step lighter" aria-label="Step lighter">\u2212</button>'
         + '<button type="button" class="ev2-pc-step-btn" data-pc-step="+1" data-tip="Step darker" aria-label="Step darker">+</button>'
         + discloseHTML
-        + '<button type="button" class="ev2-pc-reset" data-pc-reset' + (opts.isDetached ? '' : ' disabled') + ' data-tip="Reset to default" aria-label="Reset to default">\u21BA</button>'
+        + (function(){
+            // Row-level reset tooltip names the role explicitly so
+            // users can tell it apart from the section-level "Reset
+            // Roles" button at the top of the tier. Without the
+            // role name both buttons read just "Reset to default",
+            // which is ambiguous about scope.
+            var safeName = String(opts.tokenName || '')
+              .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+              .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            var tip = safeName ? ('Reset ' + safeName + ' to project default') : 'Reset to project default';
+            return '<button type="button" class="ev2-pc-reset" data-pc-reset' + (opts.isDetached ? '' : ' disabled') + ' data-tip="' + tip + '" aria-label="' + tip + '">\u21BA</button>';
+          })()
       + '</div>'
       + ladderHTML
       + actionsHTML
