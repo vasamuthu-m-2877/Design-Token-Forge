@@ -7,6 +7,19 @@
 
 window.DTF = window.DTF || { onThemeChange: null };
 
+/* One-time migration: the legacy unscoped `dtf-saved-tokens` key was
+   overwritten on every project visit, which caused cross-project
+   bleed (visit project A, switch to project B whose scoped stash is
+   empty, fall back to unscoped key which still holds A's tokens).
+   Purge it once and forever; per-project keys (`dtf-saved-tokens-<id>`)
+   are the only source of truth now. */
+try {
+  if (!localStorage.getItem('dtf-mig-unscoped-tokens-purged')) {
+    localStorage.removeItem('dtf-saved-tokens');
+    localStorage.setItem('dtf-mig-unscoped-tokens-purged', '1');
+  }
+} catch (e) {}
+
 /* If a ?project=<id> param is on the URL (e.g. the editor's "Preview
    components" link, or any cross-page nav), promote it to the active
    project before the selector wires up. Demo pages already react to
@@ -679,13 +692,20 @@ window.DTF = window.DTF || { onThemeChange: null };
      must render with package defaults only — otherwise the active
      project's brand bleeds into wizard chrome. */
   if (document.documentElement.getAttribute('data-no-project-theme') === '1') return;
-  /* Load project-specific tokens if an active project is set, else fall back to global */
+  /* Load project-specific tokens if an active project is set, else
+     fall back to the legacy unscoped key. CRITICAL: when a project
+     IS active but its scoped stash is empty, do NOT fall back to
+     the unscoped key — that key gets overwritten on every project
+     visit (see below) so it holds the LAST project's tokens, which
+     would bleed across projects (e.g. visit a red-brand project,
+     switch to Pearl whose stash hasn't been generated yet, and the
+     fallback paints Pearl red). Empty scoped stash means "use
+     package defaults" — the fresh fetch below will fill it in. */
   var activeProject = localStorage.getItem('dtf-active-project');
   var savedCSS = null;
   if (activeProject) {
     savedCSS = localStorage.getItem('dtf-saved-tokens-' + activeProject);
-  }
-  if (!savedCSS) {
+  } else {
     savedCSS = localStorage.getItem('dtf-saved-tokens');
   }
   if (savedCSS) {
@@ -732,6 +752,9 @@ window.DTF = window.DTF || { onThemeChange: null };
             var assembled = parts.filter(Boolean).join('\n');
             if (assembled) {
               localStorage.setItem('dtf-saved-tokens-' + activeProject, assembled);
+              /* Legacy unscoped key: kept in sync for back-compat with
+                 any code that still reads it, but it is NOT consulted
+                 when a project is active (see fallback note above). */
               localStorage.setItem('dtf-saved-tokens', assembled);
               var el = document.getElementById('dtfSavedTokens');
               if (el) { el.textContent = assembled; }
