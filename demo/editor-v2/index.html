@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=130">
+  <link rel="stylesheet" href="./editor-v2.css?v=131">
 
   <!-- Per-project token chrome: load the active project's primitives/
        semantic/surfaces so the editor itself (topbar dropdown, pills,
@@ -106,6 +106,15 @@
       <div class="ev2-proj-panel" id="projPanel" role="listbox" hidden></div>
     </div>
 
+    <button slot="action" class="ev2-topbar-icon-btn" id="historyBtn" type="button"
+      data-tip="Browse published versions. Restore any previous release as a new publish.">
+      <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M8 4v4l2.5 1.5"/>
+        <circle cx="8" cy="8" r="6"/>
+      </svg>
+      <span>History</span>
+    </button>
+
     <button slot="action" class="ev2-deploy" id="deployBtn" type="button" disabled
       data-tip="Save your changes as the new default for this project. Figma refreshes automatically.">
       <span class="ev2-deploy-label">Publish</span>
@@ -185,9 +194,12 @@
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
             <span class="ev2-section-reset-label">Reset section</span>
           </button>
-          <label class="ev2-css-toggle">
+          <label class="ev2-css-toggle" data-tip="Show or hide the --css-variable-name under each token swatch.">
             <input type="checkbox" id="showCssNames" checked>
-            <span>Show CSS names</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 5h8M4 8h8M4 11h5"/>
+            </svg>
+            <span class="ev2-css-toggle-text">CSS names</span>
           </label>
         </div>
       </header>
@@ -226,14 +238,6 @@
           <span class="ev2-autosave" id="autosaveStatus"></span>
         </div>
         <div class="ev2-savebar-r">
-          <button class="ev2-history-btn" id="historyBtn" type="button"
-            data-tip="Browse published versions. Restore any previous release as a new publish.">
-            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M8 4v4l2.5 1.5"/>
-              <circle cx="8" cy="8" r="6"/>
-            </svg>
-            <span>History</span>
-          </button>
           <button class="ev2-discard" id="discardBtn" disabled
             data-tip="Revert every unsaved change in this draft — Palette + Roles + Surfaces + Components for both light and dark modes. To reset just one section, use the Reset section button above the token list. To reset just one role, use Reset on the role card.">Discard changes</button>
         </div>
@@ -418,6 +422,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=148" defer></script>
+  <script src="./editor-v2.js?v=149" defer></script>
 </body>
 </html>
