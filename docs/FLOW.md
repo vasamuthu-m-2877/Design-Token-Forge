@@ -218,5 +218,5 @@ Follow-ups still open:
 
 **Do not delete:**
 
-- Anything under `packages/`, `projects/`, `scripts/`, `specs/`, `docs/`, `src/`, `tests/`, `tokn-deploy/`.
+- Anything under `packages/`, `projects/`, `scripts/`, `specs/`, `docs/`, `src/`, `tests/`.
 - `demo/_TEMPLATE.html`, `demo/_COMPONENT_CONFIGS.js`, `demo/_onboard-*` (build templates).
