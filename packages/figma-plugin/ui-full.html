@@ -1141,11 +1141,15 @@ function buildGroups(){
   for (var i=0; i<vars.length; i++){
     var v = vars[i];
     var k = groupKey(v.name);
-    (groups[k] = groups[k] || []).push({ tag:'upd', name:v.name, from:v.from, to:v.to });
+    (groups[k] = groups[k] || []).push({ tag: v.tag || 'upd', name:v.name, from:v.from, to:v.to });
   }
-  /* additions / removals get bucketed into a generic group */
-  if (summary.added > 0)   (groups['Other'] = groups['Other'] || []).push({ tag:'add', name:'+ ' + summary.added + ' new variables', from:'', to:'' });
-  if (summary.removed > 0) (groups['Other'] = groups['Other'] || []).push({ tag:'rem', name:'– ' + summary.removed + ' removed', from:'', to:'' });
+  /* Server changelog reports added/removed as counts. Static-host diff
+     already emits per-variable rows tagged 'add'/'rem', so we only fall
+     back to the count bucket when no individual rows were provided. */
+  var hasAddRows = vars.some(function(v){ return v.tag === 'add'; });
+  var hasRemRows = vars.some(function(v){ return v.tag === 'rem'; });
+  if (!hasAddRows && summary.added > 0)   (groups['Other'] = groups['Other'] || []).push({ tag:'add', name:'+ ' + summary.added + ' new variables', from:'', to:'' });
+  if (!hasRemRows && summary.removed > 0) (groups['Other'] = groups['Other'] || []).push({ tag:'rem', name:'– ' + summary.removed + ' removed', from:'', to:'' });
   var keys = Object.keys(groups).sort(groupSort);
   return keys.map(function(k){ return { key:k, rows:groups[k] }; });
 }
@@ -1470,65 +1474,82 @@ function requestStaticDiff(){
   parent.postMessage({ pluginMessage:{ type:'dump-current-tokens' } }, '*');
 }
 
+function fmtVal(raw){
+  if (raw == null) return '';
+  if (typeof raw === 'object' && raw.alias) return '(alias)';
+  return String(raw);
+}
+
 function handleStaticDiff(current){
   if (!tokenData || !current || !current.collections) return;
-  /* Build {colName/varName/mode: value} lookup from current */
-  var currentLookup = {};
+  /* Build name → {orderedModes, valuesByMode} lookup from current.
+     We key by collection+variable name only (NOT by mode name), because
+     the file's mode names can drift from tokens.json ("Mode 1" vs "Light").
+     We compare values by mode INDEX so renamed modes still align. */
+  var currentByName = {};
   for (var ci=0; ci<current.collections.length; ci++){
     var cc = current.collections[ci];
     for (var vi=0; vi<cc.variables.length; vi++){
       var vv = cc.variables[vi];
-      var modes = Object.keys(vv.valuesByMode || {});
-      for (var mi=0; mi<modes.length; mi++){
-        var key = cc.name + '|' + vv.name + '|' + modes[mi];
-        currentLookup[key] = String(vv.valuesByMode[modes[mi]] && vv.valuesByMode[modes[mi]].alias
-          ? '(alias)' : (vv.valuesByMode[modes[mi]] == null ? '' : vv.valuesByMode[modes[mi]])).toLowerCase();
-      }
+      var orderedModes = (cc.modes || []).slice();
+      currentByName[cc.name + '|' + vv.name] = { modes: orderedModes, vals: vv.valuesByMode || {} };
     }
   }
-  /* Walk incoming tokenData, find diffs */
-  var changedVars = [];
-  var added = 0;
-  var nameSeen = {};
+  var rows = [];   /* per-variable changedVars entries (with explicit tag) */
+  var addedCount = 0, removedCount = 0, updatedCount = 0;
+  var newKeySet = {};
   for (var nci=0; nci<tokenData.collections.length; nci++){
     var nc = tokenData.collections[nci];
+    var newModes = (nc.modes || []).slice();
     for (var nvi=0; nvi<nc.variables.length; nvi++){
       var nv = nc.variables[nvi];
-      /* tokens.json variable shape: { name, type, valuesByMode:{modeName: rawHexOrNumberOrAlias} } */
-      var modeNames = Object.keys(nv.valuesByMode || {});
+      var nameKey = nc.name + '|' + nv.name;
+      newKeySet[nameKey] = true;
+      var existing = currentByName[nameKey];
+      if (!existing){
+        addedCount++;
+        /* Show the first mode's value so the row is informative. */
+        var sampleMode = newModes[0];
+        rows.push({ tag:'add', name: nv.name, from:'', to: fmtVal(sampleMode != null ? nv.valuesByMode[sampleMode] : '') });
+        continue;
+      }
+      /* Compare by mode index: align newModes[i] ↔ existing.modes[i]. */
       var firstChange = null;
-      var seenInFile = false;
-      for (var nmi=0; nmi<modeNames.length; nmi++){
-        var mn = modeNames[nmi];
-        var k = nc.name + '|' + nv.name + '|' + mn;
-        var rawNew = nv.valuesByMode[mn];
-        var newVal = rawNew && rawNew.alias ? '(alias)' : (rawNew == null ? '' : rawNew);
-        var newKey = String(newVal).toLowerCase();
-        if (k in currentLookup){
-          seenInFile = true;
-          if (currentLookup[k] !== newKey && !firstChange){
-            firstChange = { name: nv.name, from: String(currentLookup[k] || ''), to: String(newVal || '') };
-          }
+      var n = Math.min(newModes.length, existing.modes.length);
+      for (var mi=0; mi<n; mi++){
+        var newRaw = nv.valuesByMode[newModes[mi]];
+        var oldRaw = existing.vals[existing.modes[mi]];
+        var newStr = fmtVal(newRaw);
+        var oldStr = fmtVal(oldRaw);
+        if (newStr.toLowerCase() !== oldStr.toLowerCase()){
+          firstChange = { tag:'upd', name: nv.name, from: oldStr, to: newStr };
+          break;
         }
       }
-      if (!seenInFile){ added++; nameSeen[nc.name + '/' + nv.name] = 'add'; continue; }
-      if (firstChange){ changedVars.push(firstChange); nameSeen[nc.name + '/' + nv.name] = 'upd'; }
+      if (firstChange){ updatedCount++; rows.push(firstChange); }
     }
   }
   /* Removals: in current, not in new */
-  var newLookupNames = {};
-  for (var xci=0; xci<tokenData.collections.length; xci++){
-    var xc = tokenData.collections[xci];
-    for (var xvi=0; xvi<xc.variables.length; xvi++) newLookupNames[xc.name + '|' + xc.variables[xvi].name] = true;
-  }
-  var removed = 0;
   for (var rci=0; rci<current.collections.length; rci++){
     var rc = current.collections[rci];
     for (var rvi=0; rvi<rc.variables.length; rvi++){
-      if (!newLookupNames[rc.name + '|' + rc.variables[rvi].name]) removed++;
+      var rkey = rc.name + '|' + rc.variables[rvi].name;
+      if (!newKeySet[rkey]){
+        removedCount++;
+        rows.push({ tag:'rem', name: rc.variables[rvi].name, from: fmtVal(rc.variables[rvi].valuesByMode[rc.modes[0]]), to:'' });
+      }
     }
   }
-  changeData = { entries: [{ time: Date.now(), newHash: (tokenData.contentHash || '').slice(0,7), summary: { changedVars: changedVars, added: added, removed: removed, detail: changedVars.length + ' changed, ' + added + ' added, ' + removed + ' removed' } }] };
+  /* If EVERYTHING looks added, the file most likely doesn't yet contain
+     the synced collections (first run after switching project). Surface
+     that honestly rather than dumping a 571-row wall. */
+  var likelyFirstRun = (rows.length === addedCount && addedCount > 50 && updatedCount === 0);
+  var detail = updatedCount + ' changed, ' + addedCount + ' added, ' + removedCount + ' removed';
+  if (likelyFirstRun){
+    rows = [{ tag:'add', name:'Initial sync — ' + addedCount + ' variables ready to import', from:'', to:'' }];
+    detail = 'Initial sync (' + addedCount + ' variables)';
+  }
+  changeData = { entries: [{ time: Date.now(), newHash: (tokenData.contentHash || '').slice(0,7), summary: { changedVars: rows, added: addedCount, removed: removedCount, detail: detail } }] };
   if (!changesPanel.hidden) renderChangeList();
   render();
 }
