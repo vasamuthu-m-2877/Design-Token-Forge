@@ -166,7 +166,7 @@ html[data-theme="dark"] .nav-acct-signout:hover{background:rgba(220,38,38,.15);c
      swatches keep overflow:hidden for the rounded clip. */
   overflow:visible;
 }
-.dtf-ladder--show-step .dtf-ladder-sw-step{color:currentColor !important;opacity:1}
+.dtf-ladder--show-step .dtf-ladder-sw-step{opacity:1}
 .dtf-ladder-sw{
   position:relative;
   display:block;
