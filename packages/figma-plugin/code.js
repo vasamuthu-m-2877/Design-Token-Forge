@@ -4522,11 +4522,16 @@ figma.ui.onmessage = async function(msg) {
           if (!_ve) continue;
           var _bound = _ve.boundIds;
           if (!_bound || !_bound.length) {
-            /* Legacy ledger entry (pre-V2). Fall back to the
-               coarse all-ids hash so the entry isn't silently
-               clean-looking; it'll show "bindings" once after the
-               next build records its boundIds[]. */
-            currentTokensHashes[_vk] = currentTokensHash;
+            /* Legacy ledger entry (pre-V2 — built before per-component
+               boundIds[] tracking landed). We have NO positive evidence
+               anything broke for this component, so don't surface a
+               bindings pill. A value-only sync (color hex changes,
+               etc.) doesn't break IDs in Figma — the bound component
+               picks up new values automatically, no rebuild needed.
+               If a variable ever DOES get deleted, the next Build
+               will record boundIds[] and the V2 path below will
+               correctly detect it. Until then: silent. */
+            currentTokensHashes[_vk] = _ve.tokensHash || '';
             continue;
           }
           var _missing = [];
