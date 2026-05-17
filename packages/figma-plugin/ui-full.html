@@ -706,6 +706,37 @@
   .prereqs-list span { font-size: var(--dtf-fs-10); }
   .prereqs-list span.ok { color: var(--dtf-success-content); opacity: 0.7; }
 
+  /* Subtle sync-busy strip — sits above the Builder rows during
+     deploy/sync. Replaces the old full-pane overlay that wiped the
+     visible UI every few minutes. */
+  .sync-busy-strip {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    border-radius: var(--dtf-radius-md);
+    background: var(--dtf-surface-alt);
+    border: 1px solid var(--dtf-border);
+    font-size: var(--dtf-fs-11);
+    color: var(--dtf-fg-subtle);
+  }
+  .sync-busy-strip[hidden] { display: none !important; }
+  body[data-sync-busy="deploy"] .sync-busy-strip,
+  body[data-sync-busy="sync"]   .sync-busy-strip { display: flex; }
+  .sbs-spinner {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--dtf-border-strong);
+    border-top-color: var(--dtf-brand-bg);
+    animation: bbspin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  /* Disable Build CTA while sync is mid-flight so a build can't
+     race the variable update. */
+  body[data-sync-busy="deploy"] #generateBtn,
+  body[data-sync-busy="sync"]   #generateBtn { opacity: 0.5; pointer-events: none; }
+
   .gen-info {
     display: none; margin-top: 10px; padding: 8px 10px;
     background: var(--dtf-success-bg-soft); border: 1px solid var(--dtf-success-border);
@@ -1065,6 +1096,14 @@
       <div class="prereqs-bar" id="prereqsBar">
         <strong id="prereqsTitle">Set up collections first</strong>
         <div class="prereqs-list" id="prereqsList"></div>
+      </div>
+
+      <!-- Subtle inline indicator when Sync is mid-deploy. Doesn't
+           hijack the tab — Builder rows stay readable; the Build
+           CTA is disabled so a build can't race the sync. -->
+      <div class="sync-busy-strip" id="syncBusyStrip" hidden>
+        <span class="sbs-spinner" aria-hidden="true"></span>
+        <span class="sbs-text" id="syncBusyStripText">Sync in progress…</span>
       </div>
 
       <!-- V2 Builder rows. Each row carries a head (name + pills +
@@ -1443,7 +1482,12 @@ function render(){
     });
     changesPanel.hidden = true;
     footerSync.hidden = true;
-    setBuilderBusy(true, 'Waiting for GitHub Pages to finish deploying.', 'Deployment in progress…');
+    /* Builder stays usable during deploy/sync — those are Sync-tab
+       concerns. A small inline indicator (data-sync-busy on body)
+       lets the Builder show a subtle hint without hijacking the tab. */
+    document.body.setAttribute('data-sync-busy', 'deploy');
+    var _sbs = document.getElementById('syncBusyStripText');
+    if (_sbs) _sbs.textContent = 'Deployment in progress — Build paused';
     applyFooterForActiveTab();
     return;
   }
@@ -1457,10 +1501,13 @@ function render(){
     });
     changesPanel.hidden = true;
     footerSync.hidden = true;
-    setBuilderBusy(true, 'Updating variables in this Figma file.', 'Syncing…');
+    document.body.setAttribute('data-sync-busy', 'sync');
+    var _sbs2 = document.getElementById('syncBusyStripText');
+    if (_sbs2) _sbs2.textContent = 'Syncing variables — Build paused';
     applyFooterForActiveTab();
     return;
   }
+  document.body.setAttribute('data-sync-busy', '');
 
   var serverHash  = serverStatus ? serverStatus.hash : '';
   var hasPending  = serverHash && serverHash !== figmaHash && figmaHash !== '';
