@@ -874,7 +874,12 @@ var activeFilters = new Set();   /* selected chip keys, empty = all */
 var searchTerm = '';
 var openGroups = new Set();      /* expanded group keys */
 
+/* Build stamp — bump on every UI-affecting change so you can confirm
+   the Figma plugin sandbox isn't serving a cached old copy. Shown in
+   the empty-state footer + logged once to the plugin console. */
+var BUILD_VERSION = '2026-05-17-p0';
 function log(msg){ console.log('[DTF] ' + msg); }
+log('plugin UI build ' + BUILD_VERSION);
 
 function isStaticHost(){ return SERVER.indexOf('github.io') !== -1 || SERVER.indexOf('.pages.dev') !== -1; }
 function apiUrl(endpoint){
@@ -1539,6 +1544,13 @@ function fmtVal(raw){
         Strip trailing 'px'/'rem'/'%' and parse-then-compare
         numerically. */
 function rawEqual(a, b){
+  /* Empty/null/undefined/'' on BOTH sides → equal. This catches
+     rows like `radius/none: 0 → 0` where one side stringifies to ''
+     and the other to '0' because of {value:null} or missing-mode
+     defaults — the user's intent was identical. */
+  var aEmpty = (a == null || a === '');
+  var bEmpty = (b == null || b === '');
+  if (aEmpty && bEmpty) return true;
   var aIsAlias = a && typeof a === 'object' && (a.alias || a.type === 'VARIABLE_ALIAS');
   var bIsAlias = b && typeof b === 'object' && (b.alias || b.type === 'VARIABLE_ALIAS');
   if (aIsAlias !== bIsAlias) return false;   /* one's an alias, other isn't */
@@ -1553,16 +1565,24 @@ function rawEqual(a, b){
    trims trailing zeros, and drops common length units so '14' ===
    '14px' === '14.0'. Real display still uses fmtVal. */
 function normForCompare(s){
+  if (s == null || s === '') return '';
   if (s && typeof s === 'object') return JSON.stringify(s);
-  s = String(s == null ? '' : s).trim().toLowerCase();
+  s = String(s).trim().toLowerCase();
+  if (s === '') return '';
   if (/^#[0-9a-f]+$/.test(s)){
     if (s.length === 4) s = '#' + s[1]+s[1] + s[2]+s[2] + s[3]+s[3];   /* #abc → #aabbcc */
     if (s.length === 5) s = '#' + s[1]+s[1] + s[2]+s[2] + s[3]+s[3] + s[4]+s[4]; /* #abcd → #aabbccdd */
     return s;
   }
   /* Strip common length units before numeric parse: '14px' → '14'. */
-  var stripped = s.replace(/(px|rem|em|%|ms|s)$/, '');
-  if (/^-?\d+(\.\d+)?$/.test(stripped)) return String(parseFloat(stripped));
+  var stripped = s.replace(/(px|rem|em|%|ms|s)$/, '').trim();
+  var asNum = Number(stripped);
+  if (stripped !== '' && !isNaN(asNum) && isFinite(asNum)){
+    /* Round to 6 decimals to swallow float-precision drift:
+       Figma stores opacity as 0.05000000074505806, tokens.json emits
+       '0.05' — same intent, must compare equal. */
+    return String(Math.round(asNum * 1e6) / 1e6);
+  }
   return s;
 }
 
