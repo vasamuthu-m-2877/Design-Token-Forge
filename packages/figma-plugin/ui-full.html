@@ -632,6 +632,32 @@
   .comp-pick label:first-child { border-top: 0; }
   .comp-pick label:hover { background: var(--dtf-surface-alt); }
   .comp-pick input[type="checkbox"] { accent-color: var(--dtf-brand-bg); }
+  .comp-pick .comp-name { flex: 1 1 auto; }
+  .comp-pick .comp-meta {
+    flex: 0 0 auto;
+    font-size: var(--dtf-fs-10);
+    color: var(--dtf-fg-subtle);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .comp-pick .comp-meta.is-drift { color: var(--dtf-warning-content); }
+  .comp-pick .comp-meta .meta-time { display: block; }
+  .comp-pick .comp-meta .meta-count { display: block; opacity: 0.75; }
+  .comp-pick .comp-meta .meta-drift {
+    display: inline-block;
+    margin-left: 4px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: var(--dtf-warning-bg-soft);
+    border: 1px solid var(--dtf-warning-border);
+    color: var(--dtf-warning-content);
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
 
   /* Prereqs: only visible when not met. Tiny disclosure. */
   .prereqs-bar {
@@ -973,13 +999,15 @@
       </div>
 
       <div class="comp-pick">
-        <label>
+        <label data-component="button">
           <input type="checkbox" class="comp-check" value="button">
-          <span>Button</span>
+          <span class="comp-name">Button</span>
+          <span class="comp-meta" data-meta-for="button" hidden></span>
         </label>
-        <label>
+        <label data-component="split-button">
           <input type="checkbox" class="comp-check" value="split-button">
-          <span>Split Button</span>
+          <span class="comp-name">Split Button</span>
+          <span class="comp-meta" data-meta-for="split-button" hidden></span>
         </label>
       </div>
 
@@ -2829,6 +2857,84 @@ function updateGenPrereqs(data){
     }
     genInfo.classList.add('visible');
     genInfo.textContent = '✓ Generated: ' + parts.join(', ');
+  }
+
+  /* M3 — per-row timestamp pill. Reads the schemaVersion=1 fields
+     written by W1 (componentSets[], writtenAt, project, priorSnapshot).
+     Falls back gracefully if only legacy fields are present.
+     See docs/architecture/component-builder/
+     component-ledger-and-safe-rebuild.md §10/M3. */
+  renderBuilderMeta(data.versions || {});
+}
+
+function fmtBuiltAgo(iso){
+  if (!iso) return '';
+  try {
+    var t = new Date(iso).getTime();
+    if (!t || isNaN(t)) return '';
+    var ms = Date.now() - t;
+    if (ms < 0) return 'just now';
+    var s = Math.floor(ms / 1000);
+    if (s < 60)  return 'just now';
+    var m = Math.floor(s / 60);
+    if (m < 60)  return m + 'm ago';
+    var h = Math.floor(m / 60);
+    if (h < 24)  return h + 'h ago';
+    var d = Math.floor(h / 24);
+    if (d < 30)  return d + 'd ago';
+    var mo = Math.floor(d / 30);
+    if (mo < 12) return mo + 'mo ago';
+    return Math.floor(mo / 12) + 'y ago';
+  } catch (e) { return ''; }
+}
+
+function renderBuilderMeta(versions){
+  var metas = document.querySelectorAll('.comp-pick .comp-meta');
+  for (var i = 0; i < metas.length; i++){
+    var el  = metas[i];
+    var key = el.getAttribute('data-meta-for');
+    var v   = versions[key];
+    if (!v){
+      el.hidden = true;
+      el.textContent = '';
+      el.classList.remove('is-drift');
+      continue;
+    }
+
+    /* Count variants. Prefer schemaVersion=1 componentSets shape;
+       fall back to legacy totalComponents number. */
+    var variantCount = 0;
+    if (v.componentSets && v.componentSets.length){
+      for (var ci = 0; ci < v.componentSets.length; ci++){
+        var cs = v.componentSets[ci];
+        if (cs && cs.variants) variantCount += Object.keys(cs.variants).length;
+      }
+    }
+    if (!variantCount && typeof v.totalComponents === 'number'){
+      variantCount = v.totalComponents;
+    }
+
+    /* Drift detection. If the file is now scoped to a different project
+       than the one this build was generated against, flag it. */
+    var nowProject = (typeof CURRENT_PROJECT === 'string') ? CURRENT_PROJECT : '';
+    var ranProject = v.project || '';
+    var isDrift    = !!(nowProject && ranProject && nowProject !== ranProject);
+
+    var when  = fmtBuiltAgo(v.writtenAt || v.generatedAt);
+    var ver   = v.version ? ('v' + v.version) : '';
+    var line1 = when ? ('Built ' + when) : '';
+    var line2 = [ver, variantCount ? (variantCount + ' variants') : '']
+                  .filter(Boolean).join(' · ');
+    var drift = isDrift
+      ? '<span class="meta-drift" title="Built against project ' + esc(ranProject) +
+        '; file is now scoped to ' + esc(nowProject) + '">drift</span>'
+      : '';
+
+    el.hidden = false;
+    el.classList.toggle('is-drift', isDrift);
+    el.innerHTML =
+      '<span class="meta-time">' + esc(line1) + drift + '</span>' +
+      (line2 ? '<span class="meta-count">' + esc(line2) + '</span>' : '');
   }
 }
 generateBtn.addEventListener('click', function(){

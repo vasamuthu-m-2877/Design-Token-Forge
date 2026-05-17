@@ -362,12 +362,21 @@ Each box is a discrete PR. Cross-link the PR when it ships.
   every place we do `findAll` or by-name lookup, every `remove()` call,
   every `createComponent…()` call. Output: §11 of this doc populated with
   current behaviour matrix. **No code change.** _Completed 2026-05-17._
-- [ ] **M2 — Read-only ledger writer.** On every successful Build, write
+- [x] **M2 — Read-only ledger writer.** On every successful Build, write
   the ledger entry. Do NOT use it for lookups yet. Risk: zero (only
   adding writes to pluginData). Unlocks the timestamp pill UI in M3.
-- [ ] **M3 — Builder UI timestamp pill.** Reads ledger entries, decorates
+  _Shipped 2026-05-17 via W1 (same code path)._
+- [x] **M3 — Builder UI timestamp pill.** Reads ledger entries, decorates
   each component row with "Built Xh ago · vN.N.N · K variants." Pure UI,
-  no behaviour change. **First user-visible deliverable.**
+  no behaviour change. **First user-visible deliverable.** _Shipped
+  2026-05-17. See
+  [ui-full.html L626-L658](packages/figma-plugin/ui-full.html#L626-L658)
+  (CSS),
+  [ui-full.html L1003-L1014](packages/figma-plugin/ui-full.html#L1003-L1014)
+  (markup), and
+  [ui-full.html L2866-L2949](packages/figma-plugin/ui-full.html#L2866-L2949)
+  (`renderBuilderMeta` + `fmtBuiltAgo`). Includes drift badge when the
+  file's current project differs from the build's `project` field._
 - [ ] **M4 — Defensive lookup chain.** Switch Build's "find existing
   component" path from by-name to the §4 chain. Behind a feature flag
   initially.
