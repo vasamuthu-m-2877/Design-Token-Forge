@@ -4519,6 +4519,26 @@ figma.ui.onmessage = async function(msg) {
         versions = JSON.parse(figma.root.getPluginData('dtf-component-versions') || '{}');
       } catch (e) { /* ignore */ }
 
+      /* Self-healing migration for legacy ledger keys (see ledger
+         writer comment in generateComponentFromBlueprint). Older
+         builds wrote 'split button' (space); UI looks up the
+         hyphenated registry key. Rename in place AND persist so
+         the user doesn't have to rebuild to clear the NEW pill. */
+      try {
+        var _migMap = { 'split button': 'split-button' };
+        var _migDirty = false;
+        for (var _ok in _migMap){
+          if (versions[_ok] && !versions[_migMap[_ok]]){
+            versions[_migMap[_ok]] = versions[_ok];
+            delete versions[_ok];
+            _migDirty = true;
+          }
+        }
+        if (_migDirty){
+          figma.root.setPluginData('dtf-component-versions', JSON.stringify(versions));
+        }
+      } catch (e) { /* ignore */ }
+
       /* M5/V2 — per-component bindings status.
          The OLD behaviour hashed every variable ID in the three
          collections. That meant any sync that added/removed a single
