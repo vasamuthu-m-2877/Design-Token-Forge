@@ -4862,6 +4862,13 @@
     injectProjectPrimitivesSync();
     promoteCustomRoles();
     seedSurfacePaletteFromConfig();
+    /* readBaseline MUST run before the T1 seeds. It populates
+       State.proposed[role] = current --prim-<role>-500 hex, which
+       ladderFor() needs to compute each role's hex ladder. Without
+       it, ladderFor returns garbage (generatePalette(undefined))
+       and seedT1FromSemanticCSS finds zero hex matches — every
+       lever silently stays on the in-code default. */
+    readBaseline();
     /* Hydrate T1 picks from the published config BEFORE the AA-fix
        loop and BEFORE t1Baseline is snapshotted. Without this,
        State.t1 always starts at the in-code defaults and the editor
@@ -4876,7 +4883,6 @@
     bindAddPaletteDialog();
     // Default: show CSS names ON. Overridden below if UI state has been saved.
     document.body.classList.add('ev2-show-css');
-    readBaseline();
 
     // Run boot-time auto-AA-fix BEFORE loading the draft so we can
     // snapshot the AA-clean values as the t1 baseline. Then the draft
