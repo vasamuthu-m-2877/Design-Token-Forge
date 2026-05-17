@@ -407,7 +407,19 @@
   .ch-tag.rem { background: var(--dtf-danger-content); }
   .ch-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--dtf-fg-strong); }
   .ch-from, .ch-to { color: var(--dtf-fg-subtle); }
-  .ch-arrow { color: var(--dtf-fg-faint); margin: 0 2px; }
+  .ch-arrow { color: var(--dtf-fg-faint); margin: 0 4px; }
+  /* Alias rebinding rows: fade the shared path, highlight only the
+     changed segment so the user's eye lands on `brand -> success`
+     instead of scanning two near-identical 30-char strings. */
+  .ch-alias-common {
+    flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; color: var(--dtf-fg-faint);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: var(--dtf-fs-11);
+  }
+  .ch-alias-mid { color: var(--dtf-fg-strong); font-weight: 600; }
+  .ch-from-mid { color: var(--dtf-warning-content); }
+  .ch-to-mid   { color: var(--dtf-success-content); }
   .ch-swatch {
     display: inline-block; width: 10px; height: 10px;
     border-radius: 2px; border: 1px solid var(--dtf-border-strong);
@@ -877,7 +889,7 @@ var openGroups = new Set();      /* expanded group keys */
 /* Build stamp — bump on every UI-affecting change so you can confirm
    the Figma plugin sandbox isn't serving a cached old copy. Shown in
    the empty-state footer + logged once to the plugin console. */
-var BUILD_VERSION = '2026-05-17-p0';
+var BUILD_VERSION = '2026-05-17-p1';
 function log(msg){ console.log('[DTF] ' + msg); }
 log('plugin UI build ' + BUILD_VERSION);
 
@@ -1181,8 +1193,56 @@ function applyFilters(allGroups){
 
 function isColor(v){ return /^#[0-9a-f]{3,8}$/i.test(String(v || '').trim()); }
 
+/* Compress an alias-vs-alias diff to ONLY the segment that changed.
+   '→ semantic/brand/content-default' vs '→ semantic/success/content-default'
+   becomes  fromMid='brand', toMid='success', commonPrefix='→ semantic/',
+   commonSuffix='/content-default'.
+   The user's eye lands on the actual change instead of scanning two
+   identical 30-char strings. Returns null for non-alias rows (caller
+   falls back to the plain two-column layout). */
+function diffAliasParts(from, to){
+  if (typeof from !== 'string' || typeof to !== 'string') return null;
+  if (from.indexOf('→ ') !== 0 || to.indexOf('→ ') !== 0) return null;
+  if (from === to) return null;
+  /* longest common prefix */
+  var i = 0; var minLen = Math.min(from.length, to.length);
+  while (i < minLen && from.charCodeAt(i) === to.charCodeAt(i)) i++;
+  /* longest common suffix (must stop before the prefix region) */
+  var j = 0;
+  while (j < (minLen - i) &&
+         from.charCodeAt(from.length - 1 - j) === to.charCodeAt(to.length - 1 - j)) j++;
+  /* Walk the prefix back to the last '/' so the mid segment is a whole
+     path token, not 'br'/'succ'. Same for suffix forward to next '/'. */
+  while (i > 0 && from.charAt(i - 1) !== '/') i--;
+  while (j > 0 && from.charAt(from.length - j) !== '/') j--;
+  return {
+    prefix: from.substring(0, i),
+    fromMid: from.substring(i, from.length - j),
+    toMid: to.substring(i, to.length - j),
+    suffix: from.substring(from.length - j)
+  };
+}
+
 function rowHTML(r){
   var tagLabel = r.tag === 'add' ? 'Added' : r.tag === 'rem' ? 'Removed' : 'Modified';
+
+  /* Defensive guard: if from and to render identically after
+     normalisation, this row carries no information and must not
+     appear. Belt-and-braces in case rawEqual missed a case. */
+  if (r.tag === 'upd' && normForCompare(r.from) === normForCompare(r.to)) return '';
+
+  /* Alias-vs-alias: show only the changed segment so the diff is
+     scannable at a glance. */
+  var aliasDiff = (r.tag === 'upd') ? diffAliasParts(r.from, r.to) : null;
+  if (aliasDiff){
+    var common = '<span class="ch-alias-common">' + esc(aliasDiff.prefix) + '<span class="ch-alias-mid"><span class="ch-from-mid">' + esc(aliasDiff.fromMid) + '</span><span class="ch-arrow">→</span><span class="ch-to-mid">' + esc(aliasDiff.toMid) + '</span></span>' + esc(aliasDiff.suffix) + '</span>';
+    return '<div class="change-row">'
+         + '<span class="ch-tag ' + r.tag + '" title="' + tagLabel + '">' + tagLabel + '</span>'
+         + '<span class="ch-name" title="' + esc(r.name) + '">' + esc(r.name) + '</span>'
+         + common
+         + '</div>';
+  }
+
   var fromSwatch = isColor(r.from) ? '<span class="ch-swatch" style="background:' + r.from + '"></span>' : '';
   var toSwatch   = isColor(r.to)   ? '<span class="ch-swatch" style="background:' + r.to + '"></span>'   : '';
   var fromHtml = r.from ? '<span class="ch-from">' + fromSwatch + esc(r.from) + '</span>' : '';
@@ -1628,7 +1688,20 @@ function handleStaticDiff(current){
         var newRaw = nvVals[newModes[mi]];
         var oldRaw = existing.vals[existing.modes[mi]];
         if (!rawEqual(newRaw, oldRaw)){
-          firstChange = { tag:'upd', collection: nc.name, name: nv.name, from: fmtVal(oldRaw), to: fmtVal(newRaw) };
+          /* Double-guard: even if rawEqual reports a difference,
+             refuse to emit a row whose displayed values would render
+             identical (e.g. `0 → 0`). The user only cares about
+             changes they can SEE. */
+          var fromTxt = fmtVal(oldRaw);
+          var toTxt   = fmtVal(newRaw);
+          if (normForCompare(fromTxt) === normForCompare(toTxt)){
+            if (window.__dtfDiffLogged !== true){
+              window.__dtfDiffLogged = true;
+              console.warn('[DTF] suppressed zero-info row example:', { name: nv.name, oldRaw: oldRaw, newRaw: newRaw, fromTxt: fromTxt, toTxt: toTxt });
+            }
+            continue;
+          }
+          firstChange = { tag:'upd', collection: nc.name, name: nv.name, from: fromTxt, to: toTxt };
           break;
         }
       }
