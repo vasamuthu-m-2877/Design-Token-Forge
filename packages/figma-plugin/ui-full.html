@@ -144,6 +144,23 @@
   .tb-avatar:hover { background: var(--dtf-border-strong); }
   .tb-avatar.disconnected { background: var(--dtf-surface-alt); color: var(--dtf-fg-faint); }
 
+  /* Compact refresh button in the top bar */
+  .tb-icon-btn {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; border: 0;
+    border-radius: var(--dtf-radius-sm);
+    color: var(--dtf-fg-subtle);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 120ms ease, color 120ms ease, transform 120ms ease;
+  }
+  .tb-icon-btn:hover { background: var(--dtf-surface-alt); color: var(--dtf-fg-strong); }
+  .tb-icon-btn:active { transform: scale(0.94); }
+  .tb-icon-btn[disabled] { opacity: 0.4; cursor: default; }
+  .tb-icon-btn.spinning svg { animation: tb-spin 0.8s linear infinite; }
+  @keyframes tb-spin { to { transform: rotate(360deg); } }
+
   /* ── Overflow menu (uses native <details>) ──────────── */
   .tb-menu { position: relative; }
   .tb-menu > summary { list-style: none; cursor: pointer; }
@@ -174,6 +191,9 @@
   .tb-menu-item:hover { background: var(--dtf-surface-alt); color: var(--dtf-fg-strong); }
   .tb-menu-item.danger { color: var(--dtf-danger-content); }
   .tb-menu-item input[type="checkbox"] { accent-color: var(--dtf-brand-bg); }
+  /* Connected-only items: hidden via JS toggle on the menu when GH_USERNAME
+     is empty. The dot avoids needing a wrapper element. */
+  .tb-menu-pop.signed-out .connected-only { display: none; }
   .tb-menu-sep { height: 1px; background: var(--dtf-border); margin: 4px 0; }
   .tb-menu-label {
     font-size: var(--dtf-fs-9); font-weight: 700; text-transform: uppercase;
@@ -541,25 +561,31 @@
         <option value="">Loading…</option>
       </select>
     </div>
+    <button class="tb-icon-btn" id="tbRefresh" title="Check for updates now" aria-label="Refresh" hidden>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M11.5 3.5a5 5 0 1 0 1 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M12.5 1.5v2.5h-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <details class="tb-menu" id="tbMenu">
       <summary class="tb-avatar disconnected" id="tbAvatar" title="Account menu" aria-label="Account menu">?</summary>
       <div class="tb-menu-pop">
         <div class="tb-menu-label" id="tbMenuIdentity">Not connected</div>
-        <label class="tb-menu-item">
+        <label class="tb-menu-item connected-only">
           <input type="checkbox" id="autoSyncCb">
           <span>Auto-sync when tokens change</span>
         </label>
-        <button class="tb-menu-item" id="menuChangelog">
+        <button class="tb-menu-item connected-only" id="menuChangelog">
           <span>Change history</span>
         </button>
-        <button class="tb-menu-item" id="menuDebug">
+        <button class="tb-menu-item connected-only" id="menuDebug">
           <span>Debug info</span>
         </button>
         <button class="tb-menu-item" id="menuServer">
           <span>Server URL…</span>
         </button>
-        <div class="tb-menu-sep"></div>
-        <button class="tb-menu-item danger" id="menuDisconnect">
+        <div class="tb-menu-sep connected-only"></div>
+        <button class="tb-menu-item danger connected-only" id="menuDisconnect">
           <span>Disconnect GitHub</span>
         </button>
       </div>
@@ -723,7 +749,9 @@ window.onerror = function(msg, src, line) {
 var body         = document.body;
 var projectSelect = document.getElementById('projectSelect');
 var tbAvatar     = document.getElementById('tbAvatar');
+var tbRefresh    = document.getElementById('tbRefresh');
 var tbMenu       = document.getElementById('tbMenu');
+var tbMenuPop    = document.querySelector('.tb-menu-pop');
 var tbMenuIdentity = document.getElementById('tbMenuIdentity');
 var autoSyncCb   = document.getElementById('autoSyncCb');
 var menuChangelog = document.getElementById('menuChangelog');
@@ -881,6 +909,8 @@ function render(){
     tbAvatar.textContent = '?';
     tbAvatar.title = 'Not connected';
     tbMenuIdentity.textContent = 'Not connected';
+    if (tbMenuPop) tbMenuPop.classList.add('signed-out');
+    if (tbRefresh) tbRefresh.hidden = true;
     setSyncBadge(0);
     return;
   }
@@ -889,6 +919,8 @@ function render(){
   tbAvatar.textContent = (GH_USERNAME[0] || '?').toUpperCase();
   tbAvatar.title = 'Connected as ' + GH_USERNAME;
   tbMenuIdentity.textContent = 'Connected as ' + GH_USERNAME;
+  if (tbMenuPop) tbMenuPop.classList.remove('signed-out');
+  if (tbRefresh) tbRefresh.hidden = false;
 
   /* Project mismatch: file is bound to one project, dropdown points at another.
      Render as a persistent inline banner above the change list and tweak the
@@ -1209,7 +1241,9 @@ function renderChangeList(){
       ? 'No changes match your filters.'
       : (documentProject && CURRENT_PROJECT && CURRENT_PROJECT !== documentProject)
         ? ''   /* mismatched + no diff yet → banner + footer button say everything */
-        : 'No pending changes — you’re in sync.';
+        : isStaticHost()
+          ? 'Per-token diff isn’t available on GitHub Pages. Use “Update variables” to apply the latest tokens.'
+          : 'No pending changes — you’re in sync.';
     html = emptyMsg
       ? '<div class="empty-state" id="changesEmptyHint"><div>' + emptyMsg + '</div></div>'
       : '';
@@ -1723,6 +1757,18 @@ ghVerifyBtn.addEventListener('click', function(){
 });
 ghPatInput.addEventListener('keydown', function(e){
   if (e.key === 'Enter'){ e.preventDefault(); ghVerifyBtn.click(); }
+});
+
+/* Manual refresh — force a poll + token + changelog fetch immediately. */
+if (tbRefresh) tbRefresh.addEventListener('click', function(){
+  if (tbRefresh.classList.contains('spinning')) return;
+  tbRefresh.classList.add('spinning');
+  /* Pretend we're stale so checkForChanges re-fetches tokens unconditionally. */
+  lastSeenHash = ''; hashStableCount = 0;
+  poll();
+  fetchTokenData();
+  if (!isStaticHost()) fetchChangelog();
+  setTimeout(function(){ tbRefresh.classList.remove('spinning'); }, 600);
 });
 
 function projectDisplayName(id){
