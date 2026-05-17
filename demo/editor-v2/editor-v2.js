@@ -3350,11 +3350,24 @@
      Role reset    = clear one role's T0 anchor + T1 picks.
      Both go through autoFixT1ToAA so the cleared roles still
      ship AA defaults against the loaded ladder. */
+  function _t1BaselineFor(mode, roleId) {
+    /* MUST mirror isT1ChangedInMode's baseline lookup, or reset
+       will not actually mark the role clean. If the per-role
+       entry is missing in State.t1Baseline (first load, fresh
+       project, etc.), fall back to the computed default — same
+       object shape the diff check uses. Without this fallback,
+       resetRole wrote `{}` into State.t1, and the diff then
+       compared `{}` against the rich default → all fields
+       differed → the role stayed marked dirty forever and the
+       section reset button never disabled. */
+    var b = State.t1Baseline && State.t1Baseline[mode] && State.t1Baseline[mode][roleId];
+    if (b) return Object.assign({}, b);
+    return Object.assign({}, defaultT1ForRole(roleId, mode));
+  }
   function resetRole(roleId) {
     State.proposed[roleId] = State.baseline[roleId];
-    // Restore to AA-clean t1 baseline (matches Discard behavior).
-    State.t1.light[roleId] = Object.assign({}, State.t1Baseline.light[roleId]);
-    State.t1.dark[roleId]  = Object.assign({}, State.t1Baseline.dark[roleId]);
+    State.t1.light[roleId] = _t1BaselineFor('light', roleId);
+    State.t1.dark[roleId]  = _t1BaselineFor('dark',  roleId);
     delete State.cachedSteps[roleId];
     scheduleAutosave();
     pushPreview();
@@ -3367,9 +3380,8 @@
       State.cachedSteps = {};
     } else if (tierId === 't1') {
       ROLES.forEach(function (r) {
-        // Restore to AA-clean t1 baseline (matches Discard behavior).
-        State.t1.light[r.id] = Object.assign({}, State.t1Baseline.light[r.id]);
-        State.t1.dark[r.id]  = Object.assign({}, State.t1Baseline.dark[r.id]);
+        State.t1.light[r.id] = _t1BaselineFor('light', r.id);
+        State.t1.dark[r.id]  = _t1BaselineFor('dark',  r.id);
       });
     } else if (tierId === 't2') {
       State.t2 = makeEmptyT2();
