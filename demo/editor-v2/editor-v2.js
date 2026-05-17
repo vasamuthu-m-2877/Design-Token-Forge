@@ -575,6 +575,7 @@
     activeSurface: 'base',
     editingMode:'light',
     anchor:     'exact',
+    baselineAnchor: 'exact',
     baseline:   {},
     proposed:   {},
     cachedSteps:{},
@@ -677,6 +678,7 @@
         activeT0:   State.activeT0,
         activeSurface: State.activeSurface,
         anchor:     State.anchor,
+        baselineAnchor: State.baselineAnchor,
         disclosure: State.disclosure,
         mode: document.documentElement.getAttribute('data-theme') || 'light',
         showCss: !!document.body.classList.contains('ev2-show-css'),
@@ -712,6 +714,9 @@
       State.baseline[r.id] = v || '#000000';
       State.proposed[r.id] = State.baseline[r.id];
     });
+    // Snapshot the anchor mode that goes WITH this baseline so a
+    // subsequent exact↔normalized flip is detected as a change.
+    State.baselineAnchor = State.anchor;
   }
 
   /* Lever metadata — just label + sub. The picker UI renders the
@@ -794,6 +799,7 @@
   function totalChanges() {
     var n = ROLES.reduce(function (acc, r) { return acc + (isRoleDirty(r.id) ? 1 : 0); }, 0);
     n += totalT2Changes();
+    if (State.anchor !== State.baselineAnchor) n += 1;
     return n;
   }
 
@@ -3134,6 +3140,7 @@
     // drops all overrides back to empty.
     State.t2 = makeEmptyT2();
     State.t2SurfacePalette = {};
+    State.anchor = State.baselineAnchor;
     State.cachedSteps = {};
     _systemPaletteCache = {};
     clearDraftFromStorage();
@@ -4371,11 +4378,13 @@
       // Promote EVERYTHING we just committed to be the new baseline.
       try {
         State.baseline   = JSON.parse(JSON.stringify(State.proposed));
+        State.baselineAnchor = State.anchor;
         State.t1Baseline = JSON.parse(JSON.stringify(State.t1));
         State.t2Baseline = JSON.parse(JSON.stringify(State.t2));
         State.t2SurfacePaletteBaseline = JSON.parse(JSON.stringify(State.t2SurfacePalette));
         State.lastPublishedVersion = nextVer;
         clearDraftFromStorage();
+        if (typeof saveUIState === 'function') saveUIState();
         if (typeof refreshChangeBar === 'function') refreshChangeBar();
         refreshDraftStatus('published');
         if (typeof renderActiveTier === 'function') renderActiveTier();
@@ -4612,6 +4621,9 @@
         State.activeSurface = ui.activeSurface;
       }
       if (ui.anchor === 'exact' || ui.anchor === 'normalized') State.anchor = ui.anchor;
+      if (ui.baselineAnchor === 'exact' || ui.baselineAnchor === 'normalized') {
+        State.baselineAnchor = ui.baselineAnchor;
+      }
       if (ui.disclosure && typeof ui.disclosure === 'object') {
         Object.keys(ui.disclosure).forEach(function (k) { State.disclosure[k] = !!ui.disclosure[k]; });
         // 't0:steps' is the 20-step ladder — the primary T0 surface.
@@ -5121,6 +5133,17 @@
     // switcher matches the hub even on first visit. Async, best-
     // effort: a stale cache is fine to render against meanwhile.
     refreshProjectsList();
+
+    // Make the entire "PROJECT" label area clickable, not just the
+    // chevron pill, so the hit target matches the visual chip.
+    var $projLabel = document.querySelector('.nav-project .nav-project-label');
+    if ($projLabel) {
+      $projLabel.style.cursor = 'pointer';
+      $projLabel.addEventListener('click', function (e) {
+        e.stopPropagation();
+        $projBtn.click();
+      });
+    }
 
     $projBtn.addEventListener('click', function (e) {
       e.stopPropagation();
