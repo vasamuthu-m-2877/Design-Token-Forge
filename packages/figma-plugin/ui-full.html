@@ -2138,7 +2138,23 @@ filterSearch.addEventListener('input', function(){
 /* ════════════════════════════════════════════════════
    TABS
    ════════════════════════════════════════════════════ */
-function setTab(name){
+/* Tab-ownership lock: once the user explicitly clicks a tab, no
+   code path is allowed to programmatically switch tabs again.
+   Background: users reported the tab silently flipping from
+   Components → Sync while idle. We couldn't find the offending
+   call site, so this lock is the safety net. The startup default
+   (setTab('sync') below) runs BEFORE any click can land, so the
+   default landing isn't blocked. */
+var _tabUserLocked = false;
+function setTab(name, _userInitiated){
+  if (_tabUserLocked && !_userInitiated && body.dataset.tab && body.dataset.tab !== name){
+    try {
+      console.warn('[DTF] Blocked programmatic tab switch to "' + name +
+                   '" — user is on "' + body.dataset.tab + '"');
+    } catch (e) {}
+    return;
+  }
+  if (_userInitiated) _tabUserLocked = true;
   body.dataset.tab = name;
   tabSync.setAttribute('aria-selected', name === 'sync' ? 'true' : 'false');
   tabBuilder.setAttribute('aria-selected', name === 'builder' ? 'true' : 'false');
@@ -2162,8 +2178,8 @@ function setTab(name){
 function applyFooterForActiveTab(){
   if (body.dataset.tab === 'builder'){ footerSync.hidden = true; }
 }
-tabSync.addEventListener('click', function(){ setTab('sync'); });
-tabBuilder.addEventListener('click', function(){ setTab('builder'); });
+tabSync.addEventListener('click', function(){ setTab('sync', true); });
+tabBuilder.addEventListener('click', function(){ setTab('builder', true); });
 
 /* ════════════════════════════════════════════════════
    MENU
