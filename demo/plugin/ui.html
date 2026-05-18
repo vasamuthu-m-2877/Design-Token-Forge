@@ -470,6 +470,7 @@
 
   var CURRENT_PROJECT = storageGet('dtf-project-id') || '';
   var GH_USERNAME = storageGet('dtf-gh-username') || '';
+  var GH_PAT = storageGet('dtf-gh-pat') || '';
   var ADMIN_USER = 'sridhar-ravi-2917';
   var COLOR_ONLY_COLLECTIONS = ['T0 Primitive Colors', 'T1 Color Tokens', 'T2 Surface Context Tokens', 'T3 Status Context Tokens'];
 
@@ -1226,7 +1227,9 @@
       return r.json();
     }).then(function(user) {
       GH_USERNAME = user.login;
+      GH_PAT = token;
       storageSet('dtf-gh-username', GH_USERNAME);
+      storageSet('dtf-gh-pat', GH_PAT);
       ghPatInput.value = '';
       /* Point to user's own Pages site (fork-based model) */
       var userServer = 'https://' + user.login + '.github.io/Design-Token-Forge';
@@ -1249,7 +1252,9 @@
 
   ghIdentityReset.addEventListener('click', function() {
     GH_USERNAME = '';
+    GH_PAT = '';
     storageSet('dtf-gh-username', '');
+    storageSet('dtf-gh-pat', '');
     setupAuth.style.display = 'block';
     setupDone.style.display = 'none';
     projectsFetched = false;
@@ -1258,7 +1263,61 @@
 
   /* ── Project selector ──────────────────────────────── */
   var projectsFetched = false;
+
+  /* When the user has connected a PAT, ALWAYS list projects from
+     their own fork via the GitHub Contents API. The static
+     projects.json on a Pages site (a) belongs to whichever fork is
+     deployed, so on the maintainer's URL it leaks the maintainer's
+     project list, and (b) doesn't exist at all on a fresh fork
+     until Pages + the workflow have run. Hitting /repos/<user>/Design-Token-Forge/contents/projects
+     side-steps both problems. */
+  function fetchProjectsFromForkApi() {
+    var apiBase = 'https://api.github.com/repos/' + GH_USERNAME + '/Design-Token-Forge';
+    var hdrs = {
+      'Authorization': 'Bearer ' + GH_PAT,
+      'Accept': 'application/vnd.github+json'
+    };
+    return fetch(apiBase + '/contents/projects?ref=main&_cb=' + Date.now(), { headers: hdrs })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(dirs) {
+        if (!Array.isArray(dirs)) throw new Error('Not an array');
+        var projects = dirs.filter(function(d) { return d.type === 'dir'; });
+        if (!projects.length) return [];
+        return Promise.all(projects.map(function(dir) {
+          return fetch(apiBase + '/contents/projects/' + dir.name + '/config.json?ref=main', { headers: hdrs })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(file) {
+              if (file && file.content) {
+                try {
+                  var cfg = JSON.parse(atob(file.content.replace(/\n/g, '')));
+                  return { id: cfg.id || dir.name, name: cfg.name || dir.name, owner: cfg.owner || GH_USERNAME };
+                } catch (_e) {}
+              }
+              return { id: dir.name, name: dir.name, owner: GH_USERNAME };
+            })
+            .catch(function() { return { id: dir.name, name: dir.name, owner: GH_USERNAME }; });
+        }));
+      });
+  }
+
   function fetchProjects() {
+    /* Authenticated path: use Contents API on the user's fork. */
+    if (GH_PAT && GH_USERNAME) {
+      fetchProjectsFromForkApi()
+        .then(function(list) { renderProjectList(list); })
+        .catch(function(err) {
+          log('Fork API list failed (' + err.message + ') — falling back to static projects.json');
+          fetchProjectsStatic();
+        });
+      return;
+    }
+    fetchProjectsStatic();
+  }
+
+  function fetchProjectsStatic() {
     var url = apiUrl('/projects');
     if (!url) {
       /* Local server — use the /projects endpoint */
@@ -1269,13 +1328,29 @@
       return r.json();
     }).then(function(list) {
       if (!Array.isArray(list)) throw new Error('Not an array');
+      renderProjectList(list);
+    }).catch(function() {
+      if (!projectsFetched) {
+        projectSelect.innerHTML = '<option value="">(connecting&hellip;)</option>';
+      }
+    });
+  }
+
+  function renderProjectList(list) {
       projectsFetched = true;
       projectList = list;
       if (!GH_USERNAME) {
         projectSelect.innerHTML = '<option value="">Set your GitHub username below</option>';
         return;
       }
-      var filtered = list.filter(function(p) { return !p.owner || p.owner.toLowerCase() === GH_USERNAME.toLowerCase(); });
+      /* Show ONLY projects this user owns. The fork inherits every
+         upstream project dir, so an unfiltered list leaks the
+         maintainer's projects into every colleague's dropdown.
+         Ownerless legacy configs are treated as the fork owner's. */
+      var ghUserLc = GH_USERNAME.toLowerCase();
+      var filtered = list.filter(function(p) {
+        return !p.owner || p.owner.toLowerCase() === ghUserLc;
+      });
       projectSelect.innerHTML = '';
       if (filtered.length === 0) {
         projectSelect.innerHTML = '<option value="">No projects</option>';
@@ -1310,11 +1385,6 @@
           documentProject = '';
         }
       }
-    }).catch(function() {
-      if (!projectsFetched) {
-        projectSelect.innerHTML = '<option value="">(connecting&hellip;)</option>';
-      }
-    });
   }
 
   projectSelect.addEventListener('change', function() {

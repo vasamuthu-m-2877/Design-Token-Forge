@@ -15,6 +15,54 @@
 <script src="auth-gate.js?v=2"></script>
 <link rel="stylesheet" href="../packages/tokens/src/index.css">
 <link rel="stylesheet" href="shared.css?v=1008">
+<!-- Hub is brand-neutral. In the Pages deploy, every per-project mirror
+     ships a customized copy of packages/tokens/src/semantic.css, so the
+     stylesheet above can resolve to (e.g.) Pearl's pink. Pin the hub's
+     brand-* tokens to DTF default blue so the picker chrome stays neutral
+     regardless of which project mirror served this hub. Source of truth:
+     packages/tokens/src/semantic.css (light + dark blocks). -->
+<style id="hub-brand-defaults">
+  :root {
+    --brand-content-default:#2A5BE3;
+    --brand-content-strong:#204ED1;
+    --brand-content-subtle:#5586FD;
+    --brand-content-faint:#8FB2FE;
+    --brand-component-bg-default:#3366F0;
+    --brand-component-bg-hover:#2A5BE3;
+    --brand-component-bg-pressed:#204ED1;
+    --brand-component-outline-default:#6593FE;
+    --brand-component-outline-hover:#6593FE;
+    --brand-component-outline-pressed:#5586FD;
+    --brand-component-separator:#CDDDFF;
+    --brand-container-bg:#EAF1FF;
+    --brand-container-hover:#DDE9FF;
+    --brand-container-pressed:#CDDDFF;
+    --brand-container-outline:#CDDDFF;
+    --brand-container-separator:#CDDDFF;
+    --brand-on-component:#FFFFFF;
+    --brand-on-container:#204ED1;
+  }
+  [data-theme="dark"] {
+    --brand-content-default:#B8CFFF;
+    --brand-content-strong:#CDDDFF;
+    --brand-content-subtle:#8FB2FE;
+    --brand-content-faint:#5586FD;
+    --brand-component-bg-default:#3B6FF6;
+    --brand-component-bg-hover:#5586FD;
+    --brand-component-bg-pressed:#6593FE;
+    --brand-component-outline-default:#3B6FF6;
+    --brand-component-outline-hover:#5586FD;
+    --brand-component-outline-pressed:#5586FD;
+    --brand-component-separator:#5586FD;
+    --brand-container-bg:#021587;
+    --brand-container-hover:#0828A0;
+    --brand-container-pressed:#133BB9;
+    --brand-container-outline:#2A5BE3;
+    --brand-container-separator:#0828A0;
+    --brand-on-component:#FFFFFF;
+    --brand-on-container:#CDDDFF;
+  }
+</style>
 <script src="dtf-topbar.js?v=9" defer></script>
 <script src="shared.js?v=1101" defer></script>
 <style>
@@ -276,12 +324,78 @@
     '/projects.json'
   ];
 
+  /* When a PAT is on file, ALWAYS list projects from the signed-in
+     user's own fork via the GitHub Contents API. The static
+     ../projects.json on the deployed Pages site belongs to whichever
+     owner is hosting the URL the visitor opened (typically the
+     maintainer) — falling back to that file leaks the maintainer's
+     project list to every signed-in colleague. Anonymous visitors
+     still see the static list (the PAT gate normally blocks this). */
   function tryFetch(i){
+    var ghToken = '';
+    var ghOwner = '';
+    try {
+      ghToken = localStorage.getItem('dtf-gh-pat') || '';
+      ghOwner = (localStorage.getItem('dtf-gh-owner')
+              || localStorage.getItem('dtf-gh-user') || '').trim();
+    } catch (_e) {}
+    if (ghToken && ghOwner) { fetchFromUserFork(ghOwner, ghToken); return; }
     if (i >= candidates.length) { renderFromLocalStorage(); return; }
     fetch(candidates[i], { cache: 'no-store' })
       .then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
       .then(render)
       .catch(function(){ tryFetch(i+1); });
+  }
+
+  /* List projects from `<owner>/Design-Token-Forge/projects/` via the
+     Contents API. Each project's config.json gives us name + owner,
+     mirroring the static projects.json shape so render() just works.
+     We then filter to ONLY projects this user actually owns —
+     forking the repo brings every upstream project dir along, but
+     a colleague should only see what they themselves created or
+     were explicitly given ownership of. */
+  function fetchFromUserFork(owner, token){
+    var apiBase = 'https://api.github.com/repos/' + owner + '/Design-Token-Forge';
+    var hdrs = { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' };
+    fetch(apiBase + '/contents/projects?ref=main&_cb=' + Date.now(), { headers: hdrs })
+      .then(function(r){ if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+      .then(function(dirs){
+        if (!Array.isArray(dirs)) throw new Error('not an array');
+        var projects = dirs.filter(function(d){ return d.type === 'dir'; });
+        if (!projects.length) { renderEmpty(); return; }
+        var results = []; var pending = projects.length;
+        projects.forEach(function(dir){
+          fetch(apiBase + '/contents/projects/' + dir.name + '/config.json?ref=main', { headers: hdrs })
+            .then(function(r){ return r.ok ? r.json() : null; })
+            .then(function(file){
+              if (file && file.content) {
+                try {
+                  var cfg = JSON.parse(atob(file.content.replace(/\n/g, '')));
+                  results.push({ id: cfg.id || dir.name, name: cfg.name || dir.name, owner: cfg.owner || owner, description: cfg.description || '' });
+                } catch (_e) { results.push({ id: dir.name, name: dir.name, owner: owner, description: '' }); }
+              } else { results.push({ id: dir.name, name: dir.name, owner: owner, description: '' }); }
+            })
+            .catch(function(){})
+            .finally(function(){
+              pending--;
+              if (pending === 0) {
+                var ownerLc = (owner || '').toLowerCase();
+                var mine = results.filter(function(p){
+                  /* Treat ownerless legacy configs as belonging to
+                     whoever's fork they live in. */
+                  return !p.owner || p.owner.toLowerCase() === ownerLc;
+                });
+                if (mine.length) render(mine);
+                else renderEmpty();
+              }
+            });
+        });
+      })
+      .catch(function(){
+        /* Fork has no /projects directory yet (brand-new fork) or
+           API blocked — fall back to the local cache, then onboard. */
+        renderFromLocalStorage();
+      });
   }
 
   /* Fallback when every fetch candidate fails. Chrome blocks fetch()

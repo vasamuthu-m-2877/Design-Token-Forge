@@ -107,6 +107,28 @@
     border-bottom: 1px solid var(--dtf-border);
     flex-shrink: 0;
   }
+
+  /* ── Dev preview banner ──────────────────────────────
+     Visible to everyone EXCEPT the owner so external testers know the
+     typography lane is still in flux. The handler in window.onmessage
+     (case 'user-info') hides this when figma.currentUser.name matches
+     the owner. */
+  .dev-banner {
+    display: none; /* shown by JS once user-info confirms non-owner */
+    align-items: flex-start; gap: 8px;
+    padding: 8px 12px;
+    background: #FFF7E6;
+    border-bottom: 1px solid #F5C26B;
+    font-size: 11px; line-height: 1.4; color: #7C4A03;
+    flex-shrink: 0;
+  }
+  .dev-banner strong { color: #5A3500; font-weight: 700; }
+  .dev-banner .dev-banner-close {
+    margin-left: auto; background: transparent; border: 0;
+    color: #7C4A03; cursor: pointer; font-size: 14px; line-height: 1;
+    padding: 0 4px;
+  }
+  .dev-banner .dev-banner-close:hover { color: #5A3500; }
   .tb-project {
     flex: 1; min-width: 0;
     display: flex; align-items: center; gap: 6px;
@@ -237,6 +259,14 @@
     color: var(--dtf-fg-strong);
     border-bottom-color: var(--dtf-brand-bg);
   }
+  .tab:disabled,
+  .tab[aria-disabled="true"] {
+    color: var(--dtf-fg-faint);
+    cursor: not-allowed;
+    opacity: .55;
+  }
+  .tab:disabled:hover,
+  .tab[aria-disabled="true"]:hover { color: var(--dtf-fg-faint); }
   .tab-badge {
     display: inline-block;
     margin-left: 4px;
@@ -917,6 +947,13 @@
 </head>
 <body data-screen="loading" data-tab="sync" data-conn="off">
 
+  <!-- Dev preview banner — hidden by default; revealed for non-owners
+       by the 'user-info' message handler below. -->
+  <div class="dev-banner" id="devBanner" role="status">
+    <span><strong>Typography in dev preview.</strong> Font-family / size / weight / line-height / letter-spacing variables are still being wired — expect names and values to change.</span>
+    <button class="dev-banner-close" id="devBannerClose" aria-label="Dismiss">×</button>
+  </div>
+
   <!-- ─── Top bar ──────────────────────────────────── -->
   <div class="topbar">
     <div class="tb-project">
@@ -1360,6 +1397,10 @@ function apiUrl(endpoint){
    RENDER — single source of truth for the Sync hero
    ════════════════════════════════════════════════════ */
 function render(){
+  /* Re-evaluate auth-gated UI (Components tab enabled/disabled,
+     forced fallback to Sync pane) on every render — sign-in,
+     sign-out and creds-restored all flow through here. */
+  applyAuthGate();
   /* While we’re still waiting for code.js to hand us persisted creds,
      hold the UI on a neutral splash so a saved user doesn’t see the
      “Connect your GitHub” form flash for ~100ms on every plugin open. */
@@ -1412,8 +1453,12 @@ function render(){
 
   /* Project mismatch: file is bound to one project, dropdown points at another.
      Render as a persistent inline banner above the change list and tweak the
-     primary action button to make the rebind explicit. */
-  var isMismatch = !!(documentProject && CURRENT_PROJECT && CURRENT_PROJECT !== documentProject);
+     primary action button to make the rebind explicit. Suppressed when the
+     user is signed out — the banner offers no action they can take without
+     credentials, and lingers as a stale glitch under the "Connect GitHub"
+     hero otherwise. */
+  var hasCreds = !!(GH_USERNAME && GH_PAT);
+  var isMismatch = hasCreds && !!(documentProject && CURRENT_PROJECT && CURRENT_PROJECT !== documentProject);
   if (isMismatch && mismatchSyncDoc && mismatchBuilderDoc){
     mismatchSyncDoc.textContent    = projectDisplayName(documentProject);
     mismatchSyncNew.textContent    = projectDisplayName(CURRENT_PROJECT);
@@ -2179,7 +2224,40 @@ function applyFooterForActiveTab(){
   if (body.dataset.tab === 'builder'){ footerSync.hidden = true; }
 }
 tabSync.addEventListener('click', function(){ setTab('sync', true); });
-tabBuilder.addEventListener('click', function(){ setTab('builder', true); });
+tabBuilder.addEventListener('click', function(){
+  /* Components builder writes to the file and depends on a synced
+     token set — pointless (and visually broken: the previous "Build
+     components" CTA was clickable under the "Connect GitHub first"
+     header) when the user is signed out. Bounce back to Sync with
+     a hint. */
+  if (!GH_USERNAME || !GH_PAT){
+    setTab('sync', true);
+    setStatus('Connect GitHub before building components.', 'err');
+    return;
+  }
+  setTab('builder', true);
+});
+
+/* Keep the Components tab visually disabled while signed out so the
+   user understands why the click no-ops. applyAuthGate() is called
+   from render() (which fires on every credential change). */
+function applyAuthGate(){
+  var locked = !(GH_USERNAME && GH_PAT);
+  if (tabBuilder){
+    tabBuilder.disabled = locked;
+    tabBuilder.setAttribute('aria-disabled', locked ? 'true' : 'false');
+    tabBuilder.title = locked ? 'Connect GitHub to enable component builder' : '';
+  }
+  /* If we're sitting on the Builder pane when creds get cleared,
+     flip back to Sync so the user isn't staring at a half-rendered
+     builder list. Bypasses the user-lock by clearing it first —
+     sign-out is a system-initiated reset, not a programmatic
+     interloper. */
+  if (locked && body.dataset.tab === 'builder'){
+    _tabUserLocked = false;
+    setTab('sync', false);
+  }
+}
 
 /* ════════════════════════════════════════════════════
    MENU
@@ -2296,7 +2374,22 @@ menuDisconnect.addEventListener('click', function(){
   GH_PAT = '';
   storageSet('dtf-gh-username', '');
   parent.postMessage({ pluginMessage:{ type:'clear-creds' } }, '*');
+  /* Wipe in-memory state that would otherwise paint stale banners
+     (rebind warning, "Project not deployed" hero, dropdown options)
+     under the signed-out "Connect GitHub first" header. The actual
+     file binding (documentProject) stays as-is — we restore it on
+     next sign-in via the scan. */
+  CURRENT_PROJECT = '';
+  storageSet('dtf-project-id', '');
+  projectList = [];
   projectsFetched = false;
+  connected = false;
+  tokenData = null;
+  serverStatus = null;
+  figmaHash = '';
+  lastSeenHash = ''; hashStableCount = 0; deploySettling = false;
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  if (projectSelect) projectSelect.innerHTML = '<option value="">Connect GitHub first</option>';
   fetchProjects();
   render();
 });
@@ -2839,6 +2932,31 @@ window.onmessage = function(event){
   var msg = event.data.pluginMessage;
   if (!msg) return;
 
+  /* Dev-preview banner: show for everyone except the maintainer
+     (Figma user name match). Owner stays clean. Once dismissed in
+     a session, stays dismissed via sessionStorage. */
+  if (msg.type === 'user-info'){
+    try {
+      var banner = document.getElementById('devBanner');
+      var dismissed = false;
+      try { dismissed = sessionStorage.getItem('dtf-typo-dev-banner-dismissed') === '1'; } catch(e){}
+      var name = (msg.name || '').toLowerCase();
+      var isOwner = name.indexOf('sridhar') !== -1; /* maintainer; widen if needed */
+      if (banner && !isOwner && !dismissed) {
+        banner.style.display = 'flex';
+      }
+      var close = document.getElementById('devBannerClose');
+      if (close && !close.dataset.bound){
+        close.dataset.bound = '1';
+        close.addEventListener('click', function(){
+          if (banner) banner.style.display = 'none';
+          try { sessionStorage.setItem('dtf-typo-dev-banner-dismissed', '1'); } catch(e){}
+        });
+      }
+    } catch(e){}
+    return;
+  }
+
   if (msg.type === 'scan-result'){
     hasExistingVars = msg.found;
     if (msg.savedHash && figmaHash === ''){
@@ -3018,6 +3136,40 @@ function onUndoDetected(){
 /* ════════════════════════════════════════════════════
    SERVER URL + PROJECTS + GITHUB IDENTITY
    ════════════════════════════════════════════════════ */
+
+/* Look up a project's owner from the most recent fetched list and
+   return that owner's GitHub Pages base URL. Each project lives on
+   the fork that owns it — pearl (owner: sridhar-ravi-2917) lives at
+   sridhar-ravi-2917.github.io regardless of who is signed in;
+   kanaa's own projects live at kanaa.github.io. Defaults to the
+   signed-in user when the project isn't in the list (newly-created)
+   and to the maintainer when no one is signed in. */
+function serverForProject(projectId){
+  var owner = '';
+  for (var i = 0; i < projectList.length; i++){
+    if (projectList[i].id === projectId){ owner = projectList[i].owner || ''; break; }
+  }
+  if (!owner) owner = GH_USERNAME || 'sridhar-ravi-2917';
+  return 'https://' + owner + '.github.io/Design-Token-Forge';
+}
+
+/* Switch SERVER to the active project's owner Pages and restart
+   the polling pipeline. No-op when the URL hasn't actually changed. */
+function adoptProjectServer(projectId){
+  if (!projectId) return;
+  var next = serverForProject(projectId);
+  if (next === SERVER) return;
+  SERVER = next;
+  storageSet('dtf-server-url', next);
+  parent.postMessage({ pluginMessage:{ type:'save-server-url', url:next } }, '*');
+  if (typeof dbgServer !== 'undefined' && dbgServer) dbgServer.textContent = SERVER;
+  if (typeof serverUrlInput !== 'undefined' && serverUrlInput) serverUrlInput.value = SERVER;
+  connected = false; figmaHash = ''; tokenData = null; serverStatus = null;
+  lastSeenHash = ''; hashStableCount = 0; deploySettling = false;
+  if (pollTimer) clearInterval(pollTimer);
+  startPolling();
+}
+
 function setServerUrl(url){
   url = url.replace(/\/+$/, '');
   SERVER = url;
@@ -3066,7 +3218,10 @@ ghVerifyBtn.addEventListener('click', function(){
        this whole form. localStorage from the iframe is unreliable. */
     parent.postMessage({ pluginMessage:{ type:'save-creds', username:GH_USERNAME, pat:token } }, '*');
     ghPatInput.value = '';
-    setServerUrl(DEFAULT_SERVER);
+    /* DON'T blindly set SERVER to the signed-in user's Pages — each
+       project lives on its OWNER's Pages, not the viewer's. Refresh
+       the project list and let adoptProjectServer pick the right
+       server based on the active project's owner. */
     projectsFetched = false;
     fetchProjects();
     render();
@@ -3107,17 +3262,78 @@ function selectProjectInDropdown(id){
   }
 }
 function fetchProjects(){
+  /* Authenticated path: list projects directly from the signed-in
+     user's own fork via the GitHub Contents API. This bypasses two
+     traps that made "no projects" the default for forks:
+       (a) the static projects.json on Pages belongs to whichever fork
+           hosts the URL — on the maintainer's Pages it leaks the
+           maintainer's project list to anyone signed in.
+       (b) a brand-new fork typically has Pages disabled OR a stale
+           projects.json that hasn't run through build-static yet, so
+           every static fetch 404s and the dropdown stays empty.
+     Hitting /repos/<user>/Design-Token-Forge/contents/projects always
+     reflects the actual project dirs in the fork, with no deploy
+     dependency. Falls back to the static endpoint if the API fails. */
+  if (GH_PAT && GH_USERNAME){
+    var apiBase = 'https://api.github.com/repos/' + GH_USERNAME + '/Design-Token-Forge';
+    var hdrs = { 'Authorization':'Bearer ' + GH_PAT, 'Accept':'application/vnd.github+json' };
+    fetch(apiBase + '/contents/projects?ref=main&_cb=' + Date.now(), { headers:hdrs })
+      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function(dirs){
+        if (!Array.isArray(dirs)) throw new Error('Not an array');
+        var projects = dirs.filter(function(d){ return d.type === 'dir'; });
+        if (!projects.length){ _renderProjectList([]); return; }
+        Promise.all(projects.map(function(dir){
+          return fetch(apiBase + '/contents/projects/' + dir.name + '/config.json?ref=main', { headers:hdrs })
+            .then(function(r){ return r.ok ? r.json() : null; })
+            .then(function(file){
+              if (file && file.content){
+                try {
+                  var cfg = JSON.parse(atob(file.content.replace(/\n/g,'')));
+                  return { id: cfg.id || dir.name, name: cfg.name || dir.name, owner: cfg.owner || GH_USERNAME };
+                } catch (_e){}
+              }
+              return { id: dir.name, name: dir.name, owner: GH_USERNAME };
+            })
+            .catch(function(){ return { id: dir.name, name: dir.name, owner: GH_USERNAME }; });
+        })).then(_renderProjectList);
+      })
+      .catch(function(err){
+        log('Fork API list failed (' + err.message + ') — falling back to static projects.json');
+        _fetchProjectsStatic();
+      });
+    return;
+  }
+  _fetchProjectsStatic();
+}
+function _fetchProjectsStatic(){
   var url = apiUrl('/projects'); if (!url) url = SERVER + '/projects';
   fetch(url, { cache:'no-store' })
     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(list){
       if (!Array.isArray(list)) throw new Error('Not an array');
+      _renderProjectList(list);
+    })
+    .catch(function(){
+      if (!projectsFetched) projectSelect.innerHTML = '<option value="">(connecting…)</option>';
+    });
+}
+function _renderProjectList(list){
       projectsFetched = true; projectList = list;
       if (!GH_USERNAME){
         projectSelect.innerHTML = '<option value="">Connect GitHub first</option>';
         return;
       }
-      var filtered = list.filter(function(p){ return !p.owner || p.owner.toLowerCase() === GH_USERNAME.toLowerCase(); });
+      /* Show ONLY projects this user owns. A fork inherits every
+         upstream project dir, so an unfiltered list would surface
+         the maintainer's projects (pearl, Desktop PDF Editor, …)
+         in every colleague's dropdown. Ownerless legacy configs
+         are treated as belonging to the fork's owner (i.e. this
+         user) — they predate the schema. */
+      var ghUserLc = GH_USERNAME.toLowerCase();
+      var filtered = list.filter(function(p){
+        return !p.owner || p.owner.toLowerCase() === ghUserLc;
+      });
       projectSelect.innerHTML = '';
       if (filtered.length === 0){
         projectSelect.innerHTML = '<option value="">No projects</option>';
@@ -3134,6 +3350,10 @@ function fetchProjects(){
         CURRENT_PROJECT = filtered[0].id;
         storageSet('dtf-project-id', CURRENT_PROJECT);
       }
+      /* Point SERVER at the active project's owner Pages site, since
+         each project's tokens.json/status.json lives on the owner's
+         fork — not necessarily the signed-in user's. */
+      if (CURRENT_PROJECT) adoptProjectServer(CURRENT_PROJECT);
       if (documentProject){
         var found = false;
         for (var j=0; j<list.length; j++) if (list[j].id === documentProject){ found = true; break; }
@@ -3153,10 +3373,6 @@ function fetchProjects(){
           documentProject = '';
         }
       }
-    })
-    .catch(function(){
-      if (!projectsFetched) projectSelect.innerHTML = '<option value="">(connecting…)</option>';
-    });
 }
 projectSelect.addEventListener('change', function(){
   var newProject = projectSelect.value;
@@ -3173,14 +3389,19 @@ projectSelect.addEventListener('change', function(){
   connected = false; tokenData = null; serverStatus = null;
   lastSeenHash = ''; hashStableCount = 0; deploySettling = false;
   if (pollTimer) clearInterval(pollTimer);
+  /* Point SERVER at the new project's owner Pages. adoptProjectServer
+     restarts polling itself. If the owner's URL matches the current
+     SERVER it's a no-op — we still need to startPolling() below. */
+  var prevServer = SERVER;
+  adoptProjectServer(CURRENT_PROJECT);
   /* Re-scan to refresh documentProject + figmaHash baseline. */
   parent.postMessage({ pluginMessage:{ type:'scan' } }, '*');
   /* Builder drift pill depends on CURRENT_PROJECT; ping the plugin
      so the per-row pills + action lines repaint without waiting for
      the next periodic prereq check. */
   parent.postMessage({ pluginMessage:{ type:'check-gen-prereqs' } }, '*');
-  startPolling();
-  log('Switched to project: ' + CURRENT_PROJECT + ' (file is bound to ' + (documentProject || 'none') + ')');
+  if (SERVER === prevServer) startPolling();
+  log('Switched to project: ' + CURRENT_PROJECT + ' (file is bound to ' + (documentProject || 'none') + ', server: ' + SERVER + ')');
   render();
 });
 

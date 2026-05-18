@@ -294,6 +294,34 @@
         });
       }
     }
+
+    /* If the auth gate verifies AFTER the topbar mounts (first PAT
+       entry of a fresh session), dtf-gh-user isn't in localStorage at
+       render time, so the account chip is missing. Listen for the
+       gate's ready event and remount once so the avatar appears
+       without forcing the user to navigate away and back. */
+    if (!noAcct && !ghUser && !this._authListenerWired) {
+      this._authListenerWired = true;
+      var self = this;
+      var rerender = function () {
+        try {
+          if (!localStorage.getItem('dtf-gh-user')) return;
+        } catch (_e) { return; }
+        self._mounted = false;
+        self.connectedCallback();
+      };
+      document.addEventListener('dtf-auth-ready', rerender, { once: true });
+      /* Belt-and-braces: poll briefly in case the event already fired
+         before this listener attached (auth-gate dispatches it
+         synchronously after release()). */
+      var tries = 0;
+      var iv = setInterval(function () {
+        try {
+          if (localStorage.getItem('dtf-gh-user')) { clearInterval(iv); rerender(); return; }
+        } catch (_e) { clearInterval(iv); return; }
+        if (++tries > 40) clearInterval(iv);
+      }, 50);
+    }
   };
 
   DtfTopbar.prototype._labelFor = function (page) {
