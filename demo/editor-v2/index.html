@@ -177,60 +177,62 @@
           });
       });
 
-      /* Step 4: stash drift validator (self-heal stale config).
-         The `dtf-project-config-<pid>` stash from Step 1 is used
-         for fast paint, but it only ever gets refreshed when the
-         user Publishes from this editor. If the source config
-         drifts by ANY other means — direct edit to
-         projects/<pid>/config.json on disk, git pull, multi-device
-         publish, restore-from-version, or a teammate's republish —
-         the stash wins forever and the editor shows stale colours
-         (the "Pearl brand stuck at #07CBCF when disk says #E75A6F"
-         bug). Hard refresh doesn't fix it because hard refresh
-         doesn't touch localStorage.
+      /* Step 4: version-tag stash drift check (Phase 1 of state model).
+         Every published config.json carries `latestVersion.version`
+         (e.g. "v0.0.7"). Stash freshness is a 1-string compare —
+         far cheaper than the old paletteKeys + semanticMap deep
+         compare, and never produces false positives from cosmetic
+         reordering of unrelated fields.
 
-         Strategy: AFTER paint, async-fetch the authoritative
-         config and compare paletteKeys + semanticMap to the stash.
          On mismatch:
-           • Overwrite the stash with truth.
-           • Clear dtf-saved-tokens-<pid> (it was derived from the
-             stale primitives and would re-poison the next boot).
-           • Auto-reload IF the user has no unsaved draft.
-           • If a draft exists, console.warn + toast (don't destroy
-             work — user must Discard, then we'll reload on next
-             boot). */
-      setTimeout(function validateStash(){
+           • Nuke BOTH stashes (config + tokens). They're derived
+             from the previous publish, so neither survives a remote
+             republish cleanly.
+           • If no unsaved draft → silent reload (next boot rebuilds
+             stashes from remote via Steps 1+3).
+           • If unsaved draft exists → toast warning, leave stashes
+             nuked so next reload still picks up the new version,
+             but DON'T auto-reload (would destroy the draft). User
+             must Discard or Publish first.
+
+         Phase 2 will handle the draft-vs-newer-HEAD case more
+         gracefully (conflict banner with Keep/Discard choice). For
+         now: preserve draft = correct behaviour, just unobtrusive. */
+      setTimeout(function validateStashByVersion(){
         try {
           var stashRaw = localStorage.getItem('dtf-project-config-' + pid);
           if (!stashRaw) return;
           var stash; try { stash = JSON.parse(stashRaw); } catch (_pe) { return; }
+          var stashVer = (stash && stash.latestVersion && stash.latestVersion.version) || '';
+          // No version field on stash = pre-Phase-1 cache. Treat as
+          // stale once so the version-tagged copy replaces it.
+          // Subsequent boots will short-circuit on match.
 
           function onFresh(fresh){
             if (!fresh || typeof fresh !== 'object') return;
-            var stashSig = JSON.stringify({ pk: stash.paletteKeys||{}, sm: stash.semanticMap||{} });
-            var freshSig = JSON.stringify({ pk: fresh.paletteKeys||{}, sm: fresh.semanticMap||{} });
-            if (stashSig === freshSig) return;
+            var freshVer = (fresh && fresh.latestVersion && fresh.latestVersion.version) || '';
+            if (!freshVer) return; // remote has no version yet — skip check
+            if (stashVer && stashVer === freshVer) return; // in sync
 
-            // Drift detected. Always heal the stash + token cache.
-            try { localStorage.setItem('dtf-project-config-' + pid, JSON.stringify(fresh)); } catch (_se) {}
+            // Drift. Nuke both stashes unconditionally — they were
+            // built against the old publish and cannot be trusted.
+            try { localStorage.removeItem('dtf-project-config-' + pid); } catch (_se) {}
             try { localStorage.removeItem('dtf-saved-tokens-' + pid); } catch (_se) {}
 
-            // Has unsaved draft? Don't auto-reload (would destroy work).
             var draftKey = 'dtf-editor-v2-draft-v2--' + pid;
             var hasDraft = false;
             try { hasDraft = !!localStorage.getItem(draftKey); } catch (_de) {}
 
             if (hasDraft) {
               // eslint-disable-next-line no-console
-              console.warn('[ev2] Project config changed on remote. Your draft is preserved. Discard the draft to pick up the new config.');
+              console.warn('[ev2] Project published to ' + freshVer + ' on remote (you had ' + (stashVer || 'unversioned') + '). Your draft is preserved. Discard or Publish to resync.');
               if (window.ev2Toast) {
-                window.ev2Toast('Project config updated on source. Discard your draft to load it.', 'warn', 6000);
+                window.ev2Toast('Project updated to ' + freshVer + ' on source. Discard your draft to load it.', 'warn', 6000);
               }
               return;
             }
-            // Clean: silently reload to apply fresh config.
             // eslint-disable-next-line no-console
-            console.info('[ev2] Stale project config stash detected — reloading from source.');
+            console.info('[ev2] Stash out of sync (' + (stashVer || 'unversioned') + ' \u2192 ' + freshVer + '). Reloading.');
             window.__ev2BypassUnloadGuard = true;
             location.reload();
           }
@@ -252,7 +254,7 @@
                     if (!file || !file.content) return;
                     try { onFresh(JSON.parse(atob(file.content.replace(/\n/g, '')))); } catch (_je) {}
                   })
-                  .catch(function(){ /* offline — leave stash, user can manually Reset */ });
+                  .catch(function(){ /* offline \u2014 leave stash, user can manually Reset */ });
               } catch (_we) {}
             });
         } catch (_e) {}
