@@ -328,18 +328,17 @@ body{
 .ev2-panes{
   flex:1;min-height:0;
   display:grid;
-  /* Default split tuned for token-editor ergonomics across screens:
-     • list pane needs ~420–560px to show row labels + step badges
-       + AA chip + inline controls without truncation
-     • preview pane benefits from every extra pixel — that's where
-       the user reads the brand surfaces & components
-     clamp(420px, 38vw, 560px) keeps the list inside a usable band
-     and lets the preview (1fr) soak up wide-monitor real estate.
-     1280 → 486/788  (38/62)
-     1440 → 547/887  (38/62)
-     1920 → 560/1354 (29/71) — preview wins on big displays
-     2560 → 560/1994 (22/78) */
-  grid-template-columns:var(--ev2-list-w, clamp(420px, 38vw, 560px)) 6px minmax(420px, 1fr);
+  /* Default split favours the editor (list) — that's where every
+     interaction happens. Preview gets a stable, readable width
+     (~480–640px) — wide enough to render the brand surfaces &
+     component cards at a meaningful size without dominating. List
+     (1fr) soaks up the rest, so on wide monitors the editor grows
+     instead of leaving dead space.
+     1280 → 754 list / 520 preview (59/41)
+     1440 → 882 list / 552 preview (61/39)
+     1920 → 1274 list / 640 preview (66/34)
+     2560 → 1914 list / 640 preview (75/25) */
+  grid-template-columns:var(--ev2-list-w, minmax(480px, 1fr)) 6px clamp(480px, 33vw, 640px);
 }
 
 /* Visible vertical divider between list and preview */
