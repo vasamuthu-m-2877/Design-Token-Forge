@@ -19,6 +19,15 @@
   <!-- Editor v2 specific layout -->
   <link rel="stylesheet" href="./editor-v2.css?v=134">
 
+  <!-- Palette engine MUST load before the per-project token script
+       below so we can synth primitives from cfg.paletteKeys before
+       first paint. Without this, the page paints with the default
+       pearl primitives, then editor-v2.js (deferred) repaints with
+       the project's palette — a visible colour flash. Same-origin
+       file fetches still happen below as a refresh layer for the
+       maintainer's own projects. -->
+  <script src="../palette-engine.js?v=85"></script>
+
   <!-- Per-project token chrome: load the active project's primitives/
        semantic/surfaces so the editor itself (topbar dropdown, pills,
        publish button, dialogs, focus rings) paints in the project's
@@ -32,6 +41,36 @@
       var qp = new URLSearchParams(location.search).get('project');
       var pid = qp || localStorage.getItem('dtf-active-project') || '';
       if (!pid) return;
+      /* Step 1: synth primitives from the config stash BEFORE first
+         paint. fetchFromUserFork on the hub seeds dtf-project-config-
+         <pid> with the owner-fork config.json (works cross-fork), so
+         this synth produces the same primitives the editor's later
+         injectProjectPrimitivesSync would produce — but it happens
+         here, blocking, before the body renders. Eliminates the
+         pearl-then-brand colour flash. */
+      try {
+        var cfgRaw = localStorage.getItem('dtf-project-config-' + pid);
+        if (cfgRaw && window.PaletteEngine) {
+          var cfg = JSON.parse(cfgRaw);
+          if (cfg && cfg.paletteKeys) {
+            var parts = [];
+            Object.keys(cfg.paletteKeys).forEach(function(roleId){
+              var keyHex = cfg.paletteKeys[roleId];
+              if (!keyHex) return;
+              try {
+                var pal = window.PaletteEngine.generatePalette(keyHex, { anchor: 'exact' });
+                parts.push(window.PaletteEngine.toCss(roleId, pal));
+              } catch (_e) {}
+            });
+            if (parts.length) {
+              var ss = document.createElement('style');
+              ss.id = 'ev2-project-primitives';
+              ss.textContent = parts.join('\n');
+              document.head.appendChild(ss);
+            }
+          }
+        }
+      } catch (_e) {}
       var cached = localStorage.getItem('dtf-saved-tokens-' + pid);
       if (cached) {
         var s = document.createElement('style');
@@ -41,16 +80,16 @@
       }
       // Always refresh from server so a project edited elsewhere shows up.
       var files = ['primitives.css','semantic.css','surfaces.css'];
-      var parts = [];
+      var parts2 = [];
       var pending = files.length;
       files.forEach(function(f, i){
         fetch('../../projects/' + pid + '/' + f + '?_cb=' + Date.now())
           .then(function(r){ if(!r.ok) throw 0; return r.text(); })
-          .then(function(t){ parts[i] = t; })
+          .then(function(t){ parts2[i] = t; })
           .catch(function(){})
           .finally(function(){
             if (--pending) return;
-            var css = parts.filter(Boolean).join('\n');
+            var css = parts2.filter(Boolean).join('\n');
             if (!css) return;
             localStorage.setItem('dtf-saved-tokens-' + pid, css);
             var el = document.getElementById('dtfSavedTokens');
@@ -70,8 +109,8 @@
   <!-- Unified topbar (custom element) — defined in demo/dtf-topbar.js -->
   <script src="../dtf-topbar.js?v=9" defer></script>
 
-  <!-- Palette engine (browser IIFE — exposes window.PaletteEngine) -->
-  <script src="../palette-engine.js?v=85" defer></script>
+  <!-- Palette engine already loaded above (sync) so editor-v2.js can
+       reuse window.PaletteEngine without re-fetching. -->
   <!-- Token Solver (pure-function engine, exposes window.DTFSolver) -->
   <script src="./solver.js?v=85" defer></script>
 </head>
