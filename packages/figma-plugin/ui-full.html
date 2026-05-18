@@ -569,6 +569,28 @@
   }
   .rebind-chip.target .rebind-chip-dot { background: var(--dtf-warning-content); }
   .rebind-arrow { color: var(--dtf-fg-faint); font-size: var(--dtf-fs-12); }
+  .rebind-caption {
+    margin-top: 8px;
+    font-size: var(--dtf-fs-11);
+    color: var(--dtf-fg-subtle);
+    line-height: 1.4;
+  }
+  .rebind-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn-link {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: var(--dtf-brand-bg);
+    font: 600 var(--dtf-fs-11)/1 var(--dtf-font);
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .btn-link:hover { filter: brightness(1.15); }
 
   /* ── Rebind summary ─────────────────────────────────
      Replaces the per-token change list in mismatch mode. A row-by-row
@@ -1051,12 +1073,16 @@
       <div class="rebind-card" id="mismatchSync" hidden>
         <div class="rebind-head">
           <svg class="rebind-head-icon" width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M6 1.5L11 10H1L6 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6 5v2.5M6 8.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-          <span class="rebind-head-title">Rebind required</span>
+          <span class="rebind-head-title" id="mismatchSyncTitle">Rebind required</span>
         </div>
         <div class="rebind-flow">
           <span class="rebind-chip"        title="Variables currently in this file"><span class="rebind-chip-dot"></span><span id="mismatchSyncDoc">—</span></span>
           <span class="rebind-arrow" aria-hidden="true">→</span>
           <span class="rebind-chip target" title="Project this panel will sync"><span class="rebind-chip-dot"></span><span id="mismatchSyncNew">—</span></span>
+        </div>
+        <div class="rebind-caption" id="mismatchSyncCaption">This will overwrite the file's existing variables.</div>
+        <div class="rebind-actions">
+          <button type="button" class="btn-link" id="mismatchSwitchBack" hidden>Switch back to <span id="mismatchSwitchBackName">—</span></button>
         </div>
       </div>
 
@@ -1364,6 +1390,10 @@ var documentProject = '', pendingSwitchProject = '';
 var userSwitchedProject = false;   /* true after user picks a new project in the dropdown
                                       so the next scan-result does NOT auto-revert to the
                                       file's bound project. */
+var destructiveSyncConfirmed = false; /* one-shot: user typed REBIND/CLAIM to approve
+                                         a destructive overwrite. Reset after the sync
+                                         completes so a later project switch re-arms
+                                         the prompt. */
 var projectList = [], projectsFetched = false;
 var fetchRetries = 0, MAX_FETCH_RETRIES = 2;
 var syncVerifyAttempts = 0, MAX_SYNC_VERIFY = 5;
@@ -1451,19 +1481,56 @@ function render(){
   if (tbMenuPop) tbMenuPop.classList.remove('signed-out');
   if (tbRefresh) tbRefresh.hidden = false;
 
-  /* Project mismatch: file is bound to one project, dropdown points at another.
-     Render as a persistent inline banner above the change list and tweak the
-     primary action button to make the rebind explicit. Suppressed when the
-     user is signed out — the banner offers no action they can take without
-     credentials, and lingers as a stale glitch under the "Connect GitHub"
-     hero otherwise. */
+  /* ── Destructive-write detection ─────────────────────────────────
+     Two cases where clicking the footer CTA would overwrite tokens
+     the user almost certainly didn't mean to touch:
+
+       (a) Bound mismatch — file is bound to project A (plugin wrote
+           dtf-project = 'A') but the dropdown now points at B. One
+           click rewrites A's variables with B's values. Real case:
+           designer opens a teammate's pearl file while their plugin
+           was last on their own project.
+
+       (b) Unbound claim — file has DTF variables but no dtf-project
+           binding (savedProject empty). Usually means the file was
+           handed off without ever being synced through the plugin,
+           or pre-dates the binding feature. Syncing would silently
+           adopt the active project and overwrite whatever was there.
+
+     Both gate the syncBtn behind a typed-confirmation modal
+     (see syncBtn click handler). The banner orients the user and
+     offers the safe escape hatch (switch back / pick different
+     project). hasExistingVars is set by scan-result. */
   var hasCreds = !!(GH_USERNAME && GH_PAT);
-  var isMismatch = hasCreds && !!(documentProject && CURRENT_PROJECT && CURRENT_PROJECT !== documentProject);
+  var isBoundMismatch  = hasCreds && !!(documentProject && CURRENT_PROJECT && CURRENT_PROJECT !== documentProject);
+  var isUnboundClaim   = hasCreds && !!(hasExistingVars && !documentProject && CURRENT_PROJECT);
+  var isMismatch       = isBoundMismatch || isUnboundClaim;
   if (isMismatch && mismatchSyncDoc && mismatchBuilderDoc){
-    mismatchSyncDoc.textContent    = projectDisplayName(documentProject);
+    var fromLabel = isBoundMismatch
+      ? projectDisplayName(documentProject)
+      : (hasExistingVars ? 'existing variables' : 'untitled');
+    mismatchSyncDoc.textContent    = fromLabel;
     mismatchSyncNew.textContent    = projectDisplayName(CURRENT_PROJECT);
-    mismatchBuilderDoc.textContent = projectDisplayName(documentProject);
+    mismatchBuilderDoc.textContent = fromLabel;
     mismatchBuilderNew.textContent = projectDisplayName(CURRENT_PROJECT);
+
+    /* Banner heading / caption tailored to the case so the user
+       understands what they're being asked to confirm. */
+    var titleEl   = document.getElementById('mismatchSyncTitle');
+    var captionEl = document.getElementById('mismatchSyncCaption');
+    if (titleEl) {
+      titleEl.textContent = isBoundMismatch ? 'Rebind required' : 'This file already has variables';
+    }
+    if (captionEl) {
+      captionEl.textContent = isBoundMismatch
+        ? 'Syncing replaces this file\u2019s ' + (hasExistingVars ? 'variables' : 'bindings') + ' with the new project\u2019s.'
+        : 'Syncing will overwrite the ' + (dbgVars && dbgVars.textContent ? dbgVars.textContent + ' ' : '') + 'existing variables with ' + projectDisplayName(CURRENT_PROJECT) + '\u2019s. This cannot be undone after Figma writes them.';
+    }
+    /* "Switch back" only applies when the file IS bound. */
+    var switchBack = document.getElementById('mismatchSwitchBack');
+    var switchBackName = document.getElementById('mismatchSwitchBackName');
+    if (switchBack) switchBack.hidden = !isBoundMismatch;
+    if (switchBackName && documentProject) switchBackName.textContent = projectDisplayName(documentProject);
   }
   if (mismatchSync)    mismatchSync.hidden    = !isMismatch;
   if (mismatchBuilder) mismatchBuilder.hidden = !isMismatch;
@@ -1577,7 +1644,9 @@ function render(){
     if (emptyHint) emptyHint.hidden = isMismatch && !hasRealDiff;
 
     if (isMismatch){
-      syncBtn.textContent = 'Rebind file & sync ' + projectDisplayName(CURRENT_PROJECT);
+      syncBtn.textContent = isBoundMismatch
+        ? 'Rebind file & sync ' + projectDisplayName(CURRENT_PROJECT)
+        : 'Claim file & sync ' + projectDisplayName(CURRENT_PROJECT);
     } else if (hasExistingVars){
       syncBtn.textContent = 'Update variables in Figma';
     } else {
@@ -2383,6 +2452,7 @@ menuDisconnect.addEventListener('click', function(){
   storageSet('dtf-project-id', '');
   projectList = [];
   projectsFetched = false;
+  destructiveSyncConfirmed = false;
   connected = false;
   tokenData = null;
   serverStatus = null;
@@ -2841,9 +2911,66 @@ function handleStaticDiff(current){
   render();
 }
 
+/* "Switch back" link in the rebind banner — reverts the dropdown
+   to the project this file is actually bound to. Pure escape hatch:
+   no sync happens, no plugin data is touched. */
+var mismatchSwitchBackBtn = document.getElementById('mismatchSwitchBack');
+if (mismatchSwitchBackBtn){
+  mismatchSwitchBackBtn.addEventListener('click', function(){
+    if (!documentProject) return;
+    projectSelect.value = documentProject;
+    var ev;
+    try { ev = new Event('change', { bubbles:true }); }
+    catch (e){ ev = document.createEvent('Event'); ev.initEvent('change', true, false); }
+    projectSelect.dispatchEvent(ev);
+  });
+}
+
 /* Sync */
 syncBtn.addEventListener('click', function(){
   if (syncing) return;
+  /* ── Destructive-write gate ─────────────────────────────────
+     Block the click when this sync would overwrite variables the
+     user almost certainly didn't intend to touch. Cases mirror the
+     render() banner logic: bound mismatch OR unbound-claim. The
+     confirm dialog spells out what gets clobbered so the user can't
+     accidentally one-click a teammate's pearl file into their own
+     project's tokens. */
+  var hasCreds = !!(GH_USERNAME && GH_PAT);
+  var isBoundMismatch = hasCreds && !!(documentProject && CURRENT_PROJECT && CURRENT_PROJECT !== documentProject);
+  var isUnboundClaim  = hasCreds && !!(hasExistingVars && !documentProject && CURRENT_PROJECT);
+  if ((isBoundMismatch || isUnboundClaim) && !destructiveSyncConfirmed){
+    var lines;
+    if (isBoundMismatch) {
+      lines = [
+        'This file is bound to "' + projectDisplayName(documentProject) + '".',
+        'Syncing now will OVERWRITE its variables with "' + projectDisplayName(CURRENT_PROJECT) + '"\u2019s values.',
+        '',
+        'This cannot be undone after Figma writes the change.',
+        '',
+        'Type REBIND to confirm:'
+      ];
+    } else {
+      lines = [
+        'This file already has ' + (dbgVars && dbgVars.textContent ? dbgVars.textContent + ' ' : '') + 'variables, but it isn\u2019t bound to any project.',
+        'Syncing now will OVERWRITE them with "' + projectDisplayName(CURRENT_PROJECT) + '"\u2019s values.',
+        '',
+        'This cannot be undone after Figma writes the change.',
+        '',
+        'Type CLAIM to confirm:'
+      ];
+    }
+    var expected = isBoundMismatch ? 'REBIND' : 'CLAIM';
+    var typed = window.prompt(lines.join('\n'), '');
+    if (typed === null) return;
+    if (typed.trim().toUpperCase() !== expected){
+      setStatus('Sync cancelled \u2014 confirmation text didn\u2019t match.', 'err');
+      return;
+    }
+    /* One-shot pass — reset on the next render so any future
+       mismatch (different project switch) re-arms the gate. */
+    destructiveSyncConfirmed = true;
+  }
   if (!tokenData){
     setStatus('Fetching tokens…', 'work');
     fetchTokenData();
@@ -3048,6 +3175,9 @@ window.onmessage = function(event){
     hasExistingVars = true;
     lastSyncedVarCount = s.variables;
     documentProject = CURRENT_PROJECT;
+    /* Sync completed — clear the one-shot confirm so a future
+       project switch re-arms the gate. */
+    destructiveSyncConfirmed = false;
     dbgVars.textContent = s.variables;
     dbgCols.textContent = s.collections;
     dbgHash.textContent = figmaHash;
@@ -3394,6 +3524,9 @@ projectSelect.addEventListener('change', function(){
   storageSet('dtf-project-id', CURRENT_PROJECT);
   pendingSwitchProject = '';
   userSwitchedProject = true;
+  /* New target project → any prior typed-confirm for the previous
+     destructive sync no longer applies. */
+  destructiveSyncConfirmed = false;
   /* Wipe the in-memory sync marker so the new project's tokens show up
      as 'changes pending' (or 'first run' if file has no vars). The file's
      bound project stays in documentProject so mismatch detection works
