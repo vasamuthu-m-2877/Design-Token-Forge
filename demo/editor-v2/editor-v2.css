@@ -2566,6 +2566,43 @@ body.ev2-modal-open{overflow:hidden}
   flex-shrink:0;
 }
 .ev2-history-body{flex:1;min-height:0;overflow:auto;padding:8px 0}
+
+/* In-dialog status line for Restore progress/errors. Sits between
+   header and list so it's adjacent to the row the user just acted
+   on. Uses the same role-colour vocab as toasts ('info' default,
+   'ok' success, 'warn' caution, 'err' failure) so call sites can
+   reuse the same kind strings. Errors stick (no auto-hide) because
+   they often carry multi-line GitHub messages with an action hint. */
+.ev2-history-status{
+  margin:10px 24px 0;
+  padding:10px 12px;
+  border-radius:var(--radius-md,6px);
+  font-size:12px;line-height:1.5;
+  border:1px solid var(--ev2-chrome-outline);
+  background:var(--ev2-chrome-bg);
+  color:var(--ev2-chrome-ct-default);
+}
+.ev2-history-status[hidden]{display:none}
+.ev2-history-status[data-kind="info"]{
+  border-color:var(--info-component-bg-default,#1d4ed8);
+  background:var(--info-component-container,#eef2ff);
+  color:var(--info-on-container,#1e3a8a);
+}
+.ev2-history-status[data-kind="ok"]{
+  border-color:var(--success-component-bg-default,#0b8d28);
+  background:var(--success-component-container,#ecfdf3);
+  color:var(--success-on-container,#065f1e);
+}
+.ev2-history-status[data-kind="warn"]{
+  border-color:var(--warning-component-bg-default,#a66208);
+  background:var(--warning-component-container,#fff7ec);
+  color:var(--warning-on-container,#7a3f00);
+}
+.ev2-history-status[data-kind="err"]{
+  border-color:var(--danger-component-bg-default,#d61d20);
+  background:var(--danger-component-container,#fef2f2);
+  color:var(--danger-on-container,#7a0a0c);
+}
 .ev2-history-empty{
   padding:32px 24px;text-align:center;
   color:var(--ev2-chrome-ct-subtle);font-size:12px;

@@ -638,6 +638,11 @@
         </div>
         <button class="ev2-modal-btn ev2-history-close" type="button" data-history-dismiss aria-label="Close">×</button>
       </header>
+      <!-- In-dialog status line. Painted by historyStatus(msg,kind)
+           in editor-v2.js. Lives here so Restore progress/errors
+           render next to the row the user just clicked instead of a
+           floating toast at the page corner. -->
+      <div class="ev2-history-status" id="ev2HistoryStatus" role="status" aria-live="polite" hidden></div>
       <div class="ev2-history-body" id="ev2HistoryBody">
         <div class="ev2-history-empty">Loading…</div>
       </div>

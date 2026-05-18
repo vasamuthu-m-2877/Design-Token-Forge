@@ -4217,6 +4217,7 @@
     if (dlg._restoring) return;
     dlg.hidden = true;
     document.body.classList.remove('ev2-modal-open');
+    historyStatus('');
   }
 
   function renderHistoryList(ghUser, snapshots) {
@@ -4303,7 +4304,7 @@
       return (s.json && s.json.meta && s.json.meta.version) === ver;
     });
     if (!snap || !snap.json) {
-      if (window.ev2Toast) window.ev2Toast('Couldn\u2019t find snapshot for ' + ver, 'error');
+      historyStatus('Couldn\u2019t find snapshot for ' + ver, 'err');
       return;
     }
     var curVer  = getProjectCurrentVersion();
@@ -4316,6 +4317,7 @@
     );
     if (!ok) return;
 
+    historyStatus('Restoring ' + ver + ' as ' + nextVer + '…', 'info');
     var btn = body.querySelector('[data-restore="' + cssEscape(ver) + '"]');
     if (btn) { btn.setAttribute('data-restoring','true'); btn.disabled = true; btn.textContent = 'Restoring\u2026'; }
     var dlg = document.getElementById('ev2HistoryDialog');
@@ -4399,7 +4401,18 @@
       window.__ev2BypassUnloadGuard = true;
       setTimeout(function () { window.location.reload(); }, 1200);
     }).catch(function (err) {
-      if (window.ev2Toast) window.ev2Toast('Restore failed: ' + (err && err.message || err), 'error', 6000);
+      var emsg = (err && err.message) || String(err);
+      // "Update is not a fast forward" survives 10 retries only
+      // when something is hammering the branch (Pages workflow
+      // bursting, another tab publishing in parallel). Spell that
+      // out so the user knows it's a transient race — not data loss
+      // — and what to do next.
+      var hint = '';
+      if (/fast.?forward/i.test(emsg)) {
+        hint = ' — the repo branch moved while we were committing (likely the deploy workflow still running from your last Publish). Wait ~30s and Restore again.';
+      }
+      historyStatus('Restore failed: ' + emsg + hint, 'err');
+      if (window.ev2Toast) window.ev2Toast('Restore failed: ' + emsg, 'err');
       if (btn) { btn.removeAttribute('data-restoring'); btn.disabled = false; btn.textContent = 'Restore'; }
       if (dlg) dlg._restoring = false;
       // eslint-disable-next-line no-console
@@ -4612,14 +4625,18 @@
       .catch(function (err) {
         // Race: someone (Pages bot, another tab, parallel commit)
         // moved the branch between our read and our PATCH. Re-read
-        // and rebuild from the new tip. Up to 6 attempts total —
-        // the deploy-tokens.yml workflow can push 2-3 times in
-        // quick succession after every publish.
+        // and rebuild from the new tip. Up to 10 attempts — the
+        // deploy-tokens.yml workflow can push 2-3 times in quick
+        // succession after every publish, and a Restore on the
+        // heels of a Publish often lands in the middle of that
+        // burst. Total worst-case wait: ~22s before surfacing the
+        // failure, which is still fast enough that the user knows
+        // it didn't silently succeed.
         var raceable = err && err.message && /fast.?forward|sha.*does not match|reference does not exist/i.test(err.message);
-        if (raceable && _retry < 5) {
-          // Backoff with jitter: 250ms, 500ms, 750ms, 1500ms, 2500ms.
-          var delays = [250, 500, 750, 1500, 2500];
-          var delay = delays[_retry] + Math.floor(Math.random() * 200);
+        if (raceable && _retry < 10) {
+          // Backoff with jitter: ramps from 250ms to 4s.
+          var delays = [250, 500, 750, 1500, 2500, 3500, 3500, 4000, 4000, 4000];
+          var delay = delays[_retry] + Math.floor(Math.random() * 250);
           return new Promise(function (resolve) { setTimeout(resolve, delay); })
             .then(function () { return ghMultiCommit(owner, files, message, branch, _retry + 1); });
         }
@@ -4890,8 +4907,21 @@
 
   var toastEl = document.getElementById('ev2Toast');
   var toastTimer = null;
-  window.ev2Toast = function (msg, kind) {
+  /* ev2Toast(msg, kind, ttlMs)
+     kind: 'ok' | 'warn' | 'err'  (also accepts 'success' / 'error'
+           as legacy aliases so call sites in publish/restore that
+           predate the rename still light up the right colour bar)
+     ttlMs: optional override of the default auto-hide. Ignored for
+            'err' — errors stick until the user dismisses them. */
+  window.ev2Toast = function (msg, kind, ttlMs) {
     kind = kind || 'ok';
+    // Backwards-compat aliases. Without this, error toasts came
+    // through as data-kind="error" which matches no CSS rule, so
+    // the accent dot stayed neutral grey instead of red — the user
+    // had no visual cue that the message was a failure.
+    if (kind === 'success') kind = 'ok';
+    else if (kind === 'error') kind = 'err';
+    else if (kind === 'warning') kind = 'warn';
     // Error toasts get a dismiss button and stay until the user
     // closes them — they often contain GitHub API messages the user
     // needs to read in full ("Resource not accessible by integration"
@@ -4915,10 +4945,41 @@
     toastEl.setAttribute('data-show', '');
     clearTimeout(toastTimer);
     if (!isErr) {
-      var ttl = kind === 'warn' ? 4000 : 2400;
+      // Default: 2.4s for ok, 4s for warn. Callers can override via
+      // ttlMs — used by long messages like "Restored vX as vY.
+      // Reloading editor…" that need extra time to read before the
+      // page navigates away.
+      var ttl = ttlMs != null ? ttlMs : (kind === 'warn' ? 4000 : 2400);
       toastTimer = setTimeout(function () { toastEl.removeAttribute('data-show'); }, ttl);
     }
   };
+
+  /* In-dialog status line for the Version history dialog.
+     Restore is invoked from inside a modal dialog — painting status
+     in a floating top-right toast forces the user's eyes off the
+     dialog and (until r728c0df) was buried under the .ev2-busy
+     overlay. Render the status right under the dialog header so it
+     sits next to the row that triggered it.
+     msg: text. kind: 'ok'|'err'|'warn'|'info'. ttlMs: optional, 0/
+          null = stick until manually cleared. */
+  function historyStatus(msg, kind, ttlMs) {
+    var el = document.getElementById('ev2HistoryStatus');
+    if (!el) return;
+    if (!msg) { el.hidden = true; el.textContent = ''; return; }
+    kind = kind || 'info';
+    if (kind === 'success') kind = 'ok';
+    else if (kind === 'error') kind = 'err';
+    else if (kind === 'warning') kind = 'warn';
+    el.textContent = msg;
+    el.setAttribute('data-kind', kind);
+    el.hidden = false;
+    clearTimeout(historyStatus._t);
+    if (ttlMs && kind !== 'err') {
+      historyStatus._t = setTimeout(function () {
+        el.hidden = true; el.textContent = '';
+      }, ttlMs);
+    }
+  }
 
   function boot() {
     if (!window.PaletteEngine) { setTimeout(boot, 30); return; }
