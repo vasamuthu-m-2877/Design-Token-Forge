@@ -425,10 +425,10 @@
   "paletteAnchor": "exact",
   "schemaVersion": 2,
   "latestVersion": {
-    "version": "v1.0.3",
-    "name": "May19 10:50",
+    "version": "v1.0.4",
+    "name": "May19 11:20",
     "description": "",
-    "savedAt": "2026-05-19T05:20:16.461Z",
+    "savedAt": "2026-05-19T05:50:38.361Z",
     "savedBy": "sridhar-ravi-2917"
   },
   "t1Picks": {
@@ -492,8 +492,8 @@
       "brand": {
         "fill": "500",
         "content": "200",
-        "container": "850",
-        "borderStep": "400",
+        "container": "black",
+        "borderStep": "750",
         "separatorStep": "300",
         "onComponent": "white",
         "onContainerStep": "200"
