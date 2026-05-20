@@ -4785,7 +4785,28 @@ figma.ui.onmessage = async function(msg) {
            to the per-component map yet. */
         currentTokensHash = dtfHash32(_ids.join('|'));
 
+        /* V4 — build a name→id map for the current file so we can
+           AUTO-HEAL stale ledger boundIds when a variable was deleted
+           + recreated (e.g. sync server started emitting a previously-
+           missing variable). Before V4, a recreated variable produced
+           a new ID; ledger still had the old ID; bindings pill fired
+           forever even though the same NAME still resolved correctly. */
+        var _nameToId = {};
+        try {
+          for (var _ci2 = 0; _ci2 < _allCols.length; _ci2++){
+            var _col2 = _allCols[_ci2];
+            var _cvids2 = _col2.variableIds || [];
+            for (var _vi3 = 0; _vi3 < _cvids2.length; _vi3++){
+              try {
+                var _v = await figma.variables.getVariableByIdAsync(_cvids2[_vi3]);
+                if (_v && _v.name) _nameToId[_v.name] = _v.id;
+              } catch (eN) {}
+            }
+          }
+        } catch (eAll) {}
+
         var _vkeys = Object.keys(versions);
+        var _ledgerDirty = false;
         for (var _vi = 0; _vi < _vkeys.length; _vi++){
           var _vk = _vkeys[_vi];
           var _ve = versions[_vk];
@@ -4804,23 +4825,51 @@ figma.ui.onmessage = async function(msg) {
             currentTokensHashes[_vk] = _ve.tokensHash || '';
             continue;
           }
+          var _names = _ve.boundNames || {};
           var _missing = [];
+          var _healedBound = [];
+          var _healedNames = {};
+          var _entryHealed = false;
           for (var _bi = 0; _bi < _bound.length; _bi++){
-            if (!_idSet[_bound[_bi]]) _missing.push(_bound[_bi]);
+            var _bid = _bound[_bi];
+            if (_idSet[_bid]) {
+              _healedBound.push(_bid);
+              if (_names[_bid]) _healedNames[_bid] = _names[_bid];
+              continue;
+            }
+            /* Stale ID — try to recover by name. */
+            var _stName = _names[_bid] || '';
+            var _newId  = _stName ? _nameToId[_stName] : null;
+            if (_newId) {
+              /* Same name still exists → swap to new ID, ledger is now
+                 valid again. No pill, no rebuild needed. */
+              _healedBound.push(_newId);
+              _healedNames[_newId] = _stName;
+              _entryHealed = true;
+              try { log('Ledger auto-heal: ' + _vk + ' "' + _stName + '" ' + _bid + ' → ' + _newId); } catch (e) {}
+            } else {
+              /* Name not found in any collection → genuinely missing. */
+              _missing.push(_bid);
+            }
+          }
+          if (_entryHealed) {
+            _ve.boundIds   = _healedBound;
+            _ve.boundNames = _healedNames;
+            /* Recompute tokensHash so the ledger stays internally
+               consistent and the UI's "tokens changed since last
+               build" delta line stops blinking. */
+            try {
+              var _sorted = _healedBound.slice().sort();
+              _ve.tokensHash = dtfHash32(_sorted.join('|'));
+            } catch (eH) {}
+            _ledgerDirty = true;
           }
           if (_missing.length === 0) {
             /* All vars Button is bound to still exist → no change. */
             currentTokensHashes[_vk] = _ve.tokensHash || '';
           } else {
-            /* Some IDs gone → real rebind needed. Sentinel includes
-               the missing list so the hash genuinely differs. */
+            /* Some IDs gone AND no name match → real rebind needed. */
             currentTokensHashes[_vk] = dtfHash32('missing:' + _missing.sort().join('|'));
-            /* V3 \u2014 resolve missing IDs back to the names recorded
-               at build time so the Builder pill can show readable
-               token paths (e.g. "surface/component/bg") instead of
-               opaque IDs. Falls back to '(unknown)' for legacy
-               ledger entries that predate boundNames{}. */
-            var _names = _ve.boundNames || {};
             var _missList = [];
             for (var _mi = 0; _mi < _missing.length; _mi++){
               var _mid = _missing[_mi];
@@ -4828,6 +4877,12 @@ figma.ui.onmessage = async function(msg) {
             }
             currentTokensMissing[_vk] = _missList;
           }
+        }
+        if (_ledgerDirty) {
+          try {
+            figma.root.setPluginData('dtf-component-versions', JSON.stringify(versions));
+            log('Ledger persisted after auto-heal pass');
+          } catch (ePers) {}
         }
       } catch (e) {}
 
