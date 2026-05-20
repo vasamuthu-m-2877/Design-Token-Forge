@@ -355,7 +355,12 @@ async function syncAll(data) {
 
   if (data.renames) {
     var renameCount = applyRenamesToIdMap(data.renames, idMap);
-    stats.renamed = renameCount;
+    /* applyRenamesToIdMap only transforms idMap KEYS — it does NOT
+       rename any actual Figma variable. The visual rename happens in
+       Pass 0 below. Keeping this as stats.renamed would double-count
+       (or worse — show a non-zero count when Pass0 silently failed).
+       Track it separately for debugging. */
+    stats.idMapRenamed = renameCount;
     log('idMap renames applied: ' + renameCount + ' keys transformed');
   }
 
@@ -383,6 +388,8 @@ async function syncAll(data) {
      This guarantees renames happen regardless of idMap/varMap state. */
   if (data.renames && Object.keys(data.renames).length > 0) {
     var directRenames = 0;
+    var attemptedRenames = 0;
+    var renameFailures = [];   /* {old, new, reason} */
     var allDTFCols = await findDTFCollections();
     for (var dri = 0; dri < allDTFCols.length; dri++) {
       var drCol = allDTFCols[dri];
@@ -392,6 +399,8 @@ async function syncAll(data) {
         if (!drVar) continue;
         var newName = data.renames[drVar.name];
         if (newName) {
+          attemptedRenames++;
+          var oldName = drVar.name;
           /* Check if another variable already has the target name */
           for (var drdi = 0; drdi < drVarIds.length; drdi++) {
             if (drdi === drvi) continue;
@@ -401,7 +410,7 @@ async function syncAll(data) {
               try { drDup.remove(); } catch (dre) { log('Pass0 remove failed: ' + dre.message); }
             }
           }
-          log('Pass0 RENAME: ' + drVar.name + ' → ' + newName + ' (id=' + drVar.id + ')');
+          log('Pass0 RENAME: ' + oldName + ' → ' + newName + ' (id=' + drVar.id + ')');
           try {
             drVar.name = newName;
             if (drVar.name === newName) {
@@ -409,17 +418,30 @@ async function syncAll(data) {
               /* Update idMap to reflect new name */
               idMap[drCol.name + '::' + newName] = drVar.id;
             } else {
-              log('Pass0 WARN: rename assignment did not stick for ' + newName + ' (got ' + drVar.name + ')');
+              var stuckReason = 'name property did not update (got "' + drVar.name + '" instead of "' + newName + '")';
+              log('Pass0 WARN: ' + stuckReason);
+              renameFailures.push({ old: oldName, new: newName, reason: stuckReason });
             }
           } catch (drErr) {
-            log('Pass0 ERROR renaming ' + drVar.name + ': ' + drErr.message);
-            stats.errors.push('Pass0 rename ' + drVar.name + ': ' + drErr.message);
+            log('Pass0 ERROR renaming ' + oldName + ': ' + drErr.message);
+            renameFailures.push({ old: oldName, new: newName, reason: drErr.message });
+            stats.errors.push('Pass0 rename ' + oldName + ' → ' + newName + ': ' + drErr.message);
           }
         }
       }
     }
-    log('Pass0 direct renames completed: ' + directRenames);
-    stats.renamed += directRenames;
+    log('Pass0 direct renames: ' + directRenames + ' applied / ' + attemptedRenames + ' attempted');
+    stats.renamed = directRenames;
+    stats.renameAttempted = attemptedRenames;
+    stats.renameFailures = renameFailures;
+
+    /* Loud surfacing: if we attempted renames but NONE stuck, the user
+       was seeing "Renamed" badges forever with no Figma effect. Push
+       a synthetic error so the UI's error summary fires. */
+    if (attemptedRenames > 0 && directRenames === 0) {
+      stats.errors.push('Rename failed: ' + attemptedRenames + ' variable(s) matched the rename map but none could be renamed. First: ' +
+        (renameFailures[0] ? (renameFailures[0].old + ' → ' + renameFailures[0].new + ' (' + renameFailures[0].reason + ')') : '(no detail)'));
+    }
 
     /* Rebuild existing lookup since names changed */
     if (directRenames > 0) {

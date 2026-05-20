@@ -3180,8 +3180,23 @@ window.onmessage = function(event){
     if (s.updated > 0)        text += s.updated + ' updated. ';
     if (s.created > 0)        text += s.created + ' created. ';
     text += s.variables + ' variables · ' + s.collections + ' collections' + (s.aliases > 0 ? ' · ' + s.aliases + ' aliases' : '') + '.';
-    setStatus(text, s.errors.length > 0 ? 'err' : 'ok');
-    setTimeout(function(){ setStatus('', ''); }, 6000);
+    /* Surface rename-attempt-but-no-effect as a loud, persistent error.
+       Previously stats.renamed was inflated by idMap bookkeeping and the
+       user saw "X renamed" in the toast while the actual Figma rename
+       silently failed (the "Renamed" badge kept coming back forever). */
+    if (s.renameAttempted && s.renameAttempted > 0 && (!s.renamed || s.renamed === 0)){
+      var detail = '';
+      if (s.renameFailures && s.renameFailures.length){
+        var f = s.renameFailures[0];
+        detail = ' First: ' + f.old + ' → ' + f.new + ' (' + f.reason + ')';
+      }
+      text = s.renameAttempted + ' rename(s) failed.' + detail + ' Open Plugins → Development → Open Console for full log.';
+      setStatus(text, 'err');
+      try { console.error('[DTF] Pass0 rename failures:', s.renameFailures); } catch(e){}
+    } else {
+      setStatus(text, s.errors.length > 0 ? 'err' : 'ok');
+    }
+    setTimeout(function(){ setStatus('', ''); }, 10000);
 
     hasExistingVars = true;
     lastSyncedVarCount = s.variables;
