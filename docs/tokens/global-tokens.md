@@ -84,21 +84,48 @@ Name → Value (px):
 
 Naming: `--spacing-{name}` (e.g., `--spacing-4: 4px;`, `--spacing-none: 0px;`)
 
-### Typography (19 tokens)
+### Typography (32 tokens)
 
-**Font family**: Configurable per product (default: system stack)
+Picked via the Tt tier of the editor (`demo/editor-v2/`) and persisted
+to each project's `config.json` under `typographyConfig`. See
+[typography.md](typography.md) for the full contract.
 
-**Font sizes** (13 steps):
+**Font families** (3 roles):
 ```
-10, 11, 12, 13, 14, 16, 18, 20, 24, 26, 28, 32, 40  (px)
+--font-family-headline   (h1–h3, titles)
+--font-family-body       (paragraphs, UI)
+--font-family-code       (<code>, <pre>, tabular numerics)
 ```
+Resolved from one of five presets (`neutral-system`,
+`modern-geometric`, `editorial-serif`, `friendly-humanist`,
+`code-first-mono`) or `"custom"` + designer-supplied family names.
+
+**Font sizes** (13 steps, density-scaled):
+```
+10, 11, 12, 13, 14, 16, 18, 20, 24, 26, 28, 32, 40  (base px)
+```
+Multiplied by ×0.92 (compact) / ×1.0 (base) / ×1.08 (comfortable).
 
 **Font weights** (5):
 ```
 regular→400, medium→500, semibold→600, bold→700, extrabold→900
 ```
 
-Naming: `--font-size-{value}`, `--font-weight-{name}`, `--font-family`
+**Line heights** (5):
+```
+tight 1.25, snug 1.375, normal 1.5, relaxed 1.625, loose 2.0
+```
+Only `normal` retunes with density (1.375 / 1.5 / 1.625). The others
+are explicit designer choices and stay fixed.
+
+**Letter spacings** (6, em → percent at the Figma boundary):
+```
+tighter -0.05em, tight -0.025em, normal 0em, wide 0.025em,
+wider 0.05em, widest 0.1em
+```
+
+Naming: `--font-family-{role}`, `--font-size-{value}`, `--font-weight-{name}`,
+`--line-height-{name}`, `--letter-spacing-{name}`.
 
 ---
 
@@ -239,7 +266,7 @@ Easing:   --easing-linear, --easing-in, --easing-out, --easing-in-out, --easing-
 |--------|----------|-------------|
 | Tokn T0 | Color primitives | 148 |
 | Tokn T0 | Spacing | 39 |
-| Tokn T0 | Typography | 19 |
+| Tokn T0 | Typography | 32 |
 | Tokn T1 | Semantic roles | 108 |
 | Tokn T2 | Surface contexts | 306 |
 | Tokn T3 | Component sizes | 93 |

@@ -197,6 +197,17 @@ end-user task, not the data shape.
 - Designer-facing copy: say **"feel"** for preset (e.g. "Pick a starting
   feel"), **"font"** for family, **"size"** for size — never "typeface",
   "weight number", or "tracking" in UI strings (those are jargon).
+- **Density** (Tt tier knob) uses three labels: `compact`, `base`,
+  `comfortable` — same vocabulary in `typographyConfig.density`, CSS
+  scaling tables, and the editor's segment control. UI strings:
+  "Tighter UI" (compact), "Default" (base), "Easier reading"
+  (comfortable). Never invent "cozy", "dense", "spacious".
+- **Install lanes** in the editor's Designer Install summary use
+  plain-English labels per `typoLaneFor()` output:
+  - `system` → "No setup needed"
+  - `google` → "Install the font in Figma"
+  - `custom` → "Bring your own font file"
+  Same triplet in the per-card parity badges and the install dialog.
 
 ## 9. Brand / version strings
 
