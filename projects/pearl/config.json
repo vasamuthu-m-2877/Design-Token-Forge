@@ -68,20 +68,20 @@
     "inverse": "greyscale"
   },
   "latestVersion": {
-    "version": "v0.0.35",
-    "name": "Restore of v0.0.12",
-    "description": "Restored from v0.0.12 — \"May18 18:20 - #A5FF99\"",
-    "savedAt": "2026-05-21T04:53:06.639Z",
+    "version": "v0.0.36",
+    "name": "May21 10:24",
+    "description": "",
+    "savedAt": "2026-05-21T04:54:17.300Z",
     "savedBy": "sridhar-ravi-2917"
   },
   "t1Picks": {
     "light": {
       "brand": {
         "fill": "600",
-        "content": "600",
+        "content": "750",
         "container": "50",
-        "borderStep": "450",
-        "separatorStep": "350",
+        "borderStep": "500",
+        "separatorStep": "400",
         "onComponent": "white",
         "onContainerStep": "600"
       },
