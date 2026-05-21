@@ -425,10 +425,10 @@
   "paletteAnchor": "exact",
   "schemaVersion": 2,
   "latestVersion": {
-    "version": "v1.0.4",
-    "name": "May19 11:20",
+    "version": "v1.0.5",
+    "name": "May21 10:46",
     "description": "",
-    "savedAt": "2026-05-19T05:50:38.361Z",
+    "savedAt": "2026-05-21T05:16:35.364Z",
     "savedBy": "sridhar-ravi-2917"
   },
   "t1Picks": {
@@ -493,7 +493,7 @@
         "fill": "500",
         "content": "200",
         "container": "black",
-        "borderStep": "750",
+        "borderStep": "400",
         "separatorStep": "300",
         "onComponent": "white",
         "onContainerStep": "200"
