@@ -553,6 +553,19 @@ body[data-pane-dragging="true"] .ev2-preview-frame{pointer-events:none}
 
 .ev2-list-body{flex:1;min-height:0;overflow-y:auto;padding:18px 24px 32px}
 
+/* Sibling sticky footer mount for the Tt tier (and any future tier
+   that wants a pinned action bar). Lives OUTSIDE .ev2-list-body so
+   it never overlays scrolling content — it's a flex sibling that
+   sits below the scroll area and consumes its own row of the rail. */
+.ev2-list-sticky{
+  flex-shrink:0;
+  background:var(--ev2-chrome-bg);
+  border-top:1px solid var(--ev2-chrome-outline);
+  box-shadow:0 -6px 12px -8px rgba(0,0,0,.08);
+  padding:10px 24px 14px;
+}
+.ev2-list-sticky[hidden]{display:none !important}
+
 .ev2-empty{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:60px 20px;text-align:center;
@@ -2746,15 +2759,11 @@ body.ev2-modal-open{overflow:hidden}
    structure of T0/T1 cards — section heads + per-section
    controls — using its own scoped classes so it can coexist
    with palette/role widgets without selector collisions. */
-/* Panel layout for the Tt tier rail. min-height:100% lets the
-   `margin-top:auto` on the sticky footer push it to the bottom of
-   the list-body when content is short. padding-block-end gives
-   the last scrolling section (density) enough clearance to scroll
-   fully ABOVE the pinned sticky — without this, the Aa cards at
-   the bottom of the density section sit BEHIND the sticky bar
-   because position:sticky;bottom:0 pins at scrollport-bottom and
-   nothing reserves space for it. */
-.ev2-typo-panel{display:flex;flex-direction:column;gap:14px;min-height:100%;box-sizing:border-box;padding-block-end:80px}
+/* Panel layout for the Tt tier rail. Plain flex column — the
+   install/CTA footer is rendered as a sibling of .ev2-list-body
+   (see .ev2-list-sticky), so no scroll-clearance trickery is
+   needed here. */
+.ev2-typo-panel{display:flex;flex-direction:column;gap:14px}
 .ev2-typo-section{display:flex;flex-direction:column;gap:6px}
 .ev2-typo-section-head{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--demo-fg-strong,#111);margin:0;padding-bottom:4px;border-bottom:1px solid var(--ev2-chrome-outline,#e5e5e5)}
 .ev2-typo-help{font-size:11px;line-height:1.4;color:var(--demo-fg-subtle,#555);margin:0 0 2px}
@@ -2947,22 +2956,11 @@ body.ev2-modal-open{overflow:hidden}
    summary never scrolls out of sight, but stays out of the
    way (single line). Click → opens the install dialog
    (markup in index.html). */
-/* Sticky designer-install footer.
-   Pins to the bottom of the .ev2-list-body scroll container.
-   For that to work when content is short:
-     - .ev2-typo-panel has min-height:100% so it FILLS list-body
-       (without this the panel collapses to content height and the
-       sticky sits at content-bottom, well above viewport-bottom).
-     - margin-top:auto pushes this last flex child to the panel
-       bottom — the actual "pin to bottom when no scroll" mechanism.
-     - position:sticky;bottom:0 then takes over once content
-       overflows: when the user scrolls past the natural position,
-       the element pins to the scroll-port bottom.
-   Negative horizontal margins (-24px each side) cancel the
-   list-body's 24px gutter so the sticky bar spans edge-to-edge;
-   negative bottom margin (-32px) eats list-body's padding-bottom
-   so the bar sits flush against the bottom of the rail. */
-.ev2-typo-install-sticky{position:sticky;bottom:0;margin:14px -24px -32px;margin-top:auto;padding:10px 24px 14px;background:var(--ev2-chrome-bg);border-top:1px solid var(--ev2-chrome-outline);box-shadow:0 -6px 12px -8px rgba(0,0,0,.08);z-index:2}
+/* Designer-install footer content. Rendered into #ttStickyMount
+   (a sibling of .ev2-list-body) — see .ev2-list-sticky for the
+   chrome (background, border, shadow). This rule only styles the
+   inner button so older padding/border code does not double up. */
+.ev2-typo-install-sticky{display:block}
 .ev2-typo-install-stickybtn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:1px solid var(--ev2-chrome-outline);border-radius:8px;background:var(--ev2-chrome-surface-2,var(--ev2-chrome-bg));font:inherit;font-size:12px;color:var(--ev2-chrome-ct-strong);cursor:pointer;text-align:left;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:background 120ms,border-color 120ms,box-shadow 120ms,transform 120ms}
 .ev2-typo-install-stickybtn:hover{border-color:var(--brand-content-default,#3D5EFC);box-shadow:0 2px 6px rgba(61,94,252,.18)}
 .ev2-typo-install-stickybtn:active{transform:translateY(1px);box-shadow:0 1px 2px rgba(0,0,0,.06)}

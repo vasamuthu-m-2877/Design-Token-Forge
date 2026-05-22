@@ -329,6 +329,19 @@
     font-size: var(--dtf-fs-12); color: var(--dtf-fg-subtle);
     line-height: 1.5; max-width: 280px;
   }
+  .hero-meta {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--dtf-border);
+    font-size: var(--dtf-fs-11); color: var(--dtf-fg-faint);
+    line-height: 1.5;
+  }
+  .hero-meta code {
+    font-family: var(--dtf-font-mono);
+    font-size: 10.5px;
+    padding: 1px 5px; border-radius: 3px;
+    background: var(--dtf-surface-alt); color: var(--dtf-fg-subtle);
+  }
+  .hero-meta-dim { opacity: 0.7; }
   .hero-actions {
     margin-top: 12px;
     display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;
@@ -1049,6 +1062,9 @@
     <div class="row"><span>Figma vars:</span><strong id="dbgVars">—</strong></div>
     <div class="row"><span>Collections:</span><strong id="dbgCols">—</strong></div>
     <div class="row"><span>Hash:</span><strong id="dbgHash">—</strong></div>
+    <div class="row"><span>Version:</span><strong id="dbgVersion">—</strong></div>
+    <div class="row"><span>Deployed:</span><strong id="dbgDeployed">—</strong></div>
+    <div class="row"><span>Last updated:</span><strong id="dbgLastUpdated">—</strong></div>
     <div class="row"><span>Server:</span><strong id="dbgServer">—</strong></div>
     <div class="copy-row"><button class="copy-btn" id="dbgCopyBtn" type="button">Copy for support</button></div>
   </div>
@@ -1274,6 +1290,9 @@ var changelogList  = null;
 var dbgVars = document.getElementById('dbgVars');
 var dbgCols = document.getElementById('dbgCols');
 var dbgHash = document.getElementById('dbgHash');
+var dbgVersion = document.getElementById('dbgVersion');
+var dbgDeployed = document.getElementById('dbgDeployed');
+var dbgLastUpdated = document.getElementById('dbgLastUpdated');
 var dbgServer = document.getElementById('dbgServer');
 
 var tabSync      = document.getElementById('tabSync');
@@ -1406,11 +1425,84 @@ var openGroups = new Set();      /* expanded group keys */
 /* Build stamp — bump on every UI-affecting change so you can confirm
    the Figma plugin sandbox isn't serving a cached old copy. Shown in
    the empty-state footer + logged once to the plugin console. */
-var BUILD_VERSION = '2026-05-17-p13';
+var BUILD_VERSION = '2026-05-22-p14';
 function log(msg){ console.log('[DTF] ' + msg); }
 log('plugin UI build ' + BUILD_VERSION);
 
 function isStaticHost(){ return SERVER.indexOf('github.io') !== -1 || SERVER.indexOf('.pages.dev') !== -1; }
+
+/* Mirror the live deploy metadata from serverStatus into the debug
+   panel. Called from render() so the rows stay in sync with every poll. */
+function updateDebugDeployRows(){
+  if (!dbgDeployed || !dbgLastUpdated) return;
+  if (!serverStatus){
+    if (dbgVersion)  dbgVersion.textContent  = '—';
+    dbgDeployed.textContent = '—';
+    dbgLastUpdated.textContent = '—';
+    return;
+  }
+  if (dbgVersion){
+    var v = serverStatus.buildVersion ? String(serverStatus.buildVersion) : '';
+    if (v && v[0] !== 'v' && v[0] !== 'V') v = 'v' + v;
+    dbgVersion.textContent = v || '—';
+  }
+  dbgDeployed.textContent = serverStatus.buildCommit || '—';
+  if (serverStatus.lastChanged){
+    var rel = fmtRelTime(serverStatus.lastChanged);
+    var abs = '';
+    try { abs = new Date(serverStatus.lastChanged).toLocaleString(); } catch(_e){}
+    dbgLastUpdated.textContent = rel + (abs ? ' (' + abs + ')' : '');
+    dbgLastUpdated.title = abs;
+  } else {
+    dbgLastUpdated.textContent = '—';
+    dbgLastUpdated.title = '';
+  }
+}
+
+/* Human-readable "last updated" line for the up-to-date hero. Combines
+   relative time (lastChanged) with the short build commit (buildCommit)
+   so users can confirm the deploy they're seeing. Both are emitted by
+   build-static.js into status.json. */
+function fmtRelTime(iso){
+  if (!iso) return '';
+  var t = Date.parse(iso);
+  if (!t || isNaN(t)) return '';
+  var diff = Math.max(0, Date.now() - t);
+  var s = Math.round(diff / 1000);
+  if (s < 60)   return s + 's ago';
+  var m = Math.round(s / 60);
+  if (m < 60)   return m + 'm ago';
+  var h = Math.round(m / 60);
+  if (h < 24)   return h + 'h ago';
+  var d = Math.round(h / 24);
+  if (d < 30)   return d + 'd ago';
+  try { return new Date(t).toLocaleDateString(); } catch(_e) { return ''; }
+}
+function formatLastUpdated(status){
+  if (!status) return '';
+  var bits = [];
+  if (status.buildVersion){
+    /* buildVersion is already prefixed with 'v' (e.g. 'v1.0.10') —
+       don't double-prefix. */
+    var ver = String(status.buildVersion);
+    if (ver[0] !== 'v' && ver[0] !== 'V') ver = 'v' + ver;
+    bits.push('Version <strong>' + esc(ver) + '</strong>');
+  }
+  /* Prefer the editor's publish timestamp over the build timestamp —
+     designers care about "when was this version published", not "when
+     was the static site rebuilt". */
+  var ts = status.versionSavedAt || status.lastChanged;
+  if (ts){
+    var rel = fmtRelTime(ts);
+    if (rel){
+      var abs = '';
+      try { abs = new Date(ts).toLocaleString(); } catch(_e){}
+      bits.push('published <strong>' + esc(rel) + '</strong>'
+              + (abs ? ' <span class="hero-meta-dim" title="' + esc(abs) + '">(' + esc(abs) + ')</span>' : ''));
+    }
+  }
+  return bits.join(' · ');
+}
 function apiUrl(endpoint){
   if (isStaticHost()){
     var cb = '_cb=' + Date.now();
@@ -1431,6 +1523,7 @@ function render(){
      forced fallback to Sync pane) on every render — sign-in,
      sign-out and creds-restored all flow through here. */
   applyAuthGate();
+  updateDebugDeployRows();
   /* While we’re still waiting for code.js to hand us persisted creds,
      hold the UI on a neutral splash so a saved user doesn’t see the
      “Connect your GitHub” form flash for ~100ms on every plugin open. */
@@ -1695,10 +1788,16 @@ function render(){
   }
 
   /* Up to date */
+  var upToDateSub = 'Figma matches the source of truth.';
+  if (serverStatus){
+    upToDateSub = '<strong>' + serverStatus.totalVariables + '</strong> variables in <strong>' + serverStatus.totalCollections + '</strong> collections.';
+    var meta = formatLastUpdated(serverStatus);
+    if (meta) upToDateSub += '<div class="hero-meta">' + meta + '</div>';
+  }
   setHero({
     glyph:'✓', glyphClass:'ok',
     title:'You\'re up to date',
-    sub: serverStatus ? '<strong>' + serverStatus.totalVariables + '</strong> variables in <strong>' + serverStatus.totalCollections + '</strong> collections.' : 'Figma matches the source of truth.'
+    sub: upToDateSub
   });
   changesPanel.hidden = true;
   footerSync.hidden = true;
@@ -2400,6 +2499,9 @@ if (dbgCopyBtn) dbgCopyBtn.addEventListener('click', function(){
     'Figma vars: '  + (dbgVars.textContent || '\u2014'),
     'Collections: ' + (dbgCols.textContent || '\u2014'),
     'Hash: '        + (dbgHash.textContent || '\u2014'),
+    'Version: '     + (dbgVersion && dbgVersion.textContent || '\u2014'),
+    'Deployed: '    + (dbgDeployed && dbgDeployed.textContent || '\u2014'),
+    'Last updated: '+ (dbgLastUpdated && dbgLastUpdated.textContent || '\u2014'),
     'Server: '      + SERVER
   ].join('\n');
   try {
@@ -3422,7 +3524,14 @@ if (tbRefresh) tbRefresh.addEventListener('click', function(){
          still wants a fresh diff). */
       if (!isStaticHost()) fetchChangelog();
       else requestStaticDiff();
-      setStatus('', '');
+      /* Also peek at the upstream repo's latest commit touching this
+         project. If it's newer than what Pages is serving, surface the
+         deploy lag explicitly so users stop wondering why "Check for
+         updates" reports up-to-date right after a push. */
+      checkUpstreamCommit().then(function(msg){
+        if (msg) setStatus(msg, 'work');
+        else setStatus('', '');
+      }).catch(function(){ setStatus('', ''); });
     }).catch(function(){
       setStatus('Couldn’t reach server — check connection', 'err');
     });
@@ -3434,6 +3543,42 @@ if (tbRefresh) tbRefresh.addEventListener('click', function(){
   }
   setTimeout(function(){ tbRefresh.classList.remove('spinning'); }, 600);
 });
+
+/* Compare upstream main-branch HEAD (for the active project's folder)
+   against the buildCommit recorded in status.json. If GitHub has newer
+   commits than what Pages is currently serving, return a banner string
+   so the user knows the refresh hit a deploy-in-flight — NOT a real
+   "nothing changed" answer. Resolves to '' when in sync or when the
+   check can't run (no PAT, no project, non-static host). */
+function checkUpstreamCommit(){
+  return new Promise(function(resolve){
+    if (!isStaticHost() || !GH_PAT || !GH_USERNAME || !CURRENT_PROJECT){ resolve(''); return; }
+    if (!serverStatus || !serverStatus.buildCommit){ resolve(''); return; }
+    var owner = '';
+    for (var i = 0; i < projectList.length; i++){
+      if (projectList[i].id === CURRENT_PROJECT){ owner = projectList[i].owner || ''; break; }
+    }
+    if (!owner) owner = GH_USERNAME;
+    var url = 'https://api.github.com/repos/' + owner + '/Design-Token-Forge/commits'
+            + '?path=projects/' + encodeURIComponent(CURRENT_PROJECT)
+            + '&sha=main&per_page=1&_cb=' + Date.now();
+    var hdrs = { 'Authorization':'Bearer ' + GH_PAT, 'Accept':'application/vnd.github+json' };
+    fetch(url, { headers:hdrs, cache:'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(list){
+        if (!Array.isArray(list) || !list.length){ resolve(''); return; }
+        var headSha = (list[0].sha || '').slice(0, 7);
+        var liveSha = String(serverStatus.buildCommit || '').slice(0, 7);
+        if (headSha && liveSha && headSha !== liveSha){
+          log('Upstream HEAD ' + headSha + ' ≠ live ' + liveSha + ' — Pages deploying');
+          resolve('A new version is on the way — finishing up. Try again in ~1 min.');
+          return;
+        }
+        resolve('');
+      })
+      .catch(function(){ resolve(''); });
+  });
+}
 
 function projectDisplayName(id){
   for (var i=0; i<projectList.length; i++) if (projectList[i].id === id) return projectList[i].name;

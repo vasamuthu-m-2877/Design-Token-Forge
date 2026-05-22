@@ -276,11 +276,24 @@ async function main() {
   let buildCommit = '';
   try { buildCommit = execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim(); } catch(e) {}
 
+  // Per-project published version — written by the editor's Publish
+  // flow into projects/<id>/config.json.latestVersion. This is what
+  // designers see in the editor's Version history dialog and is the
+  // only version surface we expose in the plugin hero. Already starts
+  // with 'v' (e.g. 'v1.0.10').
+  const latestVersion = projectConfig && projectConfig.latestVersion ? projectConfig.latestVersion : null;
+  const buildVersion  = latestVersion && latestVersion.version ? latestVersion.version : '';
+  const versionLabel  = latestVersion && latestVersion.name    ? latestVersion.name    : '';
+  const versionSavedAt = latestVersion && latestVersion.savedAt ? latestVersion.savedAt : '';
+
   // Write status.json — lightweight polling endpoint
   const status = {
     connected: true,
     hash: data.contentHash,
     lastChanged: data.exported,
+    buildVersion: buildVersion,
+    versionLabel: versionLabel,
+    versionSavedAt: versionSavedAt,
     buildCommit: buildCommit,
     pendingChanges: 0,
     totalVariables: data.stats.totalVariables,
@@ -290,7 +303,7 @@ async function main() {
   };
   const statusPath = path.join(OUT_DIR, 'status.json');
   fs.writeFileSync(statusPath, JSON.stringify(status, null, 2));
-  console.log(`  ✓ status.json  → hash ${data.contentHash}`);
+  console.log(`  ✓ status.json  → hash ${data.contentHash}${buildVersion ? ' (' + buildVersion + ')' : ''}`);
 
   // Root index.html — Launchpad (PAT-gated entry that routes to user's project or onboard)
   const indexHtml = `<!DOCTYPE html>
