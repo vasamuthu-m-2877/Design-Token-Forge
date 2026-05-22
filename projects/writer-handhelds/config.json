@@ -416,19 +416,19 @@
     "dim": "neutral",
     "deep": "neutral",
     "accent": "brand",
-    "float": "neutral",
-    "inverse": "neutral",
     "card": "neutral",
-    "modal": "neutral"
+    "modal": "neutral",
+    "float": "neutral",
+    "inverse": "neutral"
   },
   "owner": "sridhar-ravi-2917",
   "paletteAnchor": "exact",
   "schemaVersion": 2,
   "latestVersion": {
-    "version": "v1.0.9",
-    "name": "May21 13:55",
-    "description": "(Dark mode mapping fix)",
-    "savedAt": "2026-05-21T08:26:02.190Z",
+    "version": "v1.0.10",
+    "name": "May22 10:40",
+    "description": "",
+    "savedAt": "2026-05-22T05:10:50.989Z",
     "savedBy": "sridhar-ravi-2917"
   },
   "t1Picks": {
@@ -544,5 +544,8 @@
         "onContainerStep": "350"
       }
     }
+  },
+  "typographyConfig": {
+    "preset": "neutral-system"
   }
 }
