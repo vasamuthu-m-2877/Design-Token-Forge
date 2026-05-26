@@ -82,6 +82,8 @@ try {
   /* ── Build DOM — pill chip (mock Option C) ── */
   var wrap = document.createElement('div');
   wrap.className = 'nav-project';
+  var host = document.createElement('div');
+  host.className = 'nav-project-host';
   var label = document.createElement('span');
   label.className = 'nav-project-label';
   label.textContent = 'Project';
@@ -97,7 +99,6 @@ try {
   var ddPanel = document.createElement('div');
   ddPanel.className = 'nav-proj-panel';
   ddWrap.appendChild(ddBtn);
-  ddWrap.appendChild(ddPanel);
 
   wrap.appendChild(label);
   wrap.appendChild(ddWrap);
@@ -130,14 +131,19 @@ try {
   wrap.appendChild(renActBtn);
   wrap.appendChild(delActBtn);
 
+    /* The panel must live OUTSIDE .nav-project because that pill clips
+      overflow to preserve rounded corners for inner zones. */
+    host.appendChild(wrap);
+    host.appendChild(ddPanel);
+
   /* If we're mounting into the legacy right-side .nav-actions, keep the
      old before-theme-toggle insertion. In the project slot we just append. */
   if (nav.classList.contains('nav-actions')) {
     var toggle = document.getElementById('themeToggle');
-    if (toggle) nav.insertBefore(wrap, toggle);
-    else nav.appendChild(wrap);
+    if (toggle) nav.insertBefore(host, toggle);
+    else nav.appendChild(host);
   } else {
-    nav.appendChild(wrap);
+    nav.appendChild(host);
   }
 
   /* ── State ── */
@@ -395,7 +401,7 @@ try {
 
   /* Close on outside click */
   document.addEventListener('click', function(e) {
-    if (panelOpen && !ddWrap.contains(e.target)) closePanel();
+    if (panelOpen && !host.contains(e.target)) closePanel();
   });
 
   /* Close on Escape */
