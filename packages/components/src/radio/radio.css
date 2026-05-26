@@ -94,16 +94,16 @@
    ════════════════════════════════════════════════════════════════ */
 
 .radio:not([data-size]),
-.radio[data-size="base"]   { --_rd-circle-size: var(--radio-circle-size-base);   --_rd-dot-size: var(--radio-dot-size-base);   --radio-label-font-size: var(--radio-label-font-size-base); }
-.radio[data-size="micro"]  { --_rd-circle-size: var(--radio-circle-size-micro);  --_rd-dot-size: var(--radio-dot-size-micro);  --radio-label-font-size: var(--radio-label-font-size-micro); }
-.radio[data-size="tiny"]   { --_rd-circle-size: var(--radio-circle-size-tiny);   --_rd-dot-size: var(--radio-dot-size-tiny);   --radio-label-font-size: var(--radio-label-font-size-tiny); }
-.radio[data-size="small"]  { --_rd-circle-size: var(--radio-circle-size-small);  --_rd-dot-size: var(--radio-dot-size-small);  --radio-label-font-size: var(--radio-label-font-size-small); }
-.radio[data-size="medium"] { --_rd-circle-size: var(--radio-circle-size-medium); --_rd-dot-size: var(--radio-dot-size-medium); --radio-label-font-size: var(--radio-label-font-size-medium); }
-.radio[data-size="large"]  { --_rd-circle-size: var(--radio-circle-size-large);  --_rd-dot-size: var(--radio-dot-size-large);  --radio-label-font-size: var(--radio-label-font-size-large); }
-.radio[data-size="big"]    { --_rd-circle-size: var(--radio-circle-size-big);    --_rd-dot-size: var(--radio-dot-size-big);    --radio-label-font-size: var(--radio-label-font-size-big); }
-.radio[data-size="huge"]   { --_rd-circle-size: var(--radio-circle-size-huge);   --_rd-dot-size: var(--radio-dot-size-huge);   --radio-label-font-size: var(--radio-label-font-size-huge); }
-.radio[data-size="mega"]   { --_rd-circle-size: var(--radio-circle-size-mega);   --_rd-dot-size: var(--radio-dot-size-mega);   --radio-label-font-size: var(--radio-label-font-size-mega); }
-.radio[data-size="ultra"]  { --_rd-circle-size: var(--radio-circle-size-ultra);  --_rd-dot-size: var(--radio-dot-size-ultra);  --radio-label-font-size: var(--radio-label-font-size-ultra); }
+.radio[data-size="base"]   { --_rd-circle-size: var(--radio-circle-size-base);   --_rd-dot-size: var(--radio-dot-size-base);   --radio-label-font-size: var(--radio-label-font-size-base);   --radio-gap: var(--radio-gap-base); }
+.radio[data-size="micro"]  { --_rd-circle-size: var(--radio-circle-size-micro);  --_rd-dot-size: var(--radio-dot-size-micro);  --radio-label-font-size: var(--radio-label-font-size-micro);  --radio-gap: var(--radio-gap-micro); }
+.radio[data-size="tiny"]   { --_rd-circle-size: var(--radio-circle-size-tiny);   --_rd-dot-size: var(--radio-dot-size-tiny);   --radio-label-font-size: var(--radio-label-font-size-tiny);   --radio-gap: var(--radio-gap-tiny); }
+.radio[data-size="small"]  { --_rd-circle-size: var(--radio-circle-size-small);  --_rd-dot-size: var(--radio-dot-size-small);  --radio-label-font-size: var(--radio-label-font-size-small);  --radio-gap: var(--radio-gap-small); }
+.radio[data-size="medium"] { --_rd-circle-size: var(--radio-circle-size-medium); --_rd-dot-size: var(--radio-dot-size-medium); --radio-label-font-size: var(--radio-label-font-size-medium); --radio-gap: var(--radio-gap-medium); }
+.radio[data-size="large"]  { --_rd-circle-size: var(--radio-circle-size-large);  --_rd-dot-size: var(--radio-dot-size-large);  --radio-label-font-size: var(--radio-label-font-size-large);  --radio-gap: var(--radio-gap-large); }
+.radio[data-size="big"]    { --_rd-circle-size: var(--radio-circle-size-big);    --_rd-dot-size: var(--radio-dot-size-big);    --radio-label-font-size: var(--radio-label-font-size-big);    --radio-gap: var(--radio-gap-big); }
+.radio[data-size="huge"]   { --_rd-circle-size: var(--radio-circle-size-huge);   --_rd-dot-size: var(--radio-dot-size-huge);   --radio-label-font-size: var(--radio-label-font-size-huge);   --radio-gap: var(--radio-gap-huge); }
+.radio[data-size="mega"]   { --_rd-circle-size: var(--radio-circle-size-mega);   --_rd-dot-size: var(--radio-dot-size-mega);   --radio-label-font-size: var(--radio-label-font-size-mega);   --radio-gap: var(--radio-gap-mega); }
+.radio[data-size="ultra"]  { --_rd-circle-size: var(--radio-circle-size-ultra);  --_rd-dot-size: var(--radio-dot-size-ultra);  --radio-label-font-size: var(--radio-label-font-size-ultra);  --radio-gap: var(--radio-gap-ultra); }
 
 /* ════════════════════════════════════════════════════════════════
    VARIANT SELECTORS — map tokens → internal vars
@@ -130,28 +130,72 @@
   --_rd-opacity-disabled: var(--radio-opacity-disabled);
 }
 
-/* ── OUTLINE ──────────────────────────────────────────────── */
-.radio[data-variant="outline"] {
-  --_rd-border-w: var(--radio-outline-circle-border-width);
+/* ── OUTLINED ─────────────────────────────────────────── */
+.radio[data-variant="outlined"] {
+  --_rd-border-w: var(--radio-outlined-circle-border-width);
 
-  --_rd-circle-bg-off: var(--radio-outline-circle-bg-off);
-  --_rd-circle-bg-off-hover: var(--radio-outline-circle-bg-off-hover);
-  --_rd-circle-bg-on: var(--radio-outline-circle-bg-on);
-  --_rd-circle-bg-on-hover: var(--radio-outline-circle-bg-on-hover);
-  --_rd-circle-border-off: var(--radio-outline-circle-border-color-off);
-  --_rd-circle-border-off-hover: var(--radio-outline-circle-border-color-off-hover);
-  --_rd-circle-border-on: var(--radio-outline-circle-border-color-on);
-  --_rd-circle-border-on-hover: var(--radio-outline-circle-border-color-on-hover);
+  --_rd-circle-bg-off: var(--radio-outlined-circle-bg-off);
+  --_rd-circle-bg-off-hover: var(--radio-outlined-circle-bg-off-hover);
+  --_rd-circle-bg-on: var(--radio-outlined-circle-bg-on);
+  --_rd-circle-bg-on-hover: var(--radio-outlined-circle-bg-on-hover);
+  --_rd-circle-border-off: var(--radio-outlined-circle-border-color-off);
+  --_rd-circle-border-off-hover: var(--radio-outlined-circle-border-color-off-hover);
+  --_rd-circle-border-on: var(--radio-outlined-circle-border-color-on);
+  --_rd-circle-border-on-hover: var(--radio-outlined-circle-border-color-on-hover);
 
-  --_rd-dot-color: var(--radio-outline-dot-color);
+  --_rd-dot-color: var(--radio-outlined-dot-color);
 
-  --_rd-circle-bg-on-disabled: var(--radio-outline-circle-bg-on-disabled);
-  --_rd-circle-border-disabled: var(--radio-outline-circle-border-color-disabled);
-  --_rd-opacity-disabled: var(--radio-outline-opacity-disabled);
+  --_rd-circle-bg-on-disabled: var(--radio-outlined-circle-bg-on-disabled);
+  --_rd-circle-border-disabled: var(--radio-outlined-circle-border-color-disabled);
+  --_rd-opacity-disabled: var(--radio-outlined-opacity-disabled);
 }
 
-/* ════════════════════════════════════════════════════════════════
-   CHECKED STATE
+/* ════════════════════════════════════════════════════════════════   ROLE SELECTORS — palette-level remapping
+   data-role="brand" is the default (no remap needed).
+   ═════════════════════════════════════════════════════════════════ */
+
+.radio[data-role="danger"] {
+  --brand-component-bg-default: var(--danger-component-bg-default);
+  --brand-component-bg-hover: var(--danger-component-bg-hover);
+  --brand-component-bg-pressed: var(--danger-component-bg-pressed);
+  --brand-on-component: var(--danger-on-component);
+  --brand-content-default: var(--danger-content-default);
+  --brand-component-outline-default: var(--danger-component-outline-default);
+}
+.radio[data-role="success"] {
+  --brand-component-bg-default: var(--success-component-bg-default);
+  --brand-component-bg-hover: var(--success-component-bg-hover);
+  --brand-component-bg-pressed: var(--success-component-bg-pressed);
+  --brand-on-component: var(--success-on-component);
+  --brand-content-default: var(--success-content-default);
+  --brand-component-outline-default: var(--success-component-outline-default);
+}
+.radio[data-role="warning"] {
+  --brand-component-bg-default: var(--warning-component-bg-default);
+  --brand-component-bg-hover: var(--warning-component-bg-hover);
+  --brand-component-bg-pressed: var(--warning-component-bg-pressed);
+  --brand-on-component: var(--warning-on-component);
+  --brand-content-default: var(--warning-content-default);
+  --brand-component-outline-default: var(--warning-component-outline-default);
+}
+.radio[data-role="info"] {
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-bg-hover: var(--info-component-bg-hover);
+  --brand-component-bg-pressed: var(--info-component-bg-pressed);
+  --brand-on-component: var(--info-on-component);
+  --brand-content-default: var(--info-content-default);
+  --brand-component-outline-default: var(--info-component-outline-default);
+}
+.radio[data-role="neutral"] {
+  --brand-component-bg-default: var(--surface-base-cm-bg);
+  --brand-component-bg-hover: var(--surface-base-cm-bg-hover);
+  --brand-component-bg-pressed: var(--surface-base-cm-bg-pressed);
+  --brand-on-component: var(--surface-base-ct-default);
+  --brand-content-default: var(--surface-base-ct-default);
+  --brand-component-outline-default: var(--surface-base-cm-outline);
+}
+
+/* ════════════════════════════════════════════════════════════════   CHECKED STATE
    ════════════════════════════════════════════════════════════════ */
 
 .radio__control:checked + .radio__circle {
@@ -184,7 +228,7 @@
    ════════════════════════════════════════════════════════════════ */
 
 .radio:active .radio__circle {
-  transform: scale(var(--radio-circle-scale-active));
+  transform: scale(var(--radio-circle-scale-pressed));
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -220,29 +264,26 @@
 }
 
 /* ════════════════════════════════════════════════════════════════
-   ERROR — [data-error] or [aria-invalid]
+   INVALID STATE — [aria-invalid="true"]
+   Always uses danger primitives (state, not role).
    ════════════════════════════════════════════════════════════════ */
 
-.radio[data-error] .radio__circle,
 .radio[aria-invalid="true"] .radio__circle {
-  border-color: var(--radio-circle-border-color-error);
+  border-color: var(--radio-circle-border-color-invalid);
 }
 
-.radio[data-error]:hover .radio__circle,
 .radio[aria-invalid="true"]:hover .radio__circle {
-  border-color: var(--radio-circle-border-color-error-hover);
+  border-color: var(--radio-circle-border-color-invalid-hover);
 }
 
-.radio[data-error] .radio__control:checked + .radio__circle,
 .radio[aria-invalid="true"] .radio__control:checked + .radio__circle {
-  background-color: var(--radio-circle-bg-on-error);
-  border-color: var(--radio-circle-bg-on-error);
+  background-color: var(--radio-circle-bg-on-invalid);
+  border-color: var(--radio-circle-bg-on-invalid);
 }
 
-.radio[data-error]:hover .radio__control:checked + .radio__circle,
 .radio[aria-invalid="true"]:hover .radio__control:checked + .radio__circle {
-  background-color: var(--radio-circle-bg-on-error-hover);
-  border-color: var(--radio-circle-bg-on-error-hover);
+  background-color: var(--radio-circle-bg-on-invalid-hover);
+  border-color: var(--radio-circle-bg-on-invalid-hover);
 }
 
 /* ════════════════════════════════════════════════════════════════

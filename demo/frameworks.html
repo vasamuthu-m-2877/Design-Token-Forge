@@ -228,7 +228,7 @@ pre.code-body .tag{color:var(--danger-content-default,#dc2626)}
         <tr>
           <td><code>error</code></td>
           <td><code>data-error</code></td>
-          <td><code>[data-error]</code></td>
+          <td><code>[aria-invalid="true"]</code></td>
           <td>Switches to error border + text colors</td>
         </tr>
         <tr>
@@ -648,14 +648,14 @@ customElements.<span class="fn">define</span>(<span class="str">'dtf-button'</sp
         <button class="btn" data-variant="outlined" data-size="base"><span class="btn__label">Outlined</span></button>
         <button class="btn" data-variant="ghost" data-size="base"><span class="btn__label">Ghost</span></button>
         <button class="btn" data-variant="filled" data-role="danger" data-size="base"><span class="btn__label">Danger</span></button>
-        <button class="btn" data-variant="outline" data-size="base"><span class="btn__label">Outline</span></button>
+        <button class="btn" data-variant="outlined" data-size="base"><span class="btn__label">Outline</span></button>
       </div>
     </div>
 
     <div class="live-preview">
       <span class="live-label">Inputs</span>
       <div class="live-row">
-        <div class="input-group" data-variant="outline" data-size="base" style="width:220px">
+        <div class="input-group" data-variant="outlined" data-size="base" style="width:220px">
           <label class="input__label">Outline</label>
           <div class="input-field"><input placeholder="Type here…"></div>
         </div>
@@ -669,7 +669,7 @@ customElements.<span class="fn">define</span>(<span class="str">'dtf-button'</sp
     <div class="live-preview">
       <span class="live-label">Selects</span>
       <div class="live-row">
-        <div class="select-group" data-variant="outline" data-size="base" style="width:220px">
+        <div class="select-group" data-variant="outlined" data-size="base" style="width:220px">
           <label class="select__label">Country</label>
           <div class="select-field">
             <select><option value="" disabled selected>Choose…</option><option>United States</option><option>Germany</option></select>

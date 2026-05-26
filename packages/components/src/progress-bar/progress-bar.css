@@ -48,7 +48,7 @@
   --_pg-label-w: var(--progress-label-width-base);
   --_pg-fs: var(--progress-font-size-base);
   --_pg-icon: var(--progress-icon-size-base);
-  --_pg-fill: var(--progress-primary-fill);
+  --_pg-fill: var(--progress-brand-fill);
   --_pg-track-bg: var(--progress-track-bg);
   --_pg-track-border-color: var(--progress-track-border-color);
   --_pg-track-border-width: var(--progress-border-width);
@@ -156,9 +156,9 @@
 
 .progress-bar:not([data-role]),
 .progress-bar[data-role="brand"] {
-  --_pg-fill: var(--progress-primary-fill);
-  --_pg-soft-track: var(--progress-primary-soft-track);
-  --_pg-role-label: var(--progress-primary-label);
+  --_pg-fill: var(--progress-brand-fill);
+  --_pg-soft-track: var(--progress-brand-soft-track);
+  --_pg-role-label: var(--progress-brand-label);
 }
 
 .progress-bar[data-role="success"] {
@@ -177,6 +177,12 @@
   --_pg-fill: var(--progress-danger-fill);
   --_pg-soft-track: var(--progress-danger-soft-track);
   --_pg-role-label: var(--progress-danger-label);
+}
+
+.progress-bar[data-role="info"] {
+  --_pg-fill: var(--progress-info-fill);
+  --_pg-soft-track: var(--progress-info-soft-track);
+  --_pg-role-label: var(--progress-info-label);
 }
 
 .progress-bar[data-role="neutral"] {
@@ -198,10 +204,10 @@
 }
 
 /* Outline — border on track, transparent background */
-.progress-bar[data-variant="outline"] {
-  --_pg-track-bg: var(--progress-outline-track-bg);
-  --_pg-track-border-color: var(--progress-outline-border-color);
-  --_pg-track-border-width: var(--progress-outline-border-width);
+.progress-bar[data-variant="outlined"] {
+  --_pg-track-bg: var(--progress-outlined-track-bg);
+  --_pg-track-border-color: var(--progress-outlined-border-color);
+  --_pg-track-border-width: var(--progress-outlined-border-width);
 }
 
 /* Soft — tinted track matching role color family */

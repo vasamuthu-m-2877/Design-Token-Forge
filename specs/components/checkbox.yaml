@@ -12,15 +12,15 @@ component:
     is visually hidden; a styled .checkbox__box renders the indicator with
     SVG check mark (checked) or dash (indeterminate). Supports optional
     label text adjacent to the box. Two structural variants: filled (white bg)
-    and outline (transparent bg). Error state for form validation.
+    and outlined (transparent bg). Error state for form validation.
   category: inputs
 
 sizes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
 
 variants:
-  semantic: [filled, outline]
+  semantic: [filled, outlined]
 
-states: [unchecked, checked, indeterminate, hover, active, focus-visible, disabled, error]
+states: [unchecked, checked, indeterminate, hover, pressed, focus-visible, disabled, invalid]
 
 markup: |
   <label class="checkbox" data-size="base">
@@ -111,16 +111,16 @@ variables:
       - { name: "--checkbox-box-border-color-off-hover", default: "var(--surface-base-cm-outline-hover)" }
 
     checked:
-      - { name: "--checkbox-box-bg-on",                 default: "var(--primary-component-bg-default)" }
-      - { name: "--checkbox-box-bg-on-hover",           default: "var(--primary-component-bg-hover)" }
-      - { name: "--checkbox-box-border-color-on",       default: "var(--primary-component-bg-default)" }
-      - { name: "--checkbox-box-border-color-on-hover",  default: "var(--primary-component-bg-hover)" }
+      - { name: "--checkbox-box-bg-on",                 default: "var(--brand-component-bg-default)" }
+      - { name: "--checkbox-box-bg-on-hover",           default: "var(--brand-component-bg-hover)" }
+      - { name: "--checkbox-box-border-color-on",       default: "var(--brand-component-bg-default)" }
+      - { name: "--checkbox-box-border-color-on-hover",  default: "var(--brand-component-bg-hover)" }
 
     check-mark:
       - { name: "--checkbox-check-color",               default: "var(--color-fixed-white)" }
 
     disabled:
-      - { name: "--checkbox-box-bg-on-disabled",        default: "var(--primary-component-bg-default)" }
+      - { name: "--checkbox-box-bg-on-disabled",        default: "var(--brand-component-bg-default)" }
       - { name: "--checkbox-box-border-color-disabled",  default: "var(--surface-base-cm-outline)" }
       - { name: "--checkbox-opacity-disabled",           default: "0.5" }
 
@@ -129,29 +129,29 @@ variables:
   # ────────────────────────────────────────────────────────────
   # 🎨 SURFACE — OUTLINE VARIANT  (13 variables)
   # ────────────────────────────────────────────────────────────
-  surface_outline:
+  surface_outlined:
     unchecked:
-      - { name: "--checkbox-outline-box-bg-off",                default: "transparent" }
-      - { name: "--checkbox-outline-box-bg-off-hover",          default: "var(--surface-base-cm-bg-hover)" }
-      - { name: "--checkbox-outline-box-border-color-off",      default: "var(--surface-base-cm-outline)" }
-      - { name: "--checkbox-outline-box-border-color-off-hover", default: "var(--surface-base-cm-outline-hover)" }
+      - { name: "--checkbox-outlined-box-bg-off",                default: "transparent" }
+      - { name: "--checkbox-outlined-box-bg-off-hover",          default: "var(--surface-base-cm-bg-hover)" }
+      - { name: "--checkbox-outlined-box-border-color-off",      default: "var(--surface-base-cm-outline)" }
+      - { name: "--checkbox-outlined-box-border-color-off-hover", default: "var(--surface-base-cm-outline-hover)" }
 
     checked:
-      - { name: "--checkbox-outline-box-bg-on",                 default: "var(--primary-component-bg-default)" }
-      - { name: "--checkbox-outline-box-bg-on-hover",           default: "var(--primary-component-bg-hover)" }
-      - { name: "--checkbox-outline-box-border-color-on",       default: "var(--primary-component-bg-default)" }
-      - { name: "--checkbox-outline-box-border-color-on-hover",  default: "var(--primary-component-bg-hover)" }
+      - { name: "--checkbox-outlined-box-bg-on",                 default: "var(--brand-component-bg-default)" }
+      - { name: "--checkbox-outlined-box-bg-on-hover",           default: "var(--brand-component-bg-hover)" }
+      - { name: "--checkbox-outlined-box-border-color-on",       default: "var(--brand-component-bg-default)" }
+      - { name: "--checkbox-outlined-box-border-color-on-hover",  default: "var(--brand-component-bg-hover)" }
 
     check-mark:
-      - { name: "--checkbox-outline-check-color",               default: "var(--color-fixed-white)" }
+      - { name: "--checkbox-outlined-check-color",               default: "var(--color-fixed-white)" }
 
     disabled:
-      - { name: "--checkbox-outline-box-bg-on-disabled",        default: "var(--primary-component-bg-default)" }
-      - { name: "--checkbox-outline-box-border-color-disabled",  default: "var(--surface-base-cm-outline)" }
-      - { name: "--checkbox-outline-opacity-disabled",           default: "0.5" }
+      - { name: "--checkbox-outlined-box-bg-on-disabled",        default: "var(--brand-component-bg-default)" }
+      - { name: "--checkbox-outlined-box-border-color-disabled",  default: "var(--surface-base-cm-outline)" }
+      - { name: "--checkbox-outlined-opacity-disabled",           default: "0.5" }
 
     border:
-      - { name: "--checkbox-outline-box-border-width",          default: "2px" }
+      - { name: "--checkbox-outlined-box-border-width",          default: "2px" }
 
     total: 13
 
@@ -159,10 +159,10 @@ variables:
   # 🎨 SURFACE — ERROR  (4 variables, shared across variants)
   # ────────────────────────────────────────────────────────────
   surface_error:
-    - { name: "--checkbox-box-border-color-error",       default: "var(--danger-component-outline-default)" }
-    - { name: "--checkbox-box-border-color-error-hover",  default: "var(--danger-component-outline-hover)" }
-    - { name: "--checkbox-box-bg-on-error",              default: "var(--danger-component-bg-default)" }
-    - { name: "--checkbox-box-bg-on-error-hover",        default: "var(--danger-component-bg-hover)" }
+    - { name: "--checkbox-box-border-color-invalid",       default: "var(--danger-component-outline-default)" }
+    - { name: "--checkbox-box-border-color-invalid-hover",  default: "var(--danger-component-outline-hover)" }
+    - { name: "--checkbox-box-bg-on-invalid",              default: "var(--danger-component-bg-default)" }
+    - { name: "--checkbox-box-bg-on-invalid-hover",        default: "var(--danger-component-bg-hover)" }
     total: 4
 
   # ────────────────────────────────────────────────────────────
@@ -181,7 +181,7 @@ variables:
   slots:
     - { name: "--checkbox-gap",                    default: "var(--spacing-8)",  description: "Gap between box and label text" }
     - { name: "--checkbox-check-size",             default: "0.65em",  description: "Check/dash icon size relative to box" }
-    - { name: "--checkbox-box-scale-active",       default: "0.92",  description: "Box scale on press for tactile feedback" }
+    - { name: "--checkbox-box-scale-pressed",       default: "0.92",  description: "Box scale on press for tactile feedback" }
     total: 3
 
   # ────────────────────────────────────────────────────────────
@@ -200,7 +200,7 @@ variables:
   # ────────────────────────────────────────────────────────────
   a11y:
     - { name: "--checkbox-focus-outline-width",    default: "2px" }
-    - { name: "--checkbox-focus-outline-color",    default: "var(--primary-component-outline-default)" }
+    - { name: "--checkbox-focus-outline-color",    default: "var(--brand-component-outline-default)" }
     - { name: "--checkbox-focus-outline-offset",   default: "2px" }
     - { name: "--checkbox-min-tap-target",         default: "44px" }
     - { name: "--checkbox-required-indicator",     default: "'*'" }

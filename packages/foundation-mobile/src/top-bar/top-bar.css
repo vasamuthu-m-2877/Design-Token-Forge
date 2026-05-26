@@ -1,0 +1,197 @@
+/* ════════════════════════════════════════════════════════════════
+   TopBar — Mobile Foundation L2 · Structural CSS
+   Composition of icon-button (L1) + text. Internal bridge vars
+   pattern follows L1 atom convention.
+   ════════════════════════════════════════════════════════════════ */
+
+.fm-top-bar {
+  /* Internal bridge vars — resolve density into single applied values */
+  --_fm-top-bar-height: var(--fm-top-bar-height-base);
+  --_fm-top-bar-padding-x: var(--fm-top-bar-padding-x-base);
+  --_fm-top-bar-padding-y: var(--fm-top-bar-padding-y-base);
+  --_fm-top-bar-gap: var(--fm-top-bar-gap-base);
+  --_fm-top-bar-title-font-size: var(--fm-top-bar-title-font-size-base);
+  --_fm-top-bar-bg: var(--fm-top-bar-bg);
+  --_fm-top-bar-backdrop: none;
+  --_fm-top-bar-shadow: var(--fm-top-bar-shadow);
+  --_fm-top-bar-border-b: var(--fm-top-bar-border-width-b) solid var(--fm-top-bar-border-color-b);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--_fm-top-bar-gap);
+
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--_fm-top-bar-height);
+  padding-block: var(--_fm-top-bar-padding-y);
+  padding-inline: var(--_fm-top-bar-padding-x);
+  padding-block-start: calc(var(--_fm-top-bar-padding-y) + var(--fm-top-bar-safe-area-top));
+
+  position: var(--fm-top-bar-position);
+  top: 0;
+  inset-inline: 0;
+  z-index: var(--fm-top-bar-z-index);
+
+  background: var(--_fm-top-bar-bg);
+  backdrop-filter: var(--_fm-top-bar-backdrop);
+  -webkit-backdrop-filter: var(--_fm-top-bar-backdrop);
+  color: var(--fm-top-bar-fg);
+  border-block-end: var(--_fm-top-bar-border-b);
+  box-shadow: var(--_fm-top-bar-shadow);
+  overflow: var(--fm-top-bar-overflow);
+
+  transition-property: var(--fm-top-bar-transition-property);
+  transition-duration: var(--fm-top-bar-transition-duration);
+  transition-timing-function: var(--fm-top-bar-transition-easing);
+
+  font-family: inherit;
+  margin: 0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   DENSITY MODES
+   ──────────────────────────────────────────────────────────── */
+
+.fm-top-bar[data-density="medium"] {
+  --_fm-top-bar-height: var(--fm-top-bar-height-medium);
+  --_fm-top-bar-padding-x: var(--fm-top-bar-padding-x-medium);
+  --_fm-top-bar-padding-y: var(--fm-top-bar-padding-y-medium);
+  --_fm-top-bar-gap: var(--fm-top-bar-gap-medium);
+  --_fm-top-bar-title-font-size: var(--fm-top-bar-title-font-size-medium);
+}
+
+.fm-top-bar[data-density="large"] {
+  --_fm-top-bar-height: var(--fm-top-bar-height-large);
+  --_fm-top-bar-padding-x: var(--fm-top-bar-padding-x-large);
+  --_fm-top-bar-padding-y: var(--fm-top-bar-padding-y-large);
+  --_fm-top-bar-gap: var(--fm-top-bar-gap-large);
+  --_fm-top-bar-title-font-size: var(--fm-top-bar-title-font-size-large);
+}
+
+/* ────────────────────────────────────────────────────────────
+   VARIANTS (surface treatment)
+   ──────────────────────────────────────────────────────────── */
+
+.fm-top-bar[data-variant="translucent"] {
+  --_fm-top-bar-bg: var(--fm-top-bar-bg-translucent);
+  --_fm-top-bar-backdrop: var(--fm-top-bar-backdrop-filter);
+  color: var(--fm-top-bar-fg-on-translucent);
+}
+
+.fm-top-bar[data-variant="transparent"] {
+  --_fm-top-bar-bg: transparent;
+  --_fm-top-bar-shadow: none;
+  --_fm-top-bar-border-b: 0 solid transparent;
+}
+
+/* ────────────────────────────────────────────────────────────
+   STATES
+   ──────────────────────────────────────────────────────────── */
+
+.fm-top-bar[data-state="scrolled"] {
+  --_fm-top-bar-shadow: var(--fm-top-bar-shadow-scrolled);
+  --_fm-top-bar-border-b: 1px solid var(--fm-top-bar-border-color-b);
+}
+
+.fm-top-bar[data-state="elevated"] {
+  --_fm-top-bar-shadow: var(--fm-top-bar-shadow-elevated);
+}
+
+/* ────────────────────────────────────────────────────────────
+   SLOTS
+   ──────────────────────────────────────────────────────────── */
+
+.fm-top-bar__leading {
+  grid-column: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: var(--fm-top-bar-leading-min-width);
+  min-height: var(--fm-top-bar-min-tap-target);
+}
+
+.fm-top-bar__title-wrap {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;             /* allow ellipsis */
+  justify-content: center;
+}
+
+.fm-top-bar__title {
+  margin: 0;
+  font-size: var(--_fm-top-bar-title-font-size);
+  font-weight: var(--fm-top-bar-title-font-weight);
+  line-height: var(--fm-top-bar-title-line-height);
+  letter-spacing: var(--fm-top-bar-title-letter-spacing);
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fm-top-bar__subtitle {
+  margin: 0;
+  font-size: var(--fm-top-bar-subtitle-font-size);
+  font-weight: var(--fm-top-bar-subtitle-font-weight);
+  line-height: var(--fm-top-bar-subtitle-line-height);
+  color: var(--fm-top-bar-fg-subtitle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fm-top-bar__trailing {
+  grid-column: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--_fm-top-bar-gap);
+  min-width: var(--fm-top-bar-trailing-min-width);
+  min-height: var(--fm-top-bar-min-tap-target);
+}
+
+/* ────────────────────────────────────────────────────────────
+   TITLE ALIGNMENT MODES
+   ──────────────────────────────────────────────────────────── */
+
+.fm-top-bar[data-title-align="centered"] .fm-top-bar__title-wrap {
+  align-items: var(--fm-top-bar-title-align-centered);
+  text-align: center;
+}
+
+.fm-top-bar[data-title-align="compact"] .fm-top-bar__title-wrap {
+  align-items: var(--fm-top-bar-title-align-compact);
+}
+
+.fm-top-bar[data-title-align="large"] .fm-top-bar__title-wrap {
+  align-items: var(--fm-top-bar-title-align-large);
+}
+
+/* Default: centered (iOS convention) */
+.fm-top-bar:not([data-title-align]) .fm-top-bar__title-wrap {
+  align-items: center;
+  text-align: center;
+}
+
+/* ────────────────────────────────────────────────────────────
+   A11Y — focus ring on interactive children
+   ──────────────────────────────────────────────────────────── */
+
+.fm-top-bar :focus-visible {
+  outline: var(--fm-top-bar-focus-ring-width) solid var(--fm-top-bar-focus-ring-color);
+  outline-offset: var(--fm-top-bar-focus-ring-offset);
+  border-radius: var(--radius-sm, 4px);
+}
+
+/* ────────────────────────────────────────────────────────────
+   RTL
+   ──────────────────────────────────────────────────────────── */
+
+[dir="rtl"] .fm-top-bar__leading {
+  justify-content: flex-end;
+}
+[dir="rtl"] .fm-top-bar__trailing {
+  justify-content: flex-start;
+}

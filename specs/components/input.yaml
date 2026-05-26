@@ -11,7 +11,7 @@ component:
 
 sizes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
 variants: [outline, filled, underline]
-states: [default, hover, focus, disabled, error, readonly]
+states: [default, hover, focus-visible, disabled, invalid, readonly]
 
 variables:
 
@@ -44,7 +44,7 @@ variables:
 
     ring:
       - { name: "--input-ring-width",  default: "2px",                                    description: "Focus ring width" }
-      - { name: "--input-ring-color",  default: "var(--primary-component-outline-default)", description: "Focus ring color" }
+      - { name: "--input-ring-color",  default: "var(--brand-component-outline-default)", description: "Focus ring color" }
       - { name: "--input-ring-offset", default: "2px",                                    description: "Focus ring offset" }
 
     outline:
@@ -128,35 +128,35 @@ variables:
   # ──────────────────────────────────────────
   surface:
     outline:
-      - { name: "--input-outline-bg",                    default: "transparent",                              description: "Outline bg" }
-      - { name: "--input-outline-bg-hover",              default: "transparent",                              description: "Outline bg on hover" }
-      - { name: "--input-outline-bg-focus",              default: "transparent",                              description: "Outline bg on focus" }
-      - { name: "--input-outline-bg-disabled",           default: "transparent",                              description: "Outline bg when disabled" }
-      - { name: "--input-outline-bg-error",              default: "transparent",                              description: "Outline bg in error" }
-      - { name: "--input-outline-fg",                    default: "var(--surface-base-ct-default)",           description: "Outline text color" }
-      - { name: "--input-outline-fg-disabled",           default: "var(--surface-base-ct-faint)",             description: "Outline text when disabled" }
-      - { name: "--input-outline-border-color",          default: "var(--surface-base-cm-outline)",           description: "Outline border" }
-      - { name: "--input-outline-border-color-hover",    default: "var(--surface-base-cm-outline-hover)",     description: "Outline border on hover" }
-      - { name: "--input-outline-border-color-focus",    default: "var(--primary-component-outline-default)", description: "Outline border on focus" }
-      - { name: "--input-outline-border-color-disabled", default: "var(--surface-base-cm-outline)",           description: "Outline border when disabled" }
-      - { name: "--input-outline-border-color-error",    default: "var(--danger-component-outline-default)",  description: "Outline border in error" }
-      - { name: "--input-outline-placeholder",           default: "var(--surface-base-ct-faint)",             description: "Outline placeholder color" }
-      - { name: "--input-outline-placeholder-disabled",  default: "var(--surface-base-ct-faint)",             description: "Outline placeholder when disabled" }
-      - { name: "--input-outline-opacity-disabled",      default: "0.5",                                      description: "Outline opacity when disabled" }
+      - { name: "--input-outlined-bg",                    default: "transparent",                              description: "Outline bg" }
+      - { name: "--input-outlined-bg-hover",              default: "transparent",                              description: "Outline bg on hover" }
+      - { name: "--input-outlined-bg-focus",              default: "transparent",                              description: "Outline bg on focus" }
+      - { name: "--input-outlined-bg-disabled",           default: "transparent",                              description: "Outline bg when disabled" }
+      - { name: "--input-outlined-bg-invalid",              default: "transparent",                              description: "Outline bg in invalid state" }
+      - { name: "--input-outlined-fg",                    default: "var(--surface-base-ct-default)",           description: "Outline text color" }
+      - { name: "--input-outlined-fg-disabled",           default: "var(--surface-base-ct-faint)",             description: "Outline text when disabled" }
+      - { name: "--input-outlined-border-color",          default: "var(--surface-base-cm-outline)",           description: "Outline border" }
+      - { name: "--input-outlined-border-color-hover",    default: "var(--surface-base-cm-outline-hover)",     description: "Outline border on hover" }
+      - { name: "--input-outlined-border-color-focus",    default: "var(--brand-component-outline-default)", description: "Outline border on focus" }
+      - { name: "--input-outlined-border-color-disabled", default: "var(--surface-base-cm-outline)",           description: "Outline border when disabled" }
+      - { name: "--input-outlined-border-color-invalid",    default: "var(--danger-component-outline-default)",  description: "Outline border in invalid state" }
+      - { name: "--input-outlined-placeholder",           default: "var(--surface-base-ct-faint)",             description: "Outline placeholder color" }
+      - { name: "--input-outlined-placeholder-disabled",  default: "var(--surface-base-ct-faint)",             description: "Outline placeholder when disabled" }
+      - { name: "--input-outlined-opacity-disabled",      default: "0.5",                                      description: "Outline opacity when disabled" }
 
     filled:
       - { name: "--input-filled-bg",                    default: "var(--surface-base-cm-bg)",                description: "Filled bg" }
       - { name: "--input-filled-bg-hover",              default: "var(--surface-base-cm-bg-hover)",          description: "Filled bg on hover" }
       - { name: "--input-filled-bg-focus",              default: "var(--surface-base-cm-bg)",                description: "Filled bg on focus" }
       - { name: "--input-filled-bg-disabled",           default: "var(--surface-base-cm-bg)",                description: "Filled bg when disabled" }
-      - { name: "--input-filled-bg-error",              default: "var(--surface-base-cm-bg)",                description: "Filled bg in error" }
+      - { name: "--input-filled-bg-invalid",              default: "var(--surface-base-cm-bg)",                description: "Filled bg in invalid state" }
       - { name: "--input-filled-fg",                    default: "var(--surface-base-ct-default)",           description: "Filled text color" }
       - { name: "--input-filled-fg-disabled",           default: "var(--surface-base-ct-faint)",             description: "Filled text when disabled" }
       - { name: "--input-filled-border-color",          default: "var(--surface-base-cm-outline)",           description: "Filled border (full outline)" }
       - { name: "--input-filled-border-color-hover",    default: "var(--surface-base-cm-outline-hover)",     description: "Filled border on hover" }
-      - { name: "--input-filled-border-color-focus",    default: "var(--primary-component-outline-default)", description: "Filled border on focus" }
+      - { name: "--input-filled-border-color-focus",    default: "var(--brand-component-outline-default)", description: "Filled border on focus" }
       - { name: "--input-filled-border-color-disabled", default: "var(--surface-base-cm-outline)",           description: "Filled border when disabled" }
-      - { name: "--input-filled-border-color-error",    default: "var(--danger-component-outline-default)",  description: "Filled border in error" }
+      - { name: "--input-filled-border-color-invalid",    default: "var(--danger-component-outline-default)",  description: "Filled border in invalid state" }
       - { name: "--input-filled-placeholder",           default: "var(--surface-base-ct-faint)",             description: "Filled placeholder color" }
       - { name: "--input-filled-placeholder-disabled",  default: "var(--surface-base-ct-faint)",             description: "Filled placeholder when disabled" }
       - { name: "--input-filled-opacity-disabled",      default: "0.5",                                      description: "Filled opacity when disabled" }
@@ -166,26 +166,26 @@ variables:
       - { name: "--input-underline-bg-hover",              default: "transparent",                              description: "Underline bg on hover" }
       - { name: "--input-underline-bg-focus",              default: "transparent",                              description: "Underline bg on focus" }
       - { name: "--input-underline-bg-disabled",           default: "transparent",                              description: "Underline bg when disabled" }
-      - { name: "--input-underline-bg-error",              default: "transparent",                              description: "Underline bg in error" }
+      - { name: "--input-underline-bg-invalid",              default: "transparent",                              description: "Underline bg in invalid state" }
       - { name: "--input-underline-fg",                    default: "var(--surface-base-ct-default)",           description: "Underline text color" }
       - { name: "--input-underline-fg-disabled",           default: "var(--surface-base-ct-faint)",             description: "Underline text when disabled" }
       - { name: "--input-underline-border-color",          default: "var(--surface-base-cm-outline)",           description: "Underline border" }
       - { name: "--input-underline-border-color-hover",    default: "var(--surface-base-ct-subtle)",            description: "Underline border on hover" }
-      - { name: "--input-underline-border-color-focus",    default: "var(--primary-component-outline-default)", description: "Underline border on focus" }
+      - { name: "--input-underline-border-color-focus",    default: "var(--brand-component-outline-default)", description: "Underline border on focus" }
       - { name: "--input-underline-border-color-disabled", default: "var(--surface-base-cm-outline)",           description: "Underline border when disabled" }
-      - { name: "--input-underline-border-color-error",    default: "var(--danger-component-outline-default)",  description: "Underline border in error" }
+      - { name: "--input-underline-border-color-invalid",    default: "var(--danger-component-outline-default)",  description: "Underline border in invalid state" }
       - { name: "--input-underline-placeholder",           default: "var(--surface-base-ct-faint)",             description: "Underline placeholder" }
       - { name: "--input-underline-placeholder-disabled",  default: "var(--surface-base-ct-faint)",             description: "Underline placeholder when disabled" }
       - { name: "--input-underline-opacity-disabled",      default: "0.5",                                      description: "Underline opacity when disabled" }
 
     shared:
       - { name: "--input-label-color",          default: "var(--surface-base-ct-subtle)",            description: "Label default color" }
-      - { name: "--input-label-color-focus",    default: "var(--primary-content-default)",           description: "Label color on focus" }
-      - { name: "--input-label-color-error",    default: "var(--danger-content-default)",            description: "Label color in error" }
+      - { name: "--input-label-color-focus",    default: "var(--brand-content-default)",           description: "Label color on focus" }
+      - { name: "--input-label-color-invalid",    default: "var(--danger-content-default)",            description: "Label color in invalid state" }
       - { name: "--input-label-color-disabled", default: "var(--surface-base-ct-faint)",             description: "Label color when disabled" }
       - { name: "--input-helper-color",         default: "var(--surface-base-ct-subtle)",            description: "Helper default color" }
-      - { name: "--input-helper-color-error",   default: "var(--danger-content-default)",            description: "Helper color in error" }
-      - { name: "--input-caret-color",          default: "var(--primary-component-bg-default)",      description: "Text cursor color" }
+      - { name: "--input-helper-color-invalid",   default: "var(--danger-content-default)",            description: "Helper color in invalid state" }
+      - { name: "--input-caret-color",          default: "var(--brand-component-bg-default)",      description: "Text cursor color" }
 
   # ──────────────────────────────────────────
   # ✏️ TYPOGRAPHY  (15 vars)
@@ -261,6 +261,6 @@ variables:
   # ──────────────────────────────────────────
   a11y:
     - { name: "--input-focus-outline-width",  default: "2px",                                     description: "Focus outline width" }
-    - { name: "--input-focus-outline-color",  default: "var(--primary-component-outline-default)", description: "Focus outline color" }
+    - { name: "--input-focus-outline-color",  default: "var(--brand-component-outline-default)", description: "Focus outline color" }
     - { name: "--input-focus-outline-offset", default: "2px",                                     description: "Focus outline offset" }
     - { name: "--input-min-tap-target",       default: "44px",                                    description: "Minimum touch target" }

@@ -77,7 +77,7 @@
   --_ts-soft-bg:        var(--toast-info-soft-bg);
   --_ts-filled-bg:      var(--toast-info-filled-bg);
   --_ts-filled-fg:      var(--toast-info-filled-fg);
-  --_ts-outline-border: var(--toast-info-outline-border);
+  --_ts-outlined-border: var(--toast-info-outlined-border);
 
   /* — variant active vars (default = neutral surface) — */
   --_ts-bg:           var(--toast-bg);
@@ -134,17 +134,27 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
-   4.  ROLE SELECTORS
+   4.  ROLE SELECTORS (brand | info | success | warning | danger | neutral)
    ──────────────────────────────────────────────────────────────── */
-/* primary = alias for info (default) — consistency with other components */
+/* brand — primary alias for feedback consistency */
 .toast[data-role="brand"] {
+  --_ts-accent:         var(--toast-brand-accent);
+  --_ts-icon-color:     var(--toast-brand-icon-color);
+  --_ts-title-color:    var(--toast-brand-title-color);
+  --_ts-soft-bg:        var(--toast-brand-soft-bg);
+  --_ts-filled-bg:      var(--toast-brand-filled-bg);
+  --_ts-filled-fg:      var(--toast-brand-filled-fg);
+  --_ts-outlined-border: var(--toast-brand-outlined-border);
+}
+/* info — dedicated palette (blue) */
+.toast[data-role="info"] {
   --_ts-accent:         var(--toast-info-accent);
   --_ts-icon-color:     var(--toast-info-icon-color);
   --_ts-title-color:    var(--toast-info-title-color);
   --_ts-soft-bg:        var(--toast-info-soft-bg);
   --_ts-filled-bg:      var(--toast-info-filled-bg);
   --_ts-filled-fg:      var(--toast-info-filled-fg);
-  --_ts-outline-border: var(--toast-info-outline-border);
+  --_ts-outlined-border: var(--toast-info-outlined-border);
 }
 .toast[data-role="success"] {
   --_ts-accent:         var(--toast-success-accent);
@@ -153,7 +163,7 @@
   --_ts-soft-bg:        var(--toast-success-soft-bg);
   --_ts-filled-bg:      var(--toast-success-filled-bg);
   --_ts-filled-fg:      var(--toast-success-filled-fg);
-  --_ts-outline-border: var(--toast-success-outline-border);
+  --_ts-outlined-border: var(--toast-success-outlined-border);
 }
 .toast[data-role="warning"] {
   --_ts-accent:         var(--toast-warning-accent);
@@ -162,7 +172,7 @@
   --_ts-soft-bg:        var(--toast-warning-soft-bg);
   --_ts-filled-bg:      var(--toast-warning-filled-bg);
   --_ts-filled-fg:      var(--toast-warning-filled-fg);
-  --_ts-outline-border: var(--toast-warning-outline-border);
+  --_ts-outlined-border: var(--toast-warning-outlined-border);
 }
 .toast[data-role="danger"] {
   --_ts-accent:         var(--toast-danger-accent);
@@ -171,7 +181,7 @@
   --_ts-soft-bg:        var(--toast-danger-soft-bg);
   --_ts-filled-bg:      var(--toast-danger-filled-bg);
   --_ts-filled-fg:      var(--toast-danger-filled-fg);
-  --_ts-outline-border: var(--toast-danger-outline-border);
+  --_ts-outlined-border: var(--toast-danger-outlined-border);
 }
 .toast[data-role="neutral"] {
   --_ts-accent:         var(--toast-neutral-accent);
@@ -180,7 +190,7 @@
   --_ts-soft-bg:        var(--toast-neutral-soft-bg);
   --_ts-filled-bg:      var(--toast-neutral-filled-bg);
   --_ts-filled-fg:      var(--toast-neutral-filled-fg);
-  --_ts-outline-border: var(--toast-neutral-outline-border);
+  --_ts-outlined-border: var(--toast-neutral-outlined-border);
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -206,11 +216,11 @@
 .toast[data-variant="filled"] .toast__accent { display:none }
 
 /* ────────────────────────────────────────────────────────────────
-   7.  VARIANT: OUTLINE (transparent + role border)
+   7.  VARIANT: OUTLINED (transparent + role border)
    ──────────────────────────────────────────────────────────────── */
-.toast[data-variant="outline"] {
+.toast[data-variant="outlined"] {
   --_ts-bg: transparent;
-  --_ts-border-color: var(--_ts-outline-border);
+  --_ts-border-color: var(--_ts-outlined-border);
   box-shadow: none;
 }
 

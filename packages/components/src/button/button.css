@@ -273,9 +273,9 @@
 }
 .btn:not([data-variant]):active,
 .btn[data-variant="filled"]:active {
-  --_btn-bg: var(--btn-filled-bg-active);
-  --_btn-border-color: var(--btn-filled-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-filled-bg-pressed);
+  --_btn-border-color: var(--btn-filled-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── SECONDARY ──────────────────────────────────────────────── */
@@ -292,9 +292,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="outlined"]:active {
-  --_btn-bg: var(--btn-outlined-bg-active);
-  --_btn-border-color: var(--btn-outlined-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-outlined-bg-pressed);
+  --_btn-border-color: var(--btn-outlined-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── TERTIARY ───────────────────────────────────────────────── */
@@ -311,9 +311,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="soft"]:active {
-  --_btn-bg: var(--btn-soft-bg-active);
-  --_btn-border-color: var(--btn-soft-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-soft-bg-pressed);
+  --_btn-border-color: var(--btn-soft-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── GHOST ──────────────────────────────────────────────────── */
@@ -330,9 +330,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="ghost"]:active {
-  --_btn-bg: var(--btn-ghost-bg-active);
-  --_btn-border-color: var(--btn-ghost-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-ghost-bg-pressed);
+  --_btn-border-color: var(--btn-ghost-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── DANGER ─────────────────────────────────────────────────── */
@@ -349,9 +349,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="danger"]:active {
-  --_btn-bg: var(--btn-danger-bg-active);
-  --_btn-border-color: var(--btn-danger-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-danger-bg-pressed);
+  --_btn-border-color: var(--btn-danger-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── SUCCESS ────────────────────────────────────────────────── */
@@ -368,9 +368,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="success"]:active {
-  --_btn-bg: var(--btn-success-bg-active);
-  --_btn-border-color: var(--btn-success-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-success-bg-pressed);
+  --_btn-border-color: var(--btn-success-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── WARNING ────────────────────────────────────────────────── */
@@ -387,9 +387,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="warning"]:active {
-  --_btn-bg: var(--btn-warning-bg-active);
-  --_btn-border-color: var(--btn-warning-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-warning-bg-pressed);
+  --_btn-border-color: var(--btn-warning-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── NEUTRAL (filled, surface-context) ──────────────────────── */
@@ -406,28 +406,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="neutral"]:active {
-  --_btn-bg: var(--btn-neutral-bg-active);
-  --_btn-border-color: var(--btn-neutral-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
-}
-
-/* ── OUTLINE (outlined, surface-context border) ─────────────── */
-.btn[data-variant="outline"] {
-  --_btn-bg: var(--btn-outline-bg);
-  --_btn-fg: var(--btn-outline-fg);
-  --_btn-border-color: var(--btn-outline-border-color);
-  --_btn-shadow: var(--btn-shadow);
-}
-.btn[data-variant="outline"]:hover {
-  --_btn-bg: var(--btn-outline-bg-hover);
-  --_btn-fg: var(--btn-outline-fg-hover);
-  --_btn-border-color: var(--btn-outline-border-color-hover);
-  --_btn-shadow: var(--btn-shadow-hover);
-}
-.btn[data-variant="outline"]:active {
-  --_btn-bg: var(--btn-outline-bg-active);
-  --_btn-border-color: var(--btn-outline-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-neutral-bg-pressed);
+  --_btn-border-color: var(--btn-neutral-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ── BRAND (filled, brand palette) ──────────────────────────── */
@@ -444,76 +425,9 @@
   --_btn-shadow: var(--btn-shadow-hover);
 }
 .btn[data-variant="brand"]:active {
-  --_btn-bg: var(--btn-brand-bg-active);
-  --_btn-border-color: var(--btn-brand-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
-}
-
-/* ════════════════════════════════════════════════════════════════
-   STRUCTURAL VARIANT ALIASES
-   Canonical structural names that map to the existing token groups.
-   These work identically to their legacy counterparts:
-     filled  ≡ primary   (solid background)
-     outlined ≡ secondary (border emphasis)
-     soft    ≡ tertiary  (tinted container)
-     ghost   — already exists above
-   ════════════════════════════════════════════════════════════════ */
-
-/* ── FILLED (alias for primary) ─────────────────────────────── */
-.btn[data-variant="filled"] {
-  --_btn-bg: var(--btn-filled-bg);
-  --_btn-fg: var(--btn-filled-fg);
-  --_btn-border-color: var(--btn-filled-border-color);
-  --_btn-shadow: var(--btn-shadow);
-}
-.btn[data-variant="filled"]:hover {
-  --_btn-bg: var(--btn-filled-bg-hover);
-  --_btn-fg: var(--btn-filled-fg-hover);
-  --_btn-border-color: var(--btn-filled-border-color-hover);
-  --_btn-shadow: var(--btn-shadow-hover);
-}
-.btn[data-variant="filled"]:active {
-  --_btn-bg: var(--btn-filled-bg-active);
-  --_btn-border-color: var(--btn-filled-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
-}
-
-/* ── OUTLINED (alias for secondary) ─────────────────────────── */
-.btn[data-variant="outlined"] {
-  --_btn-bg: var(--btn-outlined-bg);
-  --_btn-fg: var(--btn-outlined-fg);
-  --_btn-border-color: var(--btn-outlined-border-color);
-  --_btn-shadow: var(--btn-shadow);
-}
-.btn[data-variant="outlined"]:hover {
-  --_btn-bg: var(--btn-outlined-bg-hover);
-  --_btn-fg: var(--btn-outlined-fg-hover);
-  --_btn-border-color: var(--btn-outlined-border-color-hover);
-  --_btn-shadow: var(--btn-shadow-hover);
-}
-.btn[data-variant="outlined"]:active {
-  --_btn-bg: var(--btn-outlined-bg-active);
-  --_btn-border-color: var(--btn-outlined-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
-}
-
-/* ── SOFT (alias for tertiary) ──────────────────────────────── */
-.btn[data-variant="soft"] {
-  --_btn-bg: var(--btn-soft-bg);
-  --_btn-fg: var(--btn-soft-fg);
-  --_btn-border-color: var(--btn-soft-border-color);
-  --_btn-shadow: var(--btn-shadow);
-}
-.btn[data-variant="soft"]:hover {
-  --_btn-bg: var(--btn-soft-bg-hover);
-  --_btn-fg: var(--btn-soft-fg-hover);
-  --_btn-border-color: var(--btn-soft-border-color-hover);
-  --_btn-shadow: var(--btn-shadow-hover);
-}
-.btn[data-variant="soft"]:active {
-  --_btn-bg: var(--btn-soft-bg-active);
-  --_btn-border-color: var(--btn-soft-border-color-active);
-  --_btn-shadow: var(--btn-shadow-active);
+  --_btn-bg: var(--btn-brand-bg-pressed);
+  --_btn-border-color: var(--btn-brand-border-color-pressed);
+  --_btn-shadow: var(--btn-shadow-pressed);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -540,7 +454,7 @@
    Only ghost needs explicit primary override (default ghost = neutral). */
 .btn[data-role="brand"] {
   --btn-ghost-bg-hover: var(--brand-container-bg);
-  --btn-ghost-bg-active: var(--brand-container-pressed);
+  --btn-ghost-bg-pressed: var(--brand-container-pressed);
   --btn-ghost-fg: var(--brand-content-default);
   --btn-ghost-fg-hover: var(--brand-content-default);
   --btn-ghost-fg-disabled: var(--brand-content-default);
@@ -561,7 +475,7 @@
   --brand-component-outline-pressed: var(--danger-component-outline-pressed);
   /* Ghost overrides */
   --btn-ghost-bg-hover: var(--danger-container-bg);
-  --btn-ghost-bg-active: var(--danger-container-pressed);
+  --btn-ghost-bg-pressed: var(--danger-container-pressed);
   --btn-ghost-fg: var(--danger-content-default);
   --btn-ghost-fg-hover: var(--danger-content-default);
   --btn-ghost-fg-disabled: var(--danger-content-default);
@@ -582,7 +496,7 @@
   --brand-component-outline-pressed: var(--success-component-outline-pressed);
   /* Ghost overrides */
   --btn-ghost-bg-hover: var(--success-container-bg);
-  --btn-ghost-bg-active: var(--success-container-pressed);
+  --btn-ghost-bg-pressed: var(--success-container-pressed);
   --btn-ghost-fg: var(--success-content-default);
   --btn-ghost-fg-hover: var(--success-content-default);
   --btn-ghost-fg-disabled: var(--success-content-default);
@@ -603,7 +517,7 @@
   --brand-component-outline-pressed: var(--warning-component-outline-pressed);
   /* Ghost overrides */
   --btn-ghost-bg-hover: var(--warning-container-bg);
-  --btn-ghost-bg-active: var(--warning-container-pressed);
+  --btn-ghost-bg-pressed: var(--warning-container-pressed);
   --btn-ghost-fg: var(--warning-content-default);
   --btn-ghost-fg-hover: var(--warning-content-default);
   --btn-ghost-fg-disabled: var(--warning-content-default);
@@ -613,7 +527,7 @@
 .btn[data-role="brand"] {
   /* Ghost overrides */
   --btn-ghost-bg-hover: var(--brand-container-bg);
-  --btn-ghost-bg-active: var(--brand-container-pressed);
+  --btn-ghost-bg-pressed: var(--brand-container-pressed);
   --btn-ghost-fg: var(--brand-content-default);
   --btn-ghost-fg-hover: var(--brand-content-default);
   --btn-ghost-fg-disabled: var(--brand-content-default);
@@ -634,7 +548,7 @@
   --brand-component-outline-pressed: var(--info-component-outline-pressed);
   /* Ghost overrides */
   --btn-ghost-bg-hover: var(--info-container-bg);
-  --btn-ghost-bg-active: var(--info-container-pressed);
+  --btn-ghost-bg-pressed: var(--info-container-pressed);
   --btn-ghost-fg: var(--info-content-default);
   --btn-ghost-fg-hover: var(--info-content-default);
   --btn-ghost-fg-disabled: var(--info-content-default);
@@ -734,42 +648,12 @@
   --_btn-border-color: var(--btn-neutral-border-color-disabled);
   opacity: var(--btn-neutral-opacity-disabled);
 }
-.btn:disabled[data-variant="outline"],
-.btn[data-disabled][data-variant="outline"] {
-  --_btn-bg: var(--btn-outline-bg-disabled);
-  --_btn-fg: var(--btn-outline-fg-disabled);
-  --_btn-border-color: var(--btn-outline-border-color-disabled);
-  opacity: var(--btn-outline-opacity-disabled);
-}
 .btn:disabled[data-variant="brand"],
 .btn[data-disabled][data-variant="brand"] {
   --_btn-bg: var(--btn-brand-bg-disabled);
   --_btn-fg: var(--btn-brand-fg-disabled);
   --_btn-border-color: var(--btn-brand-border-color-disabled);
   opacity: var(--btn-brand-opacity-disabled);
-}
-
-/* Disabled: structural variant aliases (cascade through role remap) */
-.btn:disabled[data-variant="filled"],
-.btn[data-disabled][data-variant="filled"] {
-  --_btn-bg: var(--btn-filled-bg-disabled);
-  --_btn-fg: var(--btn-filled-fg-disabled);
-  --_btn-border-color: var(--btn-filled-border-color-disabled);
-  opacity: var(--btn-filled-opacity-disabled);
-}
-.btn:disabled[data-variant="outlined"],
-.btn[data-disabled][data-variant="outlined"] {
-  --_btn-bg: var(--btn-outlined-bg-disabled);
-  --_btn-fg: var(--btn-outlined-fg-disabled);
-  --_btn-border-color: var(--btn-outlined-border-color-disabled);
-  opacity: var(--btn-outlined-opacity-disabled);
-}
-.btn:disabled[data-variant="soft"],
-.btn[data-disabled][data-variant="soft"] {
-  --_btn-bg: var(--btn-soft-bg-disabled);
-  --_btn-fg: var(--btn-soft-fg-disabled);
-  --_btn-border-color: var(--btn-soft-border-color-disabled);
-  opacity: var(--btn-soft-opacity-disabled);
 }
 
 /* Loading state — text shimmer, no spinner icon */

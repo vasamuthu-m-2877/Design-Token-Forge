@@ -18,9 +18,9 @@ component:
 sizes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
 
 variants:
-  semantic: [filled, outline]
+  semantic: [filled, outlined]
 
-states: [unchecked, checked, hover, active, focus-visible, disabled, loading]
+states: [unchecked, checked, hover, pressed, focus-visible, disabled, loading]
 
 markup: |
   <button class="switch" role="switch" aria-checked="false"
@@ -74,9 +74,9 @@ variables:
         default: "var(--shadow-sm)"
         description: "Thumb drop shadow for depth"
         count: 1
-      - name: "--switch-thumb-shadow-active"
+      - name: "--switch-thumb-shadow-pressed"
         default: "var(--shadow-md)"
-        description: "Thumb shadow on press / active"
+        description: "Thumb shadow on press / pressed"
         count: 1
 
     total: 6
@@ -147,10 +147,10 @@ variables:
       - { name: "--switch-track-border-color-off-hover", default: "var(--surface-base-cm-outline-hover)" }
 
     track-checked:
-      - { name: "--switch-track-bg-on",                 default: "var(--primary-component-bg-default)" }
-      - { name: "--switch-track-bg-on-hover",           default: "var(--primary-component-bg-hover)" }
-      - { name: "--switch-track-border-color-on",       default: "var(--primary-component-bg-default)" }
-      - { name: "--switch-track-border-color-on-hover",  default: "var(--primary-component-bg-hover)" }
+      - { name: "--switch-track-bg-on",                 default: "var(--brand-component-bg-default)" }
+      - { name: "--switch-track-bg-on-hover",           default: "var(--brand-component-bg-hover)" }
+      - { name: "--switch-track-border-color-on",       default: "var(--brand-component-bg-default)" }
+      - { name: "--switch-track-border-color-on-hover",  default: "var(--brand-component-bg-hover)" }
 
     thumb:
       - { name: "--switch-thumb-bg",                    default: "var(--color-fixed-white)" }
@@ -160,14 +160,14 @@ variables:
 
     disabled:
       - { name: "--switch-track-bg-disabled",           default: "var(--surface-base-cm-outline)" }
-      - { name: "--switch-track-bg-on-disabled",        default: "var(--primary-component-bg-default)" }
+      - { name: "--switch-track-bg-on-disabled",        default: "var(--brand-component-bg-default)" }
       - { name: "--switch-track-border-color-disabled",  default: "var(--surface-base-cm-outline)" }
       - { name: "--switch-thumb-bg-disabled",           default: "var(--color-fixed-white)" }
       - { name: "--switch-opacity-disabled",            default: "0.5" }
 
     icon:
       - { name: "--switch-thumb-icon-color-off",        default: "var(--surface-base-ct-subtle)" }
-      - { name: "--switch-thumb-icon-color-on",         default: "var(--primary-component-bg-default)" }
+      - { name: "--switch-thumb-icon-color-on",         default: "var(--brand-component-bg-default)" }
       - { name: "--switch-thumb-icon-size",             default: "0.65em" }
 
     total: 20
@@ -178,28 +178,28 @@ variables:
   # ────────────────────────────────────────────────────────────
   surface_outline:
     track-unchecked:
-      - { name: "--switch-outline-track-bg-off",                default: "transparent" }
-      - { name: "--switch-outline-track-bg-off-hover",          default: "var(--surface-base-cm-bg-hover)" }
-      - { name: "--switch-outline-track-border-color-off",      default: "var(--surface-base-cm-outline)" }
-      - { name: "--switch-outline-track-border-color-off-hover", default: "var(--surface-base-cm-outline-hover)" }
+      - { name: "--switch-outlined-track-bg-off",                default: "transparent" }
+      - { name: "--switch-outlined-track-bg-off-hover",          default: "var(--surface-base-cm-bg-hover)" }
+      - { name: "--switch-outlined-track-border-color-off",      default: "var(--surface-base-cm-outline)" }
+      - { name: "--switch-outlined-track-border-color-off-hover", default: "var(--surface-base-cm-outline-hover)" }
 
     track-checked:
-      - { name: "--switch-outline-track-bg-on",                 default: "var(--primary-component-bg-default)" }
-      - { name: "--switch-outline-track-bg-on-hover",           default: "var(--primary-component-bg-hover)" }
-      - { name: "--switch-outline-track-border-color-on",       default: "var(--primary-component-bg-default)" }
-      - { name: "--switch-outline-track-border-color-on-hover",  default: "var(--primary-component-bg-hover)" }
+      - { name: "--switch-outlined-track-bg-on",                 default: "var(--brand-component-bg-default)" }
+      - { name: "--switch-outlined-track-bg-on-hover",           default: "var(--brand-component-bg-hover)" }
+      - { name: "--switch-outlined-track-border-color-on",       default: "var(--brand-component-bg-default)" }
+      - { name: "--switch-outlined-track-border-color-on-hover",  default: "var(--brand-component-bg-hover)" }
 
     thumb:
-      - { name: "--switch-outline-thumb-bg",                    default: "var(--color-fixed-white)" }
-      - { name: "--switch-outline-thumb-bg-hover",              default: "var(--color-fixed-white)" }
-      - { name: "--switch-outline-thumb-border-color",          default: "var(--surface-base-cm-outline)" }
-      - { name: "--switch-outline-thumb-border-color-checked",  default: "transparent" }
+      - { name: "--switch-outlined-thumb-bg",                    default: "var(--color-fixed-white)" }
+      - { name: "--switch-outlined-thumb-bg-hover",              default: "var(--color-fixed-white)" }
+      - { name: "--switch-outlined-thumb-border-color",          default: "var(--surface-base-cm-outline)" }
+      - { name: "--switch-outlined-thumb-border-color-checked",  default: "transparent" }
 
     disabled-and-border:
-      - { name: "--switch-outline-track-border-width",          default: "2px",  description: "Visible border for outline variant" }
-      - { name: "--switch-outline-track-bg-disabled",           default: "transparent" }
-      - { name: "--switch-outline-track-bg-on-disabled",        default: "var(--primary-component-bg-default)" }
-      - { name: "--switch-outline-opacity-disabled",            default: "0.5" }
+      - { name: "--switch-outlined-track-border-width",          default: "2px",  description: "Visible border for outline variant" }
+      - { name: "--switch-outlined-track-bg-disabled",           default: "transparent" }
+      - { name: "--switch-outlined-track-bg-on-disabled",        default: "var(--brand-component-bg-default)" }
+      - { name: "--switch-outlined-opacity-disabled",            default: "0.5" }
 
     total: 16
 
@@ -239,7 +239,7 @@ variables:
   # ────────────────────────────────────────────────────────────
   a11y:
     - { name: "--switch-focus-outline-width",    default: "2px" }
-    - { name: "--switch-focus-outline-color",    default: "var(--primary-component-outline-default)" }
+    - { name: "--switch-focus-outline-color",    default: "var(--brand-component-outline-default)" }
     - { name: "--switch-focus-outline-offset",   default: "2px" }
     - { name: "--switch-min-tap-target",         default: "44px" }
     - { name: "--switch-required-indicator",     default: "'*'" }

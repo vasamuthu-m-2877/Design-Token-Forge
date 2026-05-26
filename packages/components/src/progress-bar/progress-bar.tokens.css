@@ -1,7 +1,23 @@
 /* ════════════════════════════════════════════════════════════════
    Design Token Forge — Progress Bar Token Defaults
-   Layer 0: System defaults for ~110 progress-bar variables.
+   Layer 0: System defaults for ~115 progress-bar variables.
    All values reference global tokens — zero hardcoded visuals.
+   ----------------------------------------------------------------
+   ANATOMY:
+     .progress-bar (wrapper, role="progressbar")
+       └─ .progress-bar__track
+            └─ .progress-bar__fill   (value bar)
+            └─ .progress-bar__buffer (optional buffer overlay)
+       └─ .progress-bar__label / .progress-bar__helper (optional rows)
+
+   VARIANTS  (data-variant):   filled (default) | outlined | soft
+   ROLES     (data-role):       brand (default) | danger | success | warning | info | neutral
+   STATES    (selectors):       default | indeterminate | disabled
+
+   ROLE TOKENS ship as inline named slots (--progress-{role}-fill / -soft-track / -label)
+   rather than --brand-* remaps, because progress-bar exposes role-specific labels
+   independently — `.progress-bar[data-role="..."]` simply switches the internal _pg-*
+   var chain to the matching slot.
    ════════════════════════════════════════════════════════════════ */
 
 .progress-bar {
@@ -80,7 +96,7 @@
   --progress-segment-gap: 2px;
 
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE  (28 vars)
+     🎨 SURFACE  (31 vars)
      Pattern: --progress-{role}-{property}
      ──────────────────────────────────────────────────────────── */
 
@@ -88,10 +104,10 @@
   --progress-track-bg: var(--surface-base-cm-bg);
   --progress-track-border-color: transparent;
 
-  /* ── PRIMARY role ── */
-  --progress-primary-fill: var(--brand-component-bg-default);
-  --progress-primary-soft-track: var(--brand-container-bg);
-  --progress-primary-label: var(--brand-content-default);
+  /* ── BRAND role ── */
+  --progress-brand-fill: var(--brand-component-bg-default);
+  --progress-brand-soft-track: var(--brand-container-bg);
+  --progress-brand-label: var(--brand-content-default);
 
   /* ── SUCCESS role ── */
   --progress-success-fill: var(--success-component-bg-default);
@@ -108,15 +124,20 @@
   --progress-danger-soft-track: var(--danger-container-bg);
   --progress-danger-label: var(--danger-content-default);
 
+  /* ── INFO role ── */
+  --progress-info-fill: var(--info-component-bg-default);
+  --progress-info-soft-track: var(--info-container-bg);
+  --progress-info-label: var(--info-content-default);
+
   /* ── NEUTRAL role ── */
   --progress-neutral-fill: var(--surface-base-ct-faint);
   --progress-neutral-soft-track: var(--surface-base-subtle);
   --progress-neutral-label: var(--surface-base-ct-default);
 
   /* ── Outline variant ── */
-  --progress-outline-track-bg: transparent;
-  --progress-outline-border-color: var(--surface-base-outline);
-  --progress-outline-border-width: 1px;
+  --progress-outlined-track-bg: transparent;
+  --progress-outlined-border-color: var(--surface-base-outline);
+  --progress-outlined-border-width: 1px;
 
   /* ── Buffer (streaming / video buffering) ── */
   --progress-buffer-bg: var(--brand-container-bg);

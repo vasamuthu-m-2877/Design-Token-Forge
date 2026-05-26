@@ -1,0 +1,223 @@
+# TopBar — Mobile Foundation L2 spec
+# v0.1.0 — Phase 2.5a (first Foundation pattern; proof-of-concept slice)
+
+pattern:
+  name: "TopBar"
+  tier: "foundation"            # L0 | L1 | foundation | shape-kit
+  platform: "mobile"            # mobile | desktop | marketing
+  tag: "header"
+  prefix: "fm-top-bar"          # fm = foundation-mobile
+  description: |
+    The top edge of a mobile screen. Holds a leading control (back/menu),
+    a title (large, medium, or compact), and up to 3 trailing actions.
+    Used in writing (NoteList, NoteEditor), commerce (ProductList,
+    ProductDetail, Cart), reading (Library, Article), chat (ConversationList).
+  category: "navigation"
+  promoted_from: "discovered in Probe 2 — Writing + Commerce both shipped it"
+
+# L2 patterns are compositional. They have:
+#   1. their own SHELL tokens (the container)
+#   2. their own SLOT tokens (the layout zones)
+#   3. they DELEGATE inner control tokens to the L1 atoms they use
+composes:
+  required_l1: [icon-button]    # leading + trailing slots
+  optional_l1: [badge]          # trailing actions may carry badges
+  inherits_tokens:
+    - "--brand-*"                # role inheritance flows through
+    - "--neutral-*"
+    - "--color-fixed-white"
+
+# Density modes (NOT all 10 — Foundations are more opinionated than L1s)
+sizes: [base, medium, large]
+  # base   = compact mobile (44px tall, iOS standard)
+  # medium = comfortable mobile (52px, default for most apps)
+  # large  = prominent mobile (64px, marketing/reader contexts)
+
+# Title display modes (orthogonal to size)
+title_modes:
+  - compact         # single-line, leading-aligned
+  - centered        # single-line, center-aligned (iOS default)
+  - large           # two-line allowed, scaled-down on scroll (iOS Large Title)
+
+# Surface variants
+variants: [solid, translucent, transparent]
+  # solid       = opaque surface, distinct from page
+  # translucent = blurred surface (frosted-glass mobile pattern)
+  # transparent = no surface (overlays content; for hero scroll patterns)
+
+# States — TopBar has fewer states than buttons; it's not an interactive atom
+states: [default, scrolled, elevated]
+  # scrolled  = adds border/shadow once content scrolls beneath
+  # elevated  = always shows shadow (for sheets on top of TopBars)
+
+variables:
+
+  # ──────────────────────────────────────────
+  # 📐 SHAPE — 8 vars
+  # ──────────────────────────────────────────
+  shape:
+    - name: "--fm-top-bar-border-width-b"
+      default: "0"
+      description: "Bottom border. 0 default; appears on scrolled state."
+    - name: "--fm-top-bar-border-color-b"
+      default: "var(--neutral-200)"
+    - name: "--fm-top-bar-shadow"
+      default: "var(--shadow-none)"
+    - name: "--fm-top-bar-shadow-scrolled"
+      default: "var(--shadow-sm)"
+    - name: "--fm-top-bar-shadow-elevated"
+      default: "var(--shadow-md)"
+    - name: "--fm-top-bar-overflow"
+      default: "visible"
+    - name: "--fm-top-bar-position"
+      default: "sticky"
+      options: [sticky, fixed, relative]
+    - name: "--fm-top-bar-z-index"
+      default: "100"
+
+  # ──────────────────────────────────────────
+  # 📏 DIMENSION — 14 vars
+  # ──────────────────────────────────────────
+  dimension:
+    - name: "--fm-top-bar-height-base"
+      default: "44px"        # iOS / Android standard
+    - name: "--fm-top-bar-height-medium"
+      default: "52px"
+    - name: "--fm-top-bar-height-large"
+      default: "64px"
+    - name: "--fm-top-bar-padding-x-base"
+      default: "var(--spacing-8)"
+    - name: "--fm-top-bar-padding-x-medium"
+      default: "var(--spacing-12)"
+    - name: "--fm-top-bar-padding-x-large"
+      default: "var(--spacing-16)"
+    - name: "--fm-top-bar-padding-y-base"
+      default: "0"
+    - name: "--fm-top-bar-padding-y-medium"
+      default: "0"
+    - name: "--fm-top-bar-padding-y-large"
+      default: "var(--spacing-4)"
+    - name: "--fm-top-bar-gap-base"
+      default: "var(--spacing-4)"
+    - name: "--fm-top-bar-gap-medium"
+      default: "var(--spacing-8)"
+    - name: "--fm-top-bar-gap-large"
+      default: "var(--spacing-12)"
+    - name: "--fm-top-bar-min-tap-target"
+      default: "44px"        # WCAG 2.5.5 minimum
+    - name: "--fm-top-bar-safe-area-top"
+      default: "env(safe-area-inset-top, 0)"
+      description: "iOS notch / Android status bar"
+
+  # ──────────────────────────────────────────
+  # 🎨 SURFACE — 6 vars
+  # ──────────────────────────────────────────
+  surface:
+    - name: "--fm-top-bar-bg"
+      default: "var(--surface-base)"
+    - name: "--fm-top-bar-bg-translucent"
+      default: "color-mix(in srgb, var(--surface-base) 70%, transparent)"
+    - name: "--fm-top-bar-backdrop-filter"
+      default: "saturate(180%) blur(20px)"
+      description: "Applied only when variant=translucent"
+    - name: "--fm-top-bar-fg"
+      default: "var(--text-primary)"
+    - name: "--fm-top-bar-fg-subtitle"
+      default: "var(--text-secondary)"
+    - name: "--fm-top-bar-fg-on-translucent"
+      default: "var(--text-primary)"
+
+  # ──────────────────────────────────────────
+  # ✍️ TYPOGRAPHY — 9 vars
+  # ──────────────────────────────────────────
+  typography:
+    - name: "--fm-top-bar-title-font-size-base"
+      default: "var(--font-size-base)"
+    - name: "--fm-top-bar-title-font-size-medium"
+      default: "var(--font-size-lg)"
+    - name: "--fm-top-bar-title-font-size-large"
+      default: "var(--font-size-2xl)"
+    - name: "--fm-top-bar-title-font-weight"
+      default: "var(--font-weight-semibold)"
+    - name: "--fm-top-bar-title-line-height"
+      default: "1.2"
+    - name: "--fm-top-bar-title-letter-spacing"
+      default: "-0.01em"
+    - name: "--fm-top-bar-subtitle-font-size"
+      default: "var(--font-size-sm)"
+    - name: "--fm-top-bar-subtitle-font-weight"
+      default: "var(--font-weight-regular)"
+    - name: "--fm-top-bar-subtitle-line-height"
+      default: "1.3"
+
+  # ──────────────────────────────────────────
+  # 🧩 SLOTS — 6 vars
+  # ──────────────────────────────────────────
+  slots:
+    - name: "--fm-top-bar-leading-min-width"
+      default: "var(--fm-top-bar-min-tap-target)"
+    - name: "--fm-top-bar-trailing-min-width"
+      default: "var(--fm-top-bar-min-tap-target)"
+    - name: "--fm-top-bar-trailing-max-actions"
+      default: "3"
+      description: "Soft limit — author convention, not enforced"
+    - name: "--fm-top-bar-title-align-centered"
+      default: "center"
+    - name: "--fm-top-bar-title-align-compact"
+      default: "start"
+    - name: "--fm-top-bar-title-align-large"
+      default: "start"
+
+  # ──────────────────────────────────────────
+  # 🎬 MOTION — 4 vars
+  # ──────────────────────────────────────────
+  motion:
+    - name: "--fm-top-bar-transition-property"
+      default: "background-color, box-shadow, border-color, backdrop-filter"
+    - name: "--fm-top-bar-transition-duration"
+      default: "var(--motion-duration-fast)"
+    - name: "--fm-top-bar-transition-easing"
+      default: "var(--motion-easing-standard)"
+    - name: "--fm-top-bar-large-title-scroll-distance"
+      default: "32px"
+      description: "How far user scrolls before large-title collapses"
+
+  # ──────────────────────────────────────────
+  # ♿ A11Y — 3 vars
+  # ──────────────────────────────────────────
+  a11y:
+    - name: "--fm-top-bar-focus-ring-color"
+      default: "var(--brand-500)"
+    - name: "--fm-top-bar-focus-ring-width"
+      default: "2px"
+    - name: "--fm-top-bar-focus-ring-offset"
+      default: "2px"
+
+# Total: 50 tokens — concise compared to L1 button (246 tokens)
+# This is by design: Foundation L2s are compositions and inherit
+# heavy lifting from L1 atoms.
+
+# A11y requirements (must be met by demo + production usage)
+a11y_requirements:
+  - "use <header> element with role=banner (implicit)"
+  - "title is an <h1> for the screen"
+  - "leading control has aria-label (e.g. Back, Menu, Close)"
+  - "trailing actions each have aria-label"
+  - "safe-area-inset-top respected for iOS notch / Android cutout"
+  - "focus-visible ring honours --fm-top-bar-focus-ring-*"
+  - "min tap target 44×44px on all interactive children (WCAG 2.5.5)"
+  - "translucent variant maintains AA contrast (test against worst-case content underneath)"
+  - "scrolled state visible to assistive tech via aria-live=polite is NOT required (purely visual)"
+
+# Used by (validates Foundation tier qualifier #1: "≥2 shape-kits")
+consumers:
+  - kit: "mobile-writing"
+    surfaces: ["NoteList", "NoteEditor", "Settings"]
+  - kit: "mobile-commerce"
+    surfaces: ["ProductList", "ProductDetail", "Cart", "Account"]
+  - kit: "mobile-reading"
+    surfaces: ["Library", "Article"]
+    status: "planned"
+  - kit: "mobile-chat"
+    surfaces: ["ConversationList", "Conversation"]
+    status: "planned"

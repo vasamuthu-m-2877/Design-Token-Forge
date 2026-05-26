@@ -1,0 +1,93 @@
+/* ════════════════════════════════════════════════════════════════
+   TopBar — Mobile Foundation L2 · Token Defaults
+   50 tokens across 7 axes. Spec: /specs/foundation-mobile/top-bar.yaml
+
+   L2 patterns are compositional: their tokens cover the shell + slots,
+   while inner L1 atoms (icon-button, badge) keep their own token surfaces.
+   Role inheritance flows through naturally — set data-role on a parent
+   and the L1s inside reroute their --brand-* references.
+   ════════════════════════════════════════════════════════════════ */
+
+.fm-top-bar {
+  /* ────────────────────────────────────────────────────────────
+     📐 SHAPE  (8)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-border-width-b: 0;
+  --fm-top-bar-border-color-b: var(--neutral-200, #e5e5e5);
+  --fm-top-bar-shadow: var(--shadow-none, none);
+  --fm-top-bar-shadow-scrolled: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.06));
+  --fm-top-bar-shadow-elevated: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.08));
+  --fm-top-bar-overflow: visible;
+  --fm-top-bar-position: sticky;
+  --fm-top-bar-z-index: 100;
+
+  /* ────────────────────────────────────────────────────────────
+     📏 DIMENSION  (14)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-height-base: 44px;
+  --fm-top-bar-height-medium: 52px;
+  --fm-top-bar-height-large: 64px;
+
+  --fm-top-bar-padding-x-base: var(--spacing-8, 8px);
+  --fm-top-bar-padding-x-medium: var(--spacing-12, 12px);
+  --fm-top-bar-padding-x-large: var(--spacing-16, 16px);
+
+  --fm-top-bar-padding-y-base: 0px;
+  --fm-top-bar-padding-y-medium: 0px;
+  --fm-top-bar-padding-y-large: var(--spacing-4, 4px);
+
+  --fm-top-bar-gap-base: var(--spacing-4, 4px);
+  --fm-top-bar-gap-medium: var(--spacing-8, 8px);
+  --fm-top-bar-gap-large: var(--spacing-12, 12px);
+
+  --fm-top-bar-min-tap-target: 44px;
+  --fm-top-bar-safe-area-top: env(safe-area-inset-top, 0px);
+
+  /* ────────────────────────────────────────────────────────────
+     🎨 SURFACE  (6)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-bg: var(--surface-base, #ffffff);
+  --fm-top-bar-bg-translucent: color-mix(in srgb, var(--surface-base, #ffffff) 70%, transparent);
+  --fm-top-bar-backdrop-filter: saturate(180%) blur(20px);
+  --fm-top-bar-fg: var(--text-primary, #1a1a1a);
+  --fm-top-bar-fg-subtitle: var(--text-secondary, #666);
+  --fm-top-bar-fg-on-translucent: var(--text-primary, #1a1a1a);
+
+  /* ────────────────────────────────────────────────────────────
+     ✍️ TYPOGRAPHY  (9)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-title-font-size-base: var(--font-size-base, 16px);
+  --fm-top-bar-title-font-size-medium: var(--font-size-lg, 18px);
+  --fm-top-bar-title-font-size-large: var(--font-size-2xl, 28px);
+  --fm-top-bar-title-font-weight: var(--font-weight-semibold, 600);
+  --fm-top-bar-title-line-height: 1.2;
+  --fm-top-bar-title-letter-spacing: -0.01em;
+  --fm-top-bar-subtitle-font-size: var(--font-size-sm, 13px);
+  --fm-top-bar-subtitle-font-weight: var(--font-weight-regular, 400);
+  --fm-top-bar-subtitle-line-height: 1.3;
+
+  /* ────────────────────────────────────────────────────────────
+     🧩 SLOTS  (6)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-leading-min-width: var(--fm-top-bar-min-tap-target);
+  --fm-top-bar-trailing-min-width: var(--fm-top-bar-min-tap-target);
+  --fm-top-bar-trailing-max-actions: 3;
+  --fm-top-bar-title-align-centered: center;
+  --fm-top-bar-title-align-compact: start;
+  --fm-top-bar-title-align-large: start;
+
+  /* ────────────────────────────────────────────────────────────
+     🎬 MOTION  (4)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-transition-property: background-color, box-shadow, border-color, backdrop-filter;
+  --fm-top-bar-transition-duration: var(--motion-duration-fast, 150ms);
+  --fm-top-bar-transition-easing: var(--motion-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  --fm-top-bar-large-title-scroll-distance: 32px;
+
+  /* ────────────────────────────────────────────────────────────
+     ♿ A11Y  (3)
+     ──────────────────────────────────────────────────────────── */
+  --fm-top-bar-focus-ring-color: var(--brand-500, #286ce5);
+  --fm-top-bar-focus-ring-width: 2px;
+  --fm-top-bar-focus-ring-offset: 2px;
+}

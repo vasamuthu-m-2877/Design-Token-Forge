@@ -15,10 +15,10 @@ component:
 
 sizes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
 variants: [outline, filled]
-states: [default, hover, focus, disabled, error, readonly]
+states: [default, hover, focus-visible, disabled, invalid, readonly]
 
 markup: |
-  <div class="select-group" data-variant="outline" data-size="base">
+  <div class="select-group" data-variant="outlined" data-size="base">
     <label class="select__label" for="sel1">Label</label>
     <div class="select-field">
       <select id="sel1">
@@ -51,7 +51,7 @@ variables:
       - { name: "--select-shadow-focus", default: "var(--shadow-none)" }
     ring:
       - { name: "--select-ring-width",    default: "2px" }
-      - { name: "--select-ring-color",    default: "var(--primary-component-outline-default)" }
+      - { name: "--select-ring-color",    default: "var(--brand-component-outline-default)" }
       - { name: "--select-ring-offset",   default: "2px" }
       - { name: "--select-outline-style", default: "solid" }
 
@@ -81,44 +81,44 @@ variables:
   # ──────────────────────────────────────────
   surface:
     outline:
-      - { name: "--select-outline-bg",                    default: "transparent" }
-      - { name: "--select-outline-bg-hover",              default: "transparent" }
-      - { name: "--select-outline-bg-focus",              default: "transparent" }
-      - { name: "--select-outline-bg-disabled",           default: "transparent" }
-      - { name: "--select-outline-bg-error",              default: "transparent" }
-      - { name: "--select-outline-fg",                    default: "var(--surface-base-ct-default)" }
-      - { name: "--select-outline-fg-disabled",           default: "var(--surface-base-ct-faint)" }
-      - { name: "--select-outline-border-color",          default: "var(--surface-base-cm-outline)" }
-      - { name: "--select-outline-border-color-hover",    default: "var(--surface-base-cm-outline-hover)" }
-      - { name: "--select-outline-border-color-focus",    default: "var(--primary-component-outline-default)" }
-      - { name: "--select-outline-border-color-disabled", default: "var(--surface-base-cm-outline)" }
-      - { name: "--select-outline-border-color-error",    default: "var(--danger-component-outline-default)" }
-      - { name: "--select-outline-placeholder",           default: "var(--surface-base-ct-faint)" }
-      - { name: "--select-outline-placeholder-disabled",  default: "var(--surface-base-ct-faint)" }
-      - { name: "--select-outline-opacity-disabled",      default: "0.5" }
+      - { name: "--select-outlined-bg",                    default: "transparent" }
+      - { name: "--select-outlined-bg-hover",              default: "transparent" }
+      - { name: "--select-outlined-bg-focus",              default: "transparent" }
+      - { name: "--select-outlined-bg-disabled",           default: "transparent" }
+      - { name: "--select-outlined-bg-invalid",              default: "transparent" }
+      - { name: "--select-outlined-fg",                    default: "var(--surface-base-ct-default)" }
+      - { name: "--select-outlined-fg-disabled",           default: "var(--surface-base-ct-faint)" }
+      - { name: "--select-outlined-border-color",          default: "var(--surface-base-cm-outline)" }
+      - { name: "--select-outlined-border-color-hover",    default: "var(--surface-base-cm-outline-hover)" }
+      - { name: "--select-outlined-border-color-focus",    default: "var(--brand-component-outline-default)" }
+      - { name: "--select-outlined-border-color-disabled", default: "var(--surface-base-cm-outline)" }
+      - { name: "--select-outlined-border-color-invalid",    default: "var(--danger-component-outline-default)" }
+      - { name: "--select-outlined-placeholder",           default: "var(--surface-base-ct-faint)" }
+      - { name: "--select-outlined-placeholder-disabled",  default: "var(--surface-base-ct-faint)" }
+      - { name: "--select-outlined-opacity-disabled",      default: "0.5" }
     filled:
       - { name: "--select-filled-bg",                    default: "var(--surface-base-cm-bg)" }
       - { name: "--select-filled-bg-hover",              default: "var(--surface-base-cm-bg-hover)" }
       - { name: "--select-filled-bg-focus",              default: "var(--surface-base-cm-bg)" }
       - { name: "--select-filled-bg-disabled",           default: "var(--surface-base-cm-bg)" }
-      - { name: "--select-filled-bg-error",              default: "var(--surface-base-cm-bg)" }
+      - { name: "--select-filled-bg-invalid",              default: "var(--surface-base-cm-bg)" }
       - { name: "--select-filled-fg",                    default: "var(--surface-base-ct-default)" }
       - { name: "--select-filled-fg-disabled",           default: "var(--surface-base-ct-faint)" }
       - { name: "--select-filled-border-color",          default: "var(--surface-base-cm-outline)" }
       - { name: "--select-filled-border-color-hover",    default: "var(--surface-base-cm-outline-hover)" }
-      - { name: "--select-filled-border-color-focus",    default: "var(--primary-component-outline-default)" }
+      - { name: "--select-filled-border-color-focus",    default: "var(--brand-component-outline-default)" }
       - { name: "--select-filled-border-color-disabled", default: "var(--surface-base-cm-outline)" }
-      - { name: "--select-filled-border-color-error",    default: "var(--danger-component-outline-default)" }
+      - { name: "--select-filled-border-color-invalid",    default: "var(--danger-component-outline-default)" }
       - { name: "--select-filled-placeholder",           default: "var(--surface-base-ct-faint)" }
       - { name: "--select-filled-placeholder-disabled",  default: "var(--surface-base-ct-faint)" }
       - { name: "--select-filled-opacity-disabled",      default: "0.5" }
     shared:
       - { name: "--select-label-color",          default: "var(--surface-base-ct-subtle)" }
-      - { name: "--select-label-color-focus",    default: "var(--primary-content-default)" }
-      - { name: "--select-label-color-error",    default: "var(--danger-content-default)" }
+      - { name: "--select-label-color-focus",    default: "var(--brand-content-default)" }
+      - { name: "--select-label-color-invalid",    default: "var(--danger-content-default)" }
       - { name: "--select-label-color-disabled", default: "var(--surface-base-ct-faint)" }
       - { name: "--select-helper-color",         default: "var(--surface-base-ct-subtle)" }
-      - { name: "--select-helper-color-error",   default: "var(--danger-content-default)" }
+      - { name: "--select-helper-color-invalid",   default: "var(--danger-content-default)" }
       - { name: "--select-chevron-color",        default: "var(--surface-base-ct-subtle)" }
 
   # ──────────────────────────────────────────

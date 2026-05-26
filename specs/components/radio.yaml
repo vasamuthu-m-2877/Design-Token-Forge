@@ -11,16 +11,16 @@ component:
     A single-selection control used in groups. Native <input type="radio">
     is visually hidden; a styled .radio__circle renders the indicator
     with a filled dot for the selected state. Supports optional label text.
-    Always circular — the dot/ring pattern scales per density. Error state
+    Always circular — the dot/ring pattern scales per density. Invalid state
     for form validation. Radio groups use a name attribute for mutual exclusion.
   category: inputs
 
 sizes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
 
 variants:
-  semantic: [filled, outline]
+  semantic: [filled, outlined]
 
-states: [unchecked, checked, hover, active, focus-visible, disabled, error]
+states: [unchecked, checked, hover, pressed, focus-visible, disabled, invalid]
 
 markup: |
   <!-- Single radio -->
@@ -103,69 +103,69 @@ variables:
         default: "var(--surface-base-cm-outline-hover)"
     checked:
       - name: "--radio-circle-bg-on"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
       - name: "--radio-circle-bg-on-hover"
-        default: "var(--primary-component-bg-hover)"
+        default: "var(--brand-component-bg-hover)"
       - name: "--radio-circle-border-color-on"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
       - name: "--radio-circle-border-color-on-hover"
-        default: "var(--primary-component-bg-hover)"
+        default: "var(--brand-component-bg-hover)"
     dot:
       - name: "--radio-dot-color"
         default: "var(--color-fixed-white)"
         description: "Dot color when checked — white on primary bg"
     disabled:
       - name: "--radio-circle-bg-on-disabled"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
       - name: "--radio-circle-border-color-disabled"
         default: "var(--surface-base-cm-outline)"
       - name: "--radio-opacity-disabled"
         default: "0.5"
-    error:
-      - name: "--radio-circle-border-color-error"
+    invalid:
+      - name: "--radio-circle-border-color-invalid"
         default: "var(--danger-component-outline-default)"
-      - name: "--radio-circle-border-color-error-hover"
+      - name: "--radio-circle-border-color-invalid-hover"
         default: "var(--danger-component-outline-hover)"
-      - name: "--radio-circle-bg-on-error"
+      - name: "--radio-circle-bg-on-invalid"
         default: "var(--danger-component-bg-default)"
-      - name: "--radio-circle-bg-on-error-hover"
+      - name: "--radio-circle-bg-on-invalid-hover"
         default: "var(--danger-component-bg-hover)"
     total: 16
 
   # ────────────────────────────────────────────────────────────
-  # 🎨 SURFACE — OUTLINE VARIANT  (13 variables)
+  # 🎨 SURFACE — OUTLINED VARIANT  (13 variables)
   # ────────────────────────────────────────────────────────────
-  surface_outline:
+  surface_outlined:
     unchecked:
-      - name: "--radio-outline-circle-bg-off"
+      - name: "--radio-outlined-circle-bg-off"
         default: "transparent"
-      - name: "--radio-outline-circle-bg-off-hover"
+      - name: "--radio-outlined-circle-bg-off-hover"
         default: "var(--surface-base-cm-bg-hover)"
-      - name: "--radio-outline-circle-border-color-off"
+      - name: "--radio-outlined-circle-border-color-off"
         default: "var(--surface-base-cm-outline)"
-      - name: "--radio-outline-circle-border-color-off-hover"
+      - name: "--radio-outlined-circle-border-color-off-hover"
         default: "var(--surface-base-cm-outline-hover)"
     checked:
-      - name: "--radio-outline-circle-bg-on"
-        default: "var(--primary-component-bg-default)"
-      - name: "--radio-outline-circle-bg-on-hover"
-        default: "var(--primary-component-bg-hover)"
-      - name: "--radio-outline-circle-border-color-on"
-        default: "var(--primary-component-bg-default)"
-      - name: "--radio-outline-circle-border-color-on-hover"
-        default: "var(--primary-component-bg-hover)"
+      - name: "--radio-outlined-circle-bg-on"
+        default: "var(--brand-component-bg-default)"
+      - name: "--radio-outlined-circle-bg-on-hover"
+        default: "var(--brand-component-bg-hover)"
+      - name: "--radio-outlined-circle-border-color-on"
+        default: "var(--brand-component-bg-default)"
+      - name: "--radio-outlined-circle-border-color-on-hover"
+        default: "var(--brand-component-bg-hover)"
     dot:
-      - name: "--radio-outline-dot-color"
+      - name: "--radio-outlined-dot-color"
         default: "var(--color-fixed-white)"
     disabled:
-      - name: "--radio-outline-circle-bg-on-disabled"
-        default: "var(--primary-component-bg-default)"
-      - name: "--radio-outline-circle-border-color-disabled"
+      - name: "--radio-outlined-circle-bg-on-disabled"
+        default: "var(--brand-component-bg-default)"
+      - name: "--radio-outlined-circle-border-color-disabled"
         default: "var(--surface-base-cm-outline)"
-      - name: "--radio-outline-opacity-disabled"
+      - name: "--radio-outlined-opacity-disabled"
         default: "0.5"
     border:
-      - name: "--radio-outline-circle-border-width"
+      - name: "--radio-outlined-circle-border-width"
         default: "2px"
     total: 13
 
@@ -190,7 +190,7 @@ variables:
     - name: "--radio-gap"
       default: "var(--spacing-8)"
       description: "Gap between circle and label"
-    - name: "--radio-circle-scale-active"
+    - name: "--radio-circle-scale-pressed"
       default: "0.92"
       description: "Press scale feedback"
     - name: "--radio-group-gap"
@@ -224,7 +224,7 @@ variables:
     - name: "--radio-focus-outline-width"
       default: "2px"
     - name: "--radio-focus-outline-color"
-      default: "var(--primary-component-outline-default)"
+      default: "var(--brand-component-outline-default)"
     - name: "--radio-focus-outline-offset"
       default: "2px"
     - name: "--radio-min-tap-target"

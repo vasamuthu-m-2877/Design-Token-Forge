@@ -4,8 +4,8 @@
    Uses internal (--_ta-*) vars set by size & variant selectors.
 
    Markup:
-   <div class="textarea-group" data-variant="outline" data-size="base">
-   <div class="textarea-group" data-variant="outline" data-size="base" data-height="fixed">
+   <div class="textarea-group" data-variant="outlined" data-size="base">
+   <div class="textarea-group" data-variant="outlined" data-size="base" data-height="fixed">
      <label class="textarea__label" for="ta1">Label</label>
      <div class="textarea-field">
        <textarea id="ta1" placeholder="Placeholder…" rows="4"></textarea>
@@ -15,7 +15,7 @@
    ════════════════════════════════════════════════════════════════ */
 
 /* ────────────────────────────────────────────────────────────────
-   1.  BASE — Internal active variables (default = base + outline)
+   1.  BASE — Internal active variables (default = base + outlined)
    ──────────────────────────────────────────────────────────────── */
 .textarea-group {
   display: flex;
@@ -32,11 +32,11 @@
   --_ta-radius: var(--textarea-radius-base);
   --_ta-height: auto;
 
-  /* Surface active vars (outline default) */
-  --_ta-bg: var(--textarea-outline-bg);
-  --_ta-fg: var(--textarea-outline-fg);
-  --_ta-border-color: var(--textarea-outline-border-color);
-  --_ta-placeholder: var(--textarea-outline-placeholder);
+  /* Surface active vars (outlined default) */
+  --_ta-bg: var(--textarea-outlined-bg);
+  --_ta-fg: var(--textarea-outlined-fg);
+  --_ta-border-color: var(--textarea-outlined-border-color);
+  --_ta-placeholder: var(--textarea-outlined-placeholder);
   --_ta-shadow: var(--textarea-shadow);
 }
 
@@ -127,13 +127,13 @@
    3.  VARIANT SELECTORS — map surface tokens → active vars
    ──────────────────────────────────────────────────────────────── */
 
-/* Outline (default) */
+/* Outlined (default) */
 .textarea-group,
-.textarea-group[data-variant="outline"] {
-  --_ta-bg: var(--textarea-outline-bg);
-  --_ta-fg: var(--textarea-outline-fg);
-  --_ta-border-color: var(--textarea-outline-border-color);
-  --_ta-placeholder: var(--textarea-outline-placeholder);
+.textarea-group[data-variant="outlined"] {
+  --_ta-bg: var(--textarea-outlined-bg);
+  --_ta-fg: var(--textarea-outlined-fg);
+  --_ta-border-color: var(--textarea-outlined-border-color);
+  --_ta-placeholder: var(--textarea-outlined-placeholder);
 }
 
 /* Filled */
@@ -153,14 +153,46 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
-   4.  STATE OVERRIDES — hover, focus, error, disabled
+   ROLE SELECTORS — palette-level remapping (affects focus border,
+   focus label color, caret). data-role="brand" is the default.
+   Invalid state (aria-invalid) always overrides role.
+   ───────────────────────────────────────────────────────────────── */
+
+.textarea-group[data-role="danger"] {
+  --brand-component-bg-default: var(--danger-component-bg-default);
+  --brand-component-outline-default: var(--danger-component-outline-default);
+  --brand-content-default: var(--danger-content-default);
+}
+.textarea-group[data-role="success"] {
+  --brand-component-bg-default: var(--success-component-bg-default);
+  --brand-component-outline-default: var(--success-component-outline-default);
+  --brand-content-default: var(--success-content-default);
+}
+.textarea-group[data-role="warning"] {
+  --brand-component-bg-default: var(--warning-component-bg-default);
+  --brand-component-outline-default: var(--warning-component-outline-default);
+  --brand-content-default: var(--warning-content-default);
+}
+.textarea-group[data-role="info"] {
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-outline-default: var(--info-component-outline-default);
+  --brand-content-default: var(--info-content-default);
+}
+.textarea-group[data-role="neutral"] {
+  --brand-component-bg-default: var(--surface-base-cm-bg-pressed);
+  --brand-component-outline-default: var(--surface-base-cm-outline-hover);
+  --brand-content-default: var(--surface-base-ct-default);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   4.  STATE OVERRIDES — hover, focus, invalid, disabled
    ──────────────────────────────────────────────────────────────── */
 
-/* ── Hover (outline) ──────────────────────────────────────── */
+/* ── Hover (outlined) ───────────────────────────────────── */
 .textarea-group:not([data-disabled]):not([data-readonly]):not([data-variant]):has(.textarea-field:hover),
-.textarea-group[data-variant="outline"]:not([data-disabled]):not([data-readonly]):has(.textarea-field:hover) {
-  --_ta-bg: var(--textarea-outline-bg-hover);
-  --_ta-border-color: var(--textarea-outline-border-color-hover);
+.textarea-group[data-variant="outlined"]:not([data-disabled]):not([data-readonly]):has(.textarea-field:hover) {
+  --_ta-bg: var(--textarea-outlined-bg-hover);
+  --_ta-border-color: var(--textarea-outlined-border-color-hover);
 }
 
 /* ── Hover (filled) ───────────────────────────────────────── */
@@ -175,11 +207,11 @@
   --_ta-border-color: var(--textarea-underline-border-color-hover);
 }
 
-/* ── Focus (outline) ──────────────────────────────────────── */
+/* ── Focus (outlined) ───────────────────────────────────── */
 .textarea-group:not([data-disabled]):not([data-variant]):has(.textarea-field:focus-visible),
-.textarea-group[data-variant="outline"]:not([data-disabled]):has(.textarea-field:focus-visible) {
-  --_ta-bg: var(--textarea-outline-bg-focus);
-  --_ta-border-color: var(--textarea-outline-border-color-focus);
+.textarea-group[data-variant="outlined"]:not([data-disabled]):has(.textarea-field:focus-visible) {
+  --_ta-bg: var(--textarea-outlined-bg-focus);
+  --_ta-border-color: var(--textarea-outlined-border-color-focus);
   --_ta-shadow: var(--textarea-shadow-focus);
 }
 
@@ -198,36 +230,36 @@
 }
 
 /* ── Error (outline) ──────────────────────────────────────── */
-.textarea-group[data-error]:not([data-variant]),
-.textarea-group[data-error][data-variant="outline"] {
-  --_ta-bg: var(--textarea-outline-bg-error);
-  --_ta-border-color: var(--textarea-outline-border-color-error);
+.textarea-group[aria-invalid="true"]:not([data-variant]),
+.textarea-group[aria-invalid="true"][data-variant="outlined"] {
+  --_ta-bg: var(--textarea-outlined-bg-invalid);
+  --_ta-border-color: var(--textarea-outlined-border-color-invalid);
 }
 
 /* ── Error (filled) ───────────────────────────────────────── */
-.textarea-group[data-error][data-variant="filled"] {
-  --_ta-bg: var(--textarea-filled-bg-error);
-  --_ta-border-color: var(--textarea-filled-border-color-error);
+.textarea-group[aria-invalid="true"][data-variant="filled"] {
+  --_ta-bg: var(--textarea-filled-bg-invalid);
+  --_ta-border-color: var(--textarea-filled-border-color-invalid);
 }
 
 /* ── Error (underline) ────────────────────────────────────── */
-.textarea-group[data-error][data-variant="underline"] {
-  --_ta-bg: var(--textarea-underline-bg-error);
-  --_ta-border-color: var(--textarea-underline-border-color-error);
+.textarea-group[aria-invalid="true"][data-variant="underline"] {
+  --_ta-bg: var(--textarea-underline-bg-invalid);
+  --_ta-border-color: var(--textarea-underline-border-color-invalid);
 }
 
 /* Error + Focus should keep error border color */
-.textarea-group[data-error]:has(.textarea-field:focus-visible) {
+.textarea-group[aria-invalid="true"]:has(.textarea-field:focus-visible) {
   --_ta-shadow: var(--textarea-shadow-focus);
 }
 
-/* ── Disabled (outline) ───────────────────────────────────── */
+/* ── Disabled (outlined) ────────────────────────────────── */
 .textarea-group[data-disabled]:not([data-variant]),
-.textarea-group[data-disabled][data-variant="outline"] {
-  --_ta-bg: var(--textarea-outline-bg-disabled);
-  --_ta-fg: var(--textarea-outline-fg-disabled);
-  --_ta-border-color: var(--textarea-outline-border-color-disabled);
-  --_ta-placeholder: var(--textarea-outline-placeholder-disabled);
+.textarea-group[data-disabled][data-variant="outlined"] {
+  --_ta-bg: var(--textarea-outlined-bg-disabled);
+  --_ta-fg: var(--textarea-outlined-fg-disabled);
+  --_ta-border-color: var(--textarea-outlined-border-color-disabled);
+  --_ta-placeholder: var(--textarea-outlined-placeholder-disabled);
 }
 
 /* ── Disabled (filled) ────────────────────────────────────── */
@@ -335,8 +367,8 @@
 
 }
 .textarea-group[data-disabled]:not([data-variant]) .textarea-field,
-.textarea-group[data-disabled][data-variant="outline"] .textarea-field {
-  opacity: var(--textarea-outline-opacity-disabled);
+.textarea-group[data-disabled][data-variant="outlined"] .textarea-field {
+  opacity: var(--textarea-outlined-opacity-disabled);
 }
 .textarea-group[data-disabled][data-variant="filled"] .textarea-field {
   opacity: var(--textarea-filled-opacity-disabled);
@@ -372,8 +404,8 @@
 .textarea-group:has(.textarea-field:focus-visible) .textarea__label {
   color: var(--textarea-label-color-focus);
 }
-.textarea-group[data-error] .textarea__label {
-  color: var(--textarea-label-color-error);
+.textarea-group[aria-invalid="true"] .textarea__label {
+  color: var(--textarea-label-color-invalid);
 }
 .textarea-group[data-disabled] .textarea__label {
   color: var(--textarea-label-color-disabled);
@@ -390,8 +422,8 @@
   margin-top: var(--textarea-helper-gap);
 }
 
-.textarea-group[data-error] .textarea__helper {
-  color: var(--textarea-helper-color-error);
+.textarea-group[aria-invalid="true"] .textarea__helper {
+  color: var(--textarea-helper-color-invalid);
 }
 .textarea-group[data-disabled] .textarea__helper {
   color: var(--textarea-label-color-disabled);
@@ -417,7 +449,7 @@
     border-color: GrayText;
     color: GrayText;
   }
-  .textarea-group[data-error] .textarea-field {
+  .textarea-group[aria-invalid="true"] .textarea-field {
     border-color: LinkText;
   }
 }

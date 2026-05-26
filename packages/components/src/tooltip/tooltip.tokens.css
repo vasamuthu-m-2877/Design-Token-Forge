@@ -50,7 +50,7 @@
      🎨 SURFACE  (12 vars)
      ──────────────────────────────────────────────────────────── */
 
-  /* ── DEFAULT (dark bg, light text) ─────────────────── */
+  /* ── DEFAULT (dark bg, light text) ────────────────── */
   --tooltip-bg: var(--surface-base-ct-default);
   --tooltip-fg: var(--surface-base-cn-bg);
   --tooltip-arrow-color: var(--surface-base-ct-default);
@@ -61,17 +61,22 @@
   --tooltip-light-border-color: var(--surface-base-cm-outline);
   --tooltip-light-arrow-color: var(--surface-base-cn-bg);
 
-  /* ── DANGER (canonical name) ─────────────────────────────── */
+  /* ── DANGER (error feedback) ────────────────────────────── */
   --tooltip-danger-bg: var(--danger-component-bg-default);
   --tooltip-danger-fg: var(--danger-on-component);
   --tooltip-danger-arrow-color: var(--danger-component-bg-default);
 
-  /* ── ERROR (backward-compatible alias for danger) ────────── */
-  --tooltip-error-bg: var(--tooltip-danger-bg);
-  --tooltip-error-fg: var(--tooltip-danger-fg);
-  --tooltip-error-arrow-color: var(--tooltip-danger-arrow-color);
+  /* ── WARNING (caution feedback) ─────────────────────────── */
+  --tooltip-warning-bg: var(--warning-component-bg-default);
+  --tooltip-warning-fg: var(--warning-on-component);
+  --tooltip-warning-arrow-color: var(--warning-component-bg-default);
 
-  /* ── SUCCESS ────────────────────────────────────────── */
+  /* ── INFO (informational feedback) ──────────────────────── */
+  --tooltip-info-bg: var(--info-component-bg-default);
+  --tooltip-info-fg: var(--info-on-component);
+  --tooltip-info-arrow-color: var(--info-component-bg-default);
+
+  /* ── SUCCESS (success feedback) ─────────────────────────── */
   --tooltip-success-bg: var(--success-component-bg-default);
   --tooltip-success-fg: var(--success-on-component);
   --tooltip-success-arrow-color: var(--success-component-bg-default);

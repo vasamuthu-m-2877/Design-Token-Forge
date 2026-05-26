@@ -3,7 +3,7 @@
    Variable-driven rendering — reads only from --input-* tokens.
 
    Markup:
-   <div class="input-group" data-variant="outline" data-size="base">
+   <div class="input-group" data-variant="outlined" data-size="base">
      <label class="input__label" for="x">Label</label>
      <div class="input-field">
        <span class="input__prefix">…</span>
@@ -15,7 +15,7 @@
    ════════════════════════════════════════════════════════════════ */
 
 /* ────────────────────────────────────────────────────────────────
-   1.  BASE — Internal active variables (default = base + outline)
+   1.  BASE — Internal active variables (default = base + outlined)
    ──────────────────────────────────────────────────────────────── */
 .input-group {
   display: flex;
@@ -36,11 +36,11 @@
   --_input-affix-px: var(--input-affix-px-base);
   --_input-gap: var(--input-gap-base);
 
-  /* Surface active vars (outline default) */
-  --_input-bg: var(--input-outline-bg);
-  --_input-fg: var(--input-outline-fg);
-  --_input-border-color: var(--input-outline-border-color);
-  --_input-placeholder: var(--input-outline-placeholder);
+  /* Surface active vars (outlined default) */
+  --_input-bg: var(--input-outlined-bg);
+  --_input-fg: var(--input-outlined-fg);
+  --_input-border-color: var(--input-outlined-border-color);
+  --_input-placeholder: var(--input-outlined-placeholder);
   --_input-shadow: var(--input-shadow);
 }
 
@@ -172,13 +172,13 @@
    3.  VARIANT SELECTORS — map surface tokens → active vars
    ──────────────────────────────────────────────────────────────── */
 
-/* Outline (default — no data-variant needed) */
+/* Outlined (default — no data-variant needed) */
 .input-group,
-.input-group[data-variant="outline"] {
-  --_input-bg: var(--input-outline-bg);
-  --_input-fg: var(--input-outline-fg);
-  --_input-border-color: var(--input-outline-border-color);
-  --_input-placeholder: var(--input-outline-placeholder);
+.input-group[data-variant="outlined"] {
+  --_input-bg: var(--input-outlined-bg);
+  --_input-fg: var(--input-outlined-fg);
+  --_input-border-color: var(--input-outlined-border-color);
+  --_input-placeholder: var(--input-outlined-placeholder);
 }
 
 /* Filled */
@@ -198,14 +198,47 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
-   4.  STATE OVERRIDES — hover, focus, error, disabled
+   ROLE SELECTORS — palette-level remapping (affects focus ring,
+   caret, focus border, focus label color). data-role="brand" is
+   the default (no remap needed). Invalid state (aria-invalid)
+   always overrides role.
+   ──────────────────────────────────────────────────────────────── */
+
+.input-group[data-role="danger"] {
+  --brand-component-bg-default: var(--danger-component-bg-default);
+  --brand-component-outline-default: var(--danger-component-outline-default);
+  --brand-content-default: var(--danger-content-default);
+}
+.input-group[data-role="success"] {
+  --brand-component-bg-default: var(--success-component-bg-default);
+  --brand-component-outline-default: var(--success-component-outline-default);
+  --brand-content-default: var(--success-content-default);
+}
+.input-group[data-role="warning"] {
+  --brand-component-bg-default: var(--warning-component-bg-default);
+  --brand-component-outline-default: var(--warning-component-outline-default);
+  --brand-content-default: var(--warning-content-default);
+}
+.input-group[data-role="info"] {
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-outline-default: var(--info-component-outline-default);
+  --brand-content-default: var(--info-content-default);
+}
+.input-group[data-role="neutral"] {
+  --brand-component-bg-default: var(--surface-base-cm-bg-pressed);
+  --brand-component-outline-default: var(--surface-base-cm-outline-hover);
+  --brand-content-default: var(--surface-base-ct-default);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   4.  STATE OVERRIDES — hover, focus, invalid, disabled
    ──────────────────────────────────────────────────────────────── */
 
 /* ── Hover (outline) ──────────────────────────────────────── */
 .input-group:not([data-disabled]):not([data-readonly]):not([data-variant]):has(.input-field:hover),
-.input-group[data-variant="outline"]:not([data-disabled]):not([data-readonly]):has(.input-field:hover) {
-  --_input-bg: var(--input-outline-bg-hover);
-  --_input-border-color: var(--input-outline-border-color-hover);
+.input-group[data-variant="outlined"]:not([data-disabled]):not([data-readonly]):has(.input-field:hover) {
+  --_input-bg: var(--input-outlined-bg-hover);
+  --_input-border-color: var(--input-outlined-border-color-hover);
 }
 
 /* ── Hover (filled) ───────────────────────────────────────── */
@@ -222,9 +255,9 @@
 
 /* ── Focus (outline) ──────────────────────────────────────── */
 .input-group:not([data-disabled]):not([data-variant]):has(.input-field:focus-visible),
-.input-group[data-variant="outline"]:not([data-disabled]):has(.input-field:focus-visible) {
-  --_input-bg: var(--input-outline-bg-focus);
-  --_input-border-color: var(--input-outline-border-color-focus);
+.input-group[data-variant="outlined"]:not([data-disabled]):has(.input-field:focus-visible) {
+  --_input-bg: var(--input-outlined-bg-focus);
+  --_input-border-color: var(--input-outlined-border-color-focus);
   --_input-shadow: var(--input-shadow-focus);
 }
 
@@ -242,37 +275,37 @@
   --_input-shadow: var(--input-shadow-focus);
 }
 
-/* ── Error (outline) ──────────────────────────────────────── */
-.input-group[data-error]:not([data-variant]),
-.input-group[data-error][data-variant="outline"] {
-  --_input-bg: var(--input-outline-bg-error);
-  --_input-border-color: var(--input-outline-border-color-error);
+/* ── Invalid (outlined) ──────────────────────────────────── */
+.input-group[aria-invalid="true"]:not([data-variant]),
+.input-group[aria-invalid="true"][data-variant="outlined"] {
+  --_input-bg: var(--input-outlined-bg-invalid);
+  --_input-border-color: var(--input-outlined-border-color-invalid);
 }
 
-/* ── Error (filled) ───────────────────────────────────────── */
-.input-group[data-error][data-variant="filled"] {
-  --_input-bg: var(--input-filled-bg-error);
-  --_input-border-color: var(--input-filled-border-color-error);
+/* ── Invalid (filled) ────────────────────────────────────── */
+.input-group[aria-invalid="true"][data-variant="filled"] {
+  --_input-bg: var(--input-filled-bg-invalid);
+  --_input-border-color: var(--input-filled-border-color-invalid);
 }
 
-/* ── Error (underline) ────────────────────────────────────── */
-.input-group[data-error][data-variant="underline"] {
-  --_input-bg: var(--input-underline-bg-error);
-  --_input-border-color: var(--input-underline-border-color-error);
+/* ── Invalid (underline) ─────────────────────────────────── */
+.input-group[aria-invalid="true"][data-variant="underline"] {
+  --_input-bg: var(--input-underline-bg-invalid);
+  --_input-border-color: var(--input-underline-border-color-invalid);
 }
 
-/* Error + Focus should keep error border color */
-.input-group[data-error]:has(.input-field:focus-visible) {
+/* Invalid + Focus should keep invalid border color */
+.input-group[aria-invalid="true"]:has(.input-field:focus-visible) {
   --_input-shadow: var(--input-shadow-focus);
 }
 
 /* ── Disabled (all variants) ──────────────────────────────── */
 .input-group[data-disabled]:not([data-variant]),
-.input-group[data-disabled][data-variant="outline"] {
-  --_input-bg: var(--input-outline-bg-disabled);
-  --_input-fg: var(--input-outline-fg-disabled);
-  --_input-border-color: var(--input-outline-border-color-disabled);
-  --_input-placeholder: var(--input-outline-placeholder-disabled);
+.input-group[data-disabled][data-variant="outlined"] {
+  --_input-bg: var(--input-outlined-bg-disabled);
+  --_input-fg: var(--input-outlined-fg-disabled);
+  --_input-border-color: var(--input-outlined-border-color-disabled);
+  --_input-placeholder: var(--input-outlined-placeholder-disabled);
 }
 .input-group[data-disabled][data-variant="filled"] {
   --_input-bg: var(--input-filled-bg-disabled);
@@ -379,8 +412,8 @@
 
 }
 .input-group[data-disabled]:not([data-variant]) .input-field,
-.input-group[data-disabled][data-variant="outline"] .input-field {
-  opacity: var(--input-outline-opacity-disabled);
+.input-group[data-disabled][data-variant="outlined"] .input-field {
+  opacity: var(--input-outlined-opacity-disabled);
 }
 .input-group[data-disabled][data-variant="filled"] .input-field {
   opacity: var(--input-filled-opacity-disabled);
@@ -417,8 +450,8 @@
 .input-group:has(.input-field:focus-visible) .input__label {
   color: var(--input-label-color-focus);
 }
-.input-group[data-error] .input__label {
-  color: var(--input-label-color-error);
+.input-group[aria-invalid="true"] .input__label {
+  color: var(--input-label-color-invalid);
 }
 .input-group[data-disabled] .input__label {
   color: var(--input-label-color-disabled);
@@ -436,8 +469,8 @@
   margin-top: var(--input-helper-gap);
 }
 
-.input-group[data-error] .input__helper {
-  color: var(--input-helper-color-error);
+.input-group[aria-invalid="true"] .input__helper {
+  color: var(--input-helper-color-invalid);
 }
 .input-group[data-disabled] .input__helper {
   color: var(--input-label-color-disabled);
@@ -506,7 +539,7 @@
     border-color: GrayText;
     color: GrayText;
   }
-  .input-group[data-error] .input-field {
+  .input-group[aria-invalid="true"] .input-field {
     border-color: LinkText;
   }
 }

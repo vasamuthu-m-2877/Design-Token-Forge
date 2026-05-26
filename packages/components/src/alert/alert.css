@@ -6,7 +6,7 @@
 
    Markup:
    <div class="alert" data-role="info" data-size="base"
-        data-variant="outline" role="alert">
+        data-variant="outlined" role="alert">
      <span class="alert__accent"></span>
      <span class="alert__icon"><svg>…</svg></span>
      <div class="alert__content">
@@ -31,19 +31,19 @@
   --_al-icon-size:   var(--alert-icon-size-base);
   --_al-close-size:  var(--alert-close-size-base);
 
-  /* — role active vars (primary default) — */
-  --_al-bg:             var(--alert-primary-bg);
-  --_al-fg:             var(--alert-primary-fg);
-  --_al-accent:         var(--alert-primary-accent);
-  --_al-border:         var(--alert-primary-border);
-  --_al-icon-color:     var(--alert-primary-icon-color);
-  --_al-title-color:    var(--alert-primary-title-color);
-  --_al-link-color:     var(--alert-primary-link-color);
-  --_al-link-hover:     var(--alert-primary-link-hover);
-  --_al-filled-bg:      var(--alert-primary-filled-bg);
-  --_al-filled-fg:      var(--alert-primary-filled-fg);
-  --_al-outline-border: var(--alert-primary-outline-border);
-  --_al-soft-bg:        var(--alert-primary-soft-bg);
+  /* — role active vars (brand default) — */
+  --_al-bg:             var(--alert-brand-bg);
+  --_al-fg:             var(--alert-brand-fg);
+  --_al-accent:         var(--alert-brand-accent);
+  --_al-border:         var(--alert-brand-border);
+  --_al-icon-color:     var(--alert-brand-icon-color);
+  --_al-title-color:    var(--alert-brand-title-color);
+  --_al-link-color:     var(--alert-brand-link-color);
+  --_al-link-hover:     var(--alert-brand-link-hover);
+  --_al-filled-bg:      var(--alert-brand-filled-bg);
+  --_al-filled-fg:      var(--alert-brand-filled-fg);
+  --_al-outlined-border: var(--alert-brand-outlined-border);
+  --_al-soft-bg:        var(--alert-brand-soft-bg);
 
   /* — rendering — */
   position: relative;
@@ -94,20 +94,20 @@
 /* ────────────────────────────────────────────────────────────────
    3.  ROLE SELECTORS
    ──────────────────────────────────────────────────────────────── */
-/* primary = default role — uses --brand-* palette */
+/* brand = default role — uses --brand-* palette */
 .alert[data-role="brand"] {
-  --_al-bg:             var(--alert-primary-bg);
-  --_al-fg:             var(--alert-primary-fg);
-  --_al-accent:         var(--alert-primary-accent);
-  --_al-border:         var(--alert-primary-border);
-  --_al-icon-color:     var(--alert-primary-icon-color);
-  --_al-title-color:    var(--alert-primary-title-color);
-  --_al-link-color:     var(--alert-primary-link-color);
-  --_al-link-hover:     var(--alert-primary-link-hover);
-  --_al-filled-bg:      var(--alert-primary-filled-bg);
-  --_al-filled-fg:      var(--alert-primary-filled-fg);
-  --_al-outline-border: var(--alert-primary-outline-border);
-  --_al-soft-bg:        var(--alert-primary-soft-bg);
+  --_al-bg:             var(--alert-brand-bg);
+  --_al-fg:             var(--alert-brand-fg);
+  --_al-accent:         var(--alert-brand-accent);
+  --_al-border:         var(--alert-brand-border);
+  --_al-icon-color:     var(--alert-brand-icon-color);
+  --_al-title-color:    var(--alert-brand-title-color);
+  --_al-link-color:     var(--alert-brand-link-color);
+  --_al-link-hover:     var(--alert-brand-link-hover);
+  --_al-filled-bg:      var(--alert-brand-filled-bg);
+  --_al-filled-fg:      var(--alert-brand-filled-fg);
+  --_al-outlined-border: var(--alert-brand-outlined-border);
+  --_al-soft-bg:        var(--alert-brand-soft-bg);
 }
 /* info — dedicated info palette (distinct blue) */
 .alert[data-role="info"] {
@@ -121,7 +121,7 @@
   --_al-link-hover:     var(--alert-info-link-hover);
   --_al-filled-bg:      var(--alert-info-filled-bg);
   --_al-filled-fg:      var(--alert-info-filled-fg);
-  --_al-outline-border: var(--alert-info-outline-border);
+  --_al-outlined-border: var(--alert-info-outlined-border);
   --_al-soft-bg:        var(--alert-info-soft-bg);
 }
 .alert[data-role="success"] {
@@ -135,7 +135,7 @@
   --_al-link-hover:     var(--alert-success-link-hover);
   --_al-filled-bg:      var(--alert-success-filled-bg);
   --_al-filled-fg:      var(--alert-success-filled-fg);
-  --_al-outline-border: var(--alert-success-outline-border);  --_al-soft-bg:        var(--alert-success-soft-bg);}
+  --_al-outlined-border: var(--alert-success-outlined-border);  --_al-soft-bg:        var(--alert-success-soft-bg);}
 .alert[data-role="warning"] {
   --_al-bg:             var(--alert-warning-bg);
   --_al-fg:             var(--alert-warning-fg);
@@ -147,7 +147,7 @@
   --_al-link-hover:     var(--alert-warning-link-hover);
   --_al-filled-bg:      var(--alert-warning-filled-bg);
   --_al-filled-fg:      var(--alert-warning-filled-fg);
-  --_al-outline-border: var(--alert-warning-outline-border);
+  --_al-outlined-border: var(--alert-warning-outlined-border);
   --_al-soft-bg:        var(--alert-warning-soft-bg);
 }
 .alert[data-role="danger"] {
@@ -161,7 +161,7 @@
   --_al-link-hover:     var(--alert-danger-link-hover);
   --_al-filled-bg:      var(--alert-danger-filled-bg);
   --_al-filled-fg:      var(--alert-danger-filled-fg);
-  --_al-outline-border: var(--alert-danger-outline-border);
+  --_al-outlined-border: var(--alert-danger-outlined-border);
   --_al-soft-bg:        var(--alert-danger-soft-bg);
 }
 .alert[data-role="neutral"] {
@@ -175,7 +175,7 @@
   --_al-link-hover:     var(--alert-neutral-link-hover);
   --_al-filled-bg:      var(--alert-neutral-filled-bg);
   --_al-filled-fg:      var(--alert-neutral-filled-fg);
-  --_al-outline-border: var(--alert-neutral-outline-border);
+  --_al-outlined-border: var(--alert-neutral-outlined-border);
   --_al-soft-bg:        var(--alert-neutral-soft-bg);
 }
 
@@ -203,9 +203,9 @@
 /* ────────────────────────────────────────────────────────────────
    5.  VARIANT: OUTLINE (transparent + role border)
    ──────────────────────────────────────────────────────────────── */
-.alert[data-variant="outline"] {
+.alert[data-variant="outlined"] {
   --_al-bg: transparent;
-  --_al-border: var(--_al-outline-border);
+  --_al-border: var(--_al-outlined-border);
 }
 
 /* ────────────────────────────────────────────────────────────────

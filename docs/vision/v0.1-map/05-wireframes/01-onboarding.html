@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>01 · Onboarding · DTF Wireframes</title>
+<link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>01 · Onboarding</h1>
+    <div class="wf-meta">Brand color → themed system + archetype scaffold, in under 30 minutes.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<!-- ============ STEP 1 ============ -->
+
+<div class="wf-step-intro">Step 1 of 4</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">What's your brand?</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">DTF Onboard</span> · brand</span>
+    <span>1 / 4</span>
+  </div>
+  <div class="wf-screen-body">
+    <div class="wf-stack gap-lg">
+
+      <div>
+        <label class="wf-label">Brand color <span class="wf-marker">1</span></label>
+        <div class="wf-row">
+          <input class="wf-input" style="flex:1;" value="#3D5EFC" />
+          <button class="wf-btn ghost">◐ from image</button>
+          <button class="wf-btn ghost">◑ from URL</button>
+        </div>
+        <div class="wf-help">We'll generate the full palette around this hue.</div>
+      </div>
+
+      <div>
+        <label class="wf-label">Live palette ladder <span class="wf-marker">2</span></label>
+        <div class="wf-ladder">
+          <div>50</div><div>100</div><div>200</div><div>300</div><div>400</div>
+          <div>500</div><div>600</div><div>700</div><div>800</div><div>900</div><div>950</div>
+        </div>
+        <div class="wf-help">Step 500 = your brand hex. Other steps derived perceptually.</div>
+      </div>
+
+      <div>
+        <label class="wf-label">Anchor mode <span class="wf-marker">3</span></label>
+        <div class="wf-stack gap-sm">
+          <span class="wf-radio on">Exact — your color lands at step 500</span>
+          <span class="wf-radio">Normalized — perceptually centered on L*=49 curve</span>
+        </div>
+      </div>
+
+      <div class="wf-btn-row">
+        <span class="wf-tertiary">Skip onboarding · get blank L1 setup</span>
+        <button class="wf-btn primary">Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Brand color is the ONLY required input. Everything else has defaults.</li>
+  <li data-num="2">Live ladder updates as user types — shows what the system will generate. Removes the "what does my palette look like?" anxiety.</li>
+  <li data-num="3">Anchor mode is a known DTF gotcha. Default to "Exact" — what the user picks should be what they see at step 500.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ STEP 2 ============ -->
+
+<div class="wf-step-intro">Step 2 of 4</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">Pick a typography preset</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">DTF Onboard</span> · typography</span>
+    <span>2 / 4</span>
+  </div>
+  <div class="wf-screen-body">
+    <div class="wf-grid cols-3">
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">SYSTEM MODERN</div>
+        <div style="font-size:32px; font-weight:600; margin:12px 0 4px;">Aa</div>
+        <div style="font-size:12px; color:var(--ink-2);">Inter · Geist</div>
+        <div style="margin-top:16px;"><span class="wf-radio on">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">EDITORIAL</div>
+        <div style="font-family:Georgia, serif; font-size:32px; margin:12px 0 4px;">Aa</div>
+        <div style="font-size:12px; color:var(--ink-2);">Source Serif · Newsreader</div>
+        <div style="margin-top:16px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">GEOMETRIC</div>
+        <div style="font-size:32px; font-weight:500; margin:12px 0 4px; letter-spacing:-0.02em;">Aa</div>
+        <div style="font-size:12px; color:var(--ink-2);">Manrope · Outfit</div>
+        <div style="margin-top:16px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;">
+      <button class="wf-btn ghost">▷ Upload custom fonts <span class="wf-marker">1</span></button>
+    </div>
+
+    <div class="wf-btn-row">
+      <button class="wf-btn ghost">← Back</button>
+      <button class="wf-btn primary">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Custom font upload is a power-user path. Most teams pick a preset. Don't make the preset feel like a downgrade.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ STEP 3 ============ -->
+
+<div class="wf-step-intro">Step 3 of 4</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">What kind of product are you building?</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">DTF Onboard</span> · archetype</span>
+    <span>3 / 4</span>
+  </div>
+  <div class="wf-screen-body">
+    <div class="wf-grid cols-3" style="gap:16px;">
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">DASHBOARD</div>
+        <div class="wf-box soft" style="margin:12px 0; min-height:80px; padding:8px; display:flex; gap:6px;">
+          <div style="width:24px; background:var(--bg); border:1px dashed var(--line-soft);"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:4px;">
+            <div style="height:10px; background:var(--bg); border:1px dashed var(--line-soft);"></div>
+            <div style="display:flex; gap:4px;">
+              <div style="flex:1; height:24px; border:1px dashed var(--line-soft);"></div>
+              <div style="flex:1; height:24px; border:1px dashed var(--line-soft);"></div>
+              <div style="flex:1; height:24px; border:1px dashed var(--line-soft);"></div>
+            </div>
+            <div style="flex:1; border:1px dashed var(--line-soft);"></div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--ink-2); font-family:var(--mono);">Sidebar · Stats · Tables</div>
+        <div style="margin-top:12px;"><span class="wf-radio on">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">MARKETPLACE</div>
+        <div class="wf-box soft" style="margin:12px 0; min-height:80px; padding:8px;">
+          <div style="height:10px; background:var(--bg); border:1px dashed var(--line-soft); margin-bottom:6px;"></div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;">
+            <div style="height:36px; border:1px dashed var(--line-soft);"></div>
+            <div style="height:36px; border:1px dashed var(--line-soft);"></div>
+            <div style="height:36px; border:1px dashed var(--line-soft);"></div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--ink-2); font-family:var(--mono);">Search · Filters · Cards</div>
+        <div style="margin-top:12px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">EDITORIAL</div>
+        <div class="wf-box soft" style="margin:12px 0; min-height:80px; padding:8px; display:flex; gap:6px;">
+          <div style="width:18px; display:flex; flex-direction:column; gap:3px;">
+            <div style="height:4px; border:1px dashed var(--line-soft);"></div>
+            <div style="height:4px; border:1px dashed var(--line-soft);"></div>
+            <div style="height:4px; border:1px dashed var(--line-soft);"></div>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:3px;">
+            <div style="height:6px; border:1px dashed var(--line-soft);"></div>
+            <div style="height:6px; border:1px dashed var(--line-soft);"></div>
+            <div style="flex:1; border:1px dashed var(--line-soft);"></div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:var(--ink-2); font-family:var(--mono);">Article · ToC · Author</div>
+        <div style="margin-top:12px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">SOCIAL / FEED</div>
+        <div class="wf-box soft empty" style="margin:12px 0;">feed scaffold</div>
+        <div style="font-size:11px; color:var(--ink-2); font-family:var(--mono);">Posts · Reactions · Profile</div>
+        <div style="margin-top:12px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">EDITOR / CANVAS</div>
+        <div class="wf-box soft empty" style="margin:12px 0;">editor scaffold</div>
+        <div style="font-size:11px; color:var(--ink-2); font-family:var(--mono);">Canvas · Toolbar · Panels</div>
+        <div style="margin-top:12px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">WORKFLOW / FORMS</div>
+        <div class="wf-box soft empty" style="margin:12px 0;">workflow scaffold</div>
+        <div style="font-size:11px; color:var(--ink-2); font-family:var(--mono);">Steps · Fields · Progress</div>
+        <div style="margin-top:12px;"><span class="wf-radio">Select</span></div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;" class="wf-note">
+      None of these fit? <span class="wf-tertiary">Skip — start with blank L1 only</span>. You can always add a kit later. <span class="wf-marker">1</span>
+    </div>
+
+    <div class="wf-btn-row">
+      <button class="wf-btn ghost">← Back</button>
+      <button class="wf-btn primary">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Skip is a first-class option. Never force someone into an archetype they don't recognize. The kit is a scaffold, not a cage.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ STEP 4 ============ -->
+
+<div class="wf-step-intro">Step 4 of 4 · Ready</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">Your Dashboard kit for "Acme" is ready.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">DTF Onboard</span> · ready</span>
+    <span><span class="wf-pill ok">complete</span></span>
+  </div>
+  <div class="wf-screen-body">
+    <div class="wf-grid cols-2" style="gap:24px;">
+
+      <div class="wf-stack">
+        <h3 style="margin:0;">Open</h3>
+        <button class="wf-btn primary" style="padding:16px;">▶ Open in Figma</button>
+        <div class="wf-help">Creates a new file with the kit + tokens applied.</div>
+
+        <button class="wf-btn">↓ Download code repo</button>
+        <div class="wf-help">pnpm package: tokens + L1 atoms + Dashboard L2 kit.</div>
+
+        <button class="wf-btn">⌘ Copy CLI command</button>
+        <div style="font-family:var(--mono); font-size:11px; background:var(--bg); padding:8px 12px; border:1px solid var(--line-soft);">
+          dtf init acme --archetype=dashboard
+        </div>
+      </div>
+
+      <div>
+        <h3 style="margin:0 0 12px;">What you got</h3>
+        <div class="wf-stack gap-sm">
+          <div class="wf-row"><span class="wf-pill ok">✓</span> <span>Branded token system <span style="color:var(--ink-3); font-family:var(--mono); font-size:11px;">(color · type · spacing · motion)</span></span></div>
+          <div class="wf-row"><span class="wf-pill ok">✓</span> <span>18 L1 atoms <span style="color:var(--ink-3); font-family:var(--mono); font-size:11px;">(Button · Input · Card · …)</span></span></div>
+          <div class="wf-row"><span class="wf-pill ok">✓</span> <span>11 L2 patterns <span style="color:var(--ink-3); font-family:var(--mono); font-size:11px;">(Sidebar · StatTile · DataTable · …)</span></span></div>
+          <div class="wf-row"><span class="wf-pill ok">✓</span> <span>3 example pages <span style="color:var(--ink-3); font-family:var(--mono); font-size:11px;">(Overview · Users · Settings)</span></span></div>
+          <div class="wf-row"><span class="wf-pill ok">✓</span> <span>24 recipes <span style="color:var(--ink-3); font-family:var(--mono); font-size:11px;">(documented compositions)</span></span></div>
+        </div>
+
+        <div class="wf-note" style="margin-top:24px;">
+          Everything is editable. The kit is a starting point, not a constraint. <span class="wf-marker">1</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">The "What you got" list is the moment that justifies onboarding. Make it tangible — counts + names, not adjectives.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ WHAT HAPPENS WHEN YOU CLICK "OPEN IN FIGMA" ============ -->
+
+<div class="wf-step-intro">What "Open in Figma" actually does</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">A new Figma file opens with the kit pre-installed.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Figma</span> · Acme Dashboard · new file</span>
+    <span style="font-family:var(--mono); font-size:11px;">just created by DTF</span>
+  </div>
+  <div class="wf-screen-body" style="padding:0;">
+    <div style="display:grid; grid-template-columns:200px 1fr; min-height:380px;">
+
+      <!-- Figma pages sidebar -->
+      <div style="border-right:1px solid var(--line); padding:16px 12px; background:var(--bg);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Pages</div>
+        <div class="wf-stack gap-sm" style="font-family:var(--mono); font-size:12px;">
+          <div>📁 Tokens</div>
+          <div>📁 L1 Atoms</div>
+          <div>📁 L2 Kit</div>
+          <div>📁 L3 Examples</div>
+          <div>📁 Recipes</div>
+          <div style="font-weight:600; color:var(--ink);">⭐ My Work <span class="wf-marker">1</span></div>
+        </div>
+        <div style="margin-top:24px; font-family:var(--mono); font-size:10px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px;">Libraries</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2);">✓ DTF Core (linked)</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2);">✓ Acme Tokens</div>
+      </div>
+
+      <!-- Figma canvas area showing "My Work" page (empty + helpful) -->
+      <div style="padding:32px; background:#f4f4f1;">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-bottom:16px;">⭐ My Work — your blank canvas</div>
+
+        <div class="wf-box dashed" style="min-height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; background:#fafaf8;">
+          <div style="font-family:var(--mono); font-size:13px; color:var(--ink-2);">Start composing here.</div>
+          <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">Drag L1 atoms or L2 patterns from the assets panel →</div>
+
+          <div class="wf-row" style="margin-top:16px; gap:8px;">
+            <button class="wf-btn">📋 Duplicate an example page</button>
+            <button class="wf-btn">🔍 Browse the L2 kit</button>
+            <button class="wf-btn">✨ Compose from intent</button>
+          </div>
+        </div>
+
+        <div class="wf-callout" style="margin-top:16px;">Three paths in. The designer picks the one that matches how they think. <span class="wf-marker">2</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">"My Work" is pre-created. The first thing a designer sees is THEIR space, not the library. Lowers the "where do I start?" anxiety.</li>
+  <li data-num="2">Three entry paths: copy an example (concrete), browse the kit (exploratory), AI compose (intent-driven). Different designers, different doors.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<div class="wf-step-intro">From here, the designer enters the kit</div>
+<div class="wf-row between" style="padding:24px; border:1px solid var(--line); background:var(--bg-elev);">
+  <div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Next surface</div>
+    <div style="font-family:var(--sans); font-size:16px; font-weight:600; margin-top:4px;">02 · Archetype Kit walkthrough</div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); margin-top:4px;">See what the Dashboard kit actually contains: 11 L2 patterns, 3 example pages, 24 recipes.</div>
+  </div>
+  <a class="wf-btn primary" href="02-archetype-kit.html">Open kit walkthrough →</a>
+</div>
+
+<!-- ============ KEY DECISIONS ============ -->
+
+<h2>Key decisions encoded in this flow</h2>
+
+<ul class="wf-anno-list">
+  <li data-num="A">Brand color is the only required field. Everything else has a default.</li>
+  <li data-num="B">Archetype is optional — designer can skip to a blank L1-only setup.</li>
+  <li data-num="C">Output is Figma + code + CLI simultaneously — no lock-in to one surface.</li>
+  <li data-num="D">Example L3 pages are scaffolds, never "the way it must look."</li>
+  <li data-num="E">No login required to try this flow. Onboarding is the demo.</li>
+</ul>
+
+<!-- ============ REVIEW ============ -->
+
+<h2>Review this wireframe</h2>
+<div class="wf-stack gap-sm" style="font-family:var(--mono); font-size:12px; color:var(--ink-2);">
+  <div>Whole flow: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span> <span class="wf-pill">expand</span> <span class="wf-pill">cut</span></div>
+  <div>Step 1 (brand): <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Step 2 (type): <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Step 3 (archetype): <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Step 4 (output): <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+</div>
+
+<div class="wf-footer">
+  <span><a href="index.html">← all wireframes</a></span>
+  <span><a href="02-archetype-kit.html">02 · Archetype Kit →</a></span>
+</div>
+
+</body>
+</html>

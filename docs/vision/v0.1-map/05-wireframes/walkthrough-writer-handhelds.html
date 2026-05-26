@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Walkthrough · Writer Handhelds vs v0.1 wireframes</title>
+<link rel="stylesheet" href="wireframes.css" />
+<style>
+  .verdict { display:inline-block; padding:2px 8px; font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:0.06em; border:1px solid var(--line); margin-right:6px; }
+  .verdict.holds { border-color:var(--ok); color:var(--ok); }
+  .verdict.bends { border-color:var(--warn); color:var(--warn); }
+  .verdict.breaks { border-color:var(--bad); color:var(--bad); }
+  .verdict.missing { border-color:var(--ink-3); color:var(--ink-3); }
+  .wf-finding { padding:12px 14px; border:1px solid var(--line); margin-bottom:8px; }
+  .wf-finding-head { display:flex; gap:8px; align-items:baseline; margin-bottom:6px; font-family:var(--mono); font-size:11px; color:var(--ink-2); }
+  .wf-finding-head strong { color:var(--ink); font-weight:600; }
+  .wf-finding-body { font-family:var(--sans); font-size:13px; color:var(--ink); line-height:1.6; }
+  .wf-finding-body code { font-family:var(--mono); font-size:11px; background:var(--bg); padding:1px 5px; }
+  .wf-section { margin:32px 0 24px; padding-top:24px; border-top:2px solid var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>Walkthrough · Writer Handhelds vs v0.1 wireframes</h1>
+    <div class="wf-meta">Stress-testing the 5 wireframes against a real, shipped DTF project.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<!-- ============ TEST SUBJECT ============ -->
+
+<div class="wf-box" style="margin-bottom:32px;">
+  <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Test subject</div>
+  <div style="font-family:var(--sans); font-size:18px; font-weight:600; margin:4px 0 12px;">Writer Handhelds · mobile writing app</div>
+  <div class="wf-grid cols-4" style="gap:12px; font-family:var(--mono); font-size:11px;">
+    <div><strong>Shape</strong><br/>Mobile · iOS/Android</div>
+    <div><strong>Brand</strong><br/>#286CE5 (blue)</div>
+    <div><strong>Roles</strong><br/>8 (brand, danger, warning, info, success, greyscale, desaturated, neutral)</div>
+    <div><strong>Themes</strong><br/>Light + dark (full parity)</div>
+    <div><strong>Surfaces</strong><br/>8 levels (bright, base, dim, deep, container, over-container, float, inverse)</div>
+    <div><strong>Versions</strong><br/>17 shipped (v0.0.1 → v1.0.10)</div>
+    <div><strong>Last edit</strong><br/>2026-05-22 (4d ago)</div>
+    <div><strong>Hybrid</strong><br/>Long-form reading + editor chrome</div>
+  </div>
+</div>
+
+<p style="font-family:var(--mono); font-size:12px; color:var(--ink-2); max-width:780px;">
+  For each wireframe screen: <strong>does the model hold</strong> when applied to this real project?
+  Verdict pills: <span class="verdict holds">holds</span> works as drawn ·
+  <span class="verdict bends">bends</span> works but needs adjustment ·
+  <span class="verdict breaks">breaks</span> model doesn't apply ·
+  <span class="verdict missing">missing</span> wireframe didn't cover this case.
+</p>
+
+<!-- ============ WIREFRAME 01 ============ -->
+
+<div class="wf-section">
+  <h2 style="margin:0;">01 · Onboarding</h2>
+  <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2); margin-top:4px;">Brand → archetype → working scaffold</div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Step 1 · Brand color + ladder</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds went through this exact step. <code>#286CE5</code> → 20-step ladder visible in <code>primitives.css</code>. Anchor mode worked.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>Step 1 · One brand color is not enough</strong></div>
+  <div class="wf-finding-body">
+    Real project has <strong>8 roles</strong> (brand, danger, warning, info, success, greyscale, desaturated, neutral). The wireframe shows only one swatch picker. In practice users need to pick at least brand + neutral + maybe accent. <strong>Refinement:</strong> Step 1 should be "pick brand" (anchor) then auto-derive the others with one-tap overrides, OR a multi-swatch UI.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Theme step (light + dark)</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds ships both themes with non-trivial differences (e.g. light <code>on-component=fixed-white</code>, dark also white but step indices differ). The wireframe never shows a "choose themes / configure dark mode" step. <strong>Refinement:</strong> Add Step 1.5 — "Themes: light only / dark only / both" — with a preview of how the chosen brand reads in both.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict breaks">breaks</span><strong>Step 3 · Archetype grid (6 cards: Dashboard, Marketing, etc.)</strong></div>
+  <div class="wf-finding-body">
+    The wireframe lists desktop-web shapes. There is no <strong>"mobile writing app"</strong> tile. Even "mobile app" is too coarse — a writing app needs editor toolbars + content cards; a chat app needs message bubbles + composer; a finance app needs charts + tile dashboards. <strong>Refinement:</strong> either expand the archetype list (12–20 shapes including Mobile-Reading, Mobile-Editor, Mobile-Feed, Mobile-Commerce) <em>or</em> add "Start blank + tell us what you're building" as fallback. The kit chosen here is the most consequential onboarding decision and the wireframe currently undersells it.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Surfaces config</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds has 8 surface levels. The wireframe doesn't mention surfaces at all — they're a configured artifact in <code>config.json</code>. <strong>Refinement:</strong> surfaces probably shouldn't be in onboarding (too advanced), but the output screen ("what you got") should mention them, and there needs to be a "Tune surfaces" entry point elsewhere.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>"Open in Figma" preview</strong></div>
+  <div class="wf-finding-body">
+    Showed a desktop file with 6 pages. For mobile project, file structure is probably the same — but the L2 Kit page would show mobile patterns. <strong>Refinement:</strong> the preview should be archetype-aware (show the actual kit they'd get), not a generic dashboard skeleton.
+  </div>
+</div>
+
+<!-- ============ WIREFRAME 02 ============ -->
+
+<div class="wf-section">
+  <h2 style="margin:0;">02 · Archetype Kit</h2>
+  <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2); margin-top:4px;">The L2 kit + L3 examples + recipes</div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Six-page Figma file structure</strong></div>
+  <div class="wf-finding-body">
+    Tokens / L1 / L2 Kit / L3 Examples / Recipes / My Work — this structure is shape-agnostic and works for mobile.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict breaks">breaks</span><strong>The 11 L2 patterns shown (AppShell, StatTile, DataTable, FilterBar…)</strong></div>
+  <div class="wf-finding-body">
+    None of these are right for Writer Handhelds. Mobile Writing kit would be roughly:
+    <ul style="margin:8px 0; padding-left:20px; font-family:var(--mono); font-size:12px;">
+      <li>AppShell (mobile · status bar + content + bottom nav, not sidebar + content)</li>
+      <li>BottomNav (4–5 tabs)</li>
+      <li>TopBar (back / title / actions)</li>
+      <li>NoteCard (list item)</li>
+      <li>NoteListEmpty (empty state with illustration)</li>
+      <li>EditorCanvas (the writing surface)</li>
+      <li>EditorToolbar (formatting actions)</li>
+      <li>FormatSheet (bottom-sheet picker for fonts/sizes)</li>
+      <li>SearchBar (with cancel + suggestions)</li>
+      <li>SwipeRow (swipe-to-delete row)</li>
+      <li>ContextMenu (long-press)</li>
+      <li>SettingsRow (with disclosure / toggle / switch)</li>
+      <li>Confirm sheet (iOS action sheet style)</li>
+    </ul>
+    <strong>Refinement:</strong> the wireframe should make clear that the L2 grid is <em>archetype-specific</em> and show two different examples (Dashboard kit + Mobile Writing kit side-by-side) to drive the point that "kit per shape" is real.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>L3 example annotated (the "Users" page)</strong></div>
+  <div class="wf-finding-body">
+    For writer-handhelds, equivalent L3 examples would be <em>"NoteList screen"</em> and <em>"Editor screen"</em> — both annotated showing how AppShell + BottomNav + NoteCard compose, or AppShell + EditorToolbar + EditorCanvas compose. Concept holds; specifics need swapping.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Promises / doesn't promise split</strong></div>
+  <div class="wf-finding-body">
+    Shape-agnostic. Works as drawn.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Recipes vs L2 distinction</strong></div>
+  <div class="wf-finding-body">
+    For mobile: <em>"toolbar-with-overflow"</em>, <em>"pull-to-refresh header"</em>, <em>"keyboard-aware footer"</em> are clearly recipes (compositions), not components. The split survives the mobile context.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Platform variants inside the kit</strong></div>
+  <div class="wf-finding-body">
+    Mobile means iOS conventions ≠ Android. Bottom-sheet behavior, back-gesture, action-sheet style all differ. The wireframe doesn't address whether the kit has iOS/Android variants or stays platform-neutral. <strong>Refinement:</strong> add a callout — does the kit ship one neutral set, or platform-tagged variants?
+  </div>
+</div>
+
+<!-- ============ WIREFRAME 03 ============ -->
+
+<div class="wf-section">
+  <h2 style="margin:0;">03 · Archetype Gallery</h2>
+  <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2); margin-top:4px;">Archaeology catalog UI · 127 archetypes etc.</div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>"Crawl the live product" assumption</strong></div>
+  <div class="wf-finding-body">
+    Wireframe assumed Playwright + HTML extraction. <strong>Writer Handhelds is a native mobile app.</strong> No DOM to crawl. Archaeology pipeline needs a different ingestion path: screenshot-based vision (CLIP/GPT-4V), or instrumentation hooks via React Native/Flutter inspector, or design-time Figma file scan. <strong>Refinement:</strong> the wireframe's top header should show ingestion source ("HTML crawl" / "iOS build inspector" / "Figma library scan") — different sources have different fidelity tradeoffs.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Catalog grid + fidelity score + filters</strong></div>
+  <div class="wf-finding-body">
+    The visual concept (tiles, instance counts, on-system %) is platform-agnostic. Whatever the ingestion source, the gallery format works.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Drift tab · property-by-property table</strong></div>
+  <div class="wf-finding-body">
+    padding / radius / shadow / font-size comparison works as drawn. Even more useful on mobile where 1pt off-grid is visible at 2x/3x density.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Spec tab + reviewer actions</strong></div>
+  <div class="wf-finding-body">
+    LLM auto-drafts spec from cluster representatives; same model applies regardless of source platform.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Theme dimension in drift detection</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds has light + dark. If a UserRow drifts only in dark mode (e.g. wrong on-component step), the wireframe's drift table doesn't surface that. <strong>Refinement:</strong> drift report should have a <code>theme</code> column or per-theme stats.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Density / viewport dimension</strong></div>
+  <div class="wf-finding-body">
+    Mobile has device sizes (small iPhone, large iPhone, tablet). Same drift but at <code>compact</code> vs <code>regular</code> density. Wireframe currently shows "38 routes · 4 viewports" — for mobile this should be "device classes."
+  </div>
+</div>
+
+<!-- ============ WIREFRAME 04 ============ -->
+
+<div class="wf-section">
+  <h2 style="margin:0;">04 · Drift Dashboard</h2>
+  <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2); margin-top:4px;">Exec rollup · 70% org-wide, trend chart, top sources</div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Org rollup, per-product cards, trend chart</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds would be one card in the per-product grid. Trend logic works. Exec slide format works.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>Top drift sources table · "Fix →" buttons</strong></div>
+  <div class="wf-finding-body">
+    On the web product the "Fix →" button could plausibly open a codemod / PR. For native mobile, "fix" means filing a ticket or opening the Figma component (since CSS doesn't apply). <strong>Refinement:</strong> the action surface depends on ingestion source — needs to be explicit per row.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict breaks">breaks</span><strong>Per-PR drift table</strong></div>
+  <div class="wf-finding-body">
+    Wireframe shows GitHub PRs with Δ Fidelity per PR. For mobile apps with biweekly builds + native code, "per PR drift" is less useful than "per release drift" or "per design-spec drift." <strong>Refinement:</strong> the engineering view should adapt to the artifact cadence (PR for web, build/sprint for mobile, page for marketing sites).
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Where token-version drift shows up</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds shipped 17 token versions in ~16 days. Some components in the live product use v1.0.5 tokens; new screens use v1.0.10. The dashboard never shows "X% of your product is on stale tokens." <strong>Refinement:</strong> add a "token version distribution" chip — this is unique to systems with versioned tokens (which DTF is).
+  </div>
+</div>
+
+<!-- ============ WIREFRAME 05 ============ -->
+
+<div class="wf-section">
+  <h2 style="margin:0;">05 · Compose from Intent</h2>
+  <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2); margin-top:4px;">AI compose in Figma · intent → real instances</div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Intent input + context detection</strong></div>
+  <div class="wf-finding-body">
+    "Note list with search bar and floating compose button" is a perfectly natural intent for writer-handhelds. Context auto-detection (project = Writer Handhelds, theme, page, available kit) all applies.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>Example shown was a desktop login form</strong></div>
+  <div class="wf-finding-body">
+    Not a problem in itself — but the wireframe leaves the impression that "compose" is web-shape. We should show 3 examples in v0.2: desktop form, mobile screen, marketing section. Drives home that compose works for any shape if the kit exists.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Composition breakdown + 0 off-system pill</strong></div>
+  <div class="wf-finding-body">
+    The "what got used + 0 hardcoded values" panel is the core trust mechanism. Works regardless of shape.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict bends">bends</span><strong>"Matches existing recipe" callout</strong></div>
+  <div class="wf-finding-body">
+    For a project with 17 token versions and active iteration, the recipe library is probably small at first. The callout works but needs a fallback for "no matching recipe yet — this could be the first."
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Theme target in the compose flow</strong></div>
+  <div class="wf-finding-body">
+    Writer Handhelds is dark-mode-first per its config (dark mapping is non-trivial). When composing, does the preview render in light, dark, or both? Wireframe shows only one. <strong>Refinement:</strong> add a theme toggle in the preview panel; or a "render both" mode for projects with multiple themes.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict holds">holds</span><strong>Promotion loop ("used 3+ times → review")</strong></div>
+  <div class="wf-finding-body">
+    Shape-agnostic. Works as drawn.
+  </div>
+</div>
+
+<div class="wf-finding">
+  <div class="wf-finding-head"><span class="verdict missing">missing</span><strong>Round-trip: compose → ship → archaeology catches it</strong></div>
+  <div class="wf-finding-body">
+    The big-loop diagram in 05 says "compose → ship → archaeology → drift → back." But for a mobile project without HTML-archaeology yet, the loop doesn't actually close. <strong>Refinement:</strong> the loop diagram should note which ingestion sources are live today vs roadmap.
+  </div>
+</div>
+
+<!-- ============ ROLLUP ============ -->
+
+<div class="wf-section">
+  <h2 style="margin:0;">Rollup · what writer-handhelds taught us</h2>
+</div>
+
+<div class="wf-grid cols-2" style="gap:16px;">
+
+  <div class="wf-box">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ok); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">What held up</div>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="✓">Brand ladder + anchor logic (Step 1 of onboarding)</li>
+      <li data-num="✓">Six-page Figma file structure (shape-agnostic)</li>
+      <li data-num="✓">Promises / doesn't-promise contract</li>
+      <li data-num="✓">Recipes vs L2 distinction</li>
+      <li data-num="✓">Catalog grid + fidelity score format</li>
+      <li data-num="✓">Drift property table + spec auto-draft</li>
+      <li data-num="✓">Org rollup, trend, exec slide</li>
+      <li data-num="✓">Intent input + composition breakdown</li>
+      <li data-num="✓">Promotion loop</li>
+    </ul>
+  </div>
+
+  <div class="wf-box" style="border-color:var(--bad);">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--bad); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">What broke or bent</div>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="✗">Onboarding assumed one brand color → real projects need 8 roles</li>
+      <li data-num="✗">No theme/dark-mode step in onboarding</li>
+      <li data-num="✗">Archetype grid was desktop-web only → no mobile archetypes</li>
+      <li data-num="✗">L2 kit example was dashboard → didn't prove "kit per shape"</li>
+      <li data-num="✗">Archaeology assumed HTML → native mobile needs different ingestion</li>
+      <li data-num="✗">Drift table missing <code>theme</code> dimension</li>
+      <li data-num="✗">Per-PR drift assumed web cadence → mobile is per-release/per-build</li>
+      <li data-num="✗">Compose preview shows only one theme</li>
+      <li data-num="✗">Big-loop diagram doesn't say which ingestion sources are live</li>
+    </ul>
+  </div>
+
+</div>
+
+<h2>New things to add to v0.2</h2>
+
+<table class="wf-table">
+  <thead>
+    <tr><th>#</th><th>Concept</th><th>Where it goes</th><th>Why</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>Theme-step in onboarding</strong></td>
+      <td>01 · new Step 1.5</td>
+      <td>Real projects always ship light+dark; auto-deriving dark from light is non-trivial and worth its own step.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>Multi-role brand picker</strong></td>
+      <td>01 · expand Step 1</td>
+      <td>8 roles is the median; one color is wishful.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Mobile archetypes in the grid</strong></td>
+      <td>01 · expand Step 3</td>
+      <td>Currently web-shape only; need at least 3 mobile shapes.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>Two-shape kit comparison</strong></td>
+      <td>02 · side-by-side</td>
+      <td>Showing Dashboard kit AND Mobile Writing kit drives home "kit per shape, not per company."</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>Ingestion source selector</strong></td>
+      <td>03 · header chip</td>
+      <td>HTML crawl / iOS inspector / Figma scan — each has different fidelity. Make explicit.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong>Theme + density dimensions in drift</strong></td>
+      <td>03 · drift table columns</td>
+      <td>Mobile + multi-theme projects need this slicing.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong>Token-version distribution</strong></td>
+      <td>04 · new chip</td>
+      <td>Versioned tokens are unique to DTF; "% on stale tokens" is a buyer-relevant metric.</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><strong>Cadence-aware engineering view</strong></td>
+      <td>04 · per-PR table</td>
+      <td>PR for web, release/build for native, page for marketing.</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><strong>Theme toggle in compose preview</strong></td>
+      <td>05 · preview panel</td>
+      <td>Multi-theme projects need both renders before placing.</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><strong>Ingestion-status overlay on the big loop</strong></td>
+      <td>05 · big-loop diagram</td>
+      <td>Be honest about which stages are shipped vs roadmap.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="wf-note" style="margin-top:24px;">
+  Biggest single insight: <strong>v0.1 wireframes are dashboard-shape biased.</strong> Writer Handhelds exposed that the "archetype kit per shape" thesis is genuinely real — but only one shape (web dashboard) is visible in the wireframes. v0.2 must show at least two shapes side-by-side or the central thesis isn't proven by the artifact. <span class="wf-marker">★</span>
+</div>
+
+<div class="wf-footer">
+  <span><a href="index.html">← all wireframes</a></span>
+  <span><a href="01-onboarding.html">01 · Onboarding →</a></span>
+</div>
+
+</body>
+</html>

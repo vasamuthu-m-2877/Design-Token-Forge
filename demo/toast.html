@@ -40,8 +40,8 @@
 <header class="demo-header">
   <h1>Toast Explorer <span>— Design Token Forge</span></h1>
   <div class="demo-meta">
-    <span class="demo-badge">89 CSS Variables</span>
-    <span class="demo-badge">4 Roles</span>
+    <span class="demo-badge">105 CSS Variables</span>
+    <span class="demo-badge">6 Roles</span>
     <span class="demo-badge">3 Sizes</span>
     <span class="demo-badge">4 Variants</span>
     <span class="demo-badge">6 Positions</span>
@@ -55,9 +55,11 @@
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Brand</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="info" type="button">Info</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="neutral" type="button">Neutral</button>
     </div>
   </div>
   <div class="control-divider"></div>
@@ -76,7 +78,7 @@
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="" type="button">Default</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="soft" type="button">Soft</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="filled" type="button">Filled</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outlined" type="button">Outlined</button>
     </div>
   </div>
 </nav>
@@ -201,7 +203,7 @@
     &lt;div
       key={t.id}
       className="toast"
-      data-role={t.role}           {/* primary | success | warning | danger */}
+      data-role={t.role}           {/* brand | info | success | warning | danger | neutral */}
       data-size={t.size}           {/* small | base | large */}
       data-variant={t.variant}     {/* soft | filled | outline */}
       data-state={t.state}
@@ -288,7 +290,7 @@
 --toast-{role}-accent / -icon-color / -title-color
 --toast-{role}-soft-bg       /* soft variant tinted bg */
 --toast-{role}-filled-bg / -filled-fg
---toast-{role}-outline-border
+--toast-{role}-outlined-border
 
 /* ── Typography ── */
 --toast-font-family / -font-weight / -line-height
@@ -326,7 +328,7 @@
   /* ── Constants ─────────────────────────────────────── */
   var ROLES    = ['brand','success','warning','danger'];
   var SIZES    = ['small','base','large'];
-  var VARIANTS = ['','soft','filled','outline'];
+  var VARIANTS = ['','soft','filled','outlined'];
   var VLABELS  = ['Default','Soft','Filled','Outline'];
   var POSITIONS= ['top-left','top-center','top-right','bottom-left','bottom-center','bottom-right'];
 
@@ -430,7 +432,7 @@
     ['--toast-bg',                '--surface-base-cn-bg'],
     ['--toast-fg',                '--surface-base-ct-default'],
     ['--toast-shadow',            '--shadow-lg'],
-    ['--toast-primary-accent',    '--brand-component-bg-default'],
+    ['--toast-brand-accent',    '--brand-component-bg-default'],
     ['--toast-accent-width',      '4px'],
     ['--toast-transition-duration','--duration-normal']
   ];

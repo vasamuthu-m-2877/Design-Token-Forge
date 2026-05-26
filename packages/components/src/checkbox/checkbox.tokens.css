@@ -1,6 +1,10 @@
 /* ════════════════════════════════════════════════════════════════
    Design Token Forge — Checkbox Token Defaults
-   Layer 0: System defaults for 74 checkbox variables.
+   Layer 0: System defaults for ~76 checkbox variables.
+   Anatomy: visible box + check/dash + label. Two structural variants
+   (filled, outlined). Role palette switched via [data-role] in
+   checkbox.css (brand is default; danger/warning/info/success/neutral
+   are remaps). Invalid-state border treatment is orthogonal to role.
    All values reference global tokens — zero hardcoded visuals.
    ════════════════════════════════════════════════════════════════ */
 
@@ -66,45 +70,47 @@
   --checkbox-opacity-disabled: 0.5;
 
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE — OUTLINE VARIANT  (13 vars)
+     🎨 SURFACE — OUTLINED VARIANT  (13 vars)
      ──────────────────────────────────────────────────────────── */
 
-  /* ── Outline unchecked (off) — transparent + border ── */
-  --checkbox-outline-box-bg-off: transparent;
-  --checkbox-outline-box-bg-off-hover: var(--surface-base-cm-bg-hover);
-  --checkbox-outline-box-border-color-off: var(--surface-base-cm-outline);
-  --checkbox-outline-box-border-color-off-hover: var(--surface-base-cm-outline-hover);
+  /* ── Outlined unchecked (off) — transparent + border ── */
+  --checkbox-outlined-box-bg-off: transparent;
+  --checkbox-outlined-box-bg-off-hover: var(--surface-base-cm-bg-hover);
+  --checkbox-outlined-box-border-color-off: var(--surface-base-cm-outline);
+  --checkbox-outlined-box-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
-  /* ── Outline checked (on) — filled with semantic role ── */
-  --checkbox-outline-box-bg-on: var(--brand-component-bg-default);
-  --checkbox-outline-box-bg-on-hover: var(--brand-component-bg-hover);
-  --checkbox-outline-box-border-color-on: var(--brand-component-bg-default);
-  --checkbox-outline-box-border-color-on-hover: var(--brand-component-bg-hover);
+  /* ── Outlined checked (on) — filled with semantic role ── */
+  --checkbox-outlined-box-bg-on: var(--brand-component-bg-default);
+  --checkbox-outlined-box-bg-on-hover: var(--brand-component-bg-hover);
+  --checkbox-outlined-box-border-color-on: var(--brand-component-bg-default);
+  --checkbox-outlined-box-border-color-on-hover: var(--brand-component-bg-hover);
 
-  /* ── Outline check mark ── */
-  --checkbox-outline-check-color: var(--color-fixed-white);
+  /* ── Outlined check mark ── */
+  --checkbox-outlined-check-color: var(--color-fixed-white);
 
-  /* ── Outline disabled ── */
-  --checkbox-outline-box-bg-on-disabled: var(--brand-component-bg-default);
-  --checkbox-outline-box-border-color-disabled: var(--surface-base-cm-outline);
-  --checkbox-outline-opacity-disabled: 0.5;
+  /* ── Outlined disabled ── */
+  --checkbox-outlined-box-bg-on-disabled: var(--brand-component-bg-default);
+  --checkbox-outlined-box-border-color-disabled: var(--surface-base-cm-outline);
+  --checkbox-outlined-opacity-disabled: 0.5;
 
-  /* ── Outline border ── */
-  --checkbox-outline-box-border-width: 2px;
+  /* ── Outlined border ── */
+  --checkbox-outlined-box-border-width: 2px;
 
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE — DANGER / ERROR  (8 vars, shared across variants)
+     🎨 SURFACE — INVALID STATE  (8 vars, shared across variants)
+     Invalid is a STATE (aria-invalid="true"), not a role. Default
+     mapping uses the danger palette; product themes can override.
      ────────────────────────────────────────────────────────── */
-  /* danger — canonical name */
+  /* danger primitives — semantic anchors */
   --checkbox-box-border-color-danger: var(--danger-component-outline-default);
   --checkbox-box-border-color-danger-hover: var(--danger-component-outline-hover);
   --checkbox-box-bg-on-danger: var(--danger-component-bg-default);
   --checkbox-box-bg-on-danger-hover: var(--danger-component-bg-hover);
-  /* error — backward-compatible alias */
-  --checkbox-box-border-color-error: var(--checkbox-box-border-color-danger);
-  --checkbox-box-border-color-error-hover: var(--checkbox-box-border-color-danger-hover);
-  --checkbox-box-bg-on-error: var(--checkbox-box-bg-on-danger);
-  --checkbox-box-bg-on-error-hover: var(--checkbox-box-bg-on-danger-hover);
+  /* invalid — canonical state tokens used by [aria-invalid="true"] rules */
+  --checkbox-box-border-color-invalid: var(--checkbox-box-border-color-danger);
+  --checkbox-box-border-color-invalid-hover: var(--checkbox-box-border-color-danger-hover);
+  --checkbox-box-bg-on-invalid: var(--checkbox-box-bg-on-danger);
+  --checkbox-box-bg-on-invalid-hover: var(--checkbox-box-bg-on-danger-hover);
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (14 vars)
@@ -127,11 +133,21 @@
   --checkbox-label-font-size-ultra: var(--font-size-24);
 
   /* ────────────────────────────────────────────────────────────
-     🧩 SLOTS  (3 vars)
+     🧩 SLOTS  (13 vars)
      ──────────────────────────────────────────────────────────── */
   --checkbox-gap: var(--spacing-8);
+  --checkbox-gap-micro: var(--spacing-4);
+  --checkbox-gap-tiny: var(--spacing-4);
+  --checkbox-gap-small: var(--spacing-6);
+  --checkbox-gap-base: var(--spacing-8);
+  --checkbox-gap-medium: var(--spacing-8);
+  --checkbox-gap-large: var(--spacing-10);
+  --checkbox-gap-big: var(--spacing-10);
+  --checkbox-gap-huge: var(--spacing-12);
+  --checkbox-gap-mega: var(--spacing-14);
+  --checkbox-gap-ultra: var(--spacing-16);
   --checkbox-check-size: 75%;
-  --checkbox-box-scale-active: 0.92;
+  --checkbox-box-scale-pressed: 0.92;
 
   /* ────────────────────────────────────────────────────────────
      ⚡ MOTION  (5 vars)

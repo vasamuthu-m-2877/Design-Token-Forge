@@ -227,204 +227,134 @@
 .menu-btn[data-variant="filled"] {
   --_mb-bg: var(--menu-btn-filled-bg);
   --_mb-bg-hover: var(--menu-btn-filled-bg-hover);
-  --_mb-bg-active: var(--menu-btn-filled-bg-active);
+  --_mb-bg-active: var(--menu-btn-filled-bg-pressed);
   --_mb-fg: var(--menu-btn-filled-fg);
   --_mb-fg-hover: var(--menu-btn-filled-fg-hover);
   --_mb-border-color: var(--menu-btn-filled-border-color);
   --_mb-border-color-hover: var(--menu-btn-filled-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-filled-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-filled-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── SECONDARY ──────────────────────────────────────────────── */
 .menu-btn[data-variant="outlined"] {
   --_mb-bg: var(--menu-btn-outlined-bg);
   --_mb-bg-hover: var(--menu-btn-outlined-bg-hover);
-  --_mb-bg-active: var(--menu-btn-outlined-bg-active);
+  --_mb-bg-active: var(--menu-btn-outlined-bg-pressed);
   --_mb-fg: var(--menu-btn-outlined-fg);
   --_mb-fg-hover: var(--menu-btn-outlined-fg-hover);
   --_mb-border-color: var(--menu-btn-outlined-border-color);
   --_mb-border-color-hover: var(--menu-btn-outlined-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-outlined-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-outlined-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── GHOST ──────────────────────────────────────────────────── */
 .menu-btn[data-variant="ghost"] {
   --_mb-bg: var(--menu-btn-ghost-bg);
   --_mb-bg-hover: var(--menu-btn-ghost-bg-hover);
-  --_mb-bg-active: var(--menu-btn-ghost-bg-active);
+  --_mb-bg-active: var(--menu-btn-ghost-bg-pressed);
   --_mb-fg: var(--menu-btn-ghost-fg);
   --_mb-fg-hover: var(--menu-btn-ghost-fg-hover);
   --_mb-border-color: var(--menu-btn-ghost-border-color);
   --_mb-border-color-hover: var(--menu-btn-ghost-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-ghost-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-ghost-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── NEUTRAL ────────────────────────────────────────────────── */
 .menu-btn[data-variant="neutral"] {
   --_mb-bg: var(--menu-btn-neutral-bg);
   --_mb-bg-hover: var(--menu-btn-neutral-bg-hover);
-  --_mb-bg-active: var(--menu-btn-neutral-bg-active);
+  --_mb-bg-active: var(--menu-btn-neutral-bg-pressed);
   --_mb-fg: var(--menu-btn-neutral-fg);
   --_mb-fg-hover: var(--menu-btn-neutral-fg-hover);
   --_mb-border-color: var(--menu-btn-neutral-border-color);
   --_mb-border-color-hover: var(--menu-btn-neutral-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-neutral-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-neutral-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 /* ── TERTIARY (soft, tinted fill) ──────────────────────────── */
 .menu-btn[data-variant="soft"] {
   --_mb-bg: var(--menu-btn-soft-bg);
   --_mb-bg-hover: var(--menu-btn-soft-bg-hover);
-  --_mb-bg-active: var(--menu-btn-soft-bg-active);
+  --_mb-bg-active: var(--menu-btn-soft-bg-pressed);
   --_mb-fg: var(--menu-btn-soft-fg);
   --_mb-fg-hover: var(--menu-btn-soft-fg-hover);
   --_mb-border-color: var(--menu-btn-soft-border-color);
   --_mb-border-color-hover: var(--menu-btn-soft-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-soft-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-soft-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── DANGER (filled, red) ─────────────────────────────────── */
 .menu-btn[data-variant="danger"] {
   --_mb-bg: var(--menu-btn-danger-bg);
   --_mb-bg-hover: var(--menu-btn-danger-bg-hover);
-  --_mb-bg-active: var(--menu-btn-danger-bg-active);
+  --_mb-bg-active: var(--menu-btn-danger-bg-pressed);
   --_mb-fg: var(--menu-btn-danger-fg);
   --_mb-fg-hover: var(--menu-btn-danger-fg-hover);
   --_mb-border-color: var(--menu-btn-danger-border-color);
   --_mb-border-color-hover: var(--menu-btn-danger-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-danger-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-danger-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── SUCCESS (filled, green) ───────────────────────────────── */
 .menu-btn[data-variant="success"] {
   --_mb-bg: var(--menu-btn-success-bg);
   --_mb-bg-hover: var(--menu-btn-success-bg-hover);
-  --_mb-bg-active: var(--menu-btn-success-bg-active);
+  --_mb-bg-active: var(--menu-btn-success-bg-pressed);
   --_mb-fg: var(--menu-btn-success-fg);
   --_mb-fg-hover: var(--menu-btn-success-fg-hover);
   --_mb-border-color: var(--menu-btn-success-border-color);
   --_mb-border-color-hover: var(--menu-btn-success-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-success-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-success-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── WARNING (filled, amber) ───────────────────────────────── */
 .menu-btn[data-variant="warning"] {
   --_mb-bg: var(--menu-btn-warning-bg);
   --_mb-bg-hover: var(--menu-btn-warning-bg-hover);
-  --_mb-bg-active: var(--menu-btn-warning-bg-active);
+  --_mb-bg-active: var(--menu-btn-warning-bg-pressed);
   --_mb-fg: var(--menu-btn-warning-fg);
   --_mb-fg-hover: var(--menu-btn-warning-fg-hover);
   --_mb-border-color: var(--menu-btn-warning-border-color);
   --_mb-border-color-hover: var(--menu-btn-warning-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-warning-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-warning-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
-}
-
-/* ── OUTLINE (outlined, surface-context border) ───────────── */
-.menu-btn[data-variant="outline"] {
-  --_mb-bg: var(--menu-btn-outline-bg);
-  --_mb-bg-hover: var(--menu-btn-outline-bg-hover);
-  --_mb-bg-active: var(--menu-btn-outline-bg-active);
-  --_mb-fg: var(--menu-btn-outline-fg);
-  --_mb-fg-hover: var(--menu-btn-outline-fg-hover);
-  --_mb-border-color: var(--menu-btn-outline-border-color);
-  --_mb-border-color-hover: var(--menu-btn-outline-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-outline-border-color-active);
-  --_mb-shadow: var(--menu-btn-shadow);
-  --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ── BRAND (filled, brand palette) ───────────────────────────── */
 .menu-btn[data-variant="brand"] {
   --_mb-bg: var(--menu-btn-brand-bg);
   --_mb-bg-hover: var(--menu-btn-brand-bg-hover);
-  --_mb-bg-active: var(--menu-btn-brand-bg-active);
+  --_mb-bg-active: var(--menu-btn-brand-bg-pressed);
   --_mb-fg: var(--menu-btn-brand-fg);
   --_mb-fg-hover: var(--menu-btn-brand-fg-hover);
   --_mb-border-color: var(--menu-btn-brand-border-color);
   --_mb-border-color-hover: var(--menu-btn-brand-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-brand-border-color-active);
+  --_mb-border-color-active: var(--menu-btn-brand-border-color-pressed);
   --_mb-shadow: var(--menu-btn-shadow);
   --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
-}
-
-/* ════════════════════════════════════════════════════════════════
-   STRUCTURAL VARIANT ALIASES
-   Canonical structural names that map to the existing token groups.
-   These work identically to their legacy counterparts:
-     filled   ≡ primary   (solid background)
-     outlined ≡ secondary  (border emphasis)
-     soft     ≡ tertiary   (tinted container)
-     ghost    — already exists above
-   ════════════════════════════════════════════════════════════════ */
-
-/* ── FILLED (alias for primary) ─────────────────────────────── */
-.menu-btn[data-variant="filled"] {
-  --_mb-bg: var(--menu-btn-filled-bg);
-  --_mb-bg-hover: var(--menu-btn-filled-bg-hover);
-  --_mb-bg-active: var(--menu-btn-filled-bg-active);
-  --_mb-fg: var(--menu-btn-filled-fg);
-  --_mb-fg-hover: var(--menu-btn-filled-fg-hover);
-  --_mb-border-color: var(--menu-btn-filled-border-color);
-  --_mb-border-color-hover: var(--menu-btn-filled-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-filled-border-color-active);
-  --_mb-shadow: var(--menu-btn-shadow);
-  --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
-}
-
-/* ── OUTLINED (alias for secondary) ─────────────────────────── */
-.menu-btn[data-variant="outlined"] {
-  --_mb-bg: var(--menu-btn-outlined-bg);
-  --_mb-bg-hover: var(--menu-btn-outlined-bg-hover);
-  --_mb-bg-active: var(--menu-btn-outlined-bg-active);
-  --_mb-fg: var(--menu-btn-outlined-fg);
-  --_mb-fg-hover: var(--menu-btn-outlined-fg-hover);
-  --_mb-border-color: var(--menu-btn-outlined-border-color);
-  --_mb-border-color-hover: var(--menu-btn-outlined-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-outlined-border-color-active);
-  --_mb-shadow: var(--menu-btn-shadow);
-  --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
-}
-
-/* ── SOFT (alias for tertiary) ──────────────────────────────── */
-.menu-btn[data-variant="soft"] {
-  --_mb-bg: var(--menu-btn-soft-bg);
-  --_mb-bg-hover: var(--menu-btn-soft-bg-hover);
-  --_mb-bg-active: var(--menu-btn-soft-bg-active);
-  --_mb-fg: var(--menu-btn-soft-fg);
-  --_mb-fg-hover: var(--menu-btn-soft-fg-hover);
-  --_mb-border-color: var(--menu-btn-soft-border-color);
-  --_mb-border-color-hover: var(--menu-btn-soft-border-color-hover);
-  --_mb-border-color-active: var(--menu-btn-soft-border-color-active);
-  --_mb-shadow: var(--menu-btn-shadow);
-  --_mb-shadow-hover: var(--menu-btn-shadow-hover);
-  --_mb-shadow-active: var(--menu-btn-shadow-active);
+  --_mb-shadow-active: var(--menu-btn-shadow-pressed);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -451,7 +381,7 @@
    Only ghost needs explicit primary override (default ghost = neutral). */
 .menu-btn[data-role="brand"] {
   --menu-btn-ghost-bg-hover: var(--brand-container-bg);
-  --menu-btn-ghost-bg-active: var(--brand-container-pressed);
+  --menu-btn-ghost-bg-pressed: var(--brand-container-pressed);
   --menu-btn-ghost-fg: var(--brand-content-default);
   --menu-btn-ghost-fg-hover: var(--brand-content-default);
   --menu-btn-ghost-fg-disabled: var(--brand-content-default);
@@ -472,7 +402,7 @@
   --brand-component-outline-pressed: var(--danger-component-outline-pressed);
   /* Ghost overrides */
   --menu-btn-ghost-bg-hover: var(--danger-container-bg);
-  --menu-btn-ghost-bg-active: var(--danger-container-pressed);
+  --menu-btn-ghost-bg-pressed: var(--danger-container-pressed);
   --menu-btn-ghost-fg: var(--danger-content-default);
   --menu-btn-ghost-fg-hover: var(--danger-content-default);
   --menu-btn-ghost-fg-disabled: var(--danger-content-default);
@@ -493,7 +423,7 @@
   --brand-component-outline-pressed: var(--success-component-outline-pressed);
   /* Ghost overrides */
   --menu-btn-ghost-bg-hover: var(--success-container-bg);
-  --menu-btn-ghost-bg-active: var(--success-container-pressed);
+  --menu-btn-ghost-bg-pressed: var(--success-container-pressed);
   --menu-btn-ghost-fg: var(--success-content-default);
   --menu-btn-ghost-fg-hover: var(--success-content-default);
   --menu-btn-ghost-fg-disabled: var(--success-content-default);
@@ -514,7 +444,7 @@
   --brand-component-outline-pressed: var(--warning-component-outline-pressed);
   /* Ghost overrides */
   --menu-btn-ghost-bg-hover: var(--warning-container-bg);
-  --menu-btn-ghost-bg-active: var(--warning-container-pressed);
+  --menu-btn-ghost-bg-pressed: var(--warning-container-pressed);
   --menu-btn-ghost-fg: var(--warning-content-default);
   --menu-btn-ghost-fg-hover: var(--warning-content-default);
   --menu-btn-ghost-fg-disabled: var(--warning-content-default);
@@ -524,7 +454,7 @@
 .menu-btn[data-role="brand"] {
   /* Ghost overrides */
   --menu-btn-ghost-bg-hover: var(--brand-container-bg);
-  --menu-btn-ghost-bg-active: var(--brand-container-pressed);
+  --menu-btn-ghost-bg-pressed: var(--brand-container-pressed);
   --menu-btn-ghost-fg: var(--brand-content-default);
   --menu-btn-ghost-fg-hover: var(--brand-content-default);
   --menu-btn-ghost-fg-disabled: var(--brand-content-default);
@@ -545,7 +475,7 @@
   --brand-component-outline-pressed: var(--info-component-outline-pressed);
   /* Ghost overrides */
   --menu-btn-ghost-bg-hover: var(--info-container-bg);
-  --menu-btn-ghost-bg-active: var(--info-container-pressed);
+  --menu-btn-ghost-bg-pressed: var(--info-container-pressed);
   --menu-btn-ghost-fg: var(--info-content-default);
   --menu-btn-ghost-fg-hover: var(--info-content-default);
   --menu-btn-ghost-fg-disabled: var(--info-content-default);
@@ -643,13 +573,6 @@
   --_mb-border-color: var(--menu-btn-warning-border-color-disabled);
   opacity: var(--menu-btn-warning-opacity-disabled);
 }
-.menu-btn:disabled[data-variant="outline"],
-.menu-btn[data-disabled][data-variant="outline"] {
-  --_mb-bg: var(--menu-btn-outline-bg-disabled);
-  --_mb-fg: var(--menu-btn-outline-fg-disabled);
-  --_mb-border-color: var(--menu-btn-outline-border-color-disabled);
-  opacity: var(--menu-btn-outline-opacity-disabled);
-}
 .menu-btn:disabled[data-variant="brand"],
 .menu-btn[data-disabled][data-variant="brand"] {
   --_mb-bg: var(--menu-btn-brand-bg-disabled);
@@ -657,30 +580,6 @@
   --_mb-border-color: var(--menu-btn-brand-border-color-disabled);
   opacity: var(--menu-btn-brand-opacity-disabled);
 }
-/* ── Disabled: structural aliases ───────────────────────────── */
-.menu-btn:disabled[data-variant="filled"],
-.menu-btn[data-disabled][data-variant="filled"] {
-  --_mb-bg: var(--menu-btn-filled-bg-disabled);
-  --_mb-fg: var(--menu-btn-filled-fg-disabled);
-  --_mb-border-color: var(--menu-btn-filled-border-color-disabled);
-  opacity: var(--menu-btn-filled-opacity-disabled);
-}
-.menu-btn:disabled[data-variant="outlined"],
-.menu-btn[data-disabled][data-variant="outlined"] {
-  --_mb-bg: var(--menu-btn-outlined-bg-disabled);
-  --_mb-fg: var(--menu-btn-outlined-fg-disabled);
-  --_mb-border-color: var(--menu-btn-outlined-border-color-disabled);
-  opacity: var(--menu-btn-outlined-opacity-disabled);
-}
-.menu-btn:disabled[data-variant="soft"],
-.menu-btn[data-disabled][data-variant="soft"] {
-  --_mb-bg: var(--menu-btn-soft-bg-disabled);
-  --_mb-fg: var(--menu-btn-soft-fg-disabled);
-  --_mb-border-color: var(--menu-btn-soft-border-color-disabled);
-  opacity: var(--menu-btn-soft-opacity-disabled);
-}
-
-
 /* Loading — pulse animation */
 .menu-btn[data-loading] {
   cursor: wait;

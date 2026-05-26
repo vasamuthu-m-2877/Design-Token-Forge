@@ -1,6 +1,28 @@
 /* ════════════════════════════════════════════════════════════════
    Design Token Forge — Input Token Defaults
-   Layer 0: System defaults for 172 input variables.
+   Layer 0: System defaults for ~172 input variables.
+
+   Anatomy:
+     <div.input-group>
+       <label.input-label/>             (optional)
+       <div.input-field>
+         <span.input-prefix/>           (optional — icon/text)
+         <input.input-control/>
+         <span.input-suffix/>           (optional — icon/clear)
+       </div>
+       <div.input-helper/>              (optional — helper or invalid msg)
+     </div>
+
+   Variants: outlined (default) | filled | underline
+   Roles:    brand (default) | danger | warning | info | success | neutral
+             (applied via [data-role="…"]; remaps --brand-* primitives
+              that drive focus ring + caret + focus border)
+   States:   default | hover | focus-visible | disabled | readonly
+             | invalid (aria-invalid="true")
+
+   Invalid is a STATE (triggered by aria-invalid="true"), not a role —
+   it always paints danger surfaces regardless of the active role.
+
    All values reference global tokens — zero hardcoded visuals.
    ════════════════════════════════════════════════════════════════ */
 
@@ -128,35 +150,35 @@
      ──────────────────────────────────────────────────────────── */
 
   /* ── OUTLINE (bordered, transparent bg) ─────────────────── */
-  --input-outline-bg: transparent;
-  --input-outline-bg-hover: transparent;
-  --input-outline-bg-focus: transparent;
-  --input-outline-bg-disabled: transparent;
-  --input-outline-bg-error: transparent;
-  --input-outline-fg: var(--surface-base-ct-default);
-  --input-outline-fg-disabled: var(--surface-base-ct-faint);
-  --input-outline-border-color: var(--surface-base-cm-outline);
-  --input-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --input-outline-border-color-focus: var(--brand-component-outline-default);
-  --input-outline-border-color-disabled: var(--surface-base-cm-outline);
-  --input-outline-border-color-error: var(--danger-component-outline-default);
-  --input-outline-placeholder: var(--surface-base-ct-faint);
-  --input-outline-placeholder-disabled: var(--surface-base-ct-faint);
-  --input-outline-opacity-disabled: 0.5;
+  --input-outlined-bg: transparent;
+  --input-outlined-bg-hover: transparent;
+  --input-outlined-bg-focus: transparent;
+  --input-outlined-bg-disabled: transparent;
+  --input-outlined-bg-invalid: transparent;
+  --input-outlined-fg: var(--surface-base-ct-default);
+  --input-outlined-fg-disabled: var(--surface-base-ct-faint);
+  --input-outlined-border-color: var(--surface-base-cm-outline);
+  --input-outlined-border-color-hover: var(--surface-base-cm-outline-hover);
+  --input-outlined-border-color-focus: var(--brand-component-outline-default);
+  --input-outlined-border-color-disabled: var(--surface-base-cm-outline);
+  --input-outlined-border-color-invalid: var(--danger-component-outline-default);
+  --input-outlined-placeholder: var(--surface-base-ct-faint);
+  --input-outlined-placeholder-disabled: var(--surface-base-ct-faint);
+  --input-outlined-opacity-disabled: 0.5;
 
   /* ── FILLED (tinted bg + full outline border) ──────────── */
   --input-filled-bg: var(--surface-base-cm-bg);
   --input-filled-bg-hover: var(--surface-base-cm-bg-hover);
   --input-filled-bg-focus: var(--surface-base-cm-bg);
   --input-filled-bg-disabled: var(--surface-base-cm-bg);
-  --input-filled-bg-error: var(--surface-base-cm-bg);
+  --input-filled-bg-invalid: var(--surface-base-cm-bg);
   --input-filled-fg: var(--surface-base-ct-default);
   --input-filled-fg-disabled: var(--surface-base-ct-faint);
   --input-filled-border-color: var(--surface-base-cm-outline);
   --input-filled-border-color-hover: var(--surface-base-cm-outline-hover);
   --input-filled-border-color-focus: var(--brand-component-outline-default);
   --input-filled-border-color-disabled: var(--surface-base-cm-outline);
-  --input-filled-border-color-error: var(--danger-component-outline-default);
+  --input-filled-border-color-invalid: var(--danger-component-outline-default);
   --input-filled-placeholder: var(--surface-base-ct-faint);
   --input-filled-placeholder-disabled: var(--surface-base-ct-faint);
   --input-filled-opacity-disabled: 0.5;
@@ -166,14 +188,14 @@
   --input-underline-bg-hover: transparent;
   --input-underline-bg-focus: transparent;
   --input-underline-bg-disabled: transparent;
-  --input-underline-bg-error: transparent;
+  --input-underline-bg-invalid: transparent;
   --input-underline-fg: var(--surface-base-ct-default);
   --input-underline-fg-disabled: var(--surface-base-ct-faint);
   --input-underline-border-color: var(--surface-base-cm-outline);
   --input-underline-border-color-hover: var(--surface-base-ct-subtle);
   --input-underline-border-color-focus: var(--brand-component-outline-default);
   --input-underline-border-color-disabled: var(--surface-base-cm-outline);
-  --input-underline-border-color-error: var(--danger-component-outline-default);
+  --input-underline-border-color-invalid: var(--danger-component-outline-default);
   --input-underline-placeholder: var(--surface-base-ct-faint);
   --input-underline-placeholder-disabled: var(--surface-base-ct-faint);
   --input-underline-opacity-disabled: 0.5;
@@ -181,10 +203,10 @@
   /* ── Shared surface tokens ──────────────────────────────── */
   --input-label-color: var(--surface-base-ct-subtle);
   --input-label-color-focus: var(--brand-content-default);
-  --input-label-color-error: var(--danger-content-default);
+  --input-label-color-invalid: var(--danger-content-default);
   --input-label-color-disabled: var(--surface-base-ct-faint);
   --input-helper-color: var(--surface-base-ct-subtle);
-  --input-helper-color-error: var(--danger-content-default);
+  --input-helper-color-invalid: var(--danger-content-default);
   --input-caret-color: var(--brand-component-bg-default);
 
   /* ────────────────────────────────────────────────────────────

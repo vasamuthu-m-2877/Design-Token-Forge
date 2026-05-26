@@ -2,6 +2,23 @@
    Design Token Forge — Select Token Defaults
    Layer 0: System defaults for 120 select variables.
    All values reference global tokens — zero hardcoded visuals.
+   ----------------------------------------------------------------
+   ANATOMY:
+     .select-group (wrapper)
+       └─ .select-label   (optional)
+       └─ .select-control (field + chevron slot)
+            └─ .select-field   (native <select>)
+            └─ .select-chevron (icon slot)
+       └─ .select-helper  (optional)
+
+   VARIANTS  (data-variant):   outlined (default) | filled | underline
+   ROLES     (data-role):       brand (default) | danger | success | warning | info | neutral
+   STATES    (selectors):       default | hover | focus-visible | disabled | invalid | readonly
+
+   "INVALID" IS A STATE, NOT A ROLE
+     Use aria-invalid="true" on .select-group to mark an invalid field.
+     Roles (data-role) describe the brand palette of the focus ring / label;
+     invalid state ALWAYS overrides role-tinted focus to danger borders.
    ════════════════════════════════════════════════════════════════ */
 
 .select-group {
@@ -78,23 +95,23 @@
   --select-max-width: none;
 
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE — OUTLINE VARIANT  (15 vars)
+     🎨 SURFACE — OUTLINED VARIANT  (15 vars)
      ──────────────────────────────────────────────────────────── */
-  --select-outline-bg: transparent;
-  --select-outline-bg-hover: transparent;
-  --select-outline-bg-focus: transparent;
-  --select-outline-bg-disabled: transparent;
-  --select-outline-bg-error: transparent;
-  --select-outline-fg: var(--surface-base-ct-default);
-  --select-outline-fg-disabled: var(--surface-base-ct-faint);
-  --select-outline-border-color: var(--surface-base-cm-outline);
-  --select-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --select-outline-border-color-focus: var(--brand-component-outline-default);
-  --select-outline-border-color-disabled: var(--surface-base-cm-outline);
-  --select-outline-border-color-error: var(--danger-component-outline-default);
-  --select-outline-placeholder: var(--surface-base-ct-faint);
-  --select-outline-placeholder-disabled: var(--surface-base-ct-faint);
-  --select-outline-opacity-disabled: 0.5;
+  --select-outlined-bg: transparent;
+  --select-outlined-bg-hover: transparent;
+  --select-outlined-bg-focus: transparent;
+  --select-outlined-bg-disabled: transparent;
+  --select-outlined-bg-invalid: transparent;
+  --select-outlined-fg: var(--surface-base-ct-default);
+  --select-outlined-fg-disabled: var(--surface-base-ct-faint);
+  --select-outlined-border-color: var(--surface-base-cm-outline);
+  --select-outlined-border-color-hover: var(--surface-base-cm-outline-hover);
+  --select-outlined-border-color-focus: var(--brand-component-outline-default);
+  --select-outlined-border-color-disabled: var(--surface-base-cm-outline);
+  --select-outlined-border-color-invalid: var(--danger-component-outline-default);
+  --select-outlined-placeholder: var(--surface-base-ct-faint);
+  --select-outlined-placeholder-disabled: var(--surface-base-ct-faint);
+  --select-outlined-opacity-disabled: 0.5;
 
   /* ────────────────────────────────────────────────────────────
      🎨 SURFACE — FILLED VARIANT  (15 vars)
@@ -103,14 +120,14 @@
   --select-filled-bg-hover: var(--surface-base-cm-bg-hover);
   --select-filled-bg-focus: var(--surface-base-cm-bg);
   --select-filled-bg-disabled: var(--surface-base-cm-bg);
-  --select-filled-bg-error: var(--surface-base-cm-bg);
+  --select-filled-bg-invalid: var(--surface-base-cm-bg);
   --select-filled-fg: var(--surface-base-ct-default);
   --select-filled-fg-disabled: var(--surface-base-ct-faint);
   --select-filled-border-color: var(--surface-base-cm-outline);
   --select-filled-border-color-hover: var(--surface-base-cm-outline-hover);
   --select-filled-border-color-focus: var(--brand-component-outline-default);
   --select-filled-border-color-disabled: var(--surface-base-cm-outline);
-  --select-filled-border-color-error: var(--danger-component-outline-default);
+  --select-filled-border-color-invalid: var(--danger-component-outline-default);
   --select-filled-placeholder: var(--surface-base-ct-faint);
   --select-filled-placeholder-disabled: var(--surface-base-ct-faint);
   --select-filled-opacity-disabled: 0.5;
@@ -122,14 +139,14 @@
   --select-underline-bg-hover: transparent;
   --select-underline-bg-focus: transparent;
   --select-underline-bg-disabled: transparent;
-  --select-underline-bg-error: transparent;
+  --select-underline-bg-invalid: transparent;
   --select-underline-fg: var(--surface-base-ct-default);
   --select-underline-fg-disabled: var(--surface-base-ct-faint);
   --select-underline-border-color: var(--surface-base-cm-outline);
   --select-underline-border-color-hover: var(--surface-base-ct-subtle);
   --select-underline-border-color-focus: var(--brand-component-outline-default);
   --select-underline-border-color-disabled: var(--surface-base-cm-outline);
-  --select-underline-border-color-error: var(--danger-component-outline-default);
+  --select-underline-border-color-invalid: var(--danger-component-outline-default);
   --select-underline-placeholder: var(--surface-base-ct-faint);
   --select-underline-placeholder-disabled: var(--surface-base-ct-faint);
   --select-underline-opacity-disabled: 0.5;
@@ -139,10 +156,10 @@
      ──────────────────────────────────────────────────────────── */
   --select-label-color: var(--surface-base-ct-subtle);
   --select-label-color-focus: var(--brand-content-default);
-  --select-label-color-error: var(--danger-content-default);
+  --select-label-color-invalid: var(--danger-content-default);
   --select-label-color-disabled: var(--surface-base-ct-faint);
   --select-helper-color: var(--surface-base-ct-subtle);
-  --select-helper-color-error: var(--danger-content-default);
+  --select-helper-color-invalid: var(--danger-content-default);
   --select-chevron-color: var(--surface-base-ct-subtle);
 
   /* ────────────────────────────────────────────────────────────

@@ -975,14 +975,14 @@ var COMPONENTS=[
     {group:'Filled (primary)',tokens:[
       {name:'--btn-filled-bg',ref:'--brand-component-bg-default'},
       {name:'--btn-filled-bg-hover',ref:'--brand-component-bg-hover'},
-      {name:'--btn-filled-bg-active',ref:'--brand-component-bg-pressed'},
+      {name:'--btn-filled-bg-pressed',ref:'--brand-component-bg-pressed'},
       {name:'--btn-filled-fg',ref:'--brand-on-component'},
       {name:'--btn-filled-border-color',ref:'--brand-component-bg-default'},
       {name:'--btn-filled-border-color-hover',ref:'--brand-component-bg-hover'}
     ]},
     {group:'Outlined (secondary)',tokens:[
       {name:'--btn-outlined-bg-hover',ref:'--brand-container-bg'},
-      {name:'--btn-outlined-bg-active',ref:'--brand-container-pressed'},
+      {name:'--btn-outlined-bg-pressed',ref:'--brand-container-pressed'},
       {name:'--btn-outlined-fg',ref:'--brand-content-default'},
       {name:'--btn-outlined-border-color',ref:'--brand-component-outline-default'},
       {name:'--btn-outlined-border-color-hover',ref:'--brand-component-outline-hover'}
@@ -995,7 +995,7 @@ var COMPONENTS=[
     {group:'Ghost',tokens:[
       {name:'--btn-ghost-fg',ref:'--brand-content-default'},
       {name:'--btn-ghost-bg-hover',ref:'--brand-container-bg'},
-      {name:'--btn-ghost-bg-active',ref:'--brand-container-pressed'}
+      {name:'--btn-ghost-bg-pressed',ref:'--brand-container-pressed'}
     ]},
     {group:'Danger role',tokens:[
       {name:'--btn-danger-bg',ref:'--danger-component-bg-default'},
@@ -1010,12 +1010,12 @@ var COMPONENTS=[
   ]},
   {id:'input',label:'Input',prefix:'input',refs:[
     {group:'Outline variant',tokens:[
-      {name:'--input-outline-fg',ref:'--surface-base-ct-default'},
-      {name:'--input-outline-border-color',ref:'--surface-base-cm-outline'},
-      {name:'--input-outline-border-color-hover',ref:'--surface-base-cm-outline-hover'},
-      {name:'--input-outline-border-color-focus',ref:'--brand-component-outline-default'},
-      {name:'--input-outline-border-color-error',ref:'--danger-component-outline-default'},
-      {name:'--input-outline-placeholder',ref:'--surface-base-ct-faint'}
+      {name:'--input-outlined-fg',ref:'--surface-base-ct-default'},
+      {name:'--input-outlined-border-color',ref:'--surface-base-cm-outline'},
+      {name:'--input-outlined-border-color-hover',ref:'--surface-base-cm-outline-hover'},
+      {name:'--input-outlined-border-color-focus',ref:'--brand-component-outline-default'},
+      {name:'--input-outlined-border-color-invalid',ref:'--danger-component-outline-default'},
+      {name:'--input-outlined-placeholder',ref:'--surface-base-ct-faint'}
     ]},
     {group:'Filled variant',tokens:[
       {name:'--input-filled-bg',ref:'--surface-base-cm-bg'},
@@ -1026,9 +1026,9 @@ var COMPONENTS=[
     {group:'Labels & helpers',tokens:[
       {name:'--input-label-color',ref:'--surface-base-ct-default'},
       {name:'--input-label-color-focus',ref:'--brand-content-default'},
-      {name:'--input-label-color-error',ref:'--danger-content-default'},
+      {name:'--input-label-color-invalid',ref:'--danger-content-default'},
       {name:'--input-helper-color',ref:'--surface-base-ct-subtle'},
-      {name:'--input-helper-color-error',ref:'--danger-content-default'},
+      {name:'--input-helper-color-invalid',ref:'--danger-content-default'},
       {name:'--input-caret-color',ref:'--brand-component-bg-default'}
     ]}
   ]},
@@ -1047,7 +1047,7 @@ var COMPONENTS=[
     {group:'Danger / Error',tokens:[
       {name:'--switch-track-bg-on-danger',ref:'--danger-component-bg-default'},
       {name:'--switch-track-bg-on-danger-hover',ref:'--danger-component-bg-hover'},
-      {name:'--switch-track-border-color-error-off',ref:'--danger-component-outline-default'}
+      {name:'--switch-track-border-color-invalid-off',ref:'--danger-component-outline-default'}
     ]}
   ]},
   {id:'checkbox',label:'Checkbox',prefix:'cb',refs:[
@@ -1061,8 +1061,8 @@ var COMPONENTS=[
       {name:'--cb-check-color',ref:'--brand-on-component'}
     ]},
     {group:'Error state',tokens:[
-      {name:'--cb-border-color-error',ref:'--danger-component-outline-default'},
-      {name:'--cb-bg-checked-error',ref:'--danger-component-bg-default'}
+      {name:'--cb-border-color-invalid',ref:'--danger-component-outline-default'},
+      {name:'--cb-bg-checked-invalid',ref:'--danger-component-bg-default'}
     ]}
   ]},
   {id:'radio',label:'Radio',prefix:'radio',refs:[

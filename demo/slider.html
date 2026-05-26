@@ -114,7 +114,7 @@
   <!-- 4. STATE MATRIX -->
   <section class="section" id="sec-states">
     <div class="section-header"><h2>State Matrix</h2><span class="section-tag">States</span></div>
-    <p class="section-desc">Every interactive state: default, hover (move over it), active (drag), focus (tab), disabled, loading.</p>
+    <p class="section-desc">Every interactive state: default, hover (move over it), pressed (drag), focus-visible (tab), disabled, loading.</p>
     <div class="section-body"><div id="stateMatrix" style="display:flex;flex-wrap:wrap;gap:16px"></div></div>
   </section>
 
@@ -305,7 +305,7 @@ const pct = computed(() =&gt; ((props.modelValue - props.min) / (props.max - pro
 --slider-track-radius              /* track corners (full = pill) */
 --slider-thumb-radius              /* thumb corners (full = circle) */
 --slider-thumb-border-width        /* thumb outline width */
---slider-thumb-shadow / -hover / -active
+--slider-thumb-shadow / -hover / -pressed
 --slider-track-shadow              /* inset for depth effect */
 
 /* ── Dimension ── */
@@ -318,11 +318,11 @@ const pct = computed(() =&gt; ((props.modelValue - props.min) / (props.max - pro
 
 /* ── Surface ── */
 --slider-track-bg / -hover / -disabled
---slider-fill-bg / -hover / -active / -disabled
---slider-thumb-bg / -hover / -active / -disabled
---slider-thumb-border-color / -hover / -active
---slider-thumb-halo-bg / -active / -size / -opacity
---slider-tick-color / -active / -disabled
+--slider-fill-bg / -hover / -pressed / -disabled
+--slider-thumb-bg / -hover / -pressed / -disabled
+--slider-thumb-border-color / -hover / -pressed
+--slider-thumb-halo-bg / -pressed / -size / -opacity
+--slider-tick-color / -pressed / -disabled
 --slider-tooltip-bg / -fg / -border-color
 --slider-opacity-disabled
 
@@ -333,7 +333,7 @@ const pct = computed(() =&gt; ((props.modelValue - props.min) / (props.max - pro
 --slider-value-font-size
 
 /* ── Slots ── */
---slider-thumb-scale-active        /* scale on drag */
+--slider-thumb-scale-pressed        /* scale on drag */
 --slider-thumb-icon-size / -color  /* grip icon in thumb */
 --slider-tooltip-display           /* none | block */
 --slider-ticks-display             /* none | flex */
@@ -799,19 +799,19 @@ const pct = computed(() =&gt; ((props.modelValue - props.min) / (props.max - pro
       {sec:'Fill'},
       {label:'Fill BG',token:'--slider-fill-bg',via:'--'+r+'-component-bg-default'},
       {label:'Fill BG Hover',token:'--slider-fill-bg-hover',via:'--'+r+'-component-bg-hover'},
-      {label:'Fill BG Active',token:'--slider-fill-bg-active',via:'--'+r+'-component-bg-pressed'},
+      {label:'Fill BG Active',token:'--slider-fill-bg-pressed',via:'--'+r+'-component-bg-pressed'},
       {label:'Fill BG Disabled',token:'--slider-fill-bg-disabled',via:'--'+r+'-component-bg-default'},
       {sec:'Thumb'},
       {label:'Thumb BG',token:'--slider-thumb-bg',via:'--'+r+'-component-bg-default'},
       {label:'Thumb BG Hover',token:'--slider-thumb-bg-hover',via:'--'+r+'-component-bg-hover'},
-      {label:'Thumb BG Active',token:'--slider-thumb-bg-active',via:'--'+r+'-component-bg-pressed'},
+      {label:'Thumb BG Active',token:'--slider-thumb-bg-pressed',via:'--'+r+'-component-bg-pressed'},
       {label:'Thumb BG Disabled',token:'--slider-thumb-bg-disabled',via:'--'+r+'-component-bg-default'},
       {label:'Thumb Border',token:'--slider-thumb-border-color',via:'--color-fixed-white'},
       {label:'Thumb Halo BG',token:'--slider-thumb-halo-bg',via:'--'+r+'-container-bg'},
-      {label:'Thumb Halo Active',token:'--slider-thumb-halo-bg-active',via:'--'+r+'-container-pressed'},
+      {label:'Thumb Halo Active',token:'--slider-thumb-halo-bg-pressed',via:'--'+r+'-container-pressed'},
       {sec:'Ticks'},
       {label:'Tick Color',token:'--slider-tick-color',via:'--surface-'+s+'-cm-outline'},
-      {label:'Tick Active',token:'--slider-tick-color-active',via:'--'+r+'-component-bg-default'},
+      {label:'Tick Active',token:'--slider-tick-color-pressed',via:'--'+r+'-component-bg-default'},
       {label:'Tick Disabled',token:'--slider-tick-color-disabled',via:'--surface-'+s+'-cm-outline'},
       {sec:'Tooltip'},
       {label:'Tooltip BG',token:'--slider-tooltip-bg',via:'--'+r+'-component-bg-default'},

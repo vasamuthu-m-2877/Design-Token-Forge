@@ -1,0 +1,37 @@
+{
+  "name": "@design-token-forge/foundation-mobile",
+  "version": "0.1.0",
+  "description": "Mobile Foundation — L2 patterns shared across mobile shape-kits (writing, commerce, reading, chat). Sits between L1 atoms and shape-kits per v0.2 architecture.",
+  "type": "module",
+  "main": "dist/index.css",
+  "style": "dist/index.css",
+  "exports": {
+    ".": "./dist/index.css",
+    "./top-bar": "./dist/top-bar/index.css"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "GOVERNANCE.md"
+  ],
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "peerDependencies": {
+    "@design-token-forge/tokens": "^0.1.0",
+    "@design-token-forge/components": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "css",
+    "mobile",
+    "foundation",
+    "l2-patterns"
+  ],
+  "license": "MIT"
+}

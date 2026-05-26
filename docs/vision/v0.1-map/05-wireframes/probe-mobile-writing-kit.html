@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Probe · Mobile Writing Kit (Writer Handhelds)</title>
+<link rel="stylesheet" href="wireframes.css" />
+<style>
+  /* phone frame */
+  .phone {
+    width: 280px;
+    border: 1.5px solid var(--ink);
+    border-radius: 28px;
+    padding: 8px;
+    background: var(--bg-elev);
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 22px;
+    overflow: hidden;
+    min-height: 480px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .phone-statusbar {
+    height: 24px;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-2);
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .phone-content { flex: 1; padding: 12px; overflow: hidden; }
+  .phone-bottom {
+    height: 56px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    background: var(--bg-elev);
+  }
+  .phone-bottom span { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .phone-bottom .dot { width:14px; height:14px; border:1px solid var(--ink-3); border-radius:3px; }
+  .phone-bottom .active { color: var(--ink); }
+  .phone-bottom .active .dot { background: var(--ink); border-color: var(--ink); }
+
+  /* L2 pattern card grid */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .pattern-card {
+    border: 1px solid var(--line);
+    padding: 16px;
+    background: var(--bg-elev);
+  }
+  .pattern-card h3 {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .pattern-card .role {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .pattern-card .preview {
+    min-height: 60px;
+    padding: 8px;
+    border: 1px dashed var(--line-soft);
+    background: var(--bg);
+    margin-bottom: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .pattern-card .composes {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .pattern-card .composes strong { color: var(--ink); font-weight: 600; }
+  .pattern-card .variants {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line-soft);
+  }
+
+  .verdict {
+    display:inline-block;
+    padding:2px 8px;
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    border:1px solid var(--line);
+    margin-right:6px;
+  }
+  .verdict.exists { border-color: var(--ok); color: var(--ok); }
+  .verdict.new { border-color: var(--warn); color: var(--warn); }
+  .verdict.platform { border-color: var(--bad); color: var(--bad); }
+
+  .l1-table { font-family: var(--mono); font-size: 11px; }
+  .l1-table td { padding: 4px 12px 4px 0; vertical-align: top; }
+</style>
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>Probe · Mobile Writing Kit</h1>
+    <div class="wf-meta">Concrete L2 spec for Writer Handhelds. Proves (or kills) the "kit per shape" thesis.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<!-- ============ INTENT ============ -->
+
+<div class="wf-box" style="margin-bottom:32px;">
+  <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Goal of this probe</div>
+  <div style="font-family:var(--sans); font-size:15px; margin:8px 0; line-height:1.6;">
+    Spec the actual L2 archetypes that would ship in the "Mobile Writing" kit, with enough detail that we can ask:
+    <strong>is this kit meaningfully different from the Dashboard kit?</strong>
+    If yes → "kit per shape" thesis is real. If no → the L1 set alone is enough and we should simplify the vision.
+  </div>
+</div>
+
+<!-- ============ COMPARISON HEAD ============ -->
+
+<h2>Side-by-side · Dashboard kit vs Mobile Writing kit</h2>
+
+<div class="wf-grid cols-2" style="gap:24px; margin-bottom:32px;">
+
+  <div class="wf-box">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase;">Dashboard kit (web)</div>
+    <h3 style="margin:6px 0 12px; font-family:var(--sans);">11 L2 patterns</h3>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); line-height:1.9;">
+      AppShell (sidebar + content)<br/>
+      StatTile<br/>
+      DataTable<br/>
+      FilterBar<br/>
+      EmptyState<br/>
+      FormDrawer<br/>
+      UserRow<br/>
+      ActivityFeed<br/>
+      ConfirmDialog<br/>
+      CmdPalette<br/>
+      SettingsRow
+    </div>
+  </div>
+
+  <div class="wf-box" style="border-color:var(--note);">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--note); text-transform:uppercase;">Mobile Writing kit</div>
+    <h3 style="margin:6px 0 12px; font-family:var(--sans);">14 L2 patterns</h3>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); line-height:1.9;">
+      AppShell.mobile (statusbar + content + tabbar)<br/>
+      TopBar (back / title / actions)<br/>
+      BottomTabBar (4–5 tabs, badge support)<br/>
+      NoteCard (list item with preview text)<br/>
+      NoteListEmpty (illustrated empty state)<br/>
+      SearchHeader (with cancel button)<br/>
+      SwipeRow (swipe-to-delete / pin)<br/>
+      EditorCanvas (writing surface)<br/>
+      EditorToolbar (formatting + overflow)<br/>
+      FormatSheet (bottom sheet picker)<br/>
+      ActionSheet (iOS-style modal options)<br/>
+      ConfirmSheet (destructive confirm)<br/>
+      SettingsRow.mobile (full-width, chevron)<br/>
+      Toast.mobile (top notch, swipe-to-dismiss)
+    </div>
+  </div>
+
+</div>
+
+<div class="wf-note">
+  <strong>First observation:</strong> overlap is ~30% conceptually (EmptyState ≈ NoteListEmpty, ConfirmDialog ≈ ConfirmSheet, SettingsRow ≈ SettingsRow.mobile) — but every overlap requires a different L2 because mobile patterns have different gestures, dimensions, and platform conventions. <strong>Conclusion so far: the thesis holds.</strong> <span class="wf-marker">1</span>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">A Dashboard <code>ConfirmDialog</code> is a centered modal with overlay. A mobile <code>ConfirmSheet</code> slides up from bottom and respects safe-area inset. Same L1 (Button, Text) but completely different L2 composition. Can't share.</li>
+</ul>
+
+<!-- ============ L1 INVENTORY ============ -->
+
+<h2>L1 coverage check · what we'd need before building this kit</h2>
+
+<div class="wf-box">
+  <table class="l1-table">
+    <tr>
+      <td><span class="verdict exists">exists</span></td>
+      <td>Button, IconButton, Input, Label, Text, Checkbox, Switch, Toggle, Avatar, Badge, Toast, Tooltip, Menu, Select</td>
+    </tr>
+    <tr>
+      <td><span class="verdict new">need new L1</span></td>
+      <td><strong>SwipeContainer</strong> (gesture wrapper exposing left/right action slots)</td>
+    </tr>
+    <tr>
+      <td><span class="verdict new">need new L1</span></td>
+      <td><strong>BottomSheet</strong> (modal surface anchored to bottom with drag-handle, snap-points)</td>
+    </tr>
+    <tr>
+      <td><span class="verdict new">need new L1</span></td>
+      <td><strong>SafeAreaInset</strong> (token-driven padding for notch / home indicator)</td>
+    </tr>
+    <tr>
+      <td><span class="verdict new">need new L1</span></td>
+      <td><strong>TabBarItem</strong> (icon + label + badge slot, active state)</td>
+    </tr>
+    <tr>
+      <td><span class="verdict platform">platform-specific</span></td>
+      <td><strong>NavigationBar.ios</strong> vs <strong>AppBar.android</strong> — back gesture differs, large-title behavior differs, title alignment differs</td>
+    </tr>
+  </table>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="!">4 new L1s needed before this kit can ship. <strong>This is a finding for v0.2:</strong> kits don't just compose existing L1 — they pull new L1 requirements upstream. The vision needs a "kit requested an L1" pathway.</li>
+  <li data-num="!">Platform-specific L1s (iOS vs Android nav bar) are a separate category. Either the kit ships both, the kit ships one neutral version, or we accept platform forks. <strong>Open decision for v0.2.</strong></li>
+</ul>
+
+<!-- ============ FULL L2 SPEC ============ -->
+
+<h2>L2 patterns · full spec</h2>
+
+<div class="pattern-grid">
+
+  <div class="pattern-card">
+    <h3>AppShell.mobile</h3>
+    <div class="role">layout · root container</div>
+    <div class="preview">
+      <div style="width:80%; height:80%; display:flex; flex-direction:column; gap:2px;">
+        <div style="height:8px; background:var(--line-soft);"></div>
+        <div style="flex:1; background:var(--bg-elev);"></div>
+        <div style="height:14px; background:var(--line-soft);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> SafeAreaInset · slot[content] · BottomTabBar<br/>
+      <strong>Tokens:</strong> --container-bg · --container-separator
+    </div>
+    <div class="variants">variants: with-tabbar · without-tabbar · with-floating-action</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>TopBar</h3>
+    <div class="role">navigation · per-screen header</div>
+    <div class="preview">
+      <div style="display:flex; align-items:center; gap:6px; width:90%;">
+        <div style="width:12px; height:12px; border:1px solid var(--ink-3);"></div>
+        <div style="flex:1; height:6px; background:var(--ink-3);"></div>
+        <div style="width:12px; height:12px; border:1px solid var(--ink-3);"></div>
+        <div style="width:12px; height:12px; border:1px solid var(--ink-3);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> IconButton[back] · Text[title] · slot[actions: 0-3 IconButtons]<br/>
+      <strong>Tokens:</strong> --container-bg · --content-default · --content-strong
+    </div>
+    <div class="variants">variants: default · large-title · search · transparent (over-image)</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>BottomTabBar</h3>
+    <div class="role">navigation · primary nav</div>
+    <div class="preview">
+      <div style="display:flex; justify-content:space-around; width:90%;">
+        <div style="width:14px; height:14px; background:var(--ink);"></div>
+        <div style="width:14px; height:14px; border:1px solid var(--ink-3);"></div>
+        <div style="width:14px; height:14px; border:1px solid var(--ink-3);"></div>
+        <div style="width:14px; height:14px; border:1px solid var(--ink-3);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> TabBarItem × 3–5 (new L1)<br/>
+      <strong>Tokens:</strong> --container-bg · --content-default (inactive) · --component-bg-default (active indicator)
+    </div>
+    <div class="variants">variants: 3-tabs · 4-tabs · 5-tabs · with-badge · floating (Android)</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>NoteCard</h3>
+    <div class="role">data · list item</div>
+    <div class="preview">
+      <div style="width:90%; display:flex; flex-direction:column; gap:3px;">
+        <div style="height:5px; background:var(--ink); width:60%;"></div>
+        <div style="height:3px; background:var(--ink-3); width:90%;"></div>
+        <div style="height:3px; background:var(--ink-3); width:75%;"></div>
+        <div style="height:3px; background:var(--line-soft); width:30%; margin-top:3px;"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> Text[title] · Text[preview-2-lines] · Text[timestamp] · slot[indicator: pin/lock/share]<br/>
+      <strong>Tokens:</strong> --container-bg · --content-default · --content-subtle · --container-separator
+    </div>
+    <div class="variants">variants: default · pinned · selected · with-thumbnail</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>NoteListEmpty</h3>
+    <div class="role">empty state</div>
+    <div class="preview">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+        <div style="width:32px; height:32px; border:1px dashed var(--ink-3); border-radius:50%;"></div>
+        <div style="width:60%; height:4px; background:var(--ink-3);"></div>
+        <div style="width:24px; height:8px; background:var(--ink); margin-top:4px;"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> Icon[illustration] · Text[headline] · Text[caption] · Button[primary CTA]<br/>
+      <strong>Tokens:</strong> --content-subtle · --content-faint · --component-bg-default
+    </div>
+    <div class="variants">variants: no-notes · no-results (search) · offline · error</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>SearchHeader</h3>
+    <div class="role">navigation · search mode</div>
+    <div class="preview">
+      <div style="display:flex; align-items:center; gap:6px; width:90%;">
+        <div style="flex:1; height:18px; border:1px solid var(--ink-3); border-radius:9px;"></div>
+        <div style="font-size:8px; font-family:var(--mono);">Cancel</div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> Input[search] · IconButton[clear] · Button[cancel, text-only]<br/>
+      <strong>Tokens:</strong> --container-bg · --component-outline-default · --content-default
+    </div>
+    <div class="variants">variants: idle · typing · with-suggestions-open</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>SwipeRow</h3>
+    <div class="role">data · gesture-enabled list item</div>
+    <div class="preview">
+      <div style="display:flex; width:90%; height:24px;">
+        <div style="flex:1; background:var(--bg); border:1px solid var(--line);"></div>
+        <div style="width:24px; background:var(--ink);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> SwipeContainer (new L1) · slot[content: usually NoteCard] · slot[trailing: 1–3 IconButtons]<br/>
+      <strong>Tokens:</strong> --bg-danger (destructive) · --bg-info (utility) · --on-component
+    </div>
+    <div class="variants">variants: single-action · multi-action · destructive-only · disabled</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>EditorCanvas</h3>
+    <div class="role">editor · content surface</div>
+    <div class="preview">
+      <div style="width:90%; display:flex; flex-direction:column; gap:3px;">
+        <div style="height:5px; background:var(--ink); width:70%;"></div>
+        <div style="height:3px; background:var(--ink-2); width:100%;"></div>
+        <div style="height:3px; background:var(--ink-2); width:95%;"></div>
+        <div style="height:3px; background:var(--ink-2); width:80%;"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> Text[editable] · Text[placeholder] · slot[selection-handles]<br/>
+      <strong>Tokens:</strong> --bg (paper) · --content-default · --font-family-serif · --line-height-relaxed
+    </div>
+    <div class="variants">variants: default · focused · read-only · with-selection</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>EditorToolbar</h3>
+    <div class="role">editor · formatting controls</div>
+    <div class="preview">
+      <div style="display:flex; gap:4px; width:90%;">
+        <div style="width:18px; height:18px; border:1px solid var(--ink-3);"></div>
+        <div style="width:18px; height:18px; border:1px solid var(--ink-3);"></div>
+        <div style="width:18px; height:18px; border:1px solid var(--ink-3);"></div>
+        <div style="flex:1;"></div>
+        <div style="width:18px; height:18px; border:1px solid var(--ink-3);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> IconButton × N · IconButton[overflow → opens FormatSheet]<br/>
+      <strong>Tokens:</strong> --container-bg · --component-bg-default · --content-default
+    </div>
+    <div class="variants">variants: keyboard-attached · floating · contextual (selection-only)</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>FormatSheet</h3>
+    <div class="role">modal · option picker</div>
+    <div class="preview">
+      <div style="width:90%; display:flex; flex-direction:column; gap:2px;">
+        <div style="height:3px; width:24px; background:var(--ink-3); margin:0 auto;"></div>
+        <div style="height:6px; background:var(--ink); width:40%;"></div>
+        <div style="height:4px; background:var(--ink-3);"></div>
+        <div style="height:4px; background:var(--ink-3);"></div>
+        <div style="height:4px; background:var(--ink-3);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> BottomSheet (new L1) · drag-handle · Text[title] · SettingsRow.mobile × N<br/>
+      <strong>Tokens:</strong> --float-bg · --float-outline · --content-default
+    </div>
+    <div class="variants">variants: snap-half · snap-full · snap-content-height</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>ActionSheet</h3>
+    <div class="role">modal · iOS-style options</div>
+    <div class="preview">
+      <div style="width:90%; display:flex; flex-direction:column; gap:2px;">
+        <div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink-3);"></div>
+        <div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink-3);"></div>
+        <div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink-3);"></div>
+        <div style="height:2px;"></div>
+        <div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink);"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> stack of Button[ghost, full-width] + Button[Cancel, separated]<br/>
+      <strong>Tokens:</strong> --float-bg · --content-danger (destructive) · --content-default
+    </div>
+    <div class="variants">variants: standard · with-title · with-destructive (red)</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>ConfirmSheet</h3>
+    <div class="role">modal · destructive confirm</div>
+    <div class="preview">
+      <div style="width:90%; display:flex; flex-direction:column; gap:3px;">
+        <div style="height:5px; background:var(--ink); width:70%;"></div>
+        <div style="height:3px; background:var(--ink-3); width:90%;"></div>
+        <div style="display:flex; gap:4px; margin-top:4px;">
+          <div style="flex:1; height:14px; border:1px solid var(--ink-3);"></div>
+          <div style="flex:1; height:14px; background:var(--ink);"></div>
+        </div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> BottomSheet · Text[headline] · Text[body] · Button[cancel, ghost] · Button[confirm, danger-filled]<br/>
+      <strong>Tokens:</strong> --float-bg · --content-danger
+    </div>
+    <div class="variants">variants: destructive · neutral-confirm · with-checkbox ("don't ask again")</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>SettingsRow.mobile</h3>
+    <div class="role">data · settings list item</div>
+    <div class="preview">
+      <div style="display:flex; align-items:center; gap:6px; width:90%;">
+        <div style="width:18px; height:18px; border:1px solid var(--ink-3);"></div>
+        <div style="flex:1; height:4px; background:var(--ink-2);"></div>
+        <div style="width:24px; height:12px; background:var(--ink); border-radius:6px;"></div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> Icon · Text[label] · slot[control: Switch | Select | chevron | Text]<br/>
+      <strong>Tokens:</strong> --container-bg · --container-separator · --content-default
+    </div>
+    <div class="variants">variants: nav (chevron) · toggle (switch) · choice (select) · value (text-right) · destructive (red text)</div>
+  </div>
+
+  <div class="pattern-card">
+    <h3>Toast.mobile</h3>
+    <div class="role">feedback · transient notification</div>
+    <div class="preview">
+      <div style="display:flex; align-items:center; gap:6px; width:80%; padding:4px 8px; border:1px solid var(--ink); border-radius:6px;">
+        <div style="width:10px; height:10px; background:var(--ink); border-radius:50%;"></div>
+        <div style="flex:1; height:4px; background:var(--ink-2);"></div>
+        <div style="font-size:8px; font-family:var(--mono);">↩</div>
+      </div>
+    </div>
+    <div class="composes">
+      <strong>Composes:</strong> Icon · Text · slot[action: Button-text-only]<br/>
+      <strong>Tokens:</strong> --float-bg · --float-outline · --content-default
+    </div>
+    <div class="variants">variants: info · success · warning · danger · with-undo</div>
+  </div>
+
+</div>
+
+<!-- ============ L3 EXAMPLE — REAL SCREEN ============ -->
+
+<h2>L3 example · NoteList screen composed from the kit</h2>
+
+<div class="wf-grid cols-2" style="gap:32px; align-items:start;">
+
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="phone-statusbar">
+        <span>9:41</span>
+        <span>● ● ●</span>
+      </div>
+
+      <!-- TopBar -->
+      <div style="padding:12px 16px; border-bottom:1px solid var(--line-soft); background:var(--bg-elev);">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div style="font-family:var(--sans); font-size:24px; font-weight:700;">Notes</div>
+          <div style="display:flex; gap:12px;">
+            <div style="width:18px; height:18px; border:1px solid var(--ink-2); border-radius:9px;"></div>
+            <div style="width:18px; height:18px; border:1px solid var(--ink-2);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SearchHeader -->
+      <div style="padding:8px 16px; background:var(--bg);">
+        <div style="height:32px; border-radius:8px; background:var(--bg-elev); border:1px solid var(--line); display:flex; align-items:center; padding:0 10px; font-family:var(--sans); font-size:12px; color:var(--ink-3);">
+          🔍 Search
+        </div>
+      </div>
+
+      <!-- NoteCards -->
+      <div class="phone-content" style="padding-top:4px;">
+        <div style="padding:10px 4px; border-bottom:1px solid var(--line-soft);">
+          <div style="font-family:var(--sans); font-size:13px; font-weight:600;">Q3 OKR notes 📌</div>
+          <div style="font-family:var(--sans); font-size:11px; color:var(--ink-2); line-height:1.4; margin-top:2px;">Design system rollout · figure out the mobile kit gap before next planning…</div>
+          <div style="font-family:var(--mono); font-size:9px; color:var(--ink-3); margin-top:4px;">Yesterday</div>
+        </div>
+        <div style="padding:10px 4px; border-bottom:1px solid var(--line-soft);">
+          <div style="font-family:var(--sans); font-size:13px; font-weight:600;">Trip packing list</div>
+          <div style="font-family:var(--sans); font-size:11px; color:var(--ink-2); line-height:1.4; margin-top:2px;">Charger · noise-cancelling · paperback · running shoes · passport…</div>
+          <div style="font-family:var(--mono); font-size:9px; color:var(--ink-3); margin-top:4px;">May 22</div>
+        </div>
+        <div style="padding:10px 4px; border-bottom:1px solid var(--line-soft);">
+          <div style="font-family:var(--sans); font-size:13px; font-weight:600;">Book ideas</div>
+          <div style="font-family:var(--sans); font-size:11px; color:var(--ink-2); line-height:1.4; margin-top:2px;">— what if the design system was the product, not the feature inside it…</div>
+          <div style="font-family:var(--mono); font-size:9px; color:var(--ink-3); margin-top:4px;">May 18</div>
+        </div>
+      </div>
+
+      <!-- FAB -->
+      <div style="position:absolute; right:16px; bottom:72px; width:44px; height:44px; border-radius:50%; background:var(--ink); color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:20px; font-family:var(--sans);">+</div>
+
+      <!-- BottomTabBar -->
+      <div class="phone-bottom">
+        <span class="active"><span class="dot"></span>Notes</span>
+        <span><span class="dot"></span>Search</span>
+        <span><span class="dot"></span>Tags</span>
+        <span><span class="dot"></span>Settings</span>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3 style="margin-top:0;">Composed from 6 L2 patterns + 1 L1</h3>
+    <ul class="wf-anno-list">
+      <li data-num="1"><strong>AppShell.mobile</strong> · wraps everything · gives SafeAreaInset + tabbar slot</li>
+      <li data-num="2"><strong>TopBar</strong> · variant=large-title · 2 IconButton actions</li>
+      <li data-num="3"><strong>SearchHeader</strong> · variant=idle (collapsed pseudo-input)</li>
+      <li data-num="4"><strong>NoteCard</strong> × 3 · one with pinned indicator slot filled</li>
+      <li data-num="5"><strong>Button</strong> (L1) · variant=floating-action · positioned absolute (no L2 needed)</li>
+      <li data-num="6"><strong>BottomTabBar</strong> · variant=4-tabs · "Notes" active</li>
+    </ul>
+
+    <div class="wf-note" style="margin-top:16px;">
+      <strong>Zero off-system values.</strong> Every padding, color, and radius reads from a token in the writer-handhelds project.
+      <strong>Zero new L2s invented to ship this screen.</strong> The kit covers it.
+      This is the bar.
+    </div>
+
+    <div style="margin-top:24px;">
+      <h3 style="margin-top:0;">What we learned by building this</h3>
+      <ul class="wf-anno-list">
+        <li data-num="a"><strong>FAB doesn't need a dedicated L2.</strong> It's just <code>Button</code> with a <code>floating-action</code> variant + absolute positioning recipe. <span class="verdict exists">L1 + recipe</span></li>
+        <li data-num="b"><strong>The "large title" navigation pattern</strong> is meaningfully different from desktop page header. Justifies <code>TopBar</code> as its own L2.</li>
+        <li data-num="c"><strong>SearchHeader appears in 90% of mobile apps</strong> with similar conventions. Strong candidate for an L2 in a "Mobile Foundation" sub-kit shared across mobile-shape kits.</li>
+        <li data-num="d"><strong>One screen used 6 L2s</strong> — meaning the per-screen overhead of composition is significant. The L2 kit must exist for mobile to be productive.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ RESULT ============ -->
+
+<h2>Probe conclusion · does "kit per shape" hold?</h2>
+
+<div class="wf-grid cols-2" style="gap:24px;">
+
+  <div class="wf-box">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ok); text-transform:uppercase; letter-spacing:0.06em;">Confirmed</div>
+    <h3 style="margin:6px 0 12px;">Yes — the thesis is real</h3>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="✓">Mobile Writing kit shares ~30% conceptually with Dashboard kit but ~0% in composition</li>
+      <li data-num="✓">"Same intent, different composition" is the actual story (ConfirmDialog vs ConfirmSheet)</li>
+      <li data-num="✓">Building real L3 screens without the L2 kit is painful — proves the kit's existence is necessary</li>
+      <li data-num="✓">L2 kits are bounded sets (~10–15 patterns), small enough to spec and ship per shape</li>
+    </ul>
+  </div>
+
+  <div class="wf-box" style="border-color:var(--warn);">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--warn); text-transform:uppercase; letter-spacing:0.06em;">But surfaced new gaps</div>
+    <h3 style="margin:6px 0 12px;">5 things v0.1 didn't account for</h3>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="!">Kits drive new L1 requirements upstream (SwipeContainer, BottomSheet, SafeAreaInset, TabBarItem)</li>
+      <li data-num="!">Platform variants (iOS vs Android) are a real fork — need explicit policy</li>
+      <li data-num="!">A "Mobile Foundation" shared sub-kit might be cleaner than duplicating across mobile shapes</li>
+      <li data-num="!">L2 patterns have variants (NoteCard: default/pinned/selected) — wireframes treated L2s as monolithic</li>
+      <li data-num="!">Recipes vs L2 distinction got tested (FAB = L1+recipe, not L2) — the rule held but needs sharper criteria</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============ DECISIONS FOR V0.2 ============ -->
+
+<h2>What this probe contributes to v0.2</h2>
+
+<table class="wf-table">
+  <thead>
+    <tr><th>#</th><th>Decision</th><th>Reasoning from this probe</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong>Vision must show ≥2 kits side-by-side</strong></td>
+      <td>The thesis is invisible until you see Dashboard kit and Mobile Writing kit on the same page. v0.1 only showed one.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>Add "Foundation kits" tier</strong></td>
+      <td>Mobile Foundation = the SwipeRow / SearchHeader / Toast.mobile / TabBarItem set shared across Writing, Reading, Commerce mobile kits. Saves duplication. New architectural concept v0.1 missed.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Document the L1-pull pathway</strong></td>
+      <td>Kits don't just consume L1, they request new ones. Vision needs to show this loop.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>Make L2 variants first-class</strong></td>
+      <td>Every L2 has 3–6 variants. v0.1 wireframes treated them as singular. Inventory drift.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>Adopt explicit platform-fork policy</strong></td>
+      <td>Either "kits are neutral, apps fork at integration" or "kits ship .ios + .android" — pick one in v0.2.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong>Sharpen the "L2 vs recipe" criterion</strong></td>
+      <td>Building FAB taught us: if it's just a styled L1 + positioning, it's a recipe, not an L2. Write the rule explicitly.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong>Estimate kit-build cost</strong></td>
+      <td>Mobile Writing kit = 14 L2s × ~4 variants each × Figma + code = ~56 component-states to ship. If we're promising N kits, the build cost is real and should be in the roadmap.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="wf-note" style="margin-top:24px;">
+  <strong>Net result of Path B:</strong> the vision's central thesis is confirmed by a concrete artifact, but the probe surfaced 7 new architectural concerns that v0.1 didn't address. v0.2 will be meaningfully better-shaped because we did this probe first instead of just refining v0.1's wording. <span class="wf-marker">★</span>
+</div>
+
+<div class="wf-footer">
+  <span><a href="walkthrough-writer-handhelds.html">← Walkthrough</a></span>
+  <span><a href="index.html">all wireframes →</a></span>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,20 @@
 /* ════════════════════════════════════════════════════════════════
    Design Token Forge — Radio Token Defaults
-   Layer 0: System defaults for 73 radio variables.
+   Layer 0: System defaults for ~83 radio variables.
+
+   Anatomy:
+     <label.radio>
+       <input.radio__control type="radio" />
+       <span.radio__circle><span.radio__dot/></span>
+       <span.radio__label/>
+     </label>
+
+   Variants: filled (default) | outlined
+   Roles:    brand (default) | danger | warning | info | success | neutral
+             (applied via [data-role="…"]; remaps --brand-* primitives)
+   States:   unchecked | checked | hover | pressed | disabled
+             focus-visible | invalid (aria-invalid="true")
+
    All values reference global tokens — zero hardcoded visuals.
    ════════════════════════════════════════════════════════════════ */
 
@@ -66,44 +80,48 @@
   --radio-circle-border-color-disabled: var(--surface-base-cm-outline);
   --radio-opacity-disabled: 0.5;
 
-  /* ── Danger / Error (shared across variants) ── */
-  /* danger — canonical name */
-  --radio-circle-border-color-danger: var(--danger-component-outline-default);
-  --radio-circle-border-color-danger-hover: var(--danger-component-outline-hover);
-  --radio-circle-bg-on-danger: var(--danger-component-bg-default);
-  --radio-circle-bg-on-danger-hover: var(--danger-component-bg-hover);
-  /* error — backward-compatible alias */
-  --radio-circle-border-color-error: var(--radio-circle-border-color-danger);
-  --radio-circle-border-color-error-hover: var(--radio-circle-border-color-danger-hover);
-  --radio-circle-bg-on-error: var(--radio-circle-bg-on-danger);
-  --radio-circle-bg-on-error-hover: var(--radio-circle-bg-on-danger-hover);
-
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE — OUTLINE VARIANT  (13 vars)
+     🎨 SURFACE — OUTLINED VARIANT  (13 vars)
      ──────────────────────────────────────────────────────────── */
 
   /* ── Outline unchecked (off) — transparent + border ── */
-  --radio-outline-circle-bg-off: transparent;
-  --radio-outline-circle-bg-off-hover: var(--surface-base-cm-bg-hover);
-  --radio-outline-circle-border-color-off: var(--surface-base-cm-outline);
-  --radio-outline-circle-border-color-off-hover: var(--surface-base-cm-outline-hover);
+  --radio-outlined-circle-bg-off: transparent;
+  --radio-outlined-circle-bg-off-hover: var(--surface-base-cm-bg-hover);
+  --radio-outlined-circle-border-color-off: var(--surface-base-cm-outline);
+  --radio-outlined-circle-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Outline checked (on) — filled with semantic role ── */
-  --radio-outline-circle-bg-on: var(--brand-component-bg-default);
-  --radio-outline-circle-bg-on-hover: var(--brand-component-bg-hover);
-  --radio-outline-circle-border-color-on: var(--brand-component-bg-default);
-  --radio-outline-circle-border-color-on-hover: var(--brand-component-bg-hover);
+  --radio-outlined-circle-bg-on: var(--brand-component-bg-default);
+  --radio-outlined-circle-bg-on-hover: var(--brand-component-bg-hover);
+  --radio-outlined-circle-border-color-on: var(--brand-component-bg-default);
+  --radio-outlined-circle-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Outline dot ── */
-  --radio-outline-dot-color: var(--color-fixed-white);
+  --radio-outlined-dot-color: var(--color-fixed-white);
 
   /* ── Outline disabled ── */
-  --radio-outline-circle-bg-on-disabled: var(--brand-component-bg-default);
-  --radio-outline-circle-border-color-disabled: var(--surface-base-cm-outline);
-  --radio-outline-opacity-disabled: 0.5;
+  --radio-outlined-circle-bg-on-disabled: var(--brand-component-bg-default);
+  --radio-outlined-circle-border-color-disabled: var(--surface-base-cm-outline);
+  --radio-outlined-opacity-disabled: 0.5;
 
   /* ── Outline border ── */
-  --radio-outline-circle-border-width: 2px;
+  --radio-outlined-circle-border-width: 2px;
+
+  /* ────────────────────────────────────────────────────────────
+     🎨 SURFACE — INVALID STATE  (8 vars)
+     Shared across variants. INVALID is a STATE (triggered by
+     aria-invalid="true"), not a role — it always paints with
+     danger-* primitives regardless of the active data-role.
+     ──────────────────────────────────────────────────────────── */
+  --radio-circle-border-color-invalid: var(--danger-component-outline-default);
+  --radio-circle-border-color-invalid-hover: var(--danger-component-outline-hover);
+  --radio-circle-bg-on-invalid: var(--danger-component-bg-default);
+  --radio-circle-bg-on-invalid-hover: var(--danger-component-bg-hover);
+  /* Compat aliases — older snippets used -danger naming; canonical = -invalid */
+  --radio-circle-border-color-danger: var(--radio-circle-border-color-invalid);
+  --radio-circle-border-color-danger-hover: var(--radio-circle-border-color-invalid-hover);
+  --radio-circle-bg-on-danger: var(--radio-circle-bg-on-invalid);
+  --radio-circle-bg-on-danger-hover: var(--radio-circle-bg-on-invalid-hover);
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (14 vars)
@@ -126,10 +144,20 @@
   --radio-label-font-size-ultra: var(--font-size-24);
 
   /* ────────────────────────────────────────────────────────────
-     🧩 SLOTS  (4 vars)
+     🧩 SLOTS  (14 vars)
      ──────────────────────────────────────────────────────────── */
   --radio-gap: var(--spacing-8);
-  --radio-circle-scale-active: 0.92;
+  --radio-gap-micro: var(--spacing-4);
+  --radio-gap-tiny: var(--spacing-4);
+  --radio-gap-small: var(--spacing-6);
+  --radio-gap-base: var(--spacing-8);
+  --radio-gap-medium: var(--spacing-8);
+  --radio-gap-large: var(--spacing-10);
+  --radio-gap-big: var(--spacing-10);
+  --radio-gap-huge: var(--spacing-12);
+  --radio-gap-mega: var(--spacing-14);
+  --radio-gap-ultra: var(--spacing-16);
+  --radio-circle-scale-pressed: 0.92;
   --radio-group-gap: var(--spacing-8);
   --radio-group-gap-horizontal: var(--spacing-16);
 

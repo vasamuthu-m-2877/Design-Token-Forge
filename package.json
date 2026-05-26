@@ -11,7 +11,9 @@
     "audit:primitives": "node scripts/audit-primitive-aliases.cjs",
     "audit:token-drift": "node scripts/audit-token-drift.cjs",
     "audit:migration": "node scripts/migrate-v2/audit.cjs",
+    "audit:gold": "bash scripts/audit-gold-standard.sh",
     "audit": "pnpm audit:naming && pnpm audit:primitives && pnpm audit:token-drift",
+    "gen:manifests": "node scripts/generate-token-manifest.cjs --all",
     "test:editor": "playwright test tests/editor-v2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

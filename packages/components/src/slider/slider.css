@@ -238,7 +238,7 @@
 
 /* Active ticks (within the filled range) — colored via JS adding data-active */
 .slider__tick[data-active]::before {
-  background: var(--slider-tick-color-active);
+  background: var(--slider-tick-color-pressed);
 }
 
 /* Tick label text */
@@ -346,11 +346,11 @@
 .slider[data-variant="soft"] {
   --slider-fill-bg: var(--slider-soft-fill-bg);
   --slider-fill-bg-hover: var(--slider-soft-fill-bg-hover);
-  --slider-fill-bg-active: var(--slider-soft-fill-bg-active);
+  --slider-fill-bg-pressed: var(--slider-soft-fill-bg-pressed);
   --slider-fill-bg-disabled: var(--slider-soft-fill-bg-disabled);
   --slider-tooltip-bg: var(--slider-soft-tooltip-bg);
   --slider-tooltip-fg: var(--slider-soft-tooltip-fg);
-  --slider-tick-color-active: var(--slider-soft-tick-color-active);
+  --slider-tick-color-pressed: var(--slider-soft-tick-color-pressed);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -402,6 +402,19 @@
   --brand-component-outline-default: var(--warning-component-outline-default);
 }
 
+/* ── data-role="info" ───────────────────────────────────────── */
+.slider[data-role="info"] {
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-bg-hover: var(--info-component-bg-hover);
+  --brand-component-bg-pressed: var(--info-component-bg-pressed);
+  --brand-on-component: var(--info-on-component);
+  --brand-content-default: var(--info-content-default);
+  --brand-container-bg: var(--info-container-bg);
+  --brand-container-hover: var(--info-container-hover);
+  --brand-container-pressed: var(--info-container-pressed);
+  --brand-component-outline-default: var(--info-component-outline-default);
+}
+
 /* ── data-role="neutral" ────────────────────────────────────── */
 .slider[data-role="neutral"] {
   --brand-component-bg-default: var(--surface-base-cm-bg);
@@ -445,19 +458,19 @@
 
 .slider:active .slider__fill,
 .slider[data-dragging] .slider__fill {
-  background-color: var(--slider-fill-bg-active);
+  background-color: var(--slider-fill-bg-pressed);
 }
 
 .slider:active .slider__thumb,
 .slider[data-dragging] .slider__thumb {
-  background-color: var(--slider-thumb-bg-active);
-  border-color: var(--slider-thumb-border-color-active);
-  box-shadow: var(--slider-thumb-shadow-active);
+  background-color: var(--slider-thumb-bg-pressed);
+  border-color: var(--slider-thumb-border-color-pressed);
+  box-shadow: var(--slider-thumb-shadow-pressed);
 }
 
 .slider:active .slider__thumb::before,
 .slider[data-dragging] .slider__thumb::before {
-  background: var(--slider-thumb-halo-bg-active);
+  background: var(--slider-thumb-halo-bg-pressed);
   opacity: var(--slider-thumb-halo-opacity);
 }
 

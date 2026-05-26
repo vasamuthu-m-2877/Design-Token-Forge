@@ -1803,10 +1803,10 @@
       var v = $hex.value.trim();
       if (!v.startsWith('#')) v = '#' + v;
       if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
-        $hex.removeAttribute('data-invalid');
+        $hex.removeAttribute('aria-invalid');
         setHex(v);
       } else {
-        $hex.setAttribute('data-invalid', '');
+        $hex.setAttribute('aria-invalid', 'true');
       }
     });
     if ($reset) $reset.addEventListener('click', function () {
@@ -1848,8 +1848,8 @@
     document.getElementById('ev2AddPaletteTitle').textContent = 'Add custom palette';
     document.querySelector('#ev2AddPalConfirm').textContent = 'Add palette';
     document.getElementById('ev2AddPalName').value = '';
-    document.getElementById('ev2AddPalName').removeAttribute('data-invalid');
-    document.getElementById('ev2AddPalNameHint').removeAttribute('data-error');
+    document.getElementById('ev2AddPalName').removeAttribute('aria-invalid');
+    document.getElementById('ev2AddPalNameHint').removeAttribute('aria-invalid');
     document.getElementById('ev2AddPalNameHint').textContent = 'Lowercase letters, numbers, dashes. Must be unique.';
     document.getElementById('ev2AddPalColor').value = _addPalState.hex.toLowerCase();
     document.getElementById('ev2AddPalHex').value = _addPalState.hex.toUpperCase();
@@ -1874,8 +1874,8 @@
     document.getElementById('ev2AddPaletteTitle').textContent = 'Rename palette';
     document.querySelector('#ev2AddPalConfirm').textContent = 'Rename';
     document.getElementById('ev2AddPalName').value = id;
-    document.getElementById('ev2AddPalName').removeAttribute('data-invalid');
-    document.getElementById('ev2AddPalNameHint').removeAttribute('data-error');
+    document.getElementById('ev2AddPalName').removeAttribute('aria-invalid');
+    document.getElementById('ev2AddPalNameHint').removeAttribute('aria-invalid');
     document.getElementById('ev2AddPalNameHint').textContent = 'Lowercase letters, numbers, dashes. Must be unique.';
     /* Hide color + ladder (rename only changes the id, not the colors) */
     var colorField = document.getElementById('ev2AddPalColor').closest('.ev2-addpal-field');
@@ -1943,11 +1943,11 @@
       ok = false; msg = '"' + name + '" already exists.';
     }
     if (ok) {
-      input.removeAttribute('data-invalid');
-      hint.removeAttribute('data-error');
+      input.removeAttribute('aria-invalid');
+      hint.removeAttribute('aria-invalid');
     } else {
-      input.setAttribute('data-invalid', '');
-      hint.setAttribute('data-error', '');
+      input.setAttribute('aria-invalid', 'true');
+      hint.setAttribute('aria-invalid', 'true');
     }
     hint.textContent = msg;
     confirmBtn.disabled = !ok;
@@ -1970,7 +1970,7 @@
     if (color) color.addEventListener('input', function () {
       _addPalState.hex = color.value.toUpperCase();
       hex.value = _addPalState.hex;
-      hex.removeAttribute('data-invalid');
+      hex.removeAttribute('aria-invalid');
       document.getElementById('ev2AddPalSwatch').style.background = _addPalState.hex;
       renderAddPalettePreview();
     });
@@ -1978,13 +1978,13 @@
       var v = hex.value.trim();
       if (!v.startsWith('#')) v = '#' + v;
       if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
-        hex.removeAttribute('data-invalid');
+        hex.removeAttribute('aria-invalid');
         _addPalState.hex = v.toUpperCase();
         color.value = _addPalState.hex.toLowerCase();
         document.getElementById('ev2AddPalSwatch').style.background = _addPalState.hex;
         renderAddPalettePreview();
       } else {
-        hex.setAttribute('data-invalid', '');
+        hex.setAttribute('aria-invalid', 'true');
       }
     });
     if (confirmBtn) confirmBtn.addEventListener('click', function () {
@@ -5367,7 +5367,7 @@
       nameInput._wiredAutofill = true;
     }
     descInput.value = descInput.value || '';
-    nameInput.removeAttribute('data-invalid');
+    nameInput.removeAttribute('aria-invalid');
 
     meta.innerHTML =
         '<span class="ev2-deploy-meta-row"><span class="ev2-deploy-meta-k">Project</span><span class="ev2-deploy-meta-v">' + projLabel + '</span></span>'
@@ -6004,7 +6004,7 @@
       name = defaultSnapshotName();
       nameInput.value = name;
     }
-    nameInput.removeAttribute('data-invalid');
+    nameInput.removeAttribute('aria-invalid');
     var description = (descInput.value || '').trim();
     var bumpEl = document.querySelector('#ev2SaveForm [data-ver-bump][aria-checked="true"]');
     var bump = bumpEl ? bumpEl.getAttribute('data-ver-bump') : 'patch';
@@ -7844,11 +7844,11 @@
       $modalInput.type = opts.input.type || 'text';
       $modalInput.value = '';
       $modalInput.placeholder = opts.input.placeholder || '';
-      $modalInput.removeAttribute('data-invalid');
+      $modalInput.removeAttribute('aria-invalid');
       if (opts.input.hint) {
         $modalInputHint.textContent = opts.input.hint;
         $modalInputHint.hidden = false;
-        $modalInputHint.removeAttribute('data-error');
+        $modalInputHint.removeAttribute('aria-invalid');
       } else {
         $modalInputHint.hidden = true;
       }
@@ -7869,13 +7869,13 @@
     modalValidate  = null;
     $modalField.hidden = true;
     $modalInput.value = '';
-    $modalInput.removeAttribute('data-invalid');
-    $modalInputHint.removeAttribute('data-error');
+    $modalInput.removeAttribute('aria-invalid');
+    $modalInputHint.removeAttribute('aria-invalid');
   }
   function setModalInputError(msg) {
-    $modalInput.setAttribute('data-invalid', '');
+    $modalInput.setAttribute('aria-invalid', 'true');
     $modalInputHint.textContent = msg;
-    $modalInputHint.setAttribute('data-error', '');
+    $modalInputHint.setAttribute('aria-invalid', 'true');
     $modalInputHint.hidden = false;
     $modalInput.focus();
     $modalInput.select();

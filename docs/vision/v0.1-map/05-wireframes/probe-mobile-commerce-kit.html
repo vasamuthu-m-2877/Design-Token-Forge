@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Probe 2 · Mobile Commerce Kit + Foundation hypothesis</title>
+<link rel="stylesheet" href="wireframes.css" />
+<style>
+  .phone {
+    width: 280px;
+    border: 1.5px solid var(--ink);
+    border-radius: 28px;
+    padding: 8px;
+    background: var(--bg-elev);
+  }
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 22px;
+    overflow: hidden;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .phone-statusbar {
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-2);
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .phone-bottom {
+    height: 56px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    background: var(--bg-elev);
+  }
+  .phone-bottom span { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .phone-bottom .dot { width:14px; height:14px; border:1px solid var(--ink-3); border-radius:3px; }
+  .phone-bottom .active { color: var(--ink); }
+  .phone-bottom .active .dot { background: var(--ink); border-color: var(--ink); }
+
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .pattern-card {
+    border: 1px solid var(--line);
+    padding: 16px;
+    background: var(--bg-elev);
+  }
+  .pattern-card h3 {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .pattern-card .role {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .pattern-card .preview {
+    min-height: 60px;
+    padding: 8px;
+    border: 1px dashed var(--line-soft);
+    background: var(--bg);
+    margin-bottom: 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .pattern-card .composes {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .pattern-card .composes strong { color: var(--ink); font-weight: 600; }
+  .pattern-card .variants {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line-soft);
+  }
+  .pattern-card.foundation { border-left: 3px solid var(--note); }
+  .pattern-card.shape { border-left: 3px solid var(--ink); }
+
+  .venn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .venn-col {
+    border: 1px solid var(--line);
+    padding: 14px;
+    background: var(--bg-elev);
+  }
+  .venn-col h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 10px;
+    color: var(--ink-2);
+  }
+  .venn-col.foundation h4 { color: var(--note); }
+  .venn-col ul {
+    margin: 0;
+    padding-left: 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  .verdict {
+    display:inline-block;
+    padding:2px 8px;
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    border:1px solid var(--line);
+    margin-right:6px;
+  }
+  .verdict.win { border-color: var(--ok); color: var(--ok); }
+  .verdict.lose { border-color: var(--bad); color: var(--bad); }
+  .verdict.warn { border-color: var(--warn); color: var(--warn); }
+</style>
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>Probe 2 · Mobile Commerce Kit + Foundation hypothesis</h1>
+    <div class="wf-meta">Spec a second mobile kit. Test whether a shared Foundation tier collapses the build cost.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<!-- ============ GOAL ============ -->
+
+<div class="wf-box" style="margin-bottom:32px;">
+  <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Goal of this probe</div>
+  <div style="font-family:var(--sans); font-size:15px; margin:8px 0 12px; line-height:1.6;">
+    Spec the L2 patterns for a <strong>Mobile Commerce</strong> kit (think: small e-commerce app — product list, detail, cart, checkout).
+    Then split them three ways: <em>Foundation</em> (shared with Writing) · <em>Commerce-specific</em> · <em>Writing-specific</em>.
+    If the Foundation set is non-trivial, the "kit per shape" thesis gets economically viable (you don't rebuild basics per kit).
+    If Foundation is small, every new shape is full freight and the roadmap math gets ugly.
+  </div>
+  <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2);">
+    Test subject: hypothetical <strong>"Bazaar Mobile"</strong> — a small-merchant marketplace app.
+    Uses the same DTF token system and L1 atoms as writer-handhelds.
+  </div>
+</div>
+
+<!-- ============ SPEC ============ -->
+
+<h2>Mobile Commerce kit · 13 L2 patterns</h2>
+
+<p style="font-family:var(--mono); font-size:12px; color:var(--ink-2); max-width:720px;">
+  Patterns tagged <span class="verdict win">foundation</span> are shared with Mobile Writing (Probe 1).
+  Patterns tagged <span class="verdict warn">shape-specific</span> exist only in this kit.
+</p>
+
+<div class="pattern-grid">
+
+  <!-- FOUNDATION (reused from Probe 1) -->
+
+  <div class="pattern-card foundation">
+    <h3>AppShell.mobile <span class="verdict win">foundation</span></h3>
+    <div class="role">layout · root container</div>
+    <div class="preview"><div style="width:60%; height:80%; display:flex; flex-direction:column; gap:2px;"><div style="height:8px; background:var(--line-soft);"></div><div style="flex:1; background:var(--bg-elev);"></div><div style="height:14px; background:var(--line-soft);"></div></div></div>
+    <div class="composes">Reused verbatim from Mobile Writing kit. Statusbar + content slot + tabbar.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>TopBar <span class="verdict win">foundation</span></h3>
+    <div class="role">navigation · per-screen header</div>
+    <div class="preview"><div style="display:flex; align-items:center; gap:6px; width:90%;"><div style="width:12px; height:12px; border:1px solid var(--ink-3);"></div><div style="flex:1; height:6px; background:var(--ink-3);"></div><div style="width:12px; height:12px; border:1px solid var(--ink-3);"></div><div style="width:12px; height:12px; border:1px solid var(--ink-3);"></div></div></div>
+    <div class="composes">Same L2. Commerce uses <code>default</code> variant; Writing used <code>large-title</code>. Variant covers the difference.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>BottomTabBar <span class="verdict win">foundation</span></h3>
+    <div class="role">navigation · primary nav</div>
+    <div class="preview"><div style="display:flex; justify-content:space-around; width:90%;"><div style="width:14px; height:14px; background:var(--ink);"></div><div style="width:14px; height:14px; border:1px solid var(--ink-3);"></div><div style="width:14px; height:14px; border:1px solid var(--ink-3);"></div><div style="width:14px; height:14px; border:1px solid var(--ink-3);"></div></div></div>
+    <div class="composes">Reused. Commerce uses <code>4-tabs + badge</code> (Cart badge); Writing used <code>4-tabs</code>. Same L2.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>SearchHeader <span class="verdict win">foundation</span></h3>
+    <div class="role">navigation · search mode</div>
+    <div class="preview"><div style="display:flex; align-items:center; gap:6px; width:90%;"><div style="flex:1; height:18px; border:1px solid var(--ink-3); border-radius:9px;"></div><div style="font-size:8px; font-family:var(--mono);">Cancel</div></div></div>
+    <div class="composes">Reused verbatim. Both kits need first-class search.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>ActionSheet <span class="verdict win">foundation</span></h3>
+    <div class="role">modal · iOS-style options</div>
+    <div class="preview"><div style="width:90%; display:flex; flex-direction:column; gap:2px;"><div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink-3);"></div><div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink-3);"></div><div style="height:2px;"></div><div style="height:8px; background:var(--bg-elev); border:1px solid var(--ink);"></div></div></div>
+    <div class="composes">Reused. "Share product" sheet, "Sort by" sheet — same L2.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>ConfirmSheet <span class="verdict win">foundation</span></h3>
+    <div class="role">modal · destructive confirm</div>
+    <div class="preview"><div style="width:90%; display:flex; flex-direction:column; gap:3px;"><div style="height:5px; background:var(--ink); width:70%;"></div><div style="height:3px; background:var(--ink-3); width:90%;"></div><div style="display:flex; gap:4px; margin-top:4px;"><div style="flex:1; height:14px; border:1px solid var(--ink-3);"></div><div style="flex:1; height:14px; background:var(--ink);"></div></div></div></div>
+    <div class="composes">Reused. "Remove from cart?" vs "Delete note?" — same L2, different copy.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>SettingsRow.mobile <span class="verdict win">foundation</span></h3>
+    <div class="role">data · settings list item</div>
+    <div class="preview"><div style="display:flex; align-items:center; gap:6px; width:90%;"><div style="width:18px; height:18px; border:1px solid var(--ink-3);"></div><div style="flex:1; height:4px; background:var(--ink-2);"></div><div style="width:24px; height:12px; background:var(--ink); border-radius:6px;"></div></div></div>
+    <div class="composes">Reused. Profile settings, account settings, notification prefs — identical.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>Toast.mobile <span class="verdict win">foundation</span></h3>
+    <div class="role">feedback · transient notification</div>
+    <div class="preview"><div style="display:flex; align-items:center; gap:6px; width:80%; padding:4px 8px; border:1px solid var(--ink); border-radius:6px;"><div style="width:10px; height:10px; background:var(--ink); border-radius:50%;"></div><div style="flex:1; height:4px; background:var(--ink-2);"></div><div style="font-size:8px; font-family:var(--mono);">↩</div></div></div>
+    <div class="composes">Reused. "Added to cart · Undo" vs "Note saved · Undo" — same L2.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>SwipeRow <span class="verdict win">foundation</span></h3>
+    <div class="role">data · gesture-enabled list item</div>
+    <div class="preview"><div style="display:flex; width:90%; height:24px;"><div style="flex:1; background:var(--bg); border:1px solid var(--line);"></div><div style="width:24px; background:var(--ink);"></div></div></div>
+    <div class="composes">Reused. Cart row swipe-to-remove uses identical wrapper.</div>
+  </div>
+
+  <div class="pattern-card foundation">
+    <h3>EmptyState.mobile <span class="verdict win">foundation</span></h3>
+    <div class="role">empty state</div>
+    <div class="preview"><div style="display:flex; flex-direction:column; align-items:center; gap:6px;"><div style="width:32px; height:32px; border:1px dashed var(--ink-3); border-radius:50%;"></div><div style="width:60%; height:4px; background:var(--ink-3);"></div><div style="width:24px; height:8px; background:var(--ink); margin-top:4px;"></div></div></div>
+    <div class="composes"><strong>Generalized from Probe 1's NoteListEmpty.</strong> Same structure (illustration + headline + caption + CTA). Variants cover specific cases.</div>
+    <div class="variants">variants: no-notes · no-search-results · empty-cart · no-orders · offline · error</div>
+  </div>
+
+  <!-- COMMERCE-SPECIFIC -->
+
+  <div class="pattern-card shape">
+    <h3>ProductCard <span class="verdict warn">shape-specific</span></h3>
+    <div class="role">data · grid item</div>
+    <div class="preview"><div style="width:90%; display:flex; flex-direction:column; gap:3px;"><div style="height:32px; background:var(--line-soft);"></div><div style="height:4px; background:var(--ink); width:80%;"></div><div style="height:4px; background:var(--ink-2); width:40%;"></div></div></div>
+    <div class="composes">
+      <strong>Composes:</strong> Image · Text[title] · Text[price] · slot[badge: sale/new/sold-out]<br/>
+      <strong>Tokens:</strong> --container-bg · --content-default · --content-strong (price)
+    </div>
+    <div class="variants">variants: grid · list · compact · with-rating · sold-out</div>
+  </div>
+
+  <div class="pattern-card shape">
+    <h3>ProductDetailHero <span class="verdict warn">shape-specific</span></h3>
+    <div class="role">data · product page header</div>
+    <div class="preview"><div style="width:90%; display:flex; flex-direction:column; gap:3px;"><div style="height:48px; background:var(--line-soft);"></div><div style="display:flex; justify-content:center; gap:3px;"><div style="width:4px; height:4px; background:var(--ink); border-radius:50%;"></div><div style="width:4px; height:4px; background:var(--ink-3); border-radius:50%;"></div><div style="width:4px; height:4px; background:var(--ink-3); border-radius:50%;"></div></div></div></div>
+    <div class="composes">
+      <strong>Composes:</strong> ImageCarousel · PageIndicator dots · slot[overlay: back / share / save IconButtons]<br/>
+      <strong>Tokens:</strong> --container-bg · --on-component (overlay icons)
+    </div>
+    <div class="variants">variants: single-image · carousel · with-video · with-zoom</div>
+  </div>
+
+  <div class="pattern-card shape">
+    <h3>VariantPicker <span class="verdict warn">shape-specific</span></h3>
+    <div class="role">selection · size/color picker</div>
+    <div class="preview"><div style="width:90%; display:flex; gap:4px;"><div style="width:22px; height:22px; border:1px solid var(--ink); border-radius:11px;"></div><div style="width:22px; height:22px; border:1px solid var(--ink-3); border-radius:11px;"></div><div style="width:22px; height:22px; border:1px solid var(--ink-3); border-radius:11px;"></div></div></div>
+    <div class="composes">
+      <strong>Composes:</strong> Label · row of swatch buttons OR row of size pills<br/>
+      <strong>Tokens:</strong> --component-bg-default · --component-outline-default · --content-default
+    </div>
+    <div class="variants">variants: color-swatches · size-pills · dropdown (long lists) · with-out-of-stock</div>
+  </div>
+
+  <div class="pattern-card shape">
+    <h3>CartLineItem <span class="verdict warn">shape-specific</span></h3>
+    <div class="role">data · cart row</div>
+    <div class="preview"><div style="display:flex; gap:6px; width:90%; align-items:center;"><div style="width:24px; height:24px; background:var(--line-soft);"></div><div style="flex:1; display:flex; flex-direction:column; gap:2px;"><div style="height:4px; background:var(--ink); width:80%;"></div><div style="height:3px; background:var(--ink-3); width:40%;"></div></div><div style="display:flex; align-items:center; gap:3px;"><div style="font-size:9px;">−</div><div style="font-size:9px;">2</div><div style="font-size:9px;">+</div></div></div></div>
+    <div class="composes">
+      <strong>Composes:</strong> Image · Text[title] · Text[variant-info] · QuantityStepper · Text[line-total]<br/>
+      <strong>Wraps in:</strong> SwipeRow (foundation) for remove gesture
+    </div>
+    <div class="variants">variants: default · edit-mode · low-stock · out-of-stock</div>
+  </div>
+
+  <div class="pattern-card shape">
+    <h3>PriceBreakdown <span class="verdict warn">shape-specific</span></h3>
+    <div class="role">data · checkout summary</div>
+    <div class="preview"><div style="width:90%; display:flex; flex-direction:column; gap:3px;"><div style="display:flex; justify-content:space-between;"><div style="height:3px; background:var(--ink-3); width:30%;"></div><div style="height:3px; background:var(--ink-3); width:18%;"></div></div><div style="display:flex; justify-content:space-between;"><div style="height:3px; background:var(--ink-3); width:24%;"></div><div style="height:3px; background:var(--ink-3); width:14%;"></div></div><div style="height:1px; background:var(--line); margin:3px 0;"></div><div style="display:flex; justify-content:space-between;"><div style="height:5px; background:var(--ink); width:24%;"></div><div style="height:5px; background:var(--ink); width:24%;"></div></div></div></div>
+    <div class="composes">
+      <strong>Composes:</strong> rows of Text[label] · Text[amount] + separator + Total row (Text[strong])
+    </div>
+    <div class="variants">variants: cart-summary · checkout-final · order-receipt · with-discount-line</div>
+  </div>
+
+  <div class="pattern-card shape">
+    <h3>CheckoutStepper <span class="verdict warn">shape-specific</span></h3>
+    <div class="role">navigation · multi-step progress</div>
+    <div class="preview"><div style="width:90%; display:flex; align-items:center; gap:4px;"><div style="width:14px; height:14px; background:var(--ink); border-radius:50%; color:var(--bg); display:flex; align-items:center; justify-content:center; font-size:8px;">✓</div><div style="flex:1; height:1px; background:var(--ink);"></div><div style="width:14px; height:14px; background:var(--ink); border-radius:50%;"></div><div style="flex:1; height:1px; background:var(--line-soft);"></div><div style="width:14px; height:14px; border:1px solid var(--ink-3); border-radius:50%;"></div></div></div>
+    <div class="composes">
+      <strong>Composes:</strong> sequence of step-dots connected by lines · current/done/pending states
+    </div>
+    <div class="variants">variants: 3-steps · 4-steps · with-labels · compact (dots-only)</div>
+  </div>
+
+</div>
+
+<!-- ============ THE THREE-WAY SPLIT ============ -->
+
+<h2>The three-way split</h2>
+
+<div class="venn-row">
+
+  <div class="venn-col">
+    <h4>Writing-specific (Probe 1)</h4>
+    <ul>
+      <li>NoteCard</li>
+      <li>EditorCanvas</li>
+      <li>EditorToolbar</li>
+      <li>FormatSheet</li>
+    </ul>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:10px;"><strong>4 patterns</strong></div>
+  </div>
+
+  <div class="venn-col foundation">
+    <h4>★ Mobile Foundation (shared)</h4>
+    <ul>
+      <li>AppShell.mobile</li>
+      <li>TopBar</li>
+      <li>BottomTabBar</li>
+      <li>SearchHeader</li>
+      <li>SwipeRow</li>
+      <li>ActionSheet</li>
+      <li>ConfirmSheet</li>
+      <li>SettingsRow.mobile</li>
+      <li>Toast.mobile</li>
+      <li>EmptyState.mobile (generalized)</li>
+    </ul>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--note); margin-top:10px;"><strong>10 patterns · ~71% of Writing kit · ~77% of Commerce kit</strong></div>
+  </div>
+
+  <div class="venn-col">
+    <h4>Commerce-specific (this probe)</h4>
+    <ul>
+      <li>ProductCard</li>
+      <li>ProductDetailHero</li>
+      <li>VariantPicker</li>
+      <li>CartLineItem</li>
+      <li>PriceBreakdown</li>
+      <li>CheckoutStepper</li>
+    </ul>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:10px;"><strong>6 patterns</strong></div>
+  </div>
+
+</div>
+
+<!-- ============ COST MODEL ============ -->
+
+<h2>What this does to the build math</h2>
+
+<div class="wf-box" style="margin-bottom:16px;">
+
+  <h3 style="margin-top:0;">Without a Foundation tier (Probe 1 assumption)</h3>
+  <table class="wf-table" style="margin-bottom:16px;">
+    <thead><tr><th>Kit</th><th>L2 patterns</th><th>~variants each</th><th>States to ship</th></tr></thead>
+    <tbody>
+      <tr><td>Mobile Writing</td><td>14</td><td>4</td><td>56</td></tr>
+      <tr><td>Mobile Commerce</td><td>13</td><td>4</td><td>52</td></tr>
+      <tr><td>Mobile Reading (future)</td><td>~13</td><td>4</td><td>52</td></tr>
+      <tr><td>Mobile Chat (future)</td><td>~14</td><td>4</td><td>56</td></tr>
+      <tr style="font-weight:600;"><td>Total · 4 kits</td><td>54</td><td></td><td><strong>216 component-states</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>With a Foundation tier (this probe's finding)</h3>
+  <table class="wf-table">
+    <thead><tr><th>Tier</th><th>L2 patterns</th><th>~variants each</th><th>States to ship</th></tr></thead>
+    <tbody>
+      <tr style="background:rgba(178,95,0,0.05);"><td><strong>Mobile Foundation</strong> (build once)</td><td>10</td><td>4</td><td>40</td></tr>
+      <tr><td>Writing-specific</td><td>4</td><td>4</td><td>16</td></tr>
+      <tr><td>Commerce-specific</td><td>6</td><td>4</td><td>24</td></tr>
+      <tr><td>Reading-specific (future)</td><td>~3</td><td>4</td><td>12</td></tr>
+      <tr><td>Chat-specific (future)</td><td>~4</td><td>4</td><td>16</td></tr>
+      <tr style="font-weight:600;"><td>Total · 4 kits</td><td>27</td><td></td><td><strong>108 component-states</strong></td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<div class="wf-note">
+  <strong>50% reduction in build cost.</strong> 216 → 108 states. And the 5th, 6th, Nth mobile kit gets cheaper still — each one only pays its specific delta. <span class="wf-marker">★</span>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="★">The "Mobile Foundation" tier isn't a nice-to-have — it's what makes the whole "kit per shape" thesis economically viable. Without it, every new shape doubles the maintenance surface. With it, the marginal cost of a new shape is ~4 specific L2s.</li>
+</ul>
+
+<!-- ============ L3 EXAMPLE ============ -->
+
+<h2>L3 example · Product detail screen composed from the kit</h2>
+
+<div class="wf-grid cols-2" style="gap:32px; align-items:start;">
+
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="phone-statusbar"><span>9:41</span><span>● ● ●</span></div>
+
+      <!-- ProductDetailHero -->
+      <div style="position:relative; height:200px; background:linear-gradient(180deg, var(--bg-elev) 0%, var(--line-soft) 100%); display:flex; align-items:center; justify-content:center;">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">product image</div>
+        <div style="position:absolute; top:12px; left:12px; width:32px; height:32px; background:rgba(255,255,255,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center;">←</div>
+        <div style="position:absolute; top:12px; right:12px; display:flex; gap:6px;">
+          <div style="width:32px; height:32px; background:rgba(255,255,255,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">♡</div>
+          <div style="width:32px; height:32px; background:rgba(255,255,255,0.9); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px;">⇪</div>
+        </div>
+        <div style="position:absolute; bottom:10px; left:0; right:0; display:flex; justify-content:center; gap:4px;">
+          <div style="width:5px; height:5px; background:var(--ink); border-radius:50%;"></div>
+          <div style="width:5px; height:5px; background:var(--ink-3); border-radius:50%;"></div>
+          <div style="width:5px; height:5px; background:var(--ink-3); border-radius:50%;"></div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div style="flex:1; padding:14px 16px;">
+        <div style="font-family:var(--sans); font-size:11px; color:var(--ink-2); text-transform:uppercase; letter-spacing:0.06em;">Artisan Goods</div>
+        <div style="font-family:var(--sans); font-size:17px; font-weight:600; margin:2px 0 4px;">Hand-thrown ceramic mug</div>
+        <div style="font-family:var(--sans); font-size:18px; font-weight:700; color:var(--ink);">$42.00</div>
+
+        <div style="margin-top:14px; font-family:var(--sans); font-size:11px; color:var(--ink-2);">Color</div>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <div style="width:24px; height:24px; border-radius:50%; background:#3a3a3a; border:2px solid var(--ink); box-shadow:0 0 0 2px var(--bg);"></div>
+          <div style="width:24px; height:24px; border-radius:50%; background:#c9a888; border:1px solid var(--line);"></div>
+          <div style="width:24px; height:24px; border-radius:50%; background:#7d8a73; border:1px solid var(--line);"></div>
+        </div>
+
+        <div style="margin-top:12px; font-family:var(--sans); font-size:11px; color:var(--ink-2);">Size</div>
+        <div style="display:flex; gap:6px; margin-top:6px;">
+          <div style="padding:5px 12px; border:1px solid var(--line); font-family:var(--sans); font-size:11px;">8oz</div>
+          <div style="padding:5px 12px; border:2px solid var(--ink); font-family:var(--sans); font-size:11px; font-weight:600;">12oz</div>
+          <div style="padding:5px 12px; border:1px solid var(--line); font-family:var(--sans); font-size:11px; color:var(--ink-3); text-decoration:line-through;">16oz</div>
+        </div>
+      </div>
+
+      <!-- Sticky CTA -->
+      <div style="padding:10px 16px; border-top:1px solid var(--line); background:var(--bg-elev);">
+        <div style="width:100%; padding:12px; background:var(--ink); color:var(--bg); text-align:center; font-family:var(--sans); font-size:13px; font-weight:600;">Add to cart · $42.00</div>
+      </div>
+
+      <div class="phone-bottom">
+        <span><span class="dot"></span>Shop</span>
+        <span><span class="dot"></span>Search</span>
+        <span><span class="dot"></span>Cart</span>
+        <span><span class="dot"></span>Profile</span>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3 style="margin-top:0;">Composed from 6 L2s + 1 L1</h3>
+    <ul class="wf-anno-list">
+      <li data-num="1"><strong>AppShell.mobile</strong> <span class="verdict win">foundation</span> · root</li>
+      <li data-num="2"><strong>ProductDetailHero</strong> <span class="verdict warn">shape</span> · variant=carousel + overlay actions</li>
+      <li data-num="3"><strong>VariantPicker</strong> <span class="verdict warn">shape</span> × 2 · color-swatches + size-pills variants</li>
+      <li data-num="4"><strong>Button</strong> (L1) · primary, full-width, sticky-bottom recipe</li>
+      <li data-num="5"><strong>BottomTabBar</strong> <span class="verdict win">foundation</span> · 4-tabs (no active here since we're 1 level deep)</li>
+    </ul>
+
+    <div class="wf-note" style="margin-top:16px;">
+      <strong>2 of 5 components in this screen came from the shared Foundation tier.</strong>
+      Build them once, reuse forever. The Commerce kit only had to invent <em>ProductDetailHero</em> and <em>VariantPicker</em> for this view.
+    </div>
+
+    <h3 style="margin-top:24px;">Comparing to Probe 1's NoteList screen</h3>
+    <table class="wf-table" style="font-size:12px;">
+      <thead><tr><th>Screen</th><th>Foundation L2s used</th><th>Shape-specific L2s used</th></tr></thead>
+      <tbody>
+        <tr><td>NoteList (Writing)</td><td>4 (AppShell · TopBar · SearchHeader · BottomTabBar)</td><td>2 (NoteCard, FAB-recipe)</td></tr>
+        <tr><td>Product Detail (Commerce)</td><td>2 (AppShell · BottomTabBar)</td><td>2 (ProductDetailHero, VariantPicker)</td></tr>
+      </tbody>
+    </table>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); margin-top:8px;">
+      Foundation utilization varies by screen depth: list-level screens use more foundation; detail-level screens use more shape-specific. Both compose freely.
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ NEW QUESTIONS ============ -->
+
+<h2>What this probe surfaced for v0.2</h2>
+
+<div class="wf-grid cols-2" style="gap:16px;">
+
+  <div class="wf-box" style="border-color:var(--ok);">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ok); text-transform:uppercase; letter-spacing:0.06em;">Confirmed</div>
+    <h3 style="margin:6px 0 12px;">Foundation hypothesis · works</h3>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="✓">10 of 14 Writing patterns generalize to Foundation without compromise</li>
+      <li data-num="✓">Same 10 patterns serve Commerce — 77% reuse rate</li>
+      <li data-num="✓">Build cost drops 50% across 4 kits, more for 5th+ kit</li>
+      <li data-num="✓">Foundation tier is the right granularity (not too small, not too coupled)</li>
+      <li data-num="✓">Shape-specific kit size is small (4–6 patterns) — feasible to ship</li>
+    </ul>
+  </div>
+
+  <div class="wf-box" style="border-color:var(--warn);">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--warn); text-transform:uppercase; letter-spacing:0.06em;">New gaps</div>
+    <h3 style="margin:6px 0 12px;">4 architectural choices still pending</h3>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="!">Foundation versioning: if Foundation breaks, all dependent kits break. Need an LTS policy.</li>
+      <li data-num="!">Foundation governance: who owns it? DTF core team or per-shape kit owners?</li>
+      <li data-num="!">Cross-shape Foundations: is there a "Desktop Foundation"? "Marketing Foundation"? Likely yes, by symmetry.</li>
+      <li data-num="!">Some L2s emerged generalized (EmptyState.mobile) — flagging that "build Writing first, generalize on second use" is the right authoring discipline.</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ============ NEW ARCHITECTURE TREE ============ -->
+
+<h2>The architecture v0.2 should show</h2>
+
+<div class="wf-box" style="padding:24px; background:var(--bg);">
+<pre style="font-family:var(--mono); font-size:12px; color:var(--ink); margin:0; line-height:1.7;">
+                  ┌───────────────────┐
+                  │  L0 · Tokens      │
+                  └─────────┬─────────┘
+                            │
+                  ┌─────────▼─────────┐
+                  │  L1 · Atoms       │  (Button, Input, Text, Icon, Image…)
+                  └─────────┬─────────┘
+                            │
+        ┌───────────────────┼───────────────────┐
+        │                   │                   │
+   ┌────▼─────┐       ┌─────▼─────┐       ┌─────▼─────┐
+   │ Mobile   │       │ Desktop   │       │ Marketing │
+   │ Foundation│      │ Foundation│      │ Foundation │  ← NEW TIER
+   │ (10 L2s) │       │ (~12 L2s) │       │ (~8 L2s)  │
+   └────┬─────┘       └─────┬─────┘       └─────┬─────┘
+        │                   │                   │
+   ┌────┴────┬────┐    ┌────┴───┐          ┌────┴────┐
+   ▼         ▼    ▼    ▼        ▼          ▼         ▼
+ Writing  Commerce ...Dashboard Admin  Landing   Pricing
+ (+4 L2s) (+6 L2s)   (+9 L2s)  (+5)   (+5)      (+4)
+        ↑                ↑                ↑
+        └── kit per shape, sharing a foundation per platform ──┘
+</pre>
+</div>
+
+<div class="wf-note" style="margin-top:16px;">
+  <strong>This is the architecture diagram v0.1 was missing.</strong>
+  v0.1 had L0 → L1 → kit. The probes proved we need a Foundation tier between L1 and shape-kits.
+  Roadmap implication: build <em>one Foundation</em> before <em>any shape-kit</em>. Otherwise you'll duplicate work and have to refactor mid-stream. <span class="wf-marker">★★</span>
+</div>
+
+<!-- ============ DECISION ============ -->
+
+<h2>Net result · is the vision economically viable?</h2>
+
+<div class="wf-box" style="border-color:var(--ok); padding:24px;">
+  <div style="font-family:var(--sans); font-size:18px; font-weight:600; margin-bottom:12px;">Yes — but only with a Foundation tier.</div>
+  <div style="font-family:var(--sans); font-size:14px; line-height:1.7; color:var(--ink-2);">
+    Two probes confirm: shape-specific kits are real and necessary (Probe 1), but the Foundation tier collapses the build cost from prohibitive to feasible (Probe 2). Without Foundation, every new shape doubles the maintenance surface and the roadmap collapses by kit #4. With Foundation, the marginal cost of a new shape drops to ~4–6 patterns and the model scales.
+    <br/><br/>
+    <strong>Architecturally:</strong> v0.2 must add a Foundation tier between L1 and shape-kits.<br/>
+    <strong>Roadmap:</strong> Mobile Foundation ships first (~40 component-states). First shape-kit (Writing) ships second (~16 component-states). Each additional shape: ~16–24 states.<br/>
+    <strong>Business:</strong> the "we ship N kits" pitch only works if Foundation is real. Now we know it can be.
+  </div>
+</div>
+
+<div class="wf-footer">
+  <span><a href="probe-mobile-writing-kit.html">← Probe 1</a></span>
+  <span><a href="index.html">all wireframes →</a></span>
+</div>
+
+</body>
+</html>

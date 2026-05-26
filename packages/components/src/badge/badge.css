@@ -71,7 +71,7 @@
 /* ────────────────────────────────────────────────────────────────
    3.  VARIANT SELECTORS
    ──────────────────────────────────────────────────────────────── */
-.badge[data-variant="outline"]{--_bd-bg:var(--badge-outline-bg);--_bd-fg:var(--badge-outline-fg);--_bd-border-color:var(--badge-outline-border-color)}
+.badge[data-variant="outlined"]{--_bd-bg:var(--badge-outlined-bg);--_bd-fg:var(--badge-outlined-fg);--_bd-border-color:var(--badge-outlined-border-color)}
 .badge[data-variant="soft"]{--_bd-bg:var(--badge-soft-bg);--_bd-fg:var(--badge-soft-fg);--_bd-border-color:var(--badge-soft-border-color)}
 
 /* ────────────────────────────────────────────────────────────────
@@ -81,26 +81,36 @@
 .badge[data-shape="square"]{--_bd-radius:var(--badge-radius-square)}
 
 /* ────────────────────────────────────────────────────────────────
-   5.  ROLE COLOR OVERRIDES
+   5.  ROLE COLOR OVERRIDES (brand | info | danger | success | warning | neutral)
    ──────────────────────────────────────────────────────────────── */
+/* Brand */
+.badge[data-role="brand"]{--_bd-bg:var(--badge-brand-filled-bg);--_bd-fg:var(--badge-brand-filled-fg)}
+.badge[data-role="brand"][data-variant="outlined"]{--_bd-bg:transparent;--_bd-fg:var(--badge-brand-outlined-fg);--_bd-border-color:var(--badge-brand-outlined-border)}
+.badge[data-role="brand"][data-variant="soft"]{--_bd-bg:var(--badge-brand-soft-bg);--_bd-fg:var(--badge-brand-soft-fg);--_bd-border-color:transparent}
+
+/* Info */
+.badge[data-role="info"]{--_bd-bg:var(--badge-info-filled-bg);--_bd-fg:var(--badge-info-filled-fg)}
+.badge[data-role="info"][data-variant="outlined"]{--_bd-bg:transparent;--_bd-fg:var(--badge-info-outlined-fg);--_bd-border-color:var(--badge-info-outlined-border)}
+.badge[data-role="info"][data-variant="soft"]{--_bd-bg:var(--badge-info-soft-bg);--_bd-fg:var(--badge-info-soft-fg);--_bd-border-color:transparent}
+
 /* Danger */
 .badge[data-role="danger"]{--_bd-bg:var(--badge-danger-filled-bg);--_bd-fg:var(--badge-danger-filled-fg)}
-.badge[data-role="danger"][data-variant="outline"]{--_bd-bg:transparent;--_bd-fg:var(--badge-danger-outline-fg);--_bd-border-color:var(--badge-danger-outline-border)}
+.badge[data-role="danger"][data-variant="outlined"]{--_bd-bg:transparent;--_bd-fg:var(--badge-danger-outlined-fg);--_bd-border-color:var(--badge-danger-outlined-border)}
 .badge[data-role="danger"][data-variant="soft"]{--_bd-bg:var(--badge-danger-soft-bg);--_bd-fg:var(--badge-danger-soft-fg);--_bd-border-color:transparent}
 
 /* Success */
 .badge[data-role="success"]{--_bd-bg:var(--badge-success-filled-bg);--_bd-fg:var(--badge-success-filled-fg)}
-.badge[data-role="success"][data-variant="outline"]{--_bd-bg:transparent;--_bd-fg:var(--badge-success-outline-fg);--_bd-border-color:var(--badge-success-outline-border)}
+.badge[data-role="success"][data-variant="outlined"]{--_bd-bg:transparent;--_bd-fg:var(--badge-success-outlined-fg);--_bd-border-color:var(--badge-success-outlined-border)}
 .badge[data-role="success"][data-variant="soft"]{--_bd-bg:var(--badge-success-soft-bg);--_bd-fg:var(--badge-success-soft-fg);--_bd-border-color:transparent}
 
 /* Warning */
 .badge[data-role="warning"]{--_bd-bg:var(--badge-warning-filled-bg);--_bd-fg:var(--badge-warning-filled-fg)}
-.badge[data-role="warning"][data-variant="outline"]{--_bd-bg:transparent;--_bd-fg:var(--badge-warning-outline-fg);--_bd-border-color:var(--badge-warning-outline-border)}
+.badge[data-role="warning"][data-variant="outlined"]{--_bd-bg:transparent;--_bd-fg:var(--badge-warning-outlined-fg);--_bd-border-color:var(--badge-warning-outlined-border)}
 .badge[data-role="warning"][data-variant="soft"]{--_bd-bg:var(--badge-warning-soft-bg);--_bd-fg:var(--badge-warning-soft-fg);--_bd-border-color:transparent}
 
 /* Neutral */
 .badge[data-role="neutral"]{--_bd-bg:var(--badge-neutral-filled-bg);--_bd-fg:var(--badge-neutral-filled-fg)}
-.badge[data-role="neutral"][data-variant="outline"]{--_bd-bg:transparent;--_bd-fg:var(--badge-neutral-outline-fg);--_bd-border-color:var(--badge-neutral-outline-border)}
+.badge[data-role="neutral"][data-variant="outlined"]{--_bd-bg:transparent;--_bd-fg:var(--badge-neutral-outlined-fg);--_bd-border-color:var(--badge-neutral-outlined-border)}
 .badge[data-role="neutral"][data-variant="soft"]{--_bd-bg:var(--badge-neutral-soft-bg);--_bd-fg:var(--badge-neutral-soft-fg);--_bd-border-color:transparent}
 
 /* ────────────────────────────────────────────────────────────────
@@ -181,9 +191,9 @@
   background: var(--badge-filled-bg-hover);
   color: var(--badge-filled-fg-hover);
 }
-.badge[data-interactive][data-variant="outline"]:hover {
-  background: var(--badge-outline-bg-hover);
-  color: var(--badge-outline-fg-hover);
+.badge[data-interactive][data-variant="outlined"]:hover {
+  background: var(--badge-outlined-bg-hover);
+  color: var(--badge-outlined-fg-hover);
 }
 .badge[data-interactive][data-variant="soft"]:hover {
   background: var(--badge-soft-bg-hover);

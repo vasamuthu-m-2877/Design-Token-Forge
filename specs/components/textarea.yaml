@@ -23,11 +23,11 @@ variants:
 
 height_modes: [auto, fixed]
 
-states: [default, hover, focus, disabled, readonly, error]
+states: [default, hover, focus-visible, disabled, readonly, invalid]
 
 markup: |
-  <div class="textarea-group" data-variant="outline" data-size="base">
-  <div class="textarea-group" data-variant="outline" data-size="base" data-height="fixed">
+  <div class="textarea-group" data-variant="outlined" data-size="base">
+  <div class="textarea-group" data-variant="outlined" data-size="base" data-height="fixed">
     <label class="textarea__label" for="ta1">Description</label>
     <div class="textarea-field">
       <textarea id="ta1" placeholder="Enter description…" rows="4"></textarea>
@@ -63,7 +63,7 @@ variables:
       - name: "--textarea-ring-width"
         default: "2px"
       - name: "--textarea-ring-color"
-        default: "var(--primary-component-outline-default)"
+        default: "var(--brand-component-outline-default)"
       - name: "--textarea-ring-offset"
         default: "2px"
       - name: "--textarea-outline-style"
@@ -107,38 +107,38 @@ variables:
     total: 36
 
   # ────────────────────────────────────────────────────────────
-  # 🎨 SURFACE — OUTLINE VARIANT  (15 variables)
+  # 🎨 SURFACE — OUTLINED VARIANT  (15 variables)
   # ────────────────────────────────────────────────────────────
   surface_outline:
-    - name: "--textarea-outline-bg"
+    - name: "--textarea-outlined-bg"
       default: "transparent"
-    - name: "--textarea-outline-bg-hover"
+    - name: "--textarea-outlined-bg-hover"
       default: "transparent"
-    - name: "--textarea-outline-bg-focus"
+    - name: "--textarea-outlined-bg-focus"
       default: "transparent"
-    - name: "--textarea-outline-bg-disabled"
+    - name: "--textarea-outlined-bg-disabled"
       default: "transparent"
-    - name: "--textarea-outline-bg-error"
+    - name: "--textarea-outlined-bg-invalid"
       default: "transparent"
-    - name: "--textarea-outline-fg"
+    - name: "--textarea-outlined-fg"
       default: "var(--surface-base-ct-default)"
-    - name: "--textarea-outline-fg-disabled"
+    - name: "--textarea-outlined-fg-disabled"
       default: "var(--surface-base-ct-faint)"
-    - name: "--textarea-outline-border-color"
+    - name: "--textarea-outlined-border-color"
       default: "var(--surface-base-cm-outline)"
-    - name: "--textarea-outline-border-color-hover"
+    - name: "--textarea-outlined-border-color-hover"
       default: "var(--surface-base-cm-outline-hover)"
-    - name: "--textarea-outline-border-color-focus"
-      default: "var(--primary-component-outline-default)"
-    - name: "--textarea-outline-border-color-disabled"
+    - name: "--textarea-outlined-border-color-focus"
+      default: "var(--brand-component-outline-default)"
+    - name: "--textarea-outlined-border-color-disabled"
       default: "var(--surface-base-cm-outline)"
-    - name: "--textarea-outline-border-color-error"
+    - name: "--textarea-outlined-border-color-invalid"
       default: "var(--danger-component-outline-default)"
-    - name: "--textarea-outline-placeholder"
+    - name: "--textarea-outlined-placeholder"
       default: "var(--surface-base-ct-faint)"
-    - name: "--textarea-outline-placeholder-disabled"
+    - name: "--textarea-outlined-placeholder-disabled"
       default: "var(--surface-base-ct-faint)"
-    - name: "--textarea-outline-opacity-disabled"
+    - name: "--textarea-outlined-opacity-disabled"
       default: "0.5"
     total: 15
 
@@ -154,7 +154,7 @@ variables:
       default: "var(--surface-base-cm-bg)"
     - name: "--textarea-filled-bg-disabled"
       default: "var(--surface-base-cm-bg)"
-    - name: "--textarea-filled-bg-error"
+    - name: "--textarea-filled-bg-invalid"
       default: "var(--surface-base-cm-bg)"
     - name: "--textarea-filled-fg"
       default: "var(--surface-base-ct-default)"
@@ -165,10 +165,10 @@ variables:
     - name: "--textarea-filled-border-color-hover"
       default: "var(--surface-base-cm-outline-hover)"
     - name: "--textarea-filled-border-color-focus"
-      default: "var(--primary-component-outline-default)"
+      default: "var(--brand-component-outline-default)"
     - name: "--textarea-filled-border-color-disabled"
       default: "var(--surface-base-cm-outline)"
-    - name: "--textarea-filled-border-color-error"
+    - name: "--textarea-filled-border-color-invalid"
       default: "var(--danger-component-outline-default)"
     - name: "--textarea-filled-placeholder"
       default: "var(--surface-base-ct-faint)"
@@ -185,17 +185,17 @@ variables:
     - name: "--textarea-label-color"
       default: "var(--surface-base-ct-subtle)"
     - name: "--textarea-label-color-focus"
-      default: "var(--primary-content-default)"
-    - name: "--textarea-label-color-error"
+      default: "var(--brand-content-default)"
+    - name: "--textarea-label-color-invalid"
       default: "var(--danger-content-default)"
     - name: "--textarea-label-color-disabled"
       default: "var(--surface-base-ct-faint)"
     - name: "--textarea-helper-color"
       default: "var(--surface-base-ct-subtle)"
-    - name: "--textarea-helper-color-error"
+    - name: "--textarea-helper-color-invalid"
       default: "var(--danger-content-default)"
     - name: "--textarea-caret-color"
-      default: "var(--primary-component-bg-default)"
+      default: "var(--brand-component-bg-default)"
     total: 7
 
   # ────────────────────────────────────────────────────────────

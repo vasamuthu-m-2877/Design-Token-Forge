@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>v0.2 wireframes — Kit picker (revised)</title>
+<link rel="stylesheet" href="wireframes-v2.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <strong>DTF Vision · v0.2 wireframes</strong> · Kit picker (revised)
+    <span class="wf-v2-tag">revised</span>
+  </div>
+  <div class="wf-meta">
+    <a href="index.html">← v0.2 hub</a> ·
+    <a href="../../v0.1-map/05-wireframes/02-archetype-kit-pick.html">v0.1 original</a>
+  </div>
+</div>
+
+<h1>Kit picker — platform × product-shape</h1>
+<p class="wf-step-intro" style="margin-top:8px;">Closes WT findings A2, A3 — v0.1 picker was a desktop-shape grid</p>
+
+<div class="wf-note">
+  <strong>What changed:</strong> v0.1's picker showed 6 cards
+  (Dashboard / Marketing / Editorial / Social / Editor / Workflow) all
+  implicitly desktop-shape. Mobile and marketing products had no path. v0.2
+  reframes as <strong>two stages</strong>: pick platform first, then pick
+  product shape within. Each picked combination loads a specific Foundation
+  + shape-kit pair.
+</div>
+
+<h2>Before · v0.1</h2>
+
+<div class="wf-screen" style="opacity:0.6;">
+  <div class="wf-screen-bar">
+    <span class="wf-step">v0.1 · pick an archetype</span>
+    <span>6 cards, all desktop-shape</span>
+  </div>
+  <div class="wf-screen-body">
+    <div class="wf-grid cols-3">
+      <div class="wf-box" style="text-align:center; padding:24px;">📊<br><strong>Dashboard</strong></div>
+      <div class="wf-box" style="text-align:center; padding:24px;">🛒<br><strong>Marketplace</strong></div>
+      <div class="wf-box" style="text-align:center; padding:24px;">📰<br><strong>Editorial</strong></div>
+      <div class="wf-box" style="text-align:center; padding:24px;">👥<br><strong>Social</strong></div>
+      <div class="wf-box" style="text-align:center; padding:24px;">✏️<br><strong>Editor</strong></div>
+      <div class="wf-box" style="text-align:center; padding:24px;">⚙️<br><strong>Workflow</strong></div>
+    </div>
+    <div class="wf-note">
+      writer-handhelds (a mobile writing app) has no home here. None of the 6
+      cards fit. Designer would pick "Editor" and get a desktop AppShell.
+    </div>
+  </div>
+</div>
+
+<h2>After · v0.2 stage 1</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Kit picker · stage 1 of 2</span>
+    <span>Pick your platform</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 1 · Platform</div>
+      <div class="wf-platform-grid">
+        <div class="wf-platform-card selected">
+          <div class="wf-platform-icon">📱</div>
+          <div class="wf-platform-name">Mobile</div>
+          <div class="wf-platform-meta">iOS + Android · touch · ≤480px</div>
+        </div>
+        <div class="wf-platform-card">
+          <div class="wf-platform-icon">🖥</div>
+          <div class="wf-platform-name">Desktop</div>
+          <div class="wf-platform-meta">macOS + Windows + Linux · pointer · ≥1024px</div>
+        </div>
+        <div class="wf-platform-card">
+          <div class="wf-platform-icon">🌐</div>
+          <div class="wf-platform-name">Marketing</div>
+          <div class="wf-platform-meta">Responsive · landing + docs + blog</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wf-note">
+      Picking Mobile loads <code>@dtf/mobile-foundation</code> (10 L2s shared
+      across all mobile shapes). The next step picks the shape on top.
+    </div>
+
+    <div class="wf-btn-row">
+      <span class="wf-tertiary">Pick later</span>
+      <div class="wf-btn-group">
+        <button class="wf-btn ghost">Back</button>
+        <button class="wf-btn primary">Continue → Pick shape</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>After · v0.2 stage 2 (Mobile expanded)</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Kit picker · stage 2 of 2</span>
+    <span>Mobile → pick your shape</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 1 · Platform <span style="color:var(--ok);">✓ Mobile</span></div>
+    </div>
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 2 · Product shape</div>
+      <div class="wf-shape-grid">
+
+        <div class="wf-shape-card ready">
+          <div class="wf-shape-name">Writing</div>
+          <div class="wf-shape-desc">Note-first apps. Editor, lists, sheets.</div>
+          <div class="wf-found-pill">Mobile Foundation + 4 L2s</div>
+        </div>
+
+        <div class="wf-shape-card ready">
+          <div class="wf-shape-name">Commerce</div>
+          <div class="wf-shape-desc">Product browse, cart, checkout.</div>
+          <div class="wf-found-pill">Mobile Foundation + 6 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Reading</div>
+          <div class="wf-shape-desc">Article-centric, long-form consumption.</div>
+          <div class="wf-found-pill">Mobile Foundation + ~3 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Chat</div>
+          <div class="wf-shape-desc">Threaded conversation, presence.</div>
+          <div class="wf-found-pill">Mobile Foundation + ~4 L2s</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="wf-note">
+      writer-handhelds maps cleanly to <strong>Mobile → Writing</strong>. v0.2
+      ships Writing and Commerce ready (Phase 2.5b + 2.5c); Reading and Chat
+      follow once the Foundation tier is empirically validated.
+    </div>
+
+    <div class="wf-callout">Each shape card shows what gets loaded: Foundation + N shape-specific L2s. Designer sees the cost upfront.</div>
+
+    <div class="wf-btn-row">
+      <span class="wf-tertiary">Start from scratch (no kit)</span>
+      <div class="wf-btn-group">
+        <button class="wf-btn ghost">Back</button>
+        <button class="wf-btn primary">Load Mobile Writing kit →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>After · v0.2 stage 2 (Desktop expanded — Phase 3)</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Kit picker · stage 2 of 2</span>
+    <span>Desktop → pick your shape</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 1 · Platform <span style="color:var(--ok);">✓ Desktop</span></div>
+    </div>
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 2 · Product shape</div>
+      <div class="wf-shape-grid">
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Dashboard</div>
+          <div class="wf-shape-desc">Data-dense, charts, filters, tables.</div>
+          <div class="wf-found-pill">Desktop Foundation + ~8 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Marketplace</div>
+          <div class="wf-shape-desc">Browse + filter + transact at scale.</div>
+          <div class="wf-found-pill">Desktop Foundation + ~6 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Editor</div>
+          <div class="wf-shape-desc">Canvas + tool palette + properties.</div>
+          <div class="wf-found-pill">Desktop Foundation + ~7 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Workflow</div>
+          <div class="wf-shape-desc">Multi-step processes, queues, approvals.</div>
+          <div class="wf-found-pill">Desktop Foundation + ~5 L2s</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="wf-note">
+      Desktop Foundation is Phase 3 deliverable. Validates Q21 — does the
+      Foundation tier generalize beyond mobile?
+    </div>
+
+  </div>
+</div>
+
+<h2>After · v0.2 stage 2 (Marketing expanded — Phase 3)</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Kit picker · stage 2 of 2</span>
+    <span>Marketing → pick your shape</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 1 · Platform <span style="color:var(--ok);">✓ Marketing</span></div>
+    </div>
+
+    <div class="wf-picker-stage">
+      <div class="wf-picker-stage-label">Stage 2 · Product shape</div>
+      <div class="wf-shape-grid" style="grid-template-columns:repeat(3,1fr);">
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Landing</div>
+          <div class="wf-shape-desc">Hero, features, CTA, social proof.</div>
+          <div class="wf-found-pill">Marketing Foundation + ~4 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Docs</div>
+          <div class="wf-shape-desc">Sidebar + content + on-page nav.</div>
+          <div class="wf-found-pill">Marketing Foundation + ~3 L2s</div>
+        </div>
+
+        <div class="wf-shape-card coming">
+          <div class="wf-shape-name">Blog</div>
+          <div class="wf-shape-desc">Article list + reader + tagging.</div>
+          <div class="wf-found-pill">Marketing Foundation + ~3 L2s</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>Annotations</h2>
+
+<ul class="wf-anno-list">
+  <li data-num="A2">Stage 1 + Stage 2 split makes shape = platform × product-shape explicit.</li>
+  <li data-num="A3">Removes desktop bias of v0.1. Mobile is no longer second-class.</li>
+  <li data-num="R1">"Ready" pill on Writing + Commerce reflects Phase 2.5b/2.5c deliverables. "Coming" shapes are honest about roadmap state.</li>
+  <li data-num="R2">Each card surfaces the build cost: "Mobile Foundation + N L2s" makes the Foundation tier visible to the designer at the picking moment.</li>
+  <li data-num="A6">Mobile platform card mentions iOS + Android together — platform-fork policy (NavigationBar vs AppBar) handled inside the Foundation, not at picker level.</li>
+</ul>
+
+<p style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:48px; text-align:center;">
+  See <a href="../07-roadmap.md" style="color:var(--ink-2);">07-roadmap.md</a> for kit-by-kit schedule.
+</p>
+
+</body>
+</html>

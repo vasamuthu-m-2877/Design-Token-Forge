@@ -44,9 +44,9 @@
 <header class="demo-header">
   <h1>File Upload Explorer <span>— Design Token Forge</span></h1>
   <div class="demo-meta">
-    <span class="demo-badge">~120 CSS Variables</span>
-    <span class="demo-badge">2 Variants</span>
-    <span class="demo-badge">7 Roles</span>
+    <span class="demo-badge">~162 CSS Variables</span>
+    <span class="demo-badge">1 Variant</span>
+    <span class="demo-badge">6 Roles</span>
     <span class="demo-badge">2 Modes</span>
     <span class="demo-badge">10 Sizes</span>
     <span class="demo-badge">7 Axes</span>
@@ -58,7 +58,7 @@
   <div class="control-group">
     <label>Variant</label>
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
-      <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="outlined" type="button">Outline</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="filled" type="button">Filled</button>
     </div>
   </div>
@@ -262,7 +262,7 @@
   :data-variant="variant ?? 'outline'"
   :data-mode="mode ?? 'dropzone'"
   :data-size="size ?? 'base'"
-  :data-error="error || undefined"
+  :aria-invalid="error || undefined"
   :data-disabled="disabled || undefined"
   :data-dragover="dragover || undefined"
 &gt;
@@ -285,7 +285,7 @@
   &lt;/div&gt;
   &lt;span class="file-upload__helper"&gt;{{ helper }}&lt;/span&gt;
 &lt;/div&gt;</div>
-        <div class="fw-snippet-code" data-panel="html">&lt;div class="file-upload" data-variant="outline" data-mode="dropzone" data-size="base"&gt;
+        <div class="fw-snippet-code" data-panel="html">&lt;div class="file-upload" data-variant="outlined" data-mode="dropzone" data-size="base"&gt;
   &lt;label class="file-upload__label" for="f1"&gt;Attachments&lt;/label&gt;
   &lt;div class="file-upload__zone"&gt;
     &lt;span class="file-upload__icon"&gt;&lt;svg …&gt;&lt;/svg&gt;&lt;/span&gt;
@@ -432,7 +432,7 @@
     if (role && role !== 'brand') wrap.dataset.role = role;
     if (rounded) wrap.dataset.rounded = '';
     if (opts.disabled) wrap.dataset.disabled = '';
-    if (opts.error) wrap.dataset.error = '';
+    if (opts.error) wrap.setAttribute('aria-invalid', 'true');
     if (opts.dragover) wrap.dataset.dragover = '';
     if (opts.loading) wrap.dataset.loading = '';
     if (opts.style) { for (var k in opts.style) { if (opts.style.hasOwnProperty(k)) wrap.style.setProperty(k, opts.style[k]) } }

@@ -768,6 +768,256 @@ function buildCompSize(extrasCollection) {
     variables.push(...buildComponentGroup('split-btn', 'split-button', sbtnTokens, extrasVarSet, sbtnProps));
   }
 
+  // ── Badge ─────────────────────────────────────────────────
+  // Label-indicator archetype. Per-density height, padding-x, gap, font-size,
+  // icon-size, radius. Stateless compact badge with 6 semantic roles ×
+  // 3 structural variants. No motion or interactive states.
+  const badgeFile = path.join(COMP_DIR, 'badge/badge.tokens.css');
+  if (fs.existsSync(badgeFile)) {
+    const badgeTokens = parseComponentTokens(badgeFile);
+    const badgeProps = [
+      { propCSS: 'height',    propFigma: 'height' },
+      { propCSS: 'padding-x', propFigma: 'padding-x' },
+      { propCSS: 'gap',       propFigma: 'gap' },
+      { propCSS: 'font-size', propFigma: 'font-size' },
+      { propCSS: 'icon-size', propFigma: 'icon-size' },
+      { propCSS: 'radius',    propFigma: 'radius' },
+    ];
+    variables.push(...buildComponentGroup('badge', 'badge', badgeTokens, extrasVarSet, badgeProps));
+  }
+
+  // ── Menu-button ────────────────────────────────────────────
+  // Action with disclosure archetype. Per-density height, padding-x, padding-y,
+  // chevron-pe (padding after chevron), font-size, icon-size, radius.
+  // 10-density sizing + 4 structural variants (filled/outlined/soft/ghost) +
+  // 6 semantic roles (brand/info/danger/success/warning/neutral) compose orthogonally.
+  const mbtnFile = path.join(COMP_DIR, 'menu-button/menu-button.tokens.css');
+  if (fs.existsSync(mbtnFile)) {
+    const mbtnTokens = parseComponentTokens(mbtnFile);
+    const mbtnProps = [
+      { propCSS: 'height',       propFigma: 'height' },
+      { propCSS: 'padding-x',    propFigma: 'padding-x' },
+      { propCSS: 'padding-y',    propFigma: 'padding-y' },
+      { propCSS: 'chevron-pe',   propFigma: 'chevron-pe' },
+      { propCSS: 'font-size',    propFigma: 'font-size' },
+      { propCSS: 'icon-size',    propFigma: 'icon-size' },
+      { propCSS: 'radius',       propFigma: 'radius' },
+    ];
+    variables.push(...buildComponentGroup('menu-btn', 'menu-button', mbtnTokens, extrasVarSet, mbtnProps));
+  }
+
+  // ── Datepicker ─────────────────────────────────────────────
+  // Calendar-input archetype. Per-density day cell size, nav button size,
+  // header height, and font sizes. 10-density sizing + role-less + variant-less.
+  // Popover-based calendar with day grid, header (month/year + nav), footer (today button).
+  const dpFile = path.join(COMP_DIR, 'datepicker/datepicker.tokens.css');
+  if (fs.existsSync(dpFile)) {
+    const dpTokens = parseComponentTokens(dpFile);
+    const dpProps = [
+      { propCSS: 'day-size',          propFigma: 'day-size' },
+      { propCSS: 'nav-size',          propFigma: 'nav-size' },
+      { propCSS: 'header-height',     propFigma: 'header-height' },
+      { propCSS: 'header-font-size',  propFigma: 'header-font-size' },
+      { propCSS: 'day-font-size',     propFigma: 'day-font-size' },
+      { propCSS: 'weekday-font-size', propFigma: 'weekday-font-size' },
+      { propCSS: 'nav-icon-size',     propFigma: 'nav-icon-size' },
+    ];
+    variables.push(...buildComponentGroup('datepicker', 'datepicker', dpTokens, extrasVarSet, dpProps));
+  }
+
+  // ── File-upload ───────────────────────────────────────────
+  // File-input archetype. Per-density font-size, icon-size, padding-x, padding-y.
+  // 10-density sizing + filled variant + 6 semantic roles (brand/info/danger/success/warning/neutral).
+  // Drag-drop zone + upload button input. Min-tap-target enforced.
+  const fuFile = path.join(COMP_DIR, 'file-upload/file-upload.tokens.css');
+  if (fs.existsSync(fuFile)) {
+    const fuTokens = parseComponentTokens(fuFile);
+    const fuProps = [
+      { propCSS: 'font-size',   propFigma: 'font-size' },
+      { propCSS: 'icon-size',   propFigma: 'icon-size' },
+      { propCSS: 'padding-x',   propFigma: 'padding-x' },
+      { propCSS: 'padding-y',   propFigma: 'padding-y' },
+    ];
+    variables.push(...buildComponentGroup('file-upload', 'file-upload', fuTokens, extrasVarSet, fuProps));
+  }
+
+  // ── Avatar ────────────────────────────────────────────────
+  // Identity-image archetype. Per-density size (w=h), radius, font-size
+  // (for initials), icon-size, and avatar-group stacking offset. No structural
+  // variants (role color is bg + text). Ring (online indicator) is non-density.
+  const avatarFile = path.join(COMP_DIR, 'avatar/avatar.tokens.css');
+  if (fs.existsSync(avatarFile)) {
+    const avatarTokens = parseComponentTokens(avatarFile);
+    const avatarProps = [
+      { propCSS: 'size',         propFigma: 'size' },
+      { propCSS: 'radius',       propFigma: 'radius' },
+      { propCSS: 'font-size',    propFigma: 'font-size' },
+      { propCSS: 'icon-size',    propFigma: 'icon-size' },
+      { propCSS: 'group-offset', propFigma: 'group-offset' },
+    ];
+    variables.push(...buildComponentGroup('avatar', 'avatar', avatarTokens, extrasVarSet, avatarProps));
+  }
+
+  // ── Toggle (Switch) ───────────────────────────────────────
+  // Form-binary archetype. Per-density dimension tokens for track + thumb.
+  // CSS prefix 'switch' (component class is .switch); Figma group 'toggle'
+  // so binding paths read naturally as toggle/track-w, toggle/thumb-size, etc.
+  // The track radius is intentionally a single constant (--switch-track-radius
+  // = radius-full → pill) and is NOT exposed per-density.
+  const toggleFile = path.join(COMP_DIR, 'toggle/toggle.tokens.css');
+  if (fs.existsSync(toggleFile)) {
+    const toggleTokens = parseComponentTokens(toggleFile);
+    const toggleProps = [
+      { propCSS: 'track-w',         propFigma: 'track-w' },
+      { propCSS: 'track-h',         propFigma: 'track-h' },
+      { propCSS: 'thumb-size',      propFigma: 'thumb-size' },
+      { propCSS: 'gap',             propFigma: 'gap' },
+      { propCSS: 'label-font-size', propFigma: 'label-font-size' },
+    ];
+    variables.push(...buildComponentGroup('switch', 'toggle', toggleTokens, extrasVarSet, toggleProps));
+  }
+
+  // ── Checkbox ──────────────────────────────────────────────
+  // Form-binary archetype. Per-density box-size + box-radius, plus label font-size
+  // and the always-visible gap between box and label. Border-width is structural
+  // (constant 2px) and intentionally not per-density.
+  const checkboxFile = path.join(COMP_DIR, 'checkbox/checkbox.tokens.css');
+  if (fs.existsSync(checkboxFile)) {
+    const checkboxTokens = parseComponentTokens(checkboxFile);
+    const checkboxProps = [
+      { propCSS: 'box-size',         propFigma: 'box-size' },
+      { propCSS: 'box-radius',       propFigma: 'box-radius' },
+      { propCSS: 'gap',              propFigma: 'gap' },
+      { propCSS: 'label-font-size',  propFigma: 'label-font-size' },
+    ];
+    variables.push(...buildComponentGroup('checkbox', 'checkbox', checkboxTokens, extrasVarSet, checkboxProps));
+  }
+
+  // ── Radio ─────────────────────────────────────────────────
+  // Form-binary archetype. Per-density circle (outer) + dot (inner) +
+  // label font-size + gap. Always circular so no radius axis. Border-width
+  // is structural (constant 2px) and intentionally not per-density.
+  const radioFile = path.join(COMP_DIR, 'radio/radio.tokens.css');
+  if (fs.existsSync(radioFile)) {
+    const radioTokens = parseComponentTokens(radioFile);
+    const radioProps = [
+      { propCSS: 'circle-size',      propFigma: 'circle-size' },
+      { propCSS: 'dot-size',         propFigma: 'dot-size' },
+      { propCSS: 'gap',              propFigma: 'gap' },
+      { propCSS: 'label-font-size',  propFigma: 'label-font-size' },
+    ];
+    variables.push(...buildComponentGroup('radio', 'radio', radioTokens, extrasVarSet, radioProps));
+  }
+
+  // ── Input ─────────────────────────────────────────────────
+  // Form-text archetype. Per-density height, padding-x/y, gap, min-width,
+  // radius, font-size, affix-size + affix-px, and icon-side padding.
+  // Border-width is structural (per-side primitives, not per-density).
+  // Surface tokens are variant-keyed (outlined/filled/underline) and ship
+  // via Layer 0 defaults rather than the comp-size collection.
+  const inputFile = path.join(COMP_DIR, 'input/input.tokens.css');
+  if (fs.existsSync(inputFile)) {
+    const inputTokens = parseComponentTokens(inputFile);
+    const inputProps = [
+      { propCSS: 'height',          propFigma: 'height' },
+      { propCSS: 'padding-x',       propFigma: 'padding-x' },
+      { propCSS: 'padding-y',       propFigma: 'padding-y' },
+      { propCSS: 'gap',             propFigma: 'gap' },
+      { propCSS: 'min-width',       propFigma: 'min-width' },
+      { propCSS: 'radius',          propFigma: 'radius' },
+      { propCSS: 'font-size',       propFigma: 'font-size' },
+      { propCSS: 'affix-size',      propFigma: 'affix-size' },
+      { propCSS: 'affix-px',        propFigma: 'affix-px' },
+      { propCSS: 'padding-x-icon',  propFigma: 'padding-x-icon' },
+    ];
+    variables.push(...buildComponentGroup('input', 'input', inputTokens, extrasVarSet, inputProps));
+  }
+
+  // ── Textarea ──────────────────────────────────────────────
+  // Form-text archetype, multi-line peer of input. Per-density
+  // padding-x/y, height (used when data-height="fixed"), radius,
+  // font-size. No affix slots. Min-rows / resize are non-density.
+  const textareaFile = path.join(COMP_DIR, 'textarea/textarea.tokens.css');
+  if (fs.existsSync(textareaFile)) {
+    const textareaTokens = parseComponentTokens(textareaFile);
+    const textareaProps = [
+      { propCSS: 'padding-x',  propFigma: 'padding-x' },
+      { propCSS: 'padding-y',  propFigma: 'padding-y' },
+      { propCSS: 'height',     propFigma: 'height' },
+      { propCSS: 'radius',     propFigma: 'radius' },
+      { propCSS: 'font-size',  propFigma: 'font-size' },
+    ];
+    variables.push(...buildComponentGroup('textarea', 'textarea', textareaTokens, extrasVarSet, textareaProps));
+  }
+
+  // ── Select ────────────────────────────────────────────────
+  // Form-text archetype peer of input/textarea. Per-density
+  // height, padding-x/y, radius, font-size, chevron-size.
+  const selectFile = path.join(COMP_DIR, 'select/select.tokens.css');
+  if (fs.existsSync(selectFile)) {
+    const selectTokens = parseComponentTokens(selectFile);
+    const selectProps = [
+      { propCSS: 'height',        propFigma: 'height' },
+      { propCSS: 'padding-x',     propFigma: 'padding-x' },
+      { propCSS: 'padding-y',     propFigma: 'padding-y' },
+      { propCSS: 'radius',        propFigma: 'radius' },
+      { propCSS: 'font-size',     propFigma: 'font-size' },
+      { propCSS: 'chevron-size',  propFigma: 'chevron-size' },
+    ];
+    variables.push(...buildComponentGroup('select', 'select', selectTokens, extrasVarSet, selectProps));
+  }
+
+  // ── Slider ────────────────────────────────────────────────
+  // Control-range archetype. Per-density track-h (thickness),
+  // thumb-w/h (handle), thumb-halo-size (hover ring),
+  // tooltip-font-size.
+  const sliderFile = path.join(COMP_DIR, 'slider/slider.tokens.css');
+  if (fs.existsSync(sliderFile)) {
+    const sliderTokens = parseComponentTokens(sliderFile);
+    const sliderProps = [
+      { propCSS: 'track-h',           propFigma: 'track-h' },
+      { propCSS: 'thumb-w',           propFigma: 'thumb-w' },
+      { propCSS: 'thumb-h',           propFigma: 'thumb-h' },
+      { propCSS: 'thumb-halo-size',   propFigma: 'thumb-halo-size' },
+      { propCSS: 'tooltip-font-size', propFigma: 'tooltip-font-size' },
+    ];
+    variables.push(...buildComponentGroup('slider', 'slider', sliderTokens, extrasVarSet, sliderProps));
+  }
+
+  // ── Progress Bar ──────────────────────────────────────────
+  // Feedback-progress archetype. Per-density height (track
+  // thickness), gap (track→label), label-width, font-size,
+  // icon-size.
+  const progressBarFile = path.join(COMP_DIR, 'progress-bar/progress-bar.tokens.css');
+  if (fs.existsSync(progressBarFile)) {
+    const progressBarTokens = parseComponentTokens(progressBarFile);
+    const progressBarProps = [
+      { propCSS: 'height',       propFigma: 'height' },
+      { propCSS: 'gap',          propFigma: 'gap' },
+      { propCSS: 'label-width',  propFigma: 'label-width' },
+      { propCSS: 'font-size',    propFigma: 'font-size' },
+      { propCSS: 'icon-size',    propFigma: 'icon-size' },
+    ];
+    variables.push(...buildComponentGroup('progress', 'progress-bar', progressBarTokens, extrasVarSet, progressBarProps));
+  }
+
+  // ── Progress Ring ─────────────────────────────────────────
+  // Feedback-progress archetype, circular peer. Per-density
+  // size (diameter), stroke (width), gap (to external label),
+  // font-size (center label), icon-size.
+  const progressRingFile = path.join(COMP_DIR, 'progress-ring/progress-ring.tokens.css');
+  if (fs.existsSync(progressRingFile)) {
+    const progressRingTokens = parseComponentTokens(progressRingFile);
+    const progressRingProps = [
+      { propCSS: 'size',       propFigma: 'size' },
+      { propCSS: 'stroke',     propFigma: 'stroke' },
+      { propCSS: 'gap',        propFigma: 'gap' },
+      { propCSS: 'font-size',  propFigma: 'font-size' },
+      { propCSS: 'icon-size',  propFigma: 'icon-size' },
+    ];
+    variables.push(...buildComponentGroup('ring', 'progress-ring', progressRingTokens, extrasVarSet, progressRingProps));
+  }
+
   return {
     name: 'comp size',
     modes: COMP_SIZE_MODES,

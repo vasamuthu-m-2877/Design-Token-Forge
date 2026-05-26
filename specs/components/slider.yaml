@@ -26,7 +26,7 @@ sizes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
 
 variants: []  # No named color variants — visual style is entirely custom-property-driven
 
-states: [default, hover, active, focus-visible, disabled]
+states: [default, hover, pressed, focus-visible, disabled]
 
 # ═══════════════════════════════════════════════════════════════
 # VARIABLES — 120 total
@@ -79,7 +79,7 @@ variables:
         default: "2px"
         description: "Focus ring width."
       - name: "--slider-ring-color"
-        default: "var(--primary-component-outline-default)"
+        default: "var(--brand-component-outline-default)"
       - name: "--slider-ring-offset"
         default: "2px"
 
@@ -203,25 +203,25 @@ variables:
 
     fill:
       - name: "--slider-fill-bg"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
         description: "Filled track (value indicator) background."
       - name: "--slider-fill-bg-hover"
-        default: "var(--primary-component-bg-hover)"
+        default: "var(--brand-component-bg-hover)"
       - name: "--slider-fill-bg-active"
-        default: "var(--primary-component-bg-pressed)"
+        default: "var(--brand-component-bg-pressed)"
       - name: "--slider-fill-bg-disabled"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
 
     thumb:
       - name: "--slider-thumb-bg"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
         description: "Thumb background."
       - name: "--slider-thumb-bg-hover"
-        default: "var(--primary-component-bg-hover)"
+        default: "var(--brand-component-bg-hover)"
       - name: "--slider-thumb-bg-active"
-        default: "var(--primary-component-bg-pressed)"
+        default: "var(--brand-component-bg-pressed)"
       - name: "--slider-thumb-bg-disabled"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
       - name: "--slider-thumb-border-color"
         default: "var(--color-fixed-white)"
         description: "Thumb border for outlined look."
@@ -232,10 +232,10 @@ variables:
 
     halo:
       - name: "--slider-thumb-halo-bg"
-        default: "var(--primary-container-bg)"
+        default: "var(--brand-container-bg)"
         description: "Material-style hover ring around thumb."
       - name: "--slider-thumb-halo-bg-active"
-        default: "var(--primary-container-pressed)"
+        default: "var(--brand-container-pressed)"
       - name: "--slider-thumb-halo-size"
         default: "40px"
         description: "Diameter of the halo on hover/active."
@@ -246,16 +246,16 @@ variables:
       - name: "--slider-tick-color"
         default: "var(--surface-base-cm-outline)"
       - name: "--slider-tick-color-active"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
         description: "Tick color within the filled range."
       - name: "--slider-tick-color-disabled"
         default: "var(--surface-base-cm-outline)"
 
     tooltip:
       - name: "--slider-tooltip-bg"
-        default: "var(--primary-component-bg-default)"
+        default: "var(--brand-component-bg-default)"
       - name: "--slider-tooltip-fg"
-        default: "var(--primary-on-component)"
+        default: "var(--brand-on-component)"
       - name: "--slider-tooltip-border-color"
         default: "transparent"
 
@@ -308,7 +308,7 @@ variables:
       default: "0.6em"
       description: "Optional icon inside thumb (grip dots, etc.)."
     - name: "--slider-thumb-icon-color"
-      default: "var(--primary-on-component)"
+      default: "var(--brand-on-component)"
     - name: "--slider-tooltip-display"
       default: "none"
       description: "Show/hide tooltip. Set 'block' to always show."
@@ -355,7 +355,7 @@ variables:
     - name: "--slider-focus-outline-width"
       default: "2px"
     - name: "--slider-focus-outline-color"
-      default: "var(--primary-component-outline-default)"
+      default: "var(--brand-component-outline-default)"
     - name: "--slider-focus-outline-offset"
       default: "2px"
     - name: "--slider-min-tap-target"

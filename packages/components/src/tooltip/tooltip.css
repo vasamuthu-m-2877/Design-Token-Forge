@@ -88,11 +88,20 @@
   --_tt-border-color: var(--tooltip-light-border-color);
   --_tt-shadow: var(--tooltip-light-shadow);
 }
-.tooltip[data-variant="error"],
 .tooltip[data-variant="danger"] {
   --_tt-bg: var(--tooltip-danger-bg);
   --_tt-fg: var(--tooltip-danger-fg);
   --_tt-arrow-color: var(--tooltip-danger-arrow-color);
+}
+.tooltip[data-variant="warning"] {
+  --_tt-bg: var(--tooltip-warning-bg);
+  --_tt-fg: var(--tooltip-warning-fg);
+  --_tt-arrow-color: var(--tooltip-warning-arrow-color);
+}
+.tooltip[data-variant="info"] {
+  --_tt-bg: var(--tooltip-info-bg);
+  --_tt-fg: var(--tooltip-info-fg);
+  --_tt-arrow-color: var(--tooltip-info-arrow-color);
 }
 .tooltip[data-variant="success"] {
   --_tt-bg: var(--tooltip-success-bg);

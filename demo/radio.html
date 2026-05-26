@@ -53,7 +53,7 @@
     <label>Variant</label>
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="" type="button">Filled</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outlined" type="button">Outlined</button>
     </div>
   </div>
   <div class="control-divider"></div>
@@ -177,7 +177,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card A</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="A"><option value="base" selected>Base</option><option value="bright">Bright</option><option value="deep">Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Brand</option><option value="danger">Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="A"><option value="brand" selected>Brand</option><option value="danger">Danger</option><option value="warning">Warning</option><option value="info">Info</option><option value="success">Success</option><option value="neutral">Neutral</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyA"></div>
         </div>
@@ -186,7 +186,7 @@
           <div class="pg-card-head">
             <span class="pg-card-label">Card B</span>
             <div class="pg-ctrl"><label>Surface</label><select data-pg-surface="B"><option value="base">Base</option><option value="bright">Bright</option><option value="deep" selected>Deep</option><option value="accent">Accent</option><option value="dim">Dim</option><option value="container">Container</option><option value="over-container">Over-container</option><option value="float">Float</option></select></div>
-            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="danger" selected>Danger</option><option value="success">Success</option><option value="warning">Warning</option><option value="info">Info</option></select></div>
+            <div class="pg-ctrl"><label>Role</label><select data-pg-role="B"><option value="danger" selected>Danger</option><option value="warning">Warning</option><option value="info">Info</option><option value="success">Success</option><option value="brand">Brand</option><option value="neutral">Neutral</option></select></div>
           </div>
           <div class="pg-card-body" id="pgBodyB"></div>
         </div>
@@ -212,8 +212,8 @@
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px" id="a11yDisabled"></div>
         </div>
         <div class="a11y-card">
-          <div class="a11y-card-title">Error / Invalid</div>
-          <p class="a11y-card-desc"><code>data-error</code> and <code>aria-invalid</code> for form validation.</p>
+          <div class="a11y-card-title">Invalid</div>
+          <p class="a11y-card-desc"><code>aria-invalid="true"</code> for form validation. Hooks the invalid surface tokens.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px" id="a11yError"></div>
         </div>
         <div class="a11y-card">
@@ -244,9 +244,9 @@
         <div class="fw-snippet-code" data-panel="react" data-active>&lt;label
   className="radio"
   data-size={size}
-  data-variant={variant}     {/* omit for filled | "outline" */}
+  data-variant={variant}     {/* omit for filled | "outlined" */}
   data-direction={direction} {/* omit for vertical | "horizontal" */}
-  data-error={error || undefined}
+  aria-invalid={error || undefined}
   data-disabled={disabled || undefined}
 &gt;
   &lt;input type="radio" name={name} value={value} checked={selected === value} onChange={onChange} disabled={disabled} /&gt;
@@ -258,7 +258,7 @@
   :data-size="size"
   :data-variant="variant || undefined"
   :data-direction="direction || undefined"
-  :data-error="error || undefined"
+  :aria-invalid="error || undefined"
   :data-disabled="disabled || undefined"
 &gt;
   &lt;input type="radio" :name="name" :value="value" :checked="modelValue === value" @change="$emit('update:modelValue', value)" :disabled="disabled" /&gt;
@@ -278,8 +278,8 @@
 --radio-circle-bg / -hover / -checked / -disabled
 --radio-circle-border-color / -hover / -checked
 --radio-dot-color
---radio-outline-circle-bg / -border-color
---radio-error-border-color
+--radio-outlined-circle-bg / -border-color
+--radio-invalid-border-color
 
 /* Layout */
 --radio-direction              /* vertical | horizontal */
@@ -333,7 +333,7 @@
     lbl.dataset.size=s;
     var variant=o.variant!==undefined?o.variant:curVariant;
     if(variant) lbl.dataset.variant=variant;
-    if(o.error) lbl.dataset.error='';
+    if(o.error) lbl.setAttribute('aria-invalid', 'true');
     if(o.disabled) lbl.dataset.disabled='';
     if(!o.noSync) lbl.classList.add('synced-rd');
 
@@ -418,7 +418,7 @@
       {label:'Error Off',opts:{error:true}},
       {label:'Error On',opts:{checked:true,error:true}}
     ];
-    var variants=[{label:'Filled',variant:''},{label:'Outline',variant:'outline'}];
+    var variants=[{label:'Filled',variant:''},{label:'Outlined',variant:'outlined'}];
     variants.forEach(function(v){
       var row=document.createElement('div');row.style.cssText='display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;padding:24px 32px;border-bottom:1px solid var(--demo-border)';
       var vLabel=document.createElement('div');vLabel.className='sub-label';vLabel.textContent=v.label+' variant';vLabel.style.cssText='width:100%;padding:0 0 8px';
@@ -696,20 +696,20 @@
       {label:'Circle Border On',token:'--radio-circle-border-color-on',via:'--'+r+'-component-bg-default'},
       {label:'Circle Border On Hover',token:'--radio-circle-border-color-on-hover',via:'--'+r+'-component-bg-hover'},
       {label:'Dot Color',token:'--radio-dot-color',via:'--color-fixed-white'},
-      {sec:'Outline Variant (off)'},
-      {label:'Circle BG Off Hover',token:'--radio-outline-circle-bg-off-hover',via:'--surface-'+s+'-cm-bg-hover'},
-      {label:'Circle Border Off',token:'--radio-outline-circle-border-color-off',via:'--surface-'+s+'-cm-outline'},
-      {label:'Circle Border Off Hover',token:'--radio-outline-circle-border-color-off-hover',via:'--surface-'+s+'-cm-outline-hover'},
-      {sec:'Outline Variant (on)'},
-      {label:'Circle BG On',token:'--radio-outline-circle-bg-on',via:'--'+r+'-component-bg-default'},
-      {label:'Circle BG On Hover',token:'--radio-outline-circle-bg-on-hover',via:'--'+r+'-component-bg-hover'},
-      {label:'Circle Border On',token:'--radio-outline-circle-border-color-on',via:'--'+r+'-component-bg-default'},
-      {label:'Dot Color',token:'--radio-outline-dot-color',via:'--color-fixed-white'},
+      {sec:'Outlined Variant (off)'},
+      {label:'Circle BG Off Hover',token:'--radio-outlined-circle-bg-off-hover',via:'--surface-'+s+'-cm-bg-hover'},
+      {label:'Circle Border Off',token:'--radio-outlined-circle-border-color-off',via:'--surface-'+s+'-cm-outline'},
+      {label:'Circle Border Off Hover',token:'--radio-outlined-circle-border-color-off-hover',via:'--surface-'+s+'-cm-outline-hover'},
+      {sec:'Outlined Variant (on)'},
+      {label:'Circle BG On',token:'--radio-outlined-circle-bg-on',via:'--'+r+'-component-bg-default'},
+      {label:'Circle BG On Hover',token:'--radio-outlined-circle-bg-on-hover',via:'--'+r+'-component-bg-hover'},
+      {label:'Circle Border On',token:'--radio-outlined-circle-border-color-on',via:'--'+r+'-component-bg-default'},
+      {label:'Dot Color',token:'--radio-outlined-dot-color',via:'--color-fixed-white'},
       {sec:'Error States'},
-      {label:'Border Error',token:'--radio-circle-border-color-error',via:'--danger-component-outline-default'},
-      {label:'Border Error Hover',token:'--radio-circle-border-color-error-hover',via:'--danger-component-outline-hover'},
-      {label:'BG On Error',token:'--radio-circle-bg-on-error',via:'--danger-component-bg-default'},
-      {label:'BG On Error Hover',token:'--radio-circle-bg-on-error-hover',via:'--danger-component-bg-hover'},
+      {label:'Border Error',token:'--radio-circle-border-color-invalid',via:'--danger-component-outline-default'},
+      {label:'Border Error Hover',token:'--radio-circle-border-color-invalid-hover',via:'--danger-component-outline-hover'},
+      {label:'BG On Error',token:'--radio-circle-bg-on-invalid',via:'--danger-component-bg-default'},
+      {label:'BG On Error Hover',token:'--radio-circle-bg-on-invalid-hover',via:'--danger-component-bg-hover'},
       {sec:'Disabled'},
       {label:'Border Disabled',token:'--radio-circle-border-color-disabled',via:'--surface-'+s+'-cm-outline'},
       {label:'BG On Disabled',token:'--radio-circle-bg-on-disabled',via:'--'+r+'-component-bg-default'},

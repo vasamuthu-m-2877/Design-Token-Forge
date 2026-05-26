@@ -45,7 +45,7 @@
     <span class="demo-badge">3 Variants + Dot</span>
     <span class="demo-badge">3 Shapes</span>
     <span class="demo-badge">10 Sizes</span>
-    <span class="demo-badge">5 Roles</span>
+    <span class="demo-badge">6 Roles</span>
     <span class="demo-badge">7 Axes</span>
   </div>
 </header>
@@ -56,7 +56,7 @@
     <label>Variant</label>
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="filled" type="button">Filled</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outlined" type="button">Outlined</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="soft" type="button">Soft</button>
     </div>
   </div>
@@ -86,6 +86,7 @@
     <label>Role</label>
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="brand" type="button">Brand</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="info" type="button">Info</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
@@ -131,7 +132,7 @@
 
   <!-- ─── 5. ROLES × VARIANTS ─────────────────────────── -->
   <section class="section" id="sec-roles">
-    <div class="section-header"><h2>Roles × Variants</h2><span class="section-tag">5 × 3 Matrix</span></div>
+    <div class="section-header"><h2>Roles × Variants</h2><span class="section-tag">6 × 3 Matrix</span></div>
     <p class="section-desc">All 5 semantic roles across filled, outline, and soft variants plus dot indicators.</p>
     <div class="section-body" id="roleMatrix"></div>
   </section>
@@ -218,7 +219,7 @@
   data-variant={variant}     {/* filled | outline | soft */}
   data-size={size}           {/* micro … ultra */}
   data-shape={shape}         {/* pill | rounded | square */}
-  data-role={role}           {/* brand | danger | warning | success | neutral */}
+  data-role={role}           {/* brand | info | danger | success | warning | neutral */}
   data-interactive={interactive ? '' : undefined}
   data-disabled={disabled ? '' : undefined}
 &gt;
@@ -272,11 +273,11 @@
 
 /* ── Surface (per variant) ── */
 --badge-filled-bg / -fg / -border-color / -bg-hover / -fg-hover
---badge-outline-bg / -fg / -border-color / -bg-hover / -fg-hover
+--badge-outlined-bg / -fg / -border-color / -bg-hover / -fg-hover
 --badge-soft-bg / -fg / -border-color / -bg-hover / -fg-hover
 --badge-dot-size / -color
 --badge-{role}-filled-bg / -fg
---badge-{role}-outline-border / -fg
+--badge-{role}-outlined-border / -fg
 --badge-{role}-soft-bg / -fg
 
 /* ── Typography ── */

@@ -139,16 +139,16 @@ for dir in "$COMP_DIR"/*/; do
     skip
   fi
 
-  # ─── 8. DATA-ELEVATED ────────────────────────────────
+  # ─── 8. DATA-STRONG (elevation axis; shipped name) ───
   if echo "$ELEVATED_REQUIRED" | grep -wq "$comp"; then
-    if grep -q 'data-elevated' "$css" 2>/dev/null; then
-      if grep -q 'shadow-elevated' "$tok" 2>/dev/null; then
+    if grep -q 'data-strong' "$css" 2>/dev/null; then
+      if grep -q 'shadow-strong' "$tok" 2>/dev/null; then
         ok
       else
-        fail "$comp" "data-elevated in CSS but missing shadow-elevated token"
+        fail "$comp" "data-strong in CSS but missing shadow-strong token"
       fi
     else
-      fail "$comp" "Missing data-elevated selector (required for $cat)"
+      fail "$comp" "Missing data-strong selector (required for $cat)"
     fi
   else
     skip
@@ -215,6 +215,14 @@ REF_BTN=$(grep -E 'radius.*(micro|tiny|small|base|medium|large|big|huge|mega|ult
   grep -v 'rounded\|full\|none' | sed 's/.*var(//' | sed 's/).*//' | tr '\n' ',')
 
 for sibling in menu-button split-button; do
+  # split-button intentionally inherits radius via --btn-radius-* (multi-zone-model.md Q6).
+  # Skip the literal-string diff for it; menu-button is checked normally.
+  if [ "$sibling" = "split-button" ]; then
+    if grep -q 'var(--btn-radius-' "$COMP_DIR/split-button/split-button.tokens.css"; then
+      ok
+      continue
+    fi
+  fi
   SIB_BTN=$(grep -E 'radius.*(micro|tiny|small|base|medium|large|big|huge|mega|ultra)' \
     "$COMP_DIR/$sibling/$sibling.tokens.css" 2>/dev/null | \
     grep -v 'rounded\|full\|none' | sed 's/.*var(//' | sed 's/).*//' | tr '\n' ',')

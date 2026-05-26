@@ -48,7 +48,7 @@
   /* Shadow */
   --menu-btn-shadow: var(--shadow-none);
   --menu-btn-shadow-hover: var(--shadow-none);
-  --menu-btn-shadow-active: var(--shadow-none);
+  --menu-btn-shadow-pressed: var(--shadow-none);
   --menu-btn-shadow-strong: var(--shadow-sm);
 
   /* ────────────────────────────────────────────────────────────
@@ -140,142 +140,142 @@
   /* ── PRIMARY ≡ FILLED (solid bg, reads --brand-* palette) ─────────────────────────────── */
   --menu-btn-filled-bg: var(--brand-component-bg-default);
   --menu-btn-filled-bg-hover: var(--brand-component-bg-hover);
-  --menu-btn-filled-bg-active: var(--brand-component-bg-pressed);
+  --menu-btn-filled-bg-pressed: var(--brand-component-bg-pressed);
   --menu-btn-filled-bg-disabled: var(--brand-component-bg-default);
   --menu-btn-filled-fg: var(--brand-on-component);
   --menu-btn-filled-fg-hover: var(--brand-on-component);
   --menu-btn-filled-fg-disabled: var(--brand-on-component);
   --menu-btn-filled-border-color: var(--brand-component-bg-default);
   --menu-btn-filled-border-color-hover: var(--brand-component-bg-hover);
-  --menu-btn-filled-border-color-active: var(--brand-component-bg-pressed);
+  --menu-btn-filled-border-color-pressed: var(--brand-component-bg-pressed);
   --menu-btn-filled-border-color-disabled: var(--brand-component-bg-default);
   --menu-btn-filled-opacity-disabled: 0.5;
 
   /* ── SECONDARY ≡ OUTLINED (border emphasis, --brand-* palette) ─────────── */
   --menu-btn-outlined-bg: transparent;
   --menu-btn-outlined-bg-hover: var(--brand-container-bg);
-  --menu-btn-outlined-bg-active: var(--brand-container-pressed);
+  --menu-btn-outlined-bg-pressed: var(--brand-container-pressed);
   --menu-btn-outlined-bg-disabled: transparent;
   --menu-btn-outlined-fg: var(--brand-content-default);
   --menu-btn-outlined-fg-hover: var(--brand-content-default);
   --menu-btn-outlined-fg-disabled: var(--brand-content-default);
   --menu-btn-outlined-border-color: var(--brand-component-outline-default);
   --menu-btn-outlined-border-color-hover: var(--brand-component-outline-hover);
-  --menu-btn-outlined-border-color-active: var(--brand-component-outline-pressed);
+  --menu-btn-outlined-border-color-pressed: var(--brand-component-outline-pressed);
   --menu-btn-outlined-border-color-disabled: var(--brand-component-outline-default);
   --menu-btn-outlined-opacity-disabled: 0.5;
 
   /* ── GHOST (transparent bg, --surface-* by default) ────────────────────── */
   --menu-btn-ghost-bg: transparent;
   --menu-btn-ghost-bg-hover: var(--surface-base-cm-bg-hover);
-  --menu-btn-ghost-bg-active: var(--surface-base-cm-bg-pressed);
+  --menu-btn-ghost-bg-pressed: var(--surface-base-cm-bg-pressed);
   --menu-btn-ghost-bg-disabled: transparent;
   --menu-btn-ghost-fg: var(--surface-base-ct-default);
   --menu-btn-ghost-fg-hover: var(--surface-base-ct-strong);
   --menu-btn-ghost-fg-disabled: var(--surface-base-ct-default);
   --menu-btn-ghost-border-color: transparent;
   --menu-btn-ghost-border-color-hover: transparent;
-  --menu-btn-ghost-border-color-active: transparent;
+  --menu-btn-ghost-border-color-pressed: transparent;
   --menu-btn-ghost-border-color-disabled: transparent;
   --menu-btn-ghost-opacity-disabled: 0.5;
 
   /* ── NEUTRAL (legacy: filled + neutral/surface context) ──────────────────── */
   --menu-btn-neutral-bg: var(--surface-base-cm-bg);
   --menu-btn-neutral-bg-hover: var(--surface-base-cm-bg-hover);
-  --menu-btn-neutral-bg-active: var(--surface-base-cm-bg-pressed);
+  --menu-btn-neutral-bg-pressed: var(--surface-base-cm-bg-pressed);
   --menu-btn-neutral-bg-disabled: var(--surface-base-cm-bg);
   --menu-btn-neutral-fg: var(--surface-base-ct-default);
   --menu-btn-neutral-fg-hover: var(--surface-base-ct-strong);
   --menu-btn-neutral-fg-disabled: var(--surface-base-ct-default);
   --menu-btn-neutral-border-color: var(--surface-base-cm-outline);
   --menu-btn-neutral-border-color-hover: var(--surface-base-cm-outline-hover);
-  --menu-btn-neutral-border-color-active: var(--surface-base-cm-outline-pressed);
+  --menu-btn-neutral-border-color-pressed: var(--surface-base-cm-outline-pressed);
   --menu-btn-neutral-border-color-disabled: var(--surface-base-cm-outline);
   --menu-btn-neutral-opacity-disabled: 0.5;
 
   /* ── TERTIARY ≡ SOFT (tinted container, --brand-* palette) ────────────────────────── */
   --menu-btn-soft-bg: var(--brand-container-bg);
   --menu-btn-soft-bg-hover: var(--brand-container-hover);
-  --menu-btn-soft-bg-active: var(--brand-container-pressed);
+  --menu-btn-soft-bg-pressed: var(--brand-container-pressed);
   --menu-btn-soft-bg-disabled: var(--brand-container-bg);
   --menu-btn-soft-fg: var(--brand-content-default);
   --menu-btn-soft-fg-hover: var(--brand-content-default);
   --menu-btn-soft-fg-disabled: var(--brand-content-default);
   --menu-btn-soft-border-color: transparent;
   --menu-btn-soft-border-color-hover: transparent;
-  --menu-btn-soft-border-color-active: transparent;
+  --menu-btn-soft-border-color-pressed: transparent;
   --menu-btn-soft-border-color-disabled: transparent;
   --menu-btn-soft-opacity-disabled: 0.5;
 
   /* ── DANGER (legacy: filled + danger role) ───────────────────────────────── */
   --menu-btn-danger-bg: var(--danger-component-bg-default);
   --menu-btn-danger-bg-hover: var(--danger-component-bg-hover);
-  --menu-btn-danger-bg-active: var(--danger-component-bg-pressed);
+  --menu-btn-danger-bg-pressed: var(--danger-component-bg-pressed);
   --menu-btn-danger-bg-disabled: var(--danger-component-bg-default);
   --menu-btn-danger-fg: var(--danger-on-component);
   --menu-btn-danger-fg-hover: var(--danger-on-component);
   --menu-btn-danger-fg-disabled: var(--danger-on-component);
   --menu-btn-danger-border-color: var(--danger-component-bg-default);
   --menu-btn-danger-border-color-hover: var(--danger-component-bg-hover);
-  --menu-btn-danger-border-color-active: var(--danger-component-bg-pressed);
+  --menu-btn-danger-border-color-pressed: var(--danger-component-bg-pressed);
   --menu-btn-danger-border-color-disabled: var(--danger-component-bg-default);
   --menu-btn-danger-opacity-disabled: 0.5;
 
   /* ── SUCCESS (legacy: filled + success role) ─────────────────────────────── */
   --menu-btn-success-bg: var(--success-component-bg-default);
   --menu-btn-success-bg-hover: var(--success-component-bg-hover);
-  --menu-btn-success-bg-active: var(--success-component-bg-pressed);
+  --menu-btn-success-bg-pressed: var(--success-component-bg-pressed);
   --menu-btn-success-bg-disabled: var(--success-component-bg-default);
   --menu-btn-success-fg: var(--success-on-component);
   --menu-btn-success-fg-hover: var(--success-on-component);
   --menu-btn-success-fg-disabled: var(--success-on-component);
   --menu-btn-success-border-color: var(--success-component-bg-default);
   --menu-btn-success-border-color-hover: var(--success-component-bg-hover);
-  --menu-btn-success-border-color-active: var(--success-component-bg-pressed);
+  --menu-btn-success-border-color-pressed: var(--success-component-bg-pressed);
   --menu-btn-success-border-color-disabled: var(--success-component-bg-default);
   --menu-btn-success-opacity-disabled: 0.5;
 
   /* ── WARNING (legacy: filled + warning role) ─────────────────────────────── */
   --menu-btn-warning-bg: var(--warning-component-bg-default);
   --menu-btn-warning-bg-hover: var(--warning-component-bg-hover);
-  --menu-btn-warning-bg-active: var(--warning-component-bg-pressed);
+  --menu-btn-warning-bg-pressed: var(--warning-component-bg-pressed);
   --menu-btn-warning-bg-disabled: var(--warning-component-bg-default);
   --menu-btn-warning-fg: var(--warning-on-component);
   --menu-btn-warning-fg-hover: var(--warning-on-component);
   --menu-btn-warning-fg-disabled: var(--warning-on-component);
   --menu-btn-warning-border-color: var(--warning-component-bg-default);
   --menu-btn-warning-border-color-hover: var(--warning-component-bg-hover);
-  --menu-btn-warning-border-color-active: var(--warning-component-bg-pressed);
+  --menu-btn-warning-border-color-pressed: var(--warning-component-bg-pressed);
   --menu-btn-warning-border-color-disabled: var(--warning-component-bg-default);
   --menu-btn-warning-opacity-disabled: 0.5;
-
-  /* ── OUTLINE (legacy: outlined + neutral/surface context) ───────── */
-  --menu-btn-outline-bg: transparent;
-  --menu-btn-outline-bg-hover: var(--surface-base-subtle);
-  --menu-btn-outline-bg-active: var(--surface-base-strong);
-  --menu-btn-outline-bg-disabled: transparent;
-  --menu-btn-outline-fg: var(--surface-base-ct-default);
-  --menu-btn-outline-fg-hover: var(--surface-base-ct-strong);
-  --menu-btn-outline-fg-disabled: var(--surface-base-ct-default);
-  --menu-btn-outline-border-color: var(--surface-base-outline);
-  --menu-btn-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --menu-btn-outline-border-color-active: var(--surface-base-cm-outline-pressed);
-  --menu-btn-outline-border-color-disabled: var(--surface-base-outline);
-  --menu-btn-outline-opacity-disabled: 0.5;
 
   /* ── BRAND (legacy: filled + brand role) ───────────────────────── */
   --menu-btn-brand-bg: var(--brand-component-bg-default);
   --menu-btn-brand-bg-hover: var(--brand-component-bg-hover);
-  --menu-btn-brand-bg-active: var(--brand-component-bg-pressed);
+  --menu-btn-brand-bg-pressed: var(--brand-component-bg-pressed);
   --menu-btn-brand-bg-disabled: var(--brand-component-bg-default);
   --menu-btn-brand-fg: var(--brand-on-component);
   --menu-btn-brand-fg-hover: var(--brand-on-component);
   --menu-btn-brand-fg-disabled: var(--brand-on-component);
   --menu-btn-brand-border-color: var(--brand-component-bg-default);
   --menu-btn-brand-border-color-hover: var(--brand-component-bg-hover);
-  --menu-btn-brand-border-color-active: var(--brand-component-bg-pressed);
+  --menu-btn-brand-border-color-pressed: var(--brand-component-bg-pressed);
   --menu-btn-brand-border-color-disabled: var(--brand-component-bg-default);
   --menu-btn-brand-opacity-disabled: 0.5;
+
+  /* ── INFO (legacy: filled + info role) ────────────────────────────────── */
+  --menu-btn-info-bg: var(--info-component-bg-default);
+  --menu-btn-info-bg-hover: var(--info-component-bg-hover);
+  --menu-btn-info-bg-pressed: var(--info-component-bg-pressed);
+  --menu-btn-info-bg-disabled: var(--info-component-bg-default);
+  --menu-btn-info-fg: var(--info-on-component);
+  --menu-btn-info-fg-hover: var(--info-on-component);
+  --menu-btn-info-fg-disabled: var(--info-on-component);
+  --menu-btn-info-border-color: var(--info-component-bg-default);
+  --menu-btn-info-border-color-hover: var(--info-component-bg-hover);
+  --menu-btn-info-border-color-pressed: var(--info-component-bg-pressed);
+  --menu-btn-info-border-color-disabled: var(--info-component-bg-default);
+  --menu-btn-info-opacity-disabled: 0.5;
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (15 vars)

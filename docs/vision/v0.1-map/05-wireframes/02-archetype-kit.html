@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>02 · Archetype Kit · DTF Wireframes</title>
+<link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>02 · Archetype Kit</h1>
+    <div class="wf-meta">The missing middle. Dashboard kit example: L2 scaffolds + L3 examples + recipes.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<!-- ============ FIGMA FILE STRUCTURE ============ -->
+
+<div class="wf-step-intro">What the kit looks like inside Figma</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">Six pages, each with a clear role.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Figma</span> · Acme Dashboard Kit</span>
+    <span style="font-family:var(--mono); font-size:11px;">file structure</span>
+  </div>
+  <div class="wf-screen-body" style="padding:0;">
+    <div style="display:grid; grid-template-columns:220px 1fr; min-height:440px;">
+
+      <!-- Pages sidebar -->
+      <div style="border-right:1px solid var(--line); padding:16px 12px; background:var(--bg);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">Pages</div>
+        <div class="wf-stack gap-sm" style="font-family:var(--mono); font-size:12px;">
+          <div>📁 Tokens <span class="wf-marker">1</span></div>
+          <div>📁 L1 Atoms <span class="wf-marker">2</span></div>
+          <div style="font-weight:600; color:var(--ink);">📁 L2 Kit ← viewing <span class="wf-marker">3</span></div>
+          <div>📁 L3 Examples <span class="wf-marker">4</span></div>
+          <div>📁 Recipes <span class="wf-marker">5</span></div>
+          <div>⭐ My Work</div>
+        </div>
+      </div>
+
+      <!-- L2 Kit canvas — grid of L2 scaffolds -->
+      <div style="padding:24px; background:#f4f4f1;">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-bottom:16px;">📁 L2 Kit · 11 patterns</div>
+
+        <div class="wf-grid cols-4" style="gap:12px;">
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">AppShell</div>
+            <div class="wf-box soft" style="padding:4px; min-height:60px; display:flex; gap:3px;">
+              <div style="width:14px; background:var(--line-soft);"></div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                <div style="height:6px; background:var(--line-soft);"></div>
+                <div style="flex:1; background:#fafaf8;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">StatTile</div>
+            <div class="wf-box soft" style="padding:8px; min-height:60px; display:flex; flex-direction:column; gap:4px;">
+              <div style="font-size:18px; font-weight:600;">124</div>
+              <div style="font-size:9px; color:var(--ink-3); font-family:var(--mono);">Users ↑12%</div>
+            </div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">DataTable</div>
+            <div class="wf-box soft" style="padding:4px; min-height:60px; display:flex; flex-direction:column; gap:2px;">
+              <div style="height:8px; background:var(--line-soft);"></div>
+              <div style="height:6px; background:#fafaf8; border:1px dashed var(--line-soft);"></div>
+              <div style="height:6px; background:#fafaf8; border:1px dashed var(--line-soft);"></div>
+              <div style="height:6px; background:#fafaf8; border:1px dashed var(--line-soft);"></div>
+            </div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">FilterBar</div>
+            <div class="wf-box soft" style="padding:6px; min-height:60px; display:flex; align-items:center; gap:4px;">
+              <div style="height:12px; flex:1; border:1px dashed var(--line-soft);"></div>
+              <div style="height:12px; flex:1; border:1px dashed var(--line-soft);"></div>
+              <div style="height:12px; flex:1; border:1px dashed var(--line-soft);"></div>
+            </div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">EmptyState</div>
+            <div class="wf-box soft empty" style="min-height:60px; font-size:10px;">illustration + CTA</div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">FormDrawer</div>
+            <div class="wf-box soft" style="min-height:60px; padding:4px; display:flex; gap:3px;">
+              <div style="flex:1; background:rgba(0,0,0,0.04);"></div>
+              <div style="width:40%; background:var(--bg-elev); border-left:1px dashed var(--line-soft);"></div>
+            </div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">UserRow</div>
+            <div class="wf-box soft" style="padding:6px; min-height:60px; display:flex; align-items:center; gap:6px;">
+              <div style="width:18px; height:18px; border-radius:50%; background:var(--line-soft);"></div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+                <div style="height:5px; background:var(--line-soft); width:60%;"></div>
+                <div style="height:4px; background:#e0e0e0; width:40%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">ActivityFeed</div>
+            <div class="wf-box soft empty" style="min-height:60px; font-size:10px;">timeline</div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">ConfirmDialog</div>
+            <div class="wf-box soft empty" style="min-height:60px; font-size:10px;">modal</div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">CmdPalette</div>
+            <div class="wf-box soft empty" style="min-height:60px; font-size:10px;">⌘K overlay</div>
+          </div>
+
+          <div class="wf-box" style="padding:8px; background:var(--bg-elev);">
+            <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-bottom:6px;">SettingsRow</div>
+            <div class="wf-box soft" style="padding:6px; min-height:60px; display:flex; align-items:center; gap:6px;">
+              <div style="flex:1; height:5px; background:var(--line-soft);"></div>
+              <div style="width:30px; height:14px; background:var(--ink); border-radius:7px;"></div>
+            </div>
+          </div>
+
+          <div class="wf-box dashed" style="padding:8px; background:transparent; display:flex; align-items:center; justify-content:center; color:var(--ink-3); font-family:var(--mono); font-size:11px;">+ add</div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Tokens page: swatches for color / spacing / type / motion. Read-only view of what's in the system.</li>
+  <li data-num="2">L1 Atoms page: linked from DTF Core library. Updates flow automatically when DTF Core ships a new version.</li>
+  <li data-num="3">L2 Kit page: the 11 dashboard-specific scaffolds. Composed from L1 + tokens, no hardcoded values.</li>
+  <li data-num="4">L3 Examples: 3 worked example pages (Overview, Users, Settings) — designers copy + remix these.</li>
+  <li data-num="5">Recipes: documented compositions, not components. Cheap to add, infinite variety.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ L3 EXAMPLE PAGE — ANNOTATED ============ -->
+
+<div class="wf-step-intro">L3 example page — Users, annotated</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">A complete page built only from kit + L1.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">L3 Examples</span> · Users</span>
+    <span style="font-family:var(--mono); font-size:11px;">100% on-system · 0 detached layers</span>
+  </div>
+  <div class="wf-screen-body" style="padding:0;">
+    <div style="display:grid; grid-template-columns:140px 1fr; min-height:380px;">
+
+      <!-- Sidebar -->
+      <div style="border-right:1px solid var(--line); padding:16px 12px; background:var(--bg);">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-bottom:12px;">SIDEBAR <span class="wf-marker">A</span></div>
+        <div class="wf-stack gap-sm" style="font-family:var(--sans); font-size:12px;">
+          <div>Overview</div>
+          <div style="font-weight:600;">Users</div>
+          <div>Settings</div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div style="padding:24px; background:var(--bg-elev);">
+
+        <div class="wf-row between" style="margin-bottom:16px;">
+          <div style="font-family:var(--sans); font-size:18px; font-weight:600;">Users</div>
+          <button class="wf-btn primary" style="font-family:var(--sans);">+ New user</button>
+        </div>
+
+        <div class="wf-box soft" style="padding:12px; margin-bottom:12px;">
+          <div class="wf-row" style="gap:8px; font-family:var(--mono); font-size:11px; color:var(--ink-3);">
+            <span>FILTERBAR <span class="wf-marker">B</span></span>
+            <div style="flex:1; display:flex; gap:6px;">
+              <div style="flex:1; height:24px; border:1px dashed var(--line-soft);"></div>
+              <div style="flex:1; height:24px; border:1px dashed var(--line-soft);"></div>
+              <div style="flex:2; height:24px; border:1px dashed var(--line-soft);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-box soft" style="padding:0;">
+          <div style="padding:8px 12px; background:var(--bg); font-family:var(--mono); font-size:10px; color:var(--ink-3); border-bottom:1px solid var(--line-soft);">DATATABLE wrapping UserRows <span class="wf-marker">C</span></div>
+          <div class="wf-row" style="padding:10px 12px; border-bottom:1px dashed var(--line-soft);">
+            <div style="width:22px; height:22px; border-radius:50%; background:var(--line-soft);"></div>
+            <div style="margin-left:10px;">Maya Lin</div>
+            <div style="margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3);">Designer · Active</div>
+            <div style="margin-left:12px;">···</div>
+          </div>
+          <div class="wf-row" style="padding:10px 12px; border-bottom:1px dashed var(--line-soft);">
+            <div style="width:22px; height:22px; border-radius:50%; background:var(--line-soft);"></div>
+            <div style="margin-left:10px;">Raj Patel</div>
+            <div style="margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3);">Engineer · Active</div>
+            <div style="margin-left:12px;">···</div>
+          </div>
+          <div class="wf-row" style="padding:10px 12px;">
+            <div style="width:22px; height:22px; border-radius:50%; background:var(--line-soft);"></div>
+            <div style="margin-left:10px;">Priya Shah</div>
+            <div style="margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3);">DS Lead · Active</div>
+            <div style="margin-left:12px;">···</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="A">AppShell wraps everything. Sidebar + content slot. Single L2 component.</li>
+  <li data-num="B">FilterBar = L2 kit component. Slots get filled by designer with Select + Search L1 atoms.</li>
+  <li data-num="C">UserRow = L2 kit component. Repeated inside DataTable layout. Each row is one instance.</li>
+</ul>
+
+<!-- ============ THE REMIX CONTRACT ============ -->
+
+<h2>The remix contract</h2>
+
+<div class="wf-grid cols-2" style="gap:24px;">
+  <div class="wf-box">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ok); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">The kit PROMISES</div>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="✓">Every L2 uses only DTF L1 + tokens (zero hardcoded values)</li>
+      <li data-num="✓">Every L2 has all states (default · hover · loading · empty · error)</li>
+      <li data-num="✓">Every L2 is fully responsive (4 viewports tested)</li>
+      <li data-num="✓">Every L2 has a code equivalent (React / Vue / Svelte)</li>
+      <li data-num="✓">Every L2 is RTL-safe and a11y-compliant</li>
+    </ul>
+  </div>
+  <div class="wf-box">
+    <div style="font-family:var(--mono); font-size:11px; color:var(--warn); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:12px;">The kit DOES NOT promise</div>
+    <ul class="wf-anno-list" style="margin:0;">
+      <li data-num="✗">That you'll use every L2 (use what fits, ignore the rest)</li>
+      <li data-num="✗">That you can't replace any of them (detach + redesign freely)</li>
+      <li data-num="✗">That your product will look like the examples</li>
+      <li data-num="✗">Coverage for non-dashboard use cases (those have their own kits)</li>
+      <li data-num="✗">That every pattern you need exists today (compose your own L2s)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ RECIPES PANEL ============ -->
+
+<h2>Recipes page — when L2 components aren't enough</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Recipes</span> · Acme Dashboard Kit</span>
+    <span style="font-family:var(--mono); font-size:11px;">24 documented compositions</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-row" style="margin-bottom:16px; gap:8px;">
+      <input class="wf-input" style="flex:1;" placeholder="Search recipes…" />
+      <button class="wf-btn ghost">Filter: All ▼</button>
+    </div>
+
+    <div class="wf-grid cols-3" style="gap:12px;">
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">RECIPE · settings-form-row</div>
+        <div style="font-size:13px; font-weight:600; margin:6px 0 8px;">Label + control + help text</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2);">Uses: Label · Input · HelpText · IconButton</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:4px;">Used in: Settings · Profile · Billing</div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">RECIPE · inline-error</div>
+        <div style="font-size:13px; font-weight:600; margin:6px 0 8px;">Icon + message + dismiss</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2);">Uses: Icon · Text · IconButton</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:4px;">Used in: any form context</div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">RECIPE · loading-skeleton</div>
+        <div style="font-size:13px; font-weight:600; margin:6px 0 8px;">Pulsing placeholder rows</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2);">Uses: Box · animate-pulse token</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:4px;">Used in: DataTable · UserRow · ActivityFeed</div>
+      </div>
+
+    </div>
+
+    <div class="wf-note" style="margin-top:16px;">
+      Recipes are docs, not components. Cheap to add (10 min). Promote to L2 only when used 3+ times across products. <span class="wf-marker">1</span>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">This is the key architectural choice. Most "design systems" fail by componentizing every pattern. Recipes preserve flexibility while still being on-system.</li>
+</ul>
+
+<!-- ============ NAVIGATION TO NEXT ============ -->
+
+<div class="wf-arrow">▼</div>
+
+<div class="wf-row between" style="padding:24px; border:1px solid var(--line); background:var(--bg-elev); margin-top:24px;">
+  <div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">After the designer ships</div>
+    <div style="font-family:var(--sans); font-size:16px; font-weight:600; margin-top:4px;">03 · Archetype Gallery</div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); margin-top:4px;">See what DTF extracts from the LIVE product after it's shipped — the catalog UI.</div>
+  </div>
+  <a class="wf-btn primary" href="03-gallery.html">Open gallery →</a>
+</div>
+
+<!-- ============ REVIEW ============ -->
+
+<h2>Review this wireframe</h2>
+<div class="wf-stack gap-sm" style="font-family:var(--mono); font-size:12px; color:var(--ink-2);">
+  <div>Whole kit concept: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span> <span class="wf-pill">expand</span> <span class="wf-pill">cut</span></div>
+  <div>Figma file structure: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>L3 example annotation: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Promises / doesn't promise split: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Recipes vs components rule: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+</div>
+
+<div class="wf-footer">
+  <span><a href="01-onboarding.html">← 01 · Onboarding</a></span>
+  <span><a href="03-gallery.html">03 · Gallery →</a></span>
+</div>
+
+</body>
+</html>

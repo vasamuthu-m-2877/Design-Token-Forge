@@ -37,7 +37,7 @@
 <header class="demo-header">
   <h1>Alert Explorer <span>— Design Token Forge</span></h1>
   <div class="demo-meta">
-    <span class="demo-badge">91 CSS Variables</span>
+    <span class="demo-badge">122 CSS Variables</span>
     <span class="demo-badge">6 Roles</span>
     <span class="demo-badge">3 Sizes</span>
     <span class="demo-badge">4 Variants</span>
@@ -64,7 +64,7 @@
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="" type="button">Default</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="filled" type="button">Filled</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outlined" type="button">Outlined</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="soft" type="button">Soft</button>
     </div>
   </div>
@@ -96,7 +96,7 @@
   <!-- 2. VARIANT GALLERY -->
   <section class="section" id="sec-variants">
     <div class="section-header"><h2>Variant Gallery</h2><span class="section-tag">Surface</span></div>
-    <p class="section-desc">4 structural variants × 6 semantic roles at the globally selected size. Default = tinted container bg, Filled = solid component bg, Outline = transparent + role border, Soft = subtle container bg. Each variant routes to specific token layers.</p>
+    <p class="section-desc">4 structural variants × 6 semantic roles at the globally selected size. Default = tinted container bg, Filled = solid component bg, Outlined = transparent + role border, Soft = subtle container bg. Each variant routes to specific token layers.</p>
     <div class="section-body" id="variantGallery"></div>
   </section>
 
@@ -235,7 +235,7 @@
         </div>
         <div class="fw-snippet-code" data-panel="react" data-active>&lt;div
   className="alert"
-  data-role={role}           {/* primary | info | success | warning | danger | neutral */}
+  data-role={role}           {/* brand | info | success | warning | danger | neutral */}
   data-variant={variant}     {/* filled | outline | soft (omit for default) */}
   data-size={size}           {/* small | base | large */}
   role={['danger','warning'].includes(role) ? 'alert' : 'status'}
@@ -323,7 +323,7 @@
 /* ── Variant overrides (filled/outline/soft per role) ── */
 --alert-{role}-filled-bg          /* → --{role}-component-bg-default */
 --alert-{role}-filled-fg          /* → --{role}-on-component */
---alert-{role}-outline-border     /* → --{role}-component-bg-default */
+--alert-{role}-outlined-border     /* → --{role}-component-bg-default */
 --alert-{role}-soft-bg            /* → --{role}-container-bg */
 --alert-shadow                    /* none */
 
@@ -375,8 +375,8 @@
      ══════════════════════════════════════════════════════ */
   var ROLES    = ['brand','info','success','warning','danger','neutral'];
   var SIZES    = ['small','base','large'];
-  var VARIANTS = ['','filled','outline','soft'];
-  var VLABELS  = {'':'Default', filled:'Filled', outline:'Outline', soft:'Soft'};
+  var VARIANTS = ['','filled','outlined','soft'];
+  var VLABELS  = {'':'Default', filled:'Filled', outlined:'Outlined', soft:'Soft'};
 
   /* Token alias map per-size (from alert.tokens.css §2) */
   var AL_TOKENS = {
@@ -447,7 +447,7 @@
     if (opts.icon !== false) {
       var ic = document.createElement('span');
       ic.className = 'alert__icon';
-      ic.innerHTML = ICONS[role] || ICONS.primary;
+      ic.innerHTML = ICONS[role] || ICONS.brand;
       el.appendChild(ic);
     }
     var content = document.createElement('div');
@@ -731,9 +731,9 @@
       {label:'BG',      token:'--alert-'+r+'-filled-bg',   via:'--'+r+'-component-bg-default'},
       {label:'FG',      token:'--alert-'+r+'-filled-fg',   via:'--'+r+'-on-component'},
 
-      {sec:'Outline (transparent + role border)'},
+      {sec:'Outlined (transparent + role border)'},
       {label:'BG',      token:'(transparent)',              via:'—'},
-      {label:'Border',  token:'--alert-'+r+'-outline-border', via:'--'+r+'-component-bg-default'},
+      {label:'Border',  token:'--alert-'+r+'-outlined-border', via:'--'+r+'-component-bg-default'},
 
       {sec:'Soft (subtle container bg)'},
       {label:'BG',      token:'--alert-'+r+'-soft-bg',     via:'--'+r+'-container-bg'},

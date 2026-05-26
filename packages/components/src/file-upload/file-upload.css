@@ -6,7 +6,7 @@
                 data-mode="dropzone"  Drag-and-drop zone (default)
 
    Markup (Dropzone):
-   <div class="file-upload" data-variant="outline" data-size="base" data-mode="dropzone">
+   <div class="file-upload" data-variant="outlined" data-size="base" data-mode="dropzone">
      <label class="file-upload__label" for="f1">Attachments</label>
      <div class="file-upload__zone">
        <span class="file-upload__icon">…svg…</span>
@@ -21,7 +21,7 @@
    </div>
 
    Markup (Button):
-   <div class="file-upload" data-variant="outline" data-size="base" data-mode="button">
+   <div class="file-upload" data-variant="outlined" data-size="base" data-mode="button">
      <label class="file-upload__label" for="f2">Upload</label>
      <div class="file-upload__trigger">
        <span class="file-upload__icon">…svg…</span>
@@ -54,14 +54,14 @@
   --_fu-icon-size: var(--file-upload-icon-size-base);
 
   /* Surface active vars (outline default) */
-  --_fu-bg: var(--file-upload-outline-bg);
-  --_fu-bg-hover: var(--file-upload-outline-bg-hover);
-  --_fu-bg-active: var(--file-upload-outline-bg-active);
-  --_fu-bg-dragover: var(--file-upload-outline-bg-dragover);
-  --_fu-fg: var(--file-upload-outline-fg);
-  --_fu-border-color: var(--file-upload-outline-border-color);
-  --_fu-border-color-hover: var(--file-upload-outline-border-color-hover);
-  --_fu-border-color-dragover: var(--file-upload-outline-border-color-dragover);
+  --_fu-bg: var(--file-upload-outlined-bg);
+  --_fu-bg-hover: var(--file-upload-outlined-bg-hover);
+  --_fu-bg-active: var(--file-upload-outlined-bg-pressed);
+  --_fu-bg-dragover: var(--file-upload-outlined-bg-dragover);
+  --_fu-fg: var(--file-upload-outlined-fg);
+  --_fu-border-color: var(--file-upload-outlined-border-color);
+  --_fu-border-color-hover: var(--file-upload-outlined-border-color-hover);
+  --_fu-border-color-dragover: var(--file-upload-outlined-border-color-dragover);
   --_fu-shadow: var(--file-upload-shadow);
 }
 
@@ -175,7 +175,7 @@
 .file-upload[data-variant="filled"] {
   --_fu-bg: var(--file-upload-filled-bg);
   --_fu-bg-hover: var(--file-upload-filled-bg-hover);
-  --_fu-bg-active: var(--file-upload-filled-bg-active);
+  --_fu-bg-active: var(--file-upload-filled-bg-pressed);
   --_fu-bg-dragover: var(--file-upload-filled-bg-dragover);
   --_fu-fg: var(--file-upload-filled-fg);
   --_fu-border-color: var(--file-upload-filled-border-color);
@@ -290,8 +290,8 @@
   line-height: var(--file-upload-line-height);
 }
 
-.file-upload[data-error] .file-upload__label {
-  color: var(--file-upload-label-color-error);
+.file-upload[aria-invalid="true"] .file-upload__label {
+  color: var(--file-upload-label-color-invalid);
 }
 
 .file-upload[data-disabled] .file-upload__label,
@@ -331,7 +331,7 @@
 
 .file-upload__zone:active {
   background: var(--_fu-bg-active);
-  box-shadow: var(--file-upload-shadow-active);
+  box-shadow: var(--file-upload-shadow-pressed);
 }
 
 /* Drag-over state */
@@ -342,17 +342,17 @@
 }
 
 /* Error state */
-.file-upload[data-error] .file-upload__zone {
-  border-color: var(--file-upload-outline-border-color-error);
+.file-upload[aria-invalid="true"] .file-upload__zone {
+  border-color: var(--file-upload-outlined-border-color-invalid);
 }
-.file-upload[data-variant="filled"][data-error] .file-upload__zone {
-  border-color: var(--file-upload-filled-border-color-error);
+.file-upload[data-variant="filled"][aria-invalid="true"] .file-upload__zone {
+  border-color: var(--file-upload-filled-border-color-invalid);
 }
 
 /* Disabled state */
 .file-upload[data-disabled] .file-upload__zone,
 .file-upload:has(:disabled) .file-upload__zone {
-  opacity: var(--file-upload-outline-opacity-disabled);
+  opacity: var(--file-upload-outlined-opacity-disabled);
   pointer-events: none;
   cursor: default;
 }
@@ -392,12 +392,12 @@
 
 .file-upload__trigger:active {
   background: var(--_fu-bg-active);
-  box-shadow: var(--file-upload-shadow-active);
+  box-shadow: var(--file-upload-shadow-pressed);
 }
 
 .file-upload[data-disabled] .file-upload__trigger,
 .file-upload:has(:disabled) .file-upload__trigger {
-  opacity: var(--file-upload-outline-opacity-disabled);
+  opacity: var(--file-upload-outlined-opacity-disabled);
   pointer-events: none;
   cursor: default;
 }
@@ -407,8 +407,8 @@
   border-color: var(--_fu-border-color-dragover);
 }
 
-.file-upload[data-error] .file-upload__trigger {
-  border-color: var(--file-upload-outline-border-color-error);
+.file-upload[aria-invalid="true"] .file-upload__trigger {
+  border-color: var(--file-upload-outlined-border-color-invalid);
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -486,8 +486,8 @@
   color: var(--file-upload-helper-color);
   line-height: var(--file-upload-line-height);
 }
-.file-upload[data-error] .file-upload__helper {
-  color: var(--file-upload-helper-color-error);
+.file-upload[aria-invalid="true"] .file-upload__helper {
+  color: var(--file-upload-helper-color-invalid);
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -581,7 +581,7 @@
   transition: width 300ms var(--easing-in-out);
 }
 .file-upload__item[data-status="error"] .file-upload__progress-fill {
-  background: var(--file-upload-progress-fill-error);
+  background: var(--file-upload-progress-fill-invalid);
 }
 .file-upload__item[data-status="success"] .file-upload__progress-fill {
   background: var(--file-upload-progress-fill-success);

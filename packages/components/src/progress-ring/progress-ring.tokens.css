@@ -3,6 +3,19 @@
    Layer 0: System defaults for ~95 progress-ring variables.
    SVG-driven circular progress indicator.
    All values reference global tokens — zero hardcoded visuals.
+   ----------------------------------------------------------------
+   ANATOMY:
+     .progress-ring (wrapper, role="progressbar")
+       └─ <svg> (track circle + value circle)
+       └─ .progress-ring__label  (centered value / icon)
+       └─ .progress-ring__helper (optional external row)
+
+   VARIANTS  (data-variant):   filled (default) | outlined | soft
+   ROLES     (data-role):       brand (default) | danger | success | warning | info | neutral
+   STATES    (selectors):       default | indeterminate | disabled
+
+   ROLE TOKENS ship as inline named slots (--ring-{role}-fill / -soft-track),
+   mirroring progress-bar. data-role swaps the internal --_rg-* chain.
    ════════════════════════════════════════════════════════════════ */
 
 .progress-ring {
@@ -63,16 +76,16 @@
   --ring-indeterminate-width: 25%;
 
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE  (19 vars)
+     🎨 SURFACE  (21 vars)
      Pattern: --ring-{role}-{property}
      ──────────────────────────────────────────────────────────── */
 
   /* ── Track ── */
   --ring-track-color: var(--surface-base-cm-bg);
 
-  /* ── PRIMARY role ── */
-  --ring-primary-fill: var(--brand-component-bg-default);
-  --ring-primary-soft-track: var(--brand-container-bg);
+  /* ── BRAND role ── */
+  --ring-brand-fill: var(--brand-component-bg-default);
+  --ring-brand-soft-track: var(--brand-container-bg);
 
   /* ── SUCCESS role ── */
   --ring-success-fill: var(--success-component-bg-default);
@@ -85,6 +98,10 @@
   /* ── DANGER role ── */
   --ring-danger-fill: var(--danger-component-bg-default);
   --ring-danger-soft-track: var(--danger-container-bg);
+
+  /* ── INFO role ── */
+  --ring-info-fill: var(--info-component-bg-default);
+  --ring-info-soft-track: var(--info-container-bg);
 
   /* ── NEUTRAL role ── */
   --ring-neutral-fill: var(--surface-base-ct-faint);
@@ -101,8 +118,8 @@
   --ring-helper-color: var(--surface-base-ct-subtle);
 
   /* ── Outline variant ── */
-  --ring-outline-track-opacity: 0.3;
-  --ring-outline-stroke-width-add: 0px;
+  --ring-outlined-track-opacity: 0.3;
+  --ring-outlined-stroke-width-add: 0px;
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (14 vars)

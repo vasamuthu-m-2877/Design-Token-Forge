@@ -830,6 +830,260 @@ async function tryBindVar(node, field, variable) {
   }
 }
 
+/* ──────────────────────────────────────────────────────────────────
+   ICON COLOR REBINDER — Path C (auto-heal on sync)
+
+   Why this exists:
+   When a designer swaps the Icon/Placeholder instance for an icon
+   from any external library (Lucide, Phosphor, hand-drawn, etc.),
+   the swapped icon's inner vectors carry LITERAL SOLID paints. Figma
+   does NOT propagate the button's content-color variable binding
+   into a swapped instance's descendants, so every button that uses
+   that icon paints with the icon's hardcoded color (usually black).
+
+   Strategy — mirror the variant's TEXT binding onto its ICON:
+   Every button variant has its text element bound to the role-correct
+   on-component color (e.g. brand/oncomponent-content/default on a
+   Brand/Filled variant, content/default on a Neutral/Outlined one).
+   We walk each variant, read the text's color binding, and apply the
+   SAME binding to every vector inside the icon instance — both fills
+   and strokes. This way:
+     - stroke-based icons (Lucide) → recolored via strokes
+     - fill-based icons (Phosphor solid, Material) → recolored via fills
+     - icons with both → both bound
+     - per-role accuracy → automatic, no spec lookup needed
+
+   Also rebinds the Icon/Placeholder master itself to T2 default/
+   content/default as a baseline (used when the icon is shown
+   standalone, e.g. in the primitives showcase).
+
+   Idempotent. Skips already-bound paints, gradients, images. Reports
+   counts and warnings. Safe to re-run on every sync. */
+async function rebindIconPlaceholderPaints() {
+  var report = { scanned: 0, rebound: 0, placeholders: 0, variantsTouched: 0, warnings: [] };
+  try {
+    await figma.loadAllPagesAsync();
+    var collections = await figma.variables.getLocalVariableCollectionsAsync();
+    var t2 = null;
+    for (var ci = 0; ci < collections.length; ci++) {
+      if (collections[ci].name === 'T2 Surface Context Tokens') { t2 = collections[ci]; break; }
+    }
+    if (!t2) return report;
+    var defaultContentVar = null;
+    for (var vi = 0; vi < t2.variableIds.length; vi++) {
+      var v = await figma.variables.getVariableByIdAsync(t2.variableIds[vi]);
+      if (v && v.name === 'default/content/default') { defaultContentVar = v; break; }
+    }
+    if (!defaultContentVar) return report;
+
+    /* Helper: bind both fills and strokes on `node` to `variable`,
+       preserving paint properties (visibility, opacity). Only acts on
+       SOLID paints that are visible. If `forceOverGenericNeutral` is
+       true, also overrides existing bindings to the generic neutral
+       content var — this lets the variant pass replace a too-generic
+       binding with the role-correct one. */
+    function bindPaints(node, variable, why, forceOverGenericNeutral) {
+      ['fills', 'strokes'].forEach(function(field) {
+        if (!(field in node)) return;
+        var paints = node[field];
+        if (paints === figma.mixed || !Array.isArray(paints) || paints.length === 0) return;
+        var changed = false;
+        var next = [];
+        for (var pi = 0; pi < paints.length; pi++) {
+          var paint = paints[pi];
+          report.scanned++;
+          if (!paint || paint.visible === false) { next.push(paint); continue; }
+          if (paint.type !== 'SOLID') {
+            if (paint.type === 'GRADIENT_LINEAR' || paint.type === 'GRADIENT_RADIAL' ||
+                paint.type === 'GRADIENT_ANGULAR' || paint.type === 'GRADIENT_DIAMOND' ||
+                paint.type === 'IMAGE' || paint.type === 'VIDEO') {
+              report.warnings.push(node.name + '.' + field + ': ' + paint.type + ' (' + why + ')');
+            }
+            next.push(paint); continue;
+          }
+          var alreadyBound = paint.boundVariables && paint.boundVariables.color;
+          if (alreadyBound) {
+            /* Skip unless we're allowed to override the generic neutral
+               and this binding IS the generic neutral. */
+            if (!forceOverGenericNeutral) { next.push(paint); continue; }
+            if (paint.boundVariables.color.id !== defaultContentVar.id) { next.push(paint); continue; }
+            if (variable.id === defaultContentVar.id) { next.push(paint); continue; }
+            /* fall through — replace with role variable */
+          }
+          try {
+            next.push(figma.variables.setBoundVariableForPaint(paint, 'color', variable));
+            report.rebound++;
+            changed = true;
+          } catch (e) {
+            report.warnings.push(node.name + '.' + field + ': bind failed — ' + e.message);
+            next.push(paint);
+          }
+        }
+        if (changed) {
+          try { node[field] = next; }
+          catch (e) { report.warnings.push(node.name + '.' + field + ': assign failed — ' + e.message); }
+        }
+      });
+    }
+
+    /* PASS 1 — Icon/Placeholder master: baseline binding to neutral
+       content color. Used for standalone display (primitives showcase). */
+    var placeholders = figma.root.findAll(function(n) {
+      return n.type === 'COMPONENT' &&
+             (n.name === 'Icon/Placeholder' || n.name === 'DTF/Icon/Placeholder');
+    });
+    report.placeholders = placeholders.length;
+    for (var p = 0; p < placeholders.length; p++) {
+      var ph = placeholders[p];
+      bindPaints(ph, defaultContentVar, 'placeholder root', false);
+      var phDesc = ph.findAll(function() { return true; });
+      for (var dp = 0; dp < phDesc.length; dp++) bindPaints(phDesc[dp], defaultContentVar, 'placeholder descendant', false);
+    }
+
+    /* PASS 2 — Button variants: derive the role-correct content color
+       and bind every icon vector to it. Two strategies, in order:
+         (a) MIRROR FROM TEXT: read the variant's text fill binding and
+             reuse it. Works for Button + Split Button with labels.
+         (b) DERIVE FROM CONTAINER: for icon-only buttons (no text),
+             search the variant subtree for a bound paint whose
+             variable name matches a known surface pattern, then map
+             to its on-color counterpart in the same collection:
+               (any)/component/bg-(state)        -> oncomponent-content/default
+               (any)/container/border-(state)    -> oncontainer-content/default
+               (any)/component/bg-pressed        -> oncomponent-content/default
+             Falls back to default/content/default if nothing found. */
+    var allT3Vars = {};
+    var t3 = null;
+    for (var ci2 = 0; ci2 < collections.length; ci2++) {
+      if (collections[ci2].name === 'T3 Status Context Tokens') { t3 = collections[ci2]; break; }
+    }
+    if (t3) {
+      for (var tvi = 0; tvi < t3.variableIds.length; tvi++) {
+        var tv = await figma.variables.getVariableByIdAsync(t3.variableIds[tvi]);
+        if (tv) allT3Vars[tv.name] = tv;
+      }
+    }
+
+    function deriveOnColorVar(sourceVarName) {
+      /* sourceVarName like "component/bg-default" (T3 context-relative)
+         or "brand/component/bg-default" (T2 role-prefixed). Strip the
+         tail and map to on-* counterpart. */
+      if (!sourceVarName) return null;
+      var target = null;
+      if (/component\/bg-/.test(sourceVarName)) {
+        target = sourceVarName.replace(/component\/bg-[^/]+$/, 'oncomponent-content/default');
+      } else if (/container\/border-/.test(sourceVarName)) {
+        target = sourceVarName.replace(/container\/border-[^/]+$/, 'oncontainer-content/default');
+      } else if (/container\/bg-/.test(sourceVarName)) {
+        target = sourceVarName.replace(/container\/bg-[^/]+$/, 'oncontainer-content/default');
+      }
+      if (!target) return null;
+      /* Try T3 first (context-relative names), then any collection. */
+      if (allT3Vars[target]) return allT3Vars[target];
+      return null;
+    }
+
+    var btnSets = figma.root.findAll(function(n) {
+      return n.type === 'COMPONENT_SET' &&
+             (/^Button\b/.test(n.name) || /^Split Button\b/.test(n.name));
+    });
+    for (var bs = 0; bs < btnSets.length; bs++) {
+      var set = btnSets[bs];
+      var variants = set.children;
+      for (var vIdx = 0; vIdx < variants.length; vIdx++) {
+        var variant = variants[vIdx];
+        if (variant.type !== 'COMPONENT') continue;
+
+        /* Strategy A — mirror text */
+        var roleVar = null;
+        var textNodes = variant.findAll(function(n) { return n.type === 'TEXT'; });
+        for (var tx = 0; tx < textNodes.length; tx++) {
+          var f = textNodes[tx].fills;
+          if (Array.isArray(f) && f[0] && f[0].boundVariables && f[0].boundVariables.color) {
+            try {
+              var rv = await figma.variables.getVariableByIdAsync(f[0].boundVariables.color.id);
+              if (rv) { roleVar = rv; break; }
+            } catch (e) {}
+          }
+        }
+
+        /* Strategy B — derive from container paint */
+        if (!roleVar) {
+          var allBound = variant.findAll(function(n) {
+            var fs = (n.fills && Array.isArray(n.fills)) ? n.fills : [];
+            var ss = (n.strokes && Array.isArray(n.strokes)) ? n.strokes : [];
+            for (var i = 0; i < fs.length; i++) if (fs[i] && fs[i].boundVariables && fs[i].boundVariables.color) return true;
+            for (var j = 0; j < ss.length; j++) if (ss[j] && ss[j].boundVariables && ss[j].boundVariables.color) return true;
+            return false;
+          });
+          for (var ab = 0; ab < allBound.length && !roleVar; ab++) {
+            var node = allBound[ab];
+            var paintGroups = [node.fills, node.strokes];
+            for (var pg = 0; pg < paintGroups.length && !roleVar; pg++) {
+              var pp = paintGroups[pg];
+              if (!Array.isArray(pp)) continue;
+              for (var pi2 = 0; pi2 < pp.length && !roleVar; pi2++) {
+                if (!pp[pi2] || !pp[pi2].boundVariables || !pp[pi2].boundVariables.color) continue;
+                try {
+                  var srcV = await figma.variables.getVariableByIdAsync(pp[pi2].boundVariables.color.id);
+                  if (srcV) {
+                    var derived = deriveOnColorVar(srcV.name);
+                    if (derived) roleVar = derived;
+                  }
+                } catch (e) {}
+              }
+            }
+          }
+        }
+
+        /* Strategy C — fallback by set role.
+           - Neutral sets ("Button / Neutral / ..."): use T2 default/
+             content/default. T3 has no "neutral" mode, so binding to
+             T3 content/default would resolve to the brand role (its
+             collection default) and paint Neutral icons green/red/etc.
+           - Role sets (Brand, Status, etc.): use T3 content/default,
+             which resolves per the variant's T3 mode. This is the
+             correct fallback for Ghost / Outlined / Secondary /
+             Tertiary types where the container has no role-tinted
+             chrome to derive from. */
+        if (!roleVar) {
+          var isNeutralSet = /\bNeutral\b/i.test(set.name);
+          if (isNeutralSet) {
+            roleVar = defaultContentVar;
+          } else if (allT3Vars['content/default']) {
+            roleVar = allT3Vars['content/default'];
+          }
+        }
+
+        if (!roleVar) continue;
+
+        /* Apply to every vector-shape descendant inside icon instances
+           (excluding chevron, which the generator already binds). */
+        var iconInsts = variant.findAll(function(n) {
+          return n.type === 'INSTANCE' && !/chevron/i.test(n.name);
+        });
+        var touched = false;
+        for (var ii = 0; ii < iconInsts.length; ii++) {
+          var leaves = iconInsts[ii].findAll(function(n) {
+            return n.type === 'VECTOR' || n.type === 'STAR' || n.type === 'ELLIPSE' ||
+                   n.type === 'POLYGON' || n.type === 'RECTANGLE' || n.type === 'LINE' ||
+                   n.type === 'BOOLEAN_OPERATION';
+          });
+          for (var lf = 0; lf < leaves.length; lf++) {
+            var before = report.rebound;
+            bindPaints(leaves[lf], roleVar, 'variant: ' + variant.name, true);
+            if (report.rebound > before) touched = true;
+          }
+        }
+        if (touched) report.variantsTouched++;
+      }
+    }
+  } catch (err) {
+    report.warnings.push('rebinder error: ' + err.message);
+  }
+  return report;
+}
+
 /* M5/V2 — per-build set of variable IDs we actually bound. Reset at
    the start of each generateComponentFromBlueprint() invocation; read
    at Step 9 to record the precise binding surface for THIS component
@@ -2278,13 +2532,21 @@ async function generateComponentFromBlueprint(blueprint) {
     iconPlaceholder.name = 'Icon/Placeholder';
     stampOwner(iconPlaceholder);
     iconPlaceholder.description =
-      'Default icon placeholder used by every Button master as the INSTANCE_SWAP target.\n\n' +
-      'REPLACE THIS with your own icon component (e.g. from Lucide, Phosphor, Material Symbols, ' +
-      'or your in-house icon library). Any component with the same 1:1 frame can be swapped in via ' +
-      'the right-panel "Icon" property on a button instance.\n\n' +
-      'Sizing is controlled by the button\u2019s comp-size variables (icon container) \u2014 the icon ' +
-      'inherits the slot size and color automatically. Use a vector with `constraints: SCALE` so it ' +
-      'fills the swap target cleanly.';
+      'Default icon used by every Button master as the INSTANCE_SWAP target.\n\n' +
+      'REPLACE THIS with your own icon component (Lucide, Phosphor, Material Symbols, ' +
+      'or your in-house icon library) by swapping the "Icon" property on any button instance.\n\n' +
+      '── Two things to know about imported icons ──\n\n' +
+      'COLOR. Figma does not propagate the button\u2019s content-color binding into a swapped ' +
+      'instance\u2019s descendants. Most imported icons ship with literal black paints, so ' +
+      'buttons can\u2019t recolor them. DTF auto-heals this: every time you run "Update Variables", ' +
+      'the plugin rebinds any unbound SOLID paint inside Icon/Placeholder to ' +
+      'T2 / default/content/default. Gradients and image fills are skipped and reported.\n\n' +
+      'SIZE. The button\u2019s comp-size variables drive the slot\u2019s outer dimensions, but the ' +
+      'icon only scales with the slot if its inner vectors use constraints: SCALE. Most icon ' +
+      'libraries default to MIN/CENTER constraints and will not resize. For consistent sizing, ' +
+      'either use icons authored with SCALE constraints, or normalise yours once: select the ' +
+      'icon component, set its inner vectors\u2019 constraints to "Scale" (both axes), and ensure ' +
+      'the component frame is square (e.g. 20\u00d720).';
     iconPlaceholder.resize(20, 20);
     iconPlaceholder.clipsContent = true;
     iconPlaceholder.fills = [];
@@ -2759,6 +3021,40 @@ async function generateComponentFromBlueprint(blueprint) {
   iconCard.x = iconSec.innerX;
   iconCard.y = iconSec.innerY;
 
+  /* Designer-facing usage note — placed as a sibling BELOW the icon
+     card (inside the Primitives section). Plain text block, no card
+     chrome, so it reads like a caption rather than a second tile.
+     Width matches the icon card so the column stays tidy. */
+  var iconNote = figma.createFrame();
+  iconNote.name = 'icon-usage-note';
+  iconNote.fills = [];
+  iconNote.strokes = [];
+  iconNote.layoutMode = 'VERTICAL';
+  iconNote.primaryAxisSizingMode = 'AUTO';
+  iconNote.counterAxisSizingMode = 'FIXED';
+  iconNote.itemSpacing = 8;
+  iconNote.resize(iconCard.width, 10);
+  var icNoteTitle = createLabel('Bring your own icons', 13, true, COLOR_HEADING);
+  var icNoteBody = createLabel(
+    'Drop any icon library into this file (Lucide, Phosphor, Material\u2026) or publish from a team library. Swap Icon/Placeholder for your icon \u2014 colors bind automatically when the DTF plugin opens.',
+    12, false, COLOR_BODY
+  );
+  try { icNoteBody.lineHeight = { value: 150, unit: 'PERCENT' }; } catch (e) {}
+  var icNoteRule = createLabel(
+    'One rule: flatten the icon (\u2318E) before swapping. Keeps the weight consistent across every button size.',
+    12, false, COLOR_BODY
+  );
+  try { icNoteRule.lineHeight = { value: 150, unit: 'PERCENT' }; } catch (e) {}
+  iconNote.appendChild(icNoteTitle);
+  iconNote.appendChild(icNoteBody);
+  iconNote.appendChild(icNoteRule);
+  try { icNoteTitle.layoutAlign = 'STRETCH'; icNoteTitle.textAutoResize = 'HEIGHT'; } catch (e) {}
+  try { icNoteBody.layoutAlign = 'STRETCH'; icNoteBody.textAutoResize = 'HEIGHT'; } catch (e) {}
+  try { icNoteRule.layoutAlign = 'STRETCH'; icNoteRule.textAutoResize = 'HEIGHT'; } catch (e) {}
+  iconSec.section.appendChild(iconNote);
+  iconNote.x = iconCard.x;
+  iconNote.y = iconCard.y + iconCard.height + 24;
+
   /* Bind icon card to surface-bright tokens */
   if (t2Col && brightModeId) {
     try {
@@ -2769,11 +3065,15 @@ async function generateComponentFromBlueprint(blueprint) {
       tryBindFill(icDesc, t2Vars['default/content/default']);
       tryBindFill(icPreview, t2Vars['default/surfaces/bg']);
       tryBindStroke(icPreview, t2Vars['default/surfaces/outline']);
+      iconNote.setExplicitVariableModeForCollection(t2Col, brightModeId);
+      tryBindFill(icNoteTitle, t2Vars['default/content/strong']);
+      tryBindFill(icNoteBody, t2Vars['default/content/default']);
+      tryBindFill(icNoteRule, t2Vars['default/content/default']);
     } catch (icBindErr) {
       log('Icon card binding skipped: ' + icBindErr.message);
     }
   }
-  var iconSecH = iconSec.innerY + iconCard.height + 32;
+  var iconSecH = iconSec.innerY + iconCard.height + 24 + iconNote.height + 32;
   /* Section width grows to fit the card (which may have been widened to
      accommodate the chevron variant set). */
   var iconSecW = Math.max(480, iconSec.innerX + iconCard.width + 32);
@@ -4384,10 +4684,42 @@ figma.ui.onmessage = async function(msg) {
       for (var i = 0; i < cols.length; i++) {
         varCount += cols[i].variableIds.length;
       }
+      /* Heal icon color bindings on every verify (cheap, idempotent).
+         Verify fires on plugin open + manual refresh, so this catches
+         icon swaps even when no token sync is pending ("You're up to
+         date"). Silent unless paints were actually rebound. */
+      try {
+        var verifyRebind = await rebindIconPlaceholderPaints();
+        if (verifyRebind.rebound > 0) {
+          figma.notify('DTF: rebound ' + verifyRebind.rebound + ' icon paint' +
+            (verifyRebind.rebound === 1 ? '' : 's') + ' to role colors across ' +
+            verifyRebind.variantsTouched + ' button variant' +
+            (verifyRebind.variantsTouched === 1 ? '' : 's') + '.');
+        }
+      } catch (rbe) { log('verify rebind skipped: ' + rbe.message); }
       figma.ui.postMessage({ type: 'verify-result', varCount: varCount });
     } catch (e) {
       /* Report error instead of false zero — prevents false undo detection */
       figma.ui.postMessage({ type: 'verify-result', varCount: -1, error: e.message });
+    }
+  }
+
+  /* Explicit "Repair icon colors" command — same as the auto-run on
+     verify/sync, but the user can trigger it on demand (e.g. after
+     manually editing a button master). Always notifies, even if zero
+     rebinds, so the user gets confirmation. */
+  if (msg.type === 'repair-icons') {
+    try {
+      var rep = await rebindIconPlaceholderPaints();
+      figma.notify(rep.rebound === 0
+        ? 'DTF: all icon colors are correct (' + rep.placeholders + ' placeholder' +
+          (rep.placeholders === 1 ? '' : 's') + ' scanned).'
+        : 'DTF: rebound ' + rep.rebound + ' icon paint' +
+          (rep.rebound === 1 ? '' : 's') + ' across ' + rep.variantsTouched +
+          ' button variant' + (rep.variantsTouched === 1 ? '' : 's') + '.');
+      figma.ui.postMessage({ type: 'repair-icons-done', report: rep });
+    } catch (e) {
+      figma.notify('DTF: icon repair failed — ' + e.message, { error: true });
     }
   }
 
@@ -4400,15 +4732,39 @@ figma.ui.onmessage = async function(msg) {
       figma.root.setPluginData('dtf-hash', syncHash);
       figma.root.setPluginData('dtf-var-count', String(stats.variables));
       if (msg.project) figma.root.setPluginData('dtf-project', msg.project);
+
+      /* Path C — auto-heal icon color bindings. When a designer has
+         swapped Icon/Placeholder for an external icon, the swapped
+         icon's vectors carry literal SOLID paints. Rebind them to
+         the content-color variable so buttons recolor correctly.
+         Idempotent; runs every sync; silent unless paints were
+         actually rebound or a warning needs surfacing. */
+      var iconReport = await rebindIconPlaceholderPaints();
+      stats.iconPaintsRebound = iconReport.rebound;
+      stats.iconWarnings = iconReport.warnings;
+
       figma.ui.postMessage({ type: 'done', stats: stats, hash: syncHash });
-      figma.notify(
+      var notifyMsg =
         'DTF: ' + stats.variables + ' vars (' + stats.updated + ' updated, ' +
         stats.created + ' created' +
         (stats.renamed > 0 ? ', ' + stats.renamed + ' renamed' : '') +
         (stats.orphansRemoved > 0 ? ', ' + stats.orphansRemoved + ' orphans removed' : '') +
         '), ' + stats.aliases + ' aliases' +
-        (stats.errors.length > 0 ? ' (' + stats.errors.length + ' errors)' : '')
-      );
+        (stats.errors.length > 0 ? ' (' + stats.errors.length + ' errors)' : '');
+      if (iconReport.rebound > 0) {
+        notifyMsg += ' • rebound ' + iconReport.rebound + ' icon paint' +
+                     (iconReport.rebound === 1 ? '' : 's') + ' to content color';
+      }
+      figma.notify(notifyMsg);
+      if (iconReport.warnings.length > 0) {
+        figma.notify('Icon rebinder: ' + iconReport.warnings.length +
+                     ' paint' + (iconReport.warnings.length === 1 ? '' : 's') +
+                     ' need manual review (gradients/images). See plugin logs.',
+                     { timeout: 6000 });
+        for (var wi = 0; wi < iconReport.warnings.length; wi++) {
+          log('icon-rebind warning: ' + iconReport.warnings[wi]);
+        }
+      }
     } catch (e) {
       figma.ui.postMessage({ type: 'error', error: e.message });
     }

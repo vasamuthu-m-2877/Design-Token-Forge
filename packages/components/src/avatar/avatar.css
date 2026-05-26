@@ -91,13 +91,20 @@
 .avatar[data-shape="rounded-square"] { --_av-radius: var(--avatar-radius-rounded-square); }
 
 /* ────────────────────────────────────────────────────────────────
-   4.  ROLE COLOR VARIANTS
+   6.  ROLE COLOR OVERRIDES (brand | info | danger | success | warning | neutral)
    ──────────────────────────────────────────────────────────────── */
-.avatar[data-role="brand"]{--_av-bg:var(--avatar-primary-bg);--_av-fg:var(--avatar-primary-fg)}
+/* Brand */
 .avatar[data-role="brand"]{--_av-bg:var(--avatar-brand-bg);--_av-fg:var(--avatar-brand-fg)}
+/* Info */
+.avatar[data-role="info"]{--_av-bg:var(--avatar-info-bg);--_av-fg:var(--avatar-info-fg)}
+/* Danger */
 .avatar[data-role="danger"]{--_av-bg:var(--avatar-danger-bg);--_av-fg:var(--avatar-danger-fg)}
+/* Success */
 .avatar[data-role="success"]{--_av-bg:var(--avatar-success-bg);--_av-fg:var(--avatar-success-fg)}
+/* Warning */
 .avatar[data-role="warning"]{--_av-bg:var(--avatar-warning-bg);--_av-fg:var(--avatar-warning-fg)}
+/* Neutral */
+.avatar[data-role="neutral"]{--_av-bg:var(--avatar-neutral-bg);--_av-fg:var(--avatar-neutral-fg)}
 
 /* ────────────────────────────────────────────────────────────────
    5.  IMAGE

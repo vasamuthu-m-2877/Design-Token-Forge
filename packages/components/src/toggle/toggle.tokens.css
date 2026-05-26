@@ -20,7 +20,7 @@
 
   /* Thumb shadows */
   --switch-thumb-shadow: var(--shadow-sm);
-  --switch-thumb-shadow-active: var(--shadow-md);
+  --switch-thumb-shadow-pressed: var(--shadow-md);
 
   /* ────────────────────────────────────────────────────────────
      📏 DIMENSION  (30 vars)   ─ 36 cumulative
@@ -111,43 +111,43 @@
   --switch-track-border-color-on-danger-hover: var(--danger-component-bg-hover);
 
   /* error — backward-compatible alias */
-  --switch-track-bg-on-error: var(--switch-track-bg-on-danger);
-  --switch-track-bg-on-error-hover: var(--switch-track-bg-on-danger-hover);
-  --switch-track-border-color-on-error: var(--switch-track-border-color-on-danger);
-  --switch-track-border-color-on-error-hover: var(--switch-track-border-color-on-danger-hover);
+  --switch-track-bg-on-invalid: var(--switch-track-bg-on-danger);
+  --switch-track-bg-on-invalid-hover: var(--switch-track-bg-on-danger-hover);
+  --switch-track-border-color-on-invalid: var(--switch-track-border-color-on-danger);
+  --switch-track-border-color-on-invalid-hover: var(--switch-track-border-color-on-danger-hover);
 
   /* error off-state: unchecked + invalid (border treatment) */
-  --switch-track-border-color-error-off: var(--danger-component-outline-default);
-  --switch-track-border-color-error-off-hover: var(--danger-component-outline-hover);
+  --switch-track-border-color-invalid-off: var(--danger-component-outline-default);
+  --switch-track-border-color-invalid-off-hover: var(--danger-component-outline-hover);
 
   /* ────────────────────────────────────────────────────────────
      🎨 SURFACE — OUTLINE VARIANT  (17 vars) ─ 84 cumulative
      ──────────────────────────────────────────────────────────── */
 
   /* ── Outline track: unchecked (off) — transparent + outline ── */
-  --switch-outline-track-bg-off: transparent;
-  --switch-outline-track-bg-off-hover: var(--surface-base-cm-bg-hover);
-  --switch-outline-track-border-color-off: var(--surface-base-cm-outline);
-  --switch-outline-track-border-color-off-hover: var(--surface-base-cm-outline-hover);
+  --switch-outlined-track-bg-off: transparent;
+  --switch-outlined-track-bg-off-hover: var(--surface-base-cm-bg-hover);
+  --switch-outlined-track-border-color-off: var(--surface-base-cm-outline);
+  --switch-outlined-track-border-color-off-hover: var(--surface-base-cm-outline-hover);
 
   /* ── Outline track: checked (on) — filled with semantic role ── */
-  --switch-outline-track-bg-on: var(--brand-component-bg-default);
-  --switch-outline-track-bg-on-hover: var(--brand-component-bg-hover);
-  --switch-outline-track-border-color-on: var(--brand-component-bg-default);
-  --switch-outline-track-border-color-on-hover: var(--brand-component-bg-hover);
+  --switch-outlined-track-bg-on: var(--brand-component-bg-default);
+  --switch-outlined-track-bg-on-hover: var(--brand-component-bg-hover);
+  --switch-outlined-track-border-color-on: var(--brand-component-bg-default);
+  --switch-outlined-track-border-color-on-hover: var(--brand-component-bg-hover);
 
   /* ── Outline thumb ── */
-  --switch-outline-thumb-bg: var(--color-fixed-white);
-  --switch-outline-thumb-bg-hover: var(--color-fixed-white);
-  --switch-outline-thumb-border-color: var(--surface-base-cm-outline);
-  --switch-outline-thumb-border-color-checked: transparent;
+  --switch-outlined-thumb-bg: var(--color-fixed-white);
+  --switch-outlined-thumb-bg-hover: var(--color-fixed-white);
+  --switch-outlined-thumb-border-color: var(--surface-base-cm-outline);
+  --switch-outlined-thumb-border-color-checked: transparent;
 
   /* ── Outline disabled + border ── */
-  --switch-outline-track-border-width: 2px;
-  --switch-outline-track-bg-disabled: transparent;
-  --switch-outline-track-bg-on-disabled: var(--brand-component-bg-default);
-  --switch-outline-thumb-bg-disabled: var(--color-fixed-white);
-  --switch-outline-opacity-disabled: 0.5;
+  --switch-outlined-track-border-width: 2px;
+  --switch-outlined-track-bg-disabled: transparent;
+  --switch-outlined-track-bg-on-disabled: var(--brand-component-bg-default);
+  --switch-outlined-thumb-bg-disabled: var(--color-fixed-white);
+  --switch-outlined-opacity-disabled: 0.5;
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (14 vars)  ─ 98 cumulative
@@ -187,7 +187,7 @@
   --switch-gap-mega: var(--spacing-14);
   --switch-gap-ultra: var(--spacing-16);
 
-  --switch-thumb-scale-active: 1.1;
+  --switch-thumb-scale-pressed: 1.1;
   --switch-thumb-border-width: 0px;
 
   /* ────────────────────────────────────────────────────────────

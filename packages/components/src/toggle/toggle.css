@@ -211,38 +211,34 @@
 }
 
 /* ── OUTLINE (border track when off, filled when on) ────────── */
-.switch[data-variant="outline"] {
-  --_sw-border-w: var(--switch-outline-track-border-width);
-  --_sw-inset: calc((var(--_sw-track-h) - var(--_sw-thumb-size) - var(--switch-outline-track-border-width) * 2) / 2);
+.switch[data-variant="outlined"] {
+  --_sw-border-w: var(--switch-outlined-track-border-width);
+  --_sw-inset: calc((var(--_sw-track-h) - var(--_sw-thumb-size) - var(--switch-outlined-track-border-width) * 2) / 2);
 
-  --_sw-track-bg-off: var(--switch-outline-track-bg-off);
-  --_sw-track-bg-off-hover: var(--switch-outline-track-bg-off-hover);
-  --_sw-track-bg-on: var(--switch-outline-track-bg-on);
-  --_sw-track-bg-on-hover: var(--switch-outline-track-bg-on-hover);
-  --_sw-track-border-off: var(--switch-outline-track-border-color-off);
-  --_sw-track-border-off-hover: var(--switch-outline-track-border-color-off-hover);
-  --_sw-track-border-on: var(--switch-outline-track-border-color-on);
-  --_sw-track-border-on-hover: var(--switch-outline-track-border-color-on-hover);
+  --_sw-track-bg-off: var(--switch-outlined-track-bg-off);
+  --_sw-track-bg-off-hover: var(--switch-outlined-track-bg-off-hover);
+  --_sw-track-bg-on: var(--switch-outlined-track-bg-on);
+  --_sw-track-bg-on-hover: var(--switch-outlined-track-bg-on-hover);
+  --_sw-track-border-off: var(--switch-outlined-track-border-color-off);
+  --_sw-track-border-off-hover: var(--switch-outlined-track-border-color-off-hover);
+  --_sw-track-border-on: var(--switch-outlined-track-border-color-on);
+  --_sw-track-border-on-hover: var(--switch-outlined-track-border-color-on-hover);
 
-  --_sw-thumb-bg: var(--switch-outline-thumb-bg);
-  --_sw-thumb-bg-hover: var(--switch-outline-thumb-bg-hover);
-  --_sw-thumb-border: var(--switch-outline-thumb-border-color);
-  --_sw-thumb-border-checked: var(--switch-outline-thumb-border-color-checked);
+  --_sw-thumb-bg: var(--switch-outlined-thumb-bg);
+  --_sw-thumb-bg-hover: var(--switch-outlined-thumb-bg-hover);
+  --_sw-thumb-border: var(--switch-outlined-thumb-border-color);
+  --_sw-thumb-border-checked: var(--switch-outlined-thumb-border-color-checked);
 
-  --_sw-opacity-disabled: var(--switch-outline-opacity-disabled);
-  --_sw-track-bg-disabled: var(--switch-outline-track-bg-disabled);
-  --_sw-track-bg-on-disabled: var(--switch-outline-track-bg-on-disabled);
-  --_sw-thumb-bg-disabled: var(--switch-outline-thumb-bg-disabled);
+  --_sw-opacity-disabled: var(--switch-outlined-opacity-disabled);
+  --_sw-track-bg-disabled: var(--switch-outlined-track-bg-disabled);
+  --_sw-track-bg-on-disabled: var(--switch-outlined-track-bg-on-disabled);
+  --_sw-thumb-bg-disabled: var(--switch-outlined-thumb-bg-disabled);
 }
 
 /* ════════════════════════════════════════════════════════════════
    ROLE SELECTORS — palette-level remapping
+   data-role="brand" is the default (no remap needed).
    ════════════════════════════════════════════════════════════════ */
-
-/* ── data-role="brand" (no-op, already default) ─────────── */
-.switch[data-role="brand"] {
-  /* explicit primary — no-op */
-}
 
 /* ── data-role="danger" ─────────────────────────────────── */
 .switch[data-role="danger"] {
@@ -281,6 +277,19 @@
   --brand-container-hover: var(--warning-container-hover);
   --brand-container-pressed: var(--warning-container-pressed);
   --brand-component-outline-default: var(--warning-component-outline-default);
+}
+
+/* ── data-role="info" ───────────────────────────────────── */
+.switch[data-role="info"] {
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-bg-hover: var(--info-component-bg-hover);
+  --brand-component-bg-pressed: var(--info-component-bg-pressed);
+  --brand-on-component: var(--info-on-component);
+  --brand-content-default: var(--info-content-default);
+  --brand-container-bg: var(--info-container-bg);
+  --brand-container-hover: var(--info-container-hover);
+  --brand-container-pressed: var(--info-container-pressed);
+  --brand-component-outline-default: var(--info-component-outline-default);
 }
 
 /* ── data-role="neutral" ────────────────────────────────── */
@@ -333,8 +342,8 @@
    ════════════════════════════════════════════════════════════════ */
 
 .switch:active .switch__thumb {
-  transform: scale(var(--switch-thumb-scale-active));
-  box-shadow: var(--switch-thumb-shadow-active);
+  transform: scale(var(--switch-thumb-scale-pressed));
+  box-shadow: var(--switch-thumb-shadow-pressed);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -351,7 +360,6 @@
 /* Disabled */
 .switch:disabled,
 .switch[data-disabled] {
-
   pointer-events: none;
   opacity: var(--_sw-opacity-disabled);
 }
@@ -372,31 +380,31 @@
   box-shadow: var(--switch-thumb-shadow-disabled);
 }
 
-/* Error — [data-error] or [aria-invalid] */
+/* Error — [aria-invalid="true"] or [aria-invalid] */
 /* Force visible border even on filled variant (which has border-width: 0) */
-.switch[data-error] .switch__track,
+.switch[aria-invalid="true"] .switch__track,
 .switch[aria-invalid="true"] .switch__track {
-  border-width: var(--switch-outline-track-border-width);
-  border-color: var(--switch-track-border-color-error-off);
+  border-width: var(--switch-outlined-track-border-width);
+  border-color: var(--switch-track-border-color-invalid-off);
 }
-.switch[data-error],
+.switch[aria-invalid="true"],
 .switch[aria-invalid="true"] {
   /* Recalculate thumb inset to account for forced border */
-  --_sw-inset: calc((var(--_sw-track-h) - var(--_sw-thumb-size) - var(--switch-outline-track-border-width) * 2) / 2);
+  --_sw-inset: calc((var(--_sw-track-h) - var(--_sw-thumb-size) - var(--switch-outlined-track-border-width) * 2) / 2);
 }
-.switch[data-error]:hover .switch__track,
+.switch[aria-invalid="true"]:hover .switch__track,
 .switch[aria-invalid="true"]:hover .switch__track {
-  border-color: var(--switch-track-border-color-error-off-hover);
+  border-color: var(--switch-track-border-color-invalid-off-hover);
 }
-.switch[data-error][aria-checked="true"] .switch__track,
+.switch[aria-invalid="true"][aria-checked="true"] .switch__track,
 .switch[aria-invalid="true"][aria-checked="true"] .switch__track {
-  background-color: var(--switch-track-bg-on-error);
-  border-color: var(--switch-track-border-color-on-error);
+  background-color: var(--switch-track-bg-on-invalid);
+  border-color: var(--switch-track-border-color-on-invalid);
 }
-.switch[data-error][aria-checked="true"]:hover .switch__track,
+.switch[aria-invalid="true"][aria-checked="true"]:hover .switch__track,
 .switch[aria-invalid="true"][aria-checked="true"]:hover .switch__track {
-  background-color: var(--switch-track-bg-on-error-hover);
-  border-color: var(--switch-track-border-color-on-error-hover);
+  background-color: var(--switch-track-bg-on-invalid-hover);
+  border-color: var(--switch-track-border-color-on-invalid-hover);
 }
 
 /* Loading — pulse on track */
@@ -427,9 +435,6 @@
   color: var(--switch-label-color);
 }
 
-.switch-label:has(.switch:disabled) {
-
-}
 .switch-label:has(.switch:disabled) .switch-label__text {
   color: var(--switch-label-color-disabled);
 }

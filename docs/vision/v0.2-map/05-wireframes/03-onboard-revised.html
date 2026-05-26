@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>v0.2 wireframes — Onboard (revised)</title>
+<link rel="stylesheet" href="wireframes-v2.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <strong>DTF Vision · v0.2 wireframes</strong> · Onboard (revised)
+    <span class="wf-v2-tag">revised</span>
+  </div>
+  <div class="wf-meta">
+    <a href="index.html">← v0.2 hub</a> ·
+    <a href="../../v0.1-map/05-wireframes/01-onboarding.html">v0.1 original</a>
+  </div>
+</div>
+
+<h1>Onboard — brand → roles → themes</h1>
+<p class="wf-step-intro" style="margin-top:8px;">Closes WT findings T1, T2, T3 — one brand color was never enough</p>
+
+<div class="wf-note">
+  <strong>What changed:</strong> v0.1's onboard treated the brand color as a
+  single input. Real projects like <code>writer-handhelds</code> ship 8 roles,
+  2 themes (light + dark with independent step indices), and 8 surface levels.
+  v0.2 reframes onboard as 3 sub-steps. The surface ladder is now a
+  first-class step, not an afterthought.
+</div>
+
+<h2>Step 1 of 3 · Brand color + ladder</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Onboard · 1 of 3</span>
+    <span>Brand → Roles → Themes</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-substeps">
+      <div class="wf-substep active"><span class="wf-substep-num">1</span> Brand color</div>
+      <div class="wf-substep"><span class="wf-substep-num">2</span> Role mapping</div>
+      <div class="wf-substep"><span class="wf-substep-num">3</span> Themes + surfaces</div>
+    </div>
+
+    <h3 class="wf-step-title" style="margin-top:0;">Pick your brand color</h3>
+
+    <div class="wf-grid cols-2" style="align-items:start;">
+      <div>
+        <label class="wf-label">Brand hex</label>
+        <input class="wf-input" value="#286CE5" />
+        <div class="wf-help">Your primary brand colour. Step 500 will anchor here exactly.</div>
+
+        <label class="wf-label" style="margin-top:16px;">Anchor mode</label>
+        <div class="wf-stack gap-sm">
+          <div class="wf-radio on">Exact — step 500 = your hex</div>
+          <div class="wf-radio">Normalized — step 500 lands on the L*=49 curve</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="wf-label">Generated ladder</div>
+        <div class="wf-ladder">
+          <div>50</div><div>100</div><div>200</div><div>300</div><div>400</div>
+          <div>500</div><div>600</div><div>700</div><div>800</div><div>900</div><div>950</div>
+        </div>
+        <div class="wf-help">11 steps · auto-derived from your brand hex.</div>
+      </div>
+    </div>
+
+    <div class="wf-btn-row">
+      <span class="wf-tertiary">Skip — use defaults</span>
+      <div class="wf-btn-group">
+        <button class="wf-btn ghost">Back</button>
+        <button class="wf-btn primary">Continue → Role mapping</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>Step 2 of 3 · Role mapping</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Onboard · 2 of 3</span>
+    <span>Map roles to colors</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-substeps">
+      <div class="wf-substep done"><span class="wf-substep-num"></span> Brand color</div>
+      <div class="wf-substep active"><span class="wf-substep-num">2</span> Role mapping</div>
+      <div class="wf-substep"><span class="wf-substep-num">3</span> Themes + surfaces</div>
+    </div>
+
+    <h3 class="wf-step-title" style="margin-top:0;">Pick a hue for each semantic role</h3>
+    <p style="font-family:var(--sans); font-size:13px; color:var(--ink-2); max-width:680px;">
+      Each role gets its own 11-step ladder. Step 500 anchors. The 6 core roles
+      are required; greyscale and desaturated are optional but recommended.
+    </p>
+
+    <div class="wf-box soft" style="padding:8px 16px;">
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#286CE5;"></div>
+        <div class="wf-role-name">brand</div>
+        <div class="wf-role-mini-ladder">
+          <div style="background:#EEF3FE;"></div><div style="background:#DAE5FC;"></div>
+          <div style="background:#A5BEF7;"></div><div style="background:#7097F2;"></div>
+          <div style="background:#4A7AEC;"></div><div style="background:#286CE5;"></div>
+          <div style="background:#2059C2;"></div><div style="background:#18459C;"></div>
+          <div style="background:#10336F;"></div><div style="background:#0A234D;"></div>
+          <div style="background:#06162E;"></div>
+        </div>
+        <div class="wf-role-step">step 500</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#E54545;"></div>
+        <div class="wf-role-name">danger</div>
+        <div class="wf-role-mini-ladder">
+          <div style="background:#FDEEEE;"></div><div style="background:#FBD8D8;"></div>
+          <div style="background:#F5A5A5;"></div><div style="background:#EE7878;"></div>
+          <div style="background:#E85959;"></div><div style="background:#E54545;"></div>
+          <div style="background:#C13838;"></div><div style="background:#9C2D2D;"></div>
+          <div style="background:#6F2020;"></div><div style="background:#4D1616;"></div>
+          <div style="background:#2E0D0D;"></div>
+        </div>
+        <div class="wf-role-step">step 500</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#E5A025;"></div>
+        <div class="wf-role-name">warning</div>
+        <div class="wf-role-mini-ladder">
+          <div style="background:#FDF4E6;"></div><div style="background:#FBE5C6;"></div>
+          <div style="background:#F5CB85;"></div><div style="background:#EFB44A;"></div>
+          <div style="background:#E9A52E;"></div><div style="background:#E5A025;"></div>
+          <div style="background:#C2871F;"></div><div style="background:#9C6D18;"></div>
+          <div style="background:#6F4E11;"></div><div style="background:#4D360B;"></div>
+          <div style="background:#2E2007;"></div>
+        </div>
+        <div class="wf-role-step">step 500</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#2B9A55;"></div>
+        <div class="wf-role-name">success</div>
+        <div class="wf-role-mini-ladder">
+          <div style="background:#EAF5EE;"></div><div style="background:#D0E8D9;"></div>
+          <div style="background:#A1D3B4;"></div><div style="background:#6EBA8C;"></div>
+          <div style="background:#3FA66D;"></div><div style="background:#2B9A55;"></div>
+          <div style="background:#258347;"></div><div style="background:#1D6939;"></div>
+          <div style="background:#144A28;"></div><div style="background:#0D341C;"></div>
+          <div style="background:#081E10;"></div>
+        </div>
+        <div class="wf-role-step">step 500</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#2580B5;"></div>
+        <div class="wf-role-name">info</div>
+        <div class="wf-role-mini-ladder">
+          <div style="background:#E8F2F8;"></div><div style="background:#CCE2EE;"></div>
+          <div style="background:#99C3DA;"></div><div style="background:#62A3C6;"></div>
+          <div style="background:#3A8DBA;"></div><div style="background:#2580B5;"></div>
+          <div style="background:#1F6C99;"></div><div style="background:#185678;"></div>
+          <div style="background:#103D55;"></div><div style="background:#0B2A3B;"></div>
+          <div style="background:#061821;"></div>
+        </div>
+        <div class="wf-role-step">step 500</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#888888;"></div>
+        <div class="wf-role-name">neutral</div>
+        <div class="wf-role-mini-ladder">
+          <div style="background:#F4F4F4;"></div><div style="background:#E0E0E0;"></div>
+          <div style="background:#C2C2C2;"></div><div style="background:#A3A3A3;"></div>
+          <div style="background:#919191;"></div><div style="background:#888888;"></div>
+          <div style="background:#737373;"></div><div style="background:#5C5C5C;"></div>
+          <div style="background:#414141;"></div><div style="background:#2E2E2E;"></div>
+          <div style="background:#1A1A1A;"></div>
+        </div>
+        <div class="wf-role-step">step 500</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#9E9E9E; opacity:0.5;"></div>
+        <div class="wf-role-name">greyscale</div>
+        <div class="wf-role-mini-ladder" style="opacity:0.5;">
+          <div style="background:#F2F2F2;"></div><div style="background:#DCDCDC;"></div>
+          <div style="background:#BEBEBE;"></div><div style="background:#A0A0A0;"></div>
+          <div style="background:#8E8E8E;"></div><div style="background:#7A7A7A;"></div>
+          <div style="background:#666;"></div><div style="background:#525252;"></div>
+          <div style="background:#3D3D3D;"></div><div style="background:#2A2A2A;"></div>
+          <div style="background:#161616;"></div>
+        </div>
+        <div class="wf-role-step" style="color:var(--ink-3);">optional</div>
+      </div>
+
+      <div class="wf-role-row">
+        <div class="wf-role-swatch" style="background:#7E8FA3; opacity:0.5;"></div>
+        <div class="wf-role-name">desaturated</div>
+        <div class="wf-role-mini-ladder" style="opacity:0.5;">
+          <div style="background:#EFF1F4;"></div><div style="background:#D8DDE3;"></div>
+          <div style="background:#B5BCC8;"></div><div style="background:#929BAB;"></div>
+          <div style="background:#828C9C;"></div><div style="background:#7E8FA3;"></div>
+          <div style="background:#6A7A8A;"></div><div style="background:#566373;"></div>
+          <div style="background:#3D4856;"></div><div style="background:#2A323C;"></div>
+          <div style="background:#181D24;"></div>
+        </div>
+        <div class="wf-role-step" style="color:var(--ink-3);">optional</div>
+      </div>
+
+    </div>
+
+    <div class="wf-note">
+      Real test subject (writer-handhelds) uses all 8 roles. v0.1 onboard
+      assumed 1. <strong>This step is mandatory in v0.2.</strong>
+    </div>
+
+    <div class="wf-btn-row">
+      <span class="wf-tertiary">Skip — use defaults</span>
+      <div class="wf-btn-group">
+        <button class="wf-btn ghost">Back</button>
+        <button class="wf-btn primary">Continue → Themes + surfaces</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>Step 3 of 3 · Themes + surfaces</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">Onboard · 3 of 3</span>
+    <span>Themes + surface ladder</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-substeps">
+      <div class="wf-substep done"><span class="wf-substep-num"></span> Brand color</div>
+      <div class="wf-substep done"><span class="wf-substep-num"></span> Role mapping</div>
+      <div class="wf-substep active"><span class="wf-substep-num">3</span> Themes + surfaces</div>
+    </div>
+
+    <h3 class="wf-step-title" style="margin-top:0;">Themes — light + dark with independent step indices</h3>
+
+    <div class="wf-theme-pair">
+      <div class="wf-theme-card light">
+        <h4>Light theme</h4>
+        <div style="font-family:var(--mono); font-size:11px; line-height:1.8;">
+          brand → step 500<br>
+          danger → step 500<br>
+          warning → step 500<br>
+          success → step 500<br>
+          info → step 500
+        </div>
+      </div>
+      <div class="wf-theme-card dark">
+        <h4>Dark theme</h4>
+        <div style="font-family:var(--mono); font-size:11px; line-height:1.8;">
+          brand → step 400<br>
+          danger → step 400<br>
+          warning → step 300<br>
+          success → step 400<br>
+          info → step 400
+        </div>
+      </div>
+    </div>
+
+    <div class="wf-note">
+      Real projects pick <strong>different step indices per theme</strong> to
+      maintain WCAG contrast across both. v0.2 makes this a first-class onboard
+      input. Auto-pick suggests an index per theme based on contrast against
+      surface tokens; user can override.
+    </div>
+
+    <h3 class="wf-step-title">Surface ladder · 8 levels <span class="wf-v2-tag">new</span></h3>
+
+    <div class="wf-grid cols-4" style="gap:8px;">
+      <div class="wf-box" style="background:#ffffff; text-align:center; padding:24px 8px; border-color:var(--line-soft);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">bright</div>
+      </div>
+      <div class="wf-box" style="background:#fafaf8; text-align:center; padding:24px 8px; border-color:var(--line-soft);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">base</div>
+      </div>
+      <div class="wf-box" style="background:#f0f0ee; text-align:center; padding:24px 8px; border-color:var(--line-soft);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">dim</div>
+      </div>
+      <div class="wf-box" style="background:#e4e4e0; text-align:center; padding:24px 8px; border-color:var(--line-soft);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">deep</div>
+      </div>
+      <div class="wf-box" style="background:#ffffff; text-align:center; padding:24px 8px; border:1px solid var(--line);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">container</div>
+      </div>
+      <div class="wf-box" style="background:#fafaf8; text-align:center; padding:24px 8px; border:1px solid var(--line);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">over-container</div>
+      </div>
+      <div class="wf-box" style="background:#ffffff; text-align:center; padding:24px 8px; border:1px solid var(--line); box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">float</div>
+      </div>
+      <div class="wf-box" style="background:#1a1a1a; text-align:center; padding:24px 8px; border-color:var(--line);">
+        <div style="font-family:var(--mono); font-size:10px; color:#888;">inverse</div>
+      </div>
+    </div>
+
+    <div class="wf-callout">writer-handhelds ships all 8 surface levels. v0.1 onboard had 0. v0.2 makes the ladder mandatory but defaults are sensible.</div>
+
+    <div class="wf-btn-row">
+      <span class="wf-tertiary">Skip — accept defaults</span>
+      <div class="wf-btn-group">
+        <button class="wf-btn ghost">Back</button>
+        <button class="wf-btn primary">Finish — Pick a kit →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>Annotations</h2>
+
+<ul class="wf-anno-list">
+  <li data-num="T1">Brand color step now anchors via "Exact" mode by default — closes the user-picks-blue-sees-different-blue regression we hit in editor v2.</li>
+  <li data-num="T2">Role mapping step is mandatory. 6 required roles + 2 optional. Each gets its own 11-step ladder via the palette engine.</li>
+  <li data-num="T3">Surface ladder is a first-class step. 8 levels, with semantic names (bright/base/dim/deep + container/over-container/float/inverse).</li>
+  <li data-num="T4">Theme pair lets light + dark pick different step indices per role — required for WCAG across both themes.</li>
+  <li data-num="A3">Onboard "Finish" leads into the v0.2 kit picker (platform × shape), not the v0.1 6-archetype grid.</li>
+</ul>
+
+<p style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:48px; text-align:center;">
+  Next: <a href="04-kit-picker-revised.html" style="color:var(--ink-2);">Kit picker (revised) →</a>
+</p>
+
+</body>
+</html>

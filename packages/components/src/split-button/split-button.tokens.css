@@ -55,7 +55,7 @@
   /* Shadow */
   --split-btn-shadow:        var(--btn-shadow);
   --split-btn-shadow-hover:  var(--btn-shadow-hover);
-  --split-btn-shadow-active: var(--btn-shadow-active);
+  --split-btn-shadow-pressed: var(--btn-shadow-pressed);
   --split-btn-shadow-strong: var(--btn-shadow-strong);
 
   /* ────────────────────────────────────────────────────────────
@@ -155,140 +155,126 @@
   /* ── PRIMARY ≡ FILLED ────────────────────────────────────── */
   --split-btn-filled-bg:                   var(--btn-filled-bg);
   --split-btn-filled-bg-hover:             var(--btn-filled-bg-hover);
-  --split-btn-filled-bg-active:            var(--btn-filled-bg-active);
+  --split-btn-filled-bg-pressed:            var(--btn-filled-bg-pressed);
   --split-btn-filled-bg-disabled:          var(--btn-filled-bg-disabled);
   --split-btn-filled-fg:                   var(--btn-filled-fg);
   --split-btn-filled-fg-hover:             var(--btn-filled-fg-hover);
   --split-btn-filled-fg-disabled:          var(--btn-filled-fg-disabled);
   --split-btn-filled-border-color:         var(--btn-filled-border-color);
   --split-btn-filled-border-color-hover:   var(--btn-filled-border-color-hover);
-  --split-btn-filled-border-color-active:  var(--btn-filled-border-color-active);
+  --split-btn-filled-border-color-pressed:  var(--btn-filled-border-color-pressed);
   --split-btn-filled-border-color-disabled:var(--btn-filled-border-color-disabled);
   --split-btn-filled-opacity-disabled:     var(--btn-filled-opacity-disabled);
 
   /* ── SECONDARY ≡ OUTLINED ────────────────────────────────── */
   --split-btn-outlined-bg:                   var(--btn-outlined-bg);
   --split-btn-outlined-bg-hover:             var(--btn-outlined-bg-hover);
-  --split-btn-outlined-bg-active:            var(--btn-outlined-bg-active);
+  --split-btn-outlined-bg-pressed:            var(--btn-outlined-bg-pressed);
   --split-btn-outlined-bg-disabled:          var(--btn-outlined-bg-disabled);
   --split-btn-outlined-fg:                   var(--btn-outlined-fg);
   --split-btn-outlined-fg-hover:             var(--btn-outlined-fg-hover);
   --split-btn-outlined-fg-disabled:          var(--btn-outlined-fg-disabled);
   --split-btn-outlined-border-color:         var(--btn-outlined-border-color);
   --split-btn-outlined-border-color-hover:   var(--btn-outlined-border-color-hover);
-  --split-btn-outlined-border-color-active:  var(--btn-outlined-border-color-active);
+  --split-btn-outlined-border-color-pressed:  var(--btn-outlined-border-color-pressed);
   --split-btn-outlined-border-color-disabled:var(--btn-outlined-border-color-disabled);
   --split-btn-outlined-opacity-disabled:     var(--btn-outlined-opacity-disabled);
 
   /* ── DANGER ───────────────────────────────────────────────── */
   --split-btn-danger-bg:                   var(--btn-danger-bg);
   --split-btn-danger-bg-hover:             var(--btn-danger-bg-hover);
-  --split-btn-danger-bg-active:            var(--btn-danger-bg-active);
+  --split-btn-danger-bg-pressed:            var(--btn-danger-bg-pressed);
   --split-btn-danger-bg-disabled:          var(--btn-danger-bg-disabled);
   --split-btn-danger-fg:                   var(--btn-danger-fg);
   --split-btn-danger-fg-hover:             var(--btn-danger-fg-hover);
   --split-btn-danger-fg-disabled:          var(--btn-danger-fg-disabled);
   --split-btn-danger-border-color:         var(--btn-danger-border-color);
   --split-btn-danger-border-color-hover:   var(--btn-danger-border-color-hover);
-  --split-btn-danger-border-color-active:  var(--btn-danger-border-color-active);
+  --split-btn-danger-border-color-pressed:  var(--btn-danger-border-color-pressed);
   --split-btn-danger-border-color-disabled:var(--btn-danger-border-color-disabled);
   --split-btn-danger-opacity-disabled:     var(--btn-danger-opacity-disabled);
 
   /* ── NEUTRAL ──────────────────────────────────────────────── */
   --split-btn-neutral-bg:                   var(--btn-neutral-bg);
   --split-btn-neutral-bg-hover:             var(--btn-neutral-bg-hover);
-  --split-btn-neutral-bg-active:            var(--btn-neutral-bg-active);
+  --split-btn-neutral-bg-pressed:            var(--btn-neutral-bg-pressed);
   --split-btn-neutral-bg-disabled:          var(--btn-neutral-bg-disabled);
   --split-btn-neutral-fg:                   var(--btn-neutral-fg);
   --split-btn-neutral-fg-hover:             var(--btn-neutral-fg-hover);
   --split-btn-neutral-fg-disabled:          var(--btn-neutral-fg-disabled);
   --split-btn-neutral-border-color:         var(--btn-neutral-border-color);
   --split-btn-neutral-border-color-hover:   var(--btn-neutral-border-color-hover);
-  --split-btn-neutral-border-color-active:  var(--btn-neutral-border-color-active);
+  --split-btn-neutral-border-color-pressed:  var(--btn-neutral-border-color-pressed);
   --split-btn-neutral-border-color-disabled:var(--btn-neutral-border-color-disabled);
   --split-btn-neutral-opacity-disabled:     var(--btn-neutral-opacity-disabled);
 
   /* ── TERTIARY ≡ SOFT ─────────────────────────────────────── */
   --split-btn-soft-bg:                   var(--btn-soft-bg);
   --split-btn-soft-bg-hover:             var(--btn-soft-bg-hover);
-  --split-btn-soft-bg-active:            var(--btn-soft-bg-active);
+  --split-btn-soft-bg-pressed:            var(--btn-soft-bg-pressed);
   --split-btn-soft-bg-disabled:          var(--btn-soft-bg-disabled);
   --split-btn-soft-fg:                   var(--btn-soft-fg);
   --split-btn-soft-fg-hover:             var(--btn-soft-fg-hover);
   --split-btn-soft-fg-disabled:          var(--btn-soft-fg-disabled);
   --split-btn-soft-border-color:         var(--btn-soft-border-color);
   --split-btn-soft-border-color-hover:   var(--btn-soft-border-color-hover);
-  --split-btn-soft-border-color-active:  var(--btn-soft-border-color-active);
+  --split-btn-soft-border-color-pressed:  var(--btn-soft-border-color-pressed);
   --split-btn-soft-border-color-disabled:var(--btn-soft-border-color-disabled);
   --split-btn-soft-opacity-disabled:     var(--btn-soft-opacity-disabled);
 
   /* ── GHOST ────────────────────────────────────────────────── */
   --split-btn-ghost-bg:                   var(--btn-ghost-bg);
   --split-btn-ghost-bg-hover:             var(--btn-ghost-bg-hover);
-  --split-btn-ghost-bg-active:            var(--btn-ghost-bg-active);
+  --split-btn-ghost-bg-pressed:            var(--btn-ghost-bg-pressed);
   --split-btn-ghost-bg-disabled:          var(--btn-ghost-bg-disabled);
   --split-btn-ghost-fg:                   var(--btn-ghost-fg);
   --split-btn-ghost-fg-hover:             var(--btn-ghost-fg-hover);
   --split-btn-ghost-fg-disabled:          var(--btn-ghost-fg-disabled);
   --split-btn-ghost-border-color:         var(--btn-ghost-border-color);
   --split-btn-ghost-border-color-hover:   var(--btn-ghost-border-color-hover);
-  --split-btn-ghost-border-color-active:  var(--btn-ghost-border-color-active);
+  --split-btn-ghost-border-color-pressed:  var(--btn-ghost-border-color-pressed);
   --split-btn-ghost-border-color-disabled:var(--btn-ghost-border-color-disabled);
   --split-btn-ghost-opacity-disabled:     var(--btn-ghost-opacity-disabled);
 
   /* ── SUCCESS ──────────────────────────────────────────────── */
   --split-btn-success-bg:                   var(--btn-success-bg);
   --split-btn-success-bg-hover:             var(--btn-success-bg-hover);
-  --split-btn-success-bg-active:            var(--btn-success-bg-active);
+  --split-btn-success-bg-pressed:            var(--btn-success-bg-pressed);
   --split-btn-success-bg-disabled:          var(--btn-success-bg-disabled);
   --split-btn-success-fg:                   var(--btn-success-fg);
   --split-btn-success-fg-hover:             var(--btn-success-fg-hover);
   --split-btn-success-fg-disabled:          var(--btn-success-fg-disabled);
   --split-btn-success-border-color:         var(--btn-success-border-color);
   --split-btn-success-border-color-hover:   var(--btn-success-border-color-hover);
-  --split-btn-success-border-color-active:  var(--btn-success-border-color-active);
+  --split-btn-success-border-color-pressed:  var(--btn-success-border-color-pressed);
   --split-btn-success-border-color-disabled:var(--btn-success-border-color-disabled);
   --split-btn-success-opacity-disabled:     var(--btn-success-opacity-disabled);
 
   /* ── WARNING ──────────────────────────────────────────────── */
   --split-btn-warning-bg:                   var(--btn-warning-bg);
   --split-btn-warning-bg-hover:             var(--btn-warning-bg-hover);
-  --split-btn-warning-bg-active:            var(--btn-warning-bg-active);
+  --split-btn-warning-bg-pressed:            var(--btn-warning-bg-pressed);
   --split-btn-warning-bg-disabled:          var(--btn-warning-bg-disabled);
   --split-btn-warning-fg:                   var(--btn-warning-fg);
   --split-btn-warning-fg-hover:             var(--btn-warning-fg-hover);
   --split-btn-warning-fg-disabled:          var(--btn-warning-fg-disabled);
   --split-btn-warning-border-color:         var(--btn-warning-border-color);
   --split-btn-warning-border-color-hover:   var(--btn-warning-border-color-hover);
-  --split-btn-warning-border-color-active:  var(--btn-warning-border-color-active);
+  --split-btn-warning-border-color-pressed:  var(--btn-warning-border-color-pressed);
   --split-btn-warning-border-color-disabled:var(--btn-warning-border-color-disabled);
   --split-btn-warning-opacity-disabled:     var(--btn-warning-opacity-disabled);
-
-  /* ── OUTLINE ──────────────────────────────────────────────── */
-  --split-btn-outline-bg:                   var(--btn-outline-bg);
-  --split-btn-outline-bg-hover:             var(--btn-outline-bg-hover);
-  --split-btn-outline-bg-active:            var(--btn-outline-bg-active);
-  --split-btn-outline-bg-disabled:          var(--btn-outline-bg-disabled);
-  --split-btn-outline-fg:                   var(--btn-outline-fg);
-  --split-btn-outline-fg-hover:             var(--btn-outline-fg-hover);
-  --split-btn-outline-fg-disabled:          var(--btn-outline-fg-disabled);
-  --split-btn-outline-border-color:         var(--btn-outline-border-color);
-  --split-btn-outline-border-color-hover:   var(--btn-outline-border-color-hover);
-  --split-btn-outline-border-color-active:  var(--btn-outline-border-color-active);
-  --split-btn-outline-border-color-disabled:var(--btn-outline-border-color-disabled);
-  --split-btn-outline-opacity-disabled:     var(--btn-outline-opacity-disabled);
 
   /* ── BRAND ────────────────────────────────────────────────── */
   --split-btn-brand-bg:                   var(--btn-brand-bg);
   --split-btn-brand-bg-hover:             var(--btn-brand-bg-hover);
-  --split-btn-brand-bg-active:            var(--btn-brand-bg-active);
+  --split-btn-brand-bg-pressed:            var(--btn-brand-bg-pressed);
   --split-btn-brand-bg-disabled:          var(--btn-brand-bg-disabled);
   --split-btn-brand-fg:                   var(--btn-brand-fg);
   --split-btn-brand-fg-hover:             var(--btn-brand-fg-hover);
   --split-btn-brand-fg-disabled:          var(--btn-brand-fg-disabled);
   --split-btn-brand-border-color:         var(--btn-brand-border-color);
   --split-btn-brand-border-color-hover:   var(--btn-brand-border-color-hover);
-  --split-btn-brand-border-color-active:  var(--btn-brand-border-color-active);
+  --split-btn-brand-border-color-pressed:  var(--btn-brand-border-color-pressed);
   --split-btn-brand-border-color-disabled:var(--btn-brand-border-color-disabled);
   --split-btn-brand-opacity-disabled:     var(--btn-brand-opacity-disabled);
 
@@ -308,7 +294,6 @@
   --split-btn-divider-color-ghost-hover: var(--split-btn-neutral-border-color);
   --split-btn-divider-color-success:   color-mix(in srgb, var(--split-btn-success-fg) 30%, transparent);
   --split-btn-divider-color-warning:   color-mix(in srgb, var(--split-btn-warning-fg) 30%, transparent);
-  --split-btn-divider-color-outline:   var(--split-btn-outline-border-color);
   --split-btn-divider-color-brand:     color-mix(in srgb, var(--split-btn-brand-fg)   30%, transparent);
 
   /* ────────────────────────────────────────────────────────────

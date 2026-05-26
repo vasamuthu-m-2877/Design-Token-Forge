@@ -68,6 +68,62 @@ const RULES = [
   // Hardcoded "Primary" UI strings in JS (Color Editor template literals)
   [/['"](?:from |Auto-derived from )Primary[^'"]*['"]/g,
     'JS UI string says "Primary" (use "Brand")'],
+
+  // State-suffix vocabulary: pressed state must use -pressed (matches semantic + Figma + sync server).
+  // The CSS pseudo-class :active stays as-is; only the TOKEN NAME suffix is constrained.
+  // See docs/decisions/naming-charter.md.
+  [/--[a-z][a-z0-9-]+-active(?![a-z0-9-])/g,
+    'token uses legacy -active suffix (use -pressed; see naming-charter.md)',
+    { ext: '.css' }],
+  [/--[a-z][a-z0-9-]+-active(?![a-z0-9-])/g,
+    'token uses legacy -active suffix (use -pressed; see naming-charter.md)',
+    { ext: '.html' }],
+
+  // Variant vocabulary: "outline" → "outlined". See naming-charter.md §3.
+  // Forbid the HTML attribute value, the CSS selector, and the variant token prefix.
+  // Exclusions: focus-outline-*, component-outline-*, cm-outline-*, and
+  // CSS focus-ring properties (-outline-style|width|offset|color).
+  [/data-variant="outline"/g,
+    'legacy data-variant="outline" (use "outlined"; see naming-charter.md)'],
+  [/data-ctrl-variant="outline"/g,
+    'legacy data-ctrl-variant="outline" (use "outlined")',
+    { ext: '.html' }],
+  [/\[data-variant="outline"\]/g,
+    'legacy CSS selector [data-variant="outline"] (use "outlined")',
+    { ext: '.css' }],
+  [/(?<!focus|component|cm)-outline-(?!style|width|offset|color)(bg|fg|border|opacity|box|track|thumb|fill|content)/g,
+    'token uses legacy -outline- variant segment (use -outlined-; see naming-charter.md)',
+    { ext: '.css' }],
+
+  // State vocabulary: "error" → "invalid". See naming-charter.md §State.
+  // Token-name suffix everywhere.
+  [/(?<=[a-z0-9])-error(?=[-)\s,:;"'\]}])/g,
+    'token uses legacy -error suffix (use -invalid; see naming-charter.md §State)'],
+  // CSS selector hook
+  [/\[data-error(="[^"]*")?\]/g,
+    'legacy [data-error] CSS selector (use [aria-invalid="true"])',
+    { ext: '.css' }],
+  // HTML attribute
+  [/\bdata-error="[^"]*"/g,
+    'legacy data-error="..." HTML attribute (use aria-invalid="...")',
+    { ext: '.html' }],
+  // JS dataset accessor
+  [/\.dataset\.error\b/g,
+    'legacy el.dataset.error JS access (use el.getAttribute/setAttribute("aria-invalid", ...))'],
+
+  // Charter §State mandates aria-invalid="true" — `data-invalid` is NOT canonical.
+  // Catches both selectors and HTML attributes.
+  [/\[data-invalid(="[^"]*")?\]/g,
+    'non-canonical [data-invalid] selector (use [aria-invalid="true"]; see naming-charter.md)',
+    { ext: '.css' }],
+  [/\bdata-invalid(?=[\s>/="])/g,
+    'non-canonical data-invalid HTML attribute (use aria-invalid="true")',
+    { ext: '.html' }],
+  [/\.dataset\.invalid\b/g,
+    'non-canonical el.dataset.invalid (use el.getAttribute("aria-invalid"))'],
+  [/['"]data-invalid['"]/g,
+    'non-canonical "data-invalid" string in JS (use "aria-invalid")',
+    { ext: '.js' }],
 ];
 
 const violations = [];

@@ -53,7 +53,7 @@
     <label>Variant</label>
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="" type="button">Filled</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outlined" type="button">Outlined</button>
     </div>
   </div>
   <div class="control-divider"></div>
@@ -320,8 +320,8 @@
 --switch-track-bg-off / -on / -hover / -disabled
 --switch-track-border-color / -hover
 --switch-thumb-bg / -shadow
---switch-outline-track-bg-off / -on
---switch-outline-track-border-color
+--switch-outlined-track-bg-off / -on
+--switch-outlined-track-border-color
 
 /* Slots */
 --switch-gap-{size}            /* track↔label gap */
@@ -373,7 +373,7 @@
     if(variant) b.dataset.variant=variant;
     if(o.disabled) b.disabled=true;
     if(o.loading) b.dataset.loading='';
-    if(o.error) b.dataset.error='';
+    if(o.error) b.setAttribute('aria-invalid', 'true');
     if(!o.noSync) b.classList.add('synced-sw');
 
     var track=document.createElement('span');track.className='switch__track';
@@ -428,7 +428,7 @@
       {label:'Error On',opts:{checked:true,error:true}},
       {label:'Loading',opts:{loading:true}}
     ];
-    var variants=[{label:'Filled',variant:''},{label:'Outline',variant:'outline'}];
+    var variants=[{label:'Filled',variant:''},{label:'Outlined',variant:'outlined'}];
     variants.forEach(function(v){
       var row=document.createElement('div');row.style.cssText='display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;padding:24px 32px;border-bottom:1px solid var(--demo-border)';
       var vLabel=document.createElement('div');vLabel.className='sub-label';vLabel.textContent=v.label+' variant';vLabel.style.cssText='width:100%;padding:0 0 8px';
@@ -683,18 +683,18 @@
       {label:'Thumb BG',token:'--switch-thumb-bg',via:'--color-fixed-white'},
       {label:'Thumb Icon Off',token:'--switch-thumb-icon-color-off',via:'--surface-'+s+'-ct-subtle'},
       {label:'Thumb Icon On',token:'--switch-thumb-icon-color-on',via:'--'+r+'-component-bg-default'},
-      {sec:'Outline \u2014 Track (off)'},
-      {label:'Track BG Off Hover',token:'--switch-outline-track-bg-off-hover',via:'--surface-'+s+'-cm-bg-hover'},
-      {label:'Track Border Off',token:'--switch-outline-track-border-color-off',via:'--surface-'+s+'-cm-outline'},
-      {label:'Track Border Off Hover',token:'--switch-outline-track-border-color-off-hover',via:'--surface-'+s+'-cm-outline-hover'},
-      {sec:'Outline \u2014 Track (on)'},
-      {label:'Track BG On',token:'--switch-outline-track-bg-on',via:'--'+r+'-component-bg-default'},
-      {label:'Track BG On Hover',token:'--switch-outline-track-bg-on-hover',via:'--'+r+'-component-bg-hover'},
-      {label:'Track Border On',token:'--switch-outline-track-border-color-on',via:'--'+r+'-component-bg-default'},
-      {label:'Track Border On Hover',token:'--switch-outline-track-border-color-on-hover',via:'--'+r+'-component-bg-hover'},
-      {sec:'Outline \u2014 Thumb'},
-      {label:'Thumb BG',token:'--switch-outline-thumb-bg',via:'--color-fixed-white'},
-      {label:'Thumb Border',token:'--switch-outline-thumb-border-color',via:'--surface-'+s+'-cm-outline'},
+      {sec:'Outlined \u2014 Track (off)'},
+      {label:'Track BG Off Hover',token:'--switch-outlined-track-bg-off-hover',via:'--surface-'+s+'-cm-bg-hover'},
+      {label:'Track Border Off',token:'--switch-outlined-track-border-color-off',via:'--surface-'+s+'-cm-outline'},
+      {label:'Track Border Off Hover',token:'--switch-outlined-track-border-color-off-hover',via:'--surface-'+s+'-cm-outline-hover'},
+      {sec:'Outlined \u2014 Track (on)'},
+      {label:'Track BG On',token:'--switch-outlined-track-bg-on',via:'--'+r+'-component-bg-default'},
+      {label:'Track BG On Hover',token:'--switch-outlined-track-bg-on-hover',via:'--'+r+'-component-bg-hover'},
+      {label:'Track Border On',token:'--switch-outlined-track-border-color-on',via:'--'+r+'-component-bg-default'},
+      {label:'Track Border On Hover',token:'--switch-outlined-track-border-color-on-hover',via:'--'+r+'-component-bg-hover'},
+      {sec:'Outlined \u2014 Thumb'},
+      {label:'Thumb BG',token:'--switch-outlined-thumb-bg',via:'--color-fixed-white'},
+      {label:'Thumb Border',token:'--switch-outlined-thumb-border-color',via:'--surface-'+s+'-cm-outline'},
       {sec:'Disabled'},
       {label:'Track BG Disabled',token:'--switch-track-bg-disabled',via:'--surface-'+s+'-cm-outline'},
       {label:'Track BG On Disabled',token:'--switch-track-bg-on-disabled',via:'--'+r+'-component-bg-default'},

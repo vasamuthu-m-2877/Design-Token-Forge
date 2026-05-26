@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>04 · Drift Dashboard · DTF Wireframes</title>
+<link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>04 · Drift Dashboard</h1>
+    <div class="wf-meta">The screen that gets DTF funded. Exec rollup of fidelity across all products.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<!-- ============ ORG ROLLUP ============ -->
+
+<div class="wf-step-intro">Org-wide fidelity · landing view</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">Acme — design fidelity across the product suite.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">DTF Dashboard</span> · Acme</span>
+    <span style="font-family:var(--mono); font-size:11px;">last update 2h ago · 4 products monitored</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <!-- Big number -->
+    <div class="wf-row between" style="padding:24px; border:1px solid var(--line); background:var(--bg); margin-bottom:24px;">
+      <div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Org-wide fidelity</div>
+        <div style="font-family:var(--sans); font-size:48px; font-weight:600; line-height:1; margin-top:8px;">70%</div>
+        <div style="font-family:var(--mono); font-size:12px; color:var(--ok); margin-top:4px;">↑ +8% this quarter</div>
+      </div>
+      <div style="flex:1; max-width:400px; margin:0 32px;">
+        <div class="wf-bar" style="--pct: 70%; width:100%; height:16px;"></div>
+        <div style="display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; color:var(--ink-3); margin-top:4px;">
+          <span>0%</span><span>50%</span><span>target 85%</span><span>100%</span>
+        </div>
+      </div>
+      <div style="text-align:right; font-family:var(--mono); font-size:11px; color:var(--ink-3);">
+        <div>Goal: 85% by Q4</div>
+        <div style="margin-top:4px;">Gap: 15 points</div>
+      </div>
+    </div>
+
+    <!-- Per-product cards -->
+    <h3>Per-product breakdown</h3>
+    <div class="wf-grid cols-4" style="gap:12px;">
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">CHECKOUT</div>
+        <div style="font-size:28px; font-weight:600; margin:8px 0 4px;">81%</div>
+        <div class="wf-bar" style="--pct: 81%; width:100%; height:6px;"></div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ok); margin-top:8px;">↑ +12% this Q</div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">DASHBOARD</div>
+        <div style="font-size:28px; font-weight:600; margin:8px 0 4px;">64%</div>
+        <div class="wf-bar" style="--pct: 64%; width:100%; height:6px;"></div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ok); margin-top:8px;">↑ +5% this Q</div>
+      </div>
+
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">ADMIN</div>
+        <div style="font-size:28px; font-weight:600; margin:8px 0 4px;">92%</div>
+        <div class="wf-bar" style="--pct: 92%; width:100%; height:6px;"></div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ok); margin-top:8px;">↑ +2% this Q</div>
+      </div>
+
+      <div class="wf-box" style="border-color:var(--bad);">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3);">MARKETING</div>
+        <div style="font-size:28px; font-weight:600; margin:8px 0 4px;">43%</div>
+        <div class="wf-bar" style="--pct: 43%; width:100%; height:6px;"></div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--bad); margin-top:8px;">↓ −4% this Q · needs attention <span class="wf-marker">1</span></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Negative-trend product gets a red border + explicit "needs attention" label. The dashboard should surface action, not just data.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ TREND CHART ============ -->
+
+<div class="wf-step-intro">Trend over time</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">Fidelity is now a measurable trend, not a vibe.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Trend</span> · 8 quarters</span>
+    <span style="font-family:var(--mono); font-size:11px;">org-wide rollup</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <!-- ASCII-ish trend chart in HTML -->
+    <div style="font-family:var(--mono); font-size:12px; color:var(--ink-2); white-space:pre; line-height:1.4; padding:12px; background:var(--bg); border:1px solid var(--line-soft);">
+100% ┤
+     │                                                          
+ 75% ┤                                              ●──●        
+     │                                      ●──●──●             
+ 50% ┤                              ●──●──●                     
+     │                      ●──●──●                             
+ 25% ┤              ●──●──●                                     
+     │      ●──●──●                                             
+   0 └────────────────────────────────────────────────────────  
+       Q1   Q2   Q3   Q4   Q1   Q2   Q3   Q4  ← now             
+    </div>
+
+    <div class="wf-grid cols-3" style="gap:12px; margin-top:24px;">
+      <div class="wf-box soft">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); text-transform:uppercase;">Q1 (2 years ago)</div>
+        <div style="font-size:18px; font-weight:600; margin-top:4px;">12%</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:4px;">Before DTF</div>
+      </div>
+      <div class="wf-box soft">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3); text-transform:uppercase;">Q3 (last year)</div>
+        <div style="font-size:18px; font-weight:600; margin-top:4px;">47%</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:4px;">After Phase 1 rollout</div>
+      </div>
+      <div class="wf-box soft" style="border-color:var(--ok);">
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ok); text-transform:uppercase;">Q4 (now)</div>
+        <div style="font-size:18px; font-weight:600; margin-top:4px;">70%</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ok); margin-top:4px;">+58 pts over 2 years <span class="wf-marker">1</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">The "before/during/after" framing is the slide that justifies budget renewals. Show the journey, not just the snapshot.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ TOP DRIFT SOURCES ============ -->
+
+<div class="wf-step-intro">Top drift sources · the action list</div>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Drift Sources</span> · org-wide</span>
+    <span style="font-family:var(--mono); font-size:11px;">sorted by leverage</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <table class="wf-table">
+      <thead>
+        <tr><th>#</th><th>Pattern</th><th>Instances</th><th>Products affected</th><th>Suggested action</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Hardcoded <code style="font-family:var(--mono);">#FAFAFA</code></td>
+          <td>412</td>
+          <td>4</td>
+          <td><span class="wf-pill warn">migrate to --color-neutral-50</span></td>
+          <td><button class="wf-btn ghost" style="padding:4px 10px;">Fix →</button></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>padding: 14px (off-grid)</td>
+          <td>287</td>
+          <td>3</td>
+          <td><span class="wf-pill warn">propose --spacing-3-half OR migrate to --spacing-3</span></td>
+          <td><button class="wf-btn ghost" style="padding:4px 10px;">Fix →</button></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Custom box-shadow (no token)</td>
+          <td>198</td>
+          <td>2</td>
+          <td><span class="wf-pill bad">add new token --shadow-row-sm</span></td>
+          <td><button class="wf-btn ghost" style="padding:4px 10px;">Propose →</button></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Custom button hover color</td>
+          <td>156</td>
+          <td>4</td>
+          <td><span class="wf-pill warn">use --primary-hover</span></td>
+          <td><button class="wf-btn ghost" style="padding:4px 10px;">Fix →</button></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Off-grid font-size: 15px</td>
+          <td>134</td>
+          <td>3</td>
+          <td><span class="wf-pill warn">migrate to --font-size-base</span></td>
+          <td><button class="wf-btn ghost" style="padding:4px 10px;">Fix →</button></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Detached UserRow components</td>
+          <td>87</td>
+          <td>2</td>
+          <td><span class="wf-pill bad">swap to L2 instance</span></td>
+          <td><button class="wf-btn ghost" style="padding:4px 10px;">Swap →</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="wf-note" style="margin-top:16px;">
+      Each row is a 1-click action. Fixing the top 6 sources would lift org fidelity from 70% → 84%. <span class="wf-marker">1</span>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">"Effort vs. reward" math is computed. DS lead can prioritize objectively, not by gut feel.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ PER-PR DRIFT ============ -->
+
+<div class="wf-step-intro">Engineering view · per-PR drift impact</div>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Recent PRs</span> · drift impact</span>
+    <span style="font-family:var(--mono); font-size:11px;">last 24h · all products</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <table class="wf-table">
+      <thead>
+        <tr><th>PR</th><th>Title</th><th>Product</th><th>Δ Fidelity</th><th>Off-token Δ</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>#421</td><td>Redesign of pricing page</td><td>Checkout</td><td style="color:var(--bad);">−2.1%</td><td style="color:var(--bad);">+14</td><td><span class="wf-pill bad">regression</span></td></tr>
+        <tr><td>#420</td><td>Onboard new user flow</td><td>Dashboard</td><td style="color:var(--ok);">+0.3%</td><td>0</td><td><span class="wf-pill ok">pass</span></td></tr>
+        <tr><td>#419</td><td>Bug fix: button alignment</td><td>Admin</td><td>0.0%</td><td>0</td><td><span class="wf-pill ok">pass</span></td></tr>
+        <tr><td>#418</td><td>Add team settings</td><td>Dashboard</td><td style="color:var(--ok);">+1.4%</td><td style="color:var(--ok);">−8</td><td><span class="wf-pill ok">pass</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="wf-callout" style="margin-top:16px;">
+      Drift checks run on every PR as a GitHub/GitLab app. Negative trends block merge by policy. <span class="wf-marker">1</span>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">This moves DTF from "audit tool" to "build pipeline." Drift is caught at the source, not quarters later.</li>
+</ul>
+
+<!-- ============ EXEC SLIDE ============ -->
+
+<h2>How this rolls up to the C-suite</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span>Q4 Review · Design Platform</span>
+    <span style="font-family:var(--mono); font-size:11px;">slide 7 of 12</span>
+  </div>
+  <div class="wf-screen-body" style="padding:48px;">
+
+    <div style="font-family:var(--sans); font-size:24px; font-weight:600; margin-bottom:24px;">
+      Design fidelity across the product suite
+    </div>
+
+    <table class="wf-table" style="font-size:14px; margin-bottom:32px;">
+      <thead>
+        <tr><th>Product</th><th>Q3 start</th><th>Q4 end</th><th>Change</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Checkout</td><td>69%</td><td>81%</td><td style="color:var(--ok);">+12%  ↑</td></tr>
+        <tr><td>Dashboard</td><td>59%</td><td>64%</td><td style="color:var(--ok);">+5%  ↑</td></tr>
+        <tr><td>Admin</td><td>90%</td><td>92%</td><td style="color:var(--ok);">+2%  ↑</td></tr>
+        <tr><td>Marketing</td><td>47%</td><td>43%</td><td style="color:var(--bad);">−4%  ↓  ← attention</td></tr>
+        <tr style="font-weight:600;"><td>Org weighted</td><td>66%</td><td>70%</td><td style="color:var(--ok);">+4%  ↑</td></tr>
+      </tbody>
+    </table>
+
+    <div style="font-family:var(--sans); font-size:14px; font-weight:600; margin-bottom:8px;">Drivers</div>
+    <ul style="font-family:var(--sans); font-size:13px; color:var(--ink-2); padding-left:20px;">
+      <li>Onboarded 3 new L2 patterns to system (−127 detached components)</li>
+      <li>Migrated Checkout to v2 tokens (−89 hardcoded colors)</li>
+      <li>Marketing regression: new agency landing pages, off-system</li>
+    </ul>
+
+    <div style="margin-top:24px; padding:16px; border-left:2px solid var(--ink); font-family:var(--sans); font-size:13px;">
+      <strong>Plan:</strong> bring Marketing pages under DS governance in Q1.
+    </div>
+  </div>
+</div>
+
+<div class="wf-note" style="margin-top:16px;">
+  A VP Design walking into a board meeting with this slide just made themselves promotable. That's the buyer psychology DTF taps. <span class="wf-marker">1</span>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">The dashboard exists to enable this slide. Every UI choice should be evaluated by "does this make the exec presentation clearer?"</li>
+</ul>
+
+<!-- ============ NAVIGATION ============ -->
+
+<div class="wf-arrow">▼</div>
+
+<div class="wf-row between" style="padding:24px; border:1px solid var(--line); background:var(--bg-elev); margin-top:24px;">
+  <div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">The future surface</div>
+    <div style="font-family:var(--sans); font-size:16px; font-weight:600; margin-top:4px;">05 · Compose from Intent</div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); margin-top:4px;">Figma plugin: describe the screen → real L1 instances on canvas.</div>
+  </div>
+  <a class="wf-btn primary" href="05-compose-from-intent.html">Open AI compose →</a>
+</div>
+
+<!-- ============ REVIEW ============ -->
+
+<h2>Review this wireframe</h2>
+<div class="wf-stack gap-sm" style="font-family:var(--mono); font-size:12px; color:var(--ink-2);">
+  <div>Whole dashboard: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span> <span class="wf-pill">expand</span> <span class="wf-pill">cut</span></div>
+  <div>Org rollup + per-product cards: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Trend chart: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Top drift sources table: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Per-PR drift view: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Exec slide: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+</div>
+
+<div class="wf-footer">
+  <span><a href="03-gallery.html">← 03 · Gallery</a></span>
+  <span><a href="05-compose-from-intent.html">05 · Compose from Intent →</a></span>
+</div>
+
+</body>
+</html>

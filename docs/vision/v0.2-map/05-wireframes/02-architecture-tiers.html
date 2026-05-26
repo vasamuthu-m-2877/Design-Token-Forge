@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>v0.2 wireframes — Architecture tiers</title>
+<link rel="stylesheet" href="wireframes-v2.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <strong>DTF Vision · v0.2 wireframes</strong> · Architecture tiers
+    <span class="wf-v2-tag">revised</span>
+  </div>
+  <div class="wf-meta">
+    <a href="index.html">← v0.2 hub</a> ·
+    <a href="../02-architecture.md">02-architecture.md</a>
+  </div>
+</div>
+
+<h1>The layer model — before and after the Foundation tier</h1>
+<p class="wf-step-intro" style="margin-top:8px;">Visual of the single biggest change in v0.2</p>
+
+<h2>Side-by-side</h2>
+
+<div class="wf-compare">
+  <div class="wf-compare-col v1">
+    <h4>Layer model</h4>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L3 — Pages</div>
+        <div class="wf-tier-desc">Subjective compositions</div>
+      </div>
+      <div class="wf-tier-owner">product designer</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L2 — Patterns</div>
+        <div class="wf-tier-desc">Recipes + some kit scaffolds</div>
+      </div>
+      <div class="wf-tier-owner">per product</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">Archetype Kit</div>
+        <div class="wf-tier-desc">Per product shape — Dashboard, Marketplace…</div>
+      </div>
+      <div class="wf-tier-owner">DTF core</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L1 — Atoms</div>
+        <div class="wf-tier-desc">Universal, tokenized</div>
+      </div>
+      <div class="wf-tier-owner">DTF core</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L0 — Tokens</div>
+        <div class="wf-tier-desc">Color, spacing, type, motion</div>
+      </div>
+      <div class="wf-tier-owner">DTF core</div>
+    </div>
+  </div>
+
+  <div class="wf-compare-arrow">→</div>
+
+  <div class="wf-compare-col v2">
+    <h4>Layer model</h4>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L3 — Pages</div>
+        <div class="wf-tier-desc">Subjective compositions</div>
+      </div>
+      <div class="wf-tier-owner">product designer</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L2 — Patterns</div>
+        <div class="wf-tier-desc">Recipes + shape-kit + foundation L2s</div>
+      </div>
+      <div class="wf-tier-owner">per product</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">Shape Kit</div>
+        <div class="wf-tier-desc">Deltas only — mobile-writing (+4), mobile-commerce (+6)…</div>
+      </div>
+      <div class="wf-tier-owner">DTF core → shape teams</div>
+    </div>
+    <div class="wf-tier new">
+      <div>
+        <div class="wf-tier-name">Foundation <span class="wf-v2-tag">new</span></div>
+        <div class="wf-tier-desc">Per platform — Mobile (10 L2s), Desktop (~15), Marketing (~6)</div>
+      </div>
+      <div class="wf-tier-owner">DTF core</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L1 — Atoms</div>
+        <div class="wf-tier-desc">Universal, tokenized</div>
+      </div>
+      <div class="wf-tier-owner">DTF core</div>
+    </div>
+    <div class="wf-tier">
+      <div>
+        <div class="wf-tier-name">L0 — Tokens</div>
+        <div class="wf-tier-desc">Color, spacing, type, motion</div>
+      </div>
+      <div class="wf-tier-owner">DTF core</div>
+    </div>
+  </div>
+</div>
+
+<div class="wf-note">
+  The new Foundation tier captures the ~77% of L2 patterns that are
+  platform-shape concerns (being a mobile app) rather than product-shape
+  concerns (being a writing app). It sits between L1 and shape-kits.
+</div>
+
+<h2>Build math — why the Foundation tier is mandatory</h2>
+
+<p style="font-family:var(--sans); font-size:13px; color:var(--ink-2); max-width:680px; line-height:1.6; margin-bottom:24px;">
+  Probe 2 measured 77% L2 overlap between Mobile Writing and Mobile Commerce.
+  Without a Foundation tier, every shape-kit re-ships the same 10 patterns —
+  paying 4× the cost across 4 kits. The Foundation tier captures them once.
+</p>
+
+<h3>Without Foundation tier · v0.1</h3>
+<div class="wf-stackbar-label">4 mobile kits × ~14 L2s × ~4 states each = 216 component-states</div>
+<div class="wf-stackbar">
+  <div class="wf-stackbar-seg duplicate" style="flex-grow:1;">Writing · 54</div>
+  <div class="wf-stackbar-seg duplicate" style="flex-grow:1;">Commerce · 54</div>
+  <div class="wf-stackbar-seg duplicate" style="flex-grow:1;">Reading · 54</div>
+  <div class="wf-stackbar-seg duplicate" style="flex-grow:1;">Chat · 54</div>
+</div>
+<div class="wf-callout">216 states. Every kit re-ships AppShell, TopBar, BottomTabBar… every time. ~40 of those states are duplicates.</div>
+
+<h3 style="margin-top:32px;">With Foundation tier · v0.2</h3>
+<div class="wf-stackbar-label">Foundation 40 + Writing 16 + Commerce 24 + Reading 12 + Chat 16 = 108 states</div>
+<div class="wf-stackbar">
+  <div class="wf-stackbar-seg foundation" style="flex-grow:40;">Foundation · 40 (shared)</div>
+  <div class="wf-stackbar-seg writing" style="flex-grow:16;">Writing +16</div>
+  <div class="wf-stackbar-seg commerce" style="flex-grow:24;">Commerce +24</div>
+  <div class="wf-stackbar-seg reading" style="flex-grow:12;">Reading +12</div>
+  <div class="wf-stackbar-seg chat" style="flex-grow:16;">Chat +16</div>
+</div>
+<div class="wf-callout">108 states. 50% reduction. Foundation pays back after the 2nd shape-kit.</div>
+
+<h2>Connection diagram</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span class="wf-step">5-stage system · v0.2</span>
+    <span>BRAND → PRODUCT TYPE → PLATFORM × SHAPE → REAL PRODUCT → CATALOG</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <div class="wf-grid cols-4" style="align-items:stretch;">
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-bottom:6px;">STAGE 1</div>
+        <div style="font-family:var(--mono); font-weight:600;">L0 + L1</div>
+        <div style="font-family:var(--sans); font-size:12px; color:var(--ink-2); margin-top:6px;">Branded to product</div>
+      </div>
+      <div class="wf-box" style="border-color:var(--note); border-width:2px;">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--note); margin-bottom:6px;">STAGE 2 · NEW</div>
+        <div style="font-family:var(--mono); font-weight:600;">Foundation</div>
+        <div style="font-family:var(--sans); font-size:12px; color:var(--ink-2); margin-top:6px;">Mobile / Desktop / Marketing</div>
+      </div>
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-bottom:6px;">STAGE 3</div>
+        <div style="font-family:var(--mono); font-weight:600;">Shape Kit</div>
+        <div style="font-family:var(--sans); font-size:12px; color:var(--ink-2); margin-top:6px;">Deltas only</div>
+      </div>
+      <div class="wf-box">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-bottom:6px;">STAGE 4</div>
+        <div style="font-family:var(--mono); font-weight:600;">Composed product</div>
+        <div style="font-family:var(--sans); font-size:12px; color:var(--ink-2); margin-top:6px;">L3 pages</div>
+      </div>
+    </div>
+
+    <div class="wf-arrow">↓</div>
+
+    <div class="wf-box dashed" style="text-align:center;">
+      <div style="font-family:var(--mono); font-weight:600;">ARCHAEOLOGY · catalog + per-theme drift score <span class="wf-v2-tag">v0.2: per-theme</span></div>
+      <div style="font-family:var(--sans); font-size:12px; color:var(--ink-2); margin-top:6px;">
+        Two evidence sources: web crawl (Playwright) + native view-hierarchy (iOS / Android)
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<h2>Governance — who owns what</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-body" style="padding:24px 32px;">
+    <table style="width:100%; border-collapse:collapse; font-family:var(--sans); font-size:13px;">
+      <thead>
+        <tr style="border-bottom:2px solid var(--line); font-family:var(--mono); font-size:11px; text-transform:uppercase; color:var(--ink-3);">
+          <th style="text-align:left; padding:8px 0;">Tier</th>
+          <th style="text-align:left;">Owner</th>
+          <th style="text-align:left;">Versioning</th>
+          <th style="text-align:left;">Contribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px dashed var(--line-soft);">
+          <td style="padding:10px 0;"><strong>L0 + L1</strong></td>
+          <td>DTF core</td>
+          <td>independent semver</td>
+          <td>RFC + tests</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--line-soft); background:rgba(178,95,0,0.04);">
+          <td style="padding:10px 0;"><strong>Foundation</strong> <span class="wf-v2-tag">new</span></td>
+          <td>DTF core</td>
+          <td>independent semver · shape-kits pin major</td>
+          <td>RFC · must be used in ≥2 shape-kits</td>
+        </tr>
+        <tr style="border-bottom:1px dashed var(--line-soft);">
+          <td style="padding:10px 0;"><strong>Shape Kit</strong></td>
+          <td>DTF core → shape teams</td>
+          <td>pinned to Foundation major</td>
+          <td>open · shape teams own</td>
+        </tr>
+        <tr>
+          <td style="padding:10px 0;"><strong>L2 / L3</strong></td>
+          <td>product designer</td>
+          <td>per-product</td>
+          <td>recipe library</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="wf-note">
+  <strong>Promotion path:</strong> shape-specific L2 → second use in different shape → RFC → Foundation candidate → reviewed → promoted on next minor. Mirrors the recipes→L2 rule one tier up.
+</div>
+
+<h2>Open questions surfaced by this tier</h2>
+
+<ul class="wf-anno-list">
+  <li data-num="Q21">Are Desktop and Marketing Foundations real, or is Mobile a special case? Tested only on mobile so far.</li>
+  <li data-num="Q22">Foundation LTS — how long do shape-kits get to migrate after a major Foundation bump? Suggested: 6 months.</li>
+  <li data-num="Q23">Cross-platform Foundations — do some primitives (Toast, Tooltip) belong above all platforms, or does every platform fork them?</li>
+  <li data-num="Q24">Authoring discipline — build shape-specific first and generalize on second use (lazy), or pre-spec Foundations (eager)?</li>
+  <li data-num="Q25">Are L3 "screen recipes" first-class artifacts in the kit, or just illustrations in docs?</li>
+</ul>
+
+<p style="font-family:var(--mono); font-size:11px; color:var(--ink-3); margin-top:48px; text-align:center;">
+  See <a href="../09-open-questions.md" style="color:var(--ink-2);">09-open-questions.md</a> for full context.
+</p>
+
+</body>
+</html>

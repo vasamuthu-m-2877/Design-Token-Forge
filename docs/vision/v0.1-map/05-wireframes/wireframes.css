@@ -1,0 +1,407 @@
+/* DTF Vision Wireframes — line-art style
+ * Monochrome, monospace, 1px borders. Wireframes, not finished UI.
+ */
+
+:root {
+  --ink: #1a1a1a;
+  --ink-2: #555;
+  --ink-3: #888;
+  --line: #1a1a1a;
+  --line-soft: #ccc;
+  --bg: #fafaf8;
+  --bg-elev: #fff;
+  --accent: #1a1a1a;
+  --note: #b25f00;
+  --ok: #1a7a3a;
+  --warn: #b25f00;
+  --bad: #b22a2a;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: -apple-system, "SF Pro Text", system-ui, sans-serif;
+  --grid: 8px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+body {
+  padding: 32px 48px 96px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+  font-family: var(--mono);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  margin: 48px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+h3 { font-size: 13px; color: var(--ink-2); margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* Header bar */
+.wf-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 32px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.wf-header .wf-meta { color: var(--ink-3); }
+.wf-header a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line-soft); }
+.wf-header a:hover { border-color: var(--line); }
+
+/* Wireframe screen — the "device" frame */
+.wf-screen {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  margin-bottom: 24px;
+  position: relative;
+  font-family: var(--sans);
+}
+.wf-screen-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.wf-screen-bar .wf-step { font-weight: 600; color: var(--ink); }
+.wf-screen-body { padding: 32px; }
+
+/* Generic box (any UI region in a wireframe) */
+.wf-box {
+  border: 1px solid var(--line);
+  padding: 16px;
+  background: var(--bg-elev);
+  font-family: var(--sans);
+}
+.wf-box.soft { border-color: var(--line-soft); }
+.wf-box.dashed { border-style: dashed; }
+.wf-box.empty {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+/* Inputs */
+.wf-input {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 10px 12px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+}
+.wf-input[disabled] { color: var(--ink-3); background: var(--bg); }
+.wf-label {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-bottom: 6px;
+  font-family: var(--sans);
+}
+.wf-help {
+  font-size: 11px;
+  color: var(--ink-3);
+  margin-top: 4px;
+}
+
+/* Buttons */
+.wf-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+}
+.wf-btn.primary { background: var(--ink); color: var(--bg-elev); }
+.wf-btn.ghost { border-color: var(--line-soft); color: var(--ink-2); }
+.wf-btn-row {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+.wf-btn-row .wf-btn-group { display: flex; gap: 8px; }
+.wf-btn-row .wf-tertiary {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+.wf-btn-row .wf-tertiary:hover { color: var(--ink); }
+
+/* Grid layouts */
+.wf-grid {
+  display: grid;
+  gap: 12px;
+}
+.wf-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.wf-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.wf-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.wf-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+.wf-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+/* Stacks */
+.wf-stack { display: flex; flex-direction: column; gap: 12px; }
+.wf-stack.gap-sm { gap: 6px; }
+.wf-stack.gap-lg { gap: 24px; }
+.wf-row { display: flex; gap: 12px; align-items: center; }
+.wf-row.between { justify-content: space-between; }
+.wf-spacer { flex: 1; }
+
+/* Color ladder swatches */
+.wf-ladder {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  border: 1px solid var(--line);
+}
+.wf-ladder div {
+  aspect-ratio: 1;
+  border-right: 1px solid var(--line);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+}
+.wf-ladder div:last-child { border-right: 0; }
+
+/* Annotations / callouts */
+.wf-note {
+  border-left: 2px solid var(--note);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--note);
+  background: rgba(178, 95, 0, 0.04);
+  margin: 12px 0;
+}
+.wf-callout {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  margin-top: 8px;
+}
+.wf-callout::before {
+  content: "→";
+  color: var(--note);
+}
+
+/* Status pills */
+.wf-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wf-pill.ok { border-color: var(--ok); color: var(--ok); }
+.wf-pill.warn { border-color: var(--warn); color: var(--warn); }
+.wf-pill.bad { border-color: var(--bad); color: var(--bad); }
+
+/* Radio / checkbox glyphs (text-based) */
+.wf-radio, .wf-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+.wf-radio::before { content: "○"; font-family: var(--mono); }
+.wf-radio.on::before { content: "●"; }
+.wf-check::before { content: "☐"; font-family: var(--mono); }
+.wf-check.on::before { content: "☒"; }
+
+/* Step intro / outro */
+.wf-step-intro {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  margin: 32px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.wf-step-title {
+  font-family: var(--sans);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 24px;
+}
+
+/* Flow arrows between screens */
+.wf-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--ink-3);
+}
+
+/* Annotations list */
+.wf-anno-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+}
+.wf-anno-list li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  border-bottom: 1px dashed var(--line-soft);
+}
+.wf-anno-list li::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  top: 6px;
+  font-weight: 600;
+  color: var(--note);
+}
+
+/* Annotation marker inside boxes */
+.wf-marker {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--note);
+  background: var(--bg-elev);
+  color: var(--note);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 14px;
+  vertical-align: middle;
+  margin-left: 6px;
+}
+
+/* Index page styling */
+.wf-index { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+.wf-index a {
+  display: block;
+  border: 1px solid var(--line);
+  padding: 20px;
+  background: var(--bg-elev);
+  text-decoration: none;
+  color: var(--ink);
+}
+.wf-index a:hover { background: var(--ink); color: var(--bg-elev); }
+.wf-index a:hover .wf-index-desc { color: var(--bg-elev); }
+.wf-index h3 { margin: 0 0 8px; color: var(--ink); }
+.wf-index a:hover h3 { color: var(--bg-elev); }
+.wf-index-desc { font-size: 12px; color: var(--ink-2); font-family: var(--sans); }
+
+/* Tabs (used in gallery wireframe) */
+.wf-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.wf-tabs span {
+  padding: 8px 16px;
+  border-right: 1px solid var(--line-soft);
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.wf-tabs span.active {
+  background: var(--ink);
+  color: var(--bg-elev);
+  border-right-color: var(--ink);
+}
+
+/* Tables (drift report etc) */
+.wf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.wf-table th, .wf-table td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.wf-table th { font-weight: 600; color: var(--ink-2); border-bottom-color: var(--line); }
+
+/* Progress bar */
+.wf-bar {
+  display: inline-block;
+  width: 200px;
+  height: 8px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  position: relative;
+  vertical-align: middle;
+}
+.wf-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  width: var(--pct, 50%);
+}
+
+/* Footer of each wireframe page */
+.wf-footer {
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  display: flex;
+  justify-content: space-between;
+}
+.wf-footer a { color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--line-soft); }

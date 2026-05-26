@@ -48,7 +48,7 @@
     <span class="demo-badge">3 Shapes</span>
     <span class="demo-badge">3 Content Modes</span>
     <span class="demo-badge">10 Sizes</span>
-    <span class="demo-badge">5 Roles</span>
+    <span class="demo-badge">6 Roles</span>
     <span class="demo-badge">7 Axes</span>
   </div>
 </header>
@@ -85,9 +85,11 @@
     <div class="pill-bar" id="roleBar" role="radiogroup" aria-label="Role selector">
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-role="" type="button">Default</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="brand" type="button">Brand</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="info" type="button">Info</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="neutral" type="button">Neutral</button>
     </div>
   </div>
 </nav>
@@ -222,7 +224,7 @@
   className="avatar"
   data-size={size}           {/* micro … ultra */}
   data-shape={shape}         {/* circle | squircle | rounded-square */}
-  data-role={role}           {/* primary | brand | danger | success | warning */}
+  data-role={role}           {/* brand | info | danger | success | warning | neutral */}
   data-disabled={disabled ? '' : undefined}
   role="img"
   aria-label={name}
@@ -283,7 +285,7 @@
 
 /* ── Surface ── */
 --avatar-bg / -bg-hover / -fg   /* neutral fallback */
---avatar-{role}-bg / -fg        /* primary, brand, danger, success, warning */
+--avatar-{role}-bg / -fg        /* brand, info, danger, success, warning, neutral */
 --avatar-ring-width / -color / -offset
 
 /* ── Typography ── */
@@ -320,7 +322,7 @@
   var SHAPES = ['circle','squircle','rounded-square'];
   var SIZES  = ['micro','tiny','small','base','medium','large','big','huge','mega','ultra'];
   var SIZE_PX = {micro:20,tiny:24,small:28,base:32,medium:36,large:40,big:48,huge:56,mega:64,ultra:80};
-  var ROLES  = [{key:'',label:'Default'},{key:'brand',label:'Brand'},{key:'danger',label:'Danger'},{key:'success',label:'Success'},{key:'warning',label:'Warning'}];
+  var ROLES  = [{key:'',label:'Default'},{key:'brand',label:'Brand'},{key:'info',label:'Info'},{key:'danger',label:'Danger'},{key:'success',label:'Success'},{key:'warning',label:'Warning'},{key:'neutral',label:'Neutral'}];
   var STATUSES = ['online','offline','busy','away'];
   var NAMES  = ['Alice Chen','Bob Rivera','Carla Kim','David Park','Eva Singh'];
   var HUES   = [220,340,160,30,280];

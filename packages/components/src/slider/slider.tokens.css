@@ -2,8 +2,24 @@
    Design Token Forge — Slider Token Defaults
    Layer 0: System defaults for slider variables.
    All values reference global tokens — zero hardcoded visuals.
-   Structural variants: filled (default) | soft
-   Semantic roles:      primary (default) | danger | success | warning | neutral
+   ----------------------------------------------------------------
+   ANATOMY:
+     .slider (wrapper, role="slider")
+       └─ .slider__track     (rail)
+            └─ .slider__fill (value range)
+            └─ .slider__tick (optional ticks)
+       └─ .slider__thumb     (handle, owns focus)
+            └─ .slider__halo (hover/focus ring)
+       └─ .slider__tooltip   (optional value bubble)
+       └─ .slider__label / .slider__value (optional rows)
+
+   VARIANTS  (data-variant):   filled (default) | soft
+   ROLES     (data-role):       brand (default) | danger | success | warning | info | neutral
+   STATES    (selectors):       default | hover | focus-visible | pressed | disabled
+
+   ROLE REMAPPING
+     Roles override --brand-* palette vars; all variant tokens read --brand-*
+     so role swap works for both filled and soft variants automatically.
    ════════════════════════════════════════════════════════════════ */
 
 .slider {
@@ -27,7 +43,7 @@
   --slider-thumb-border-style: solid;
   --slider-thumb-shadow: var(--shadow-sm);
   --slider-thumb-shadow-hover: var(--shadow-md);
-  --slider-thumb-shadow-active: var(--shadow-sm);
+  --slider-thumb-shadow-pressed: var(--shadow-sm);
 
   /* Outline */
   --slider-outline-style: solid;
@@ -130,34 +146,34 @@
   --slider-track-border-color: transparent;
   --slider-track-border-color-disabled: transparent;
   --slider-track-shadow-hover: var(--shadow-none);
-  --slider-track-shadow-active: var(--shadow-none);
+  --slider-track-shadow-pressed: var(--shadow-none);
   --slider-track-shadow-disabled: var(--shadow-none);
 
   /* ── Fill (value indicator) ── */
   --slider-fill-bg: var(--brand-component-bg-default);
   --slider-fill-bg-hover: var(--brand-component-bg-hover);
-  --slider-fill-bg-active: var(--brand-component-bg-pressed);
+  --slider-fill-bg-pressed: var(--brand-component-bg-pressed);
   --slider-fill-bg-disabled: var(--brand-component-bg-default);
 
   /* ── Thumb — white fill + colored border = distinct from fill bar ── */
   --slider-thumb-bg: var(--color-fixed-white);
   --slider-thumb-bg-hover: var(--color-fixed-white);
-  --slider-thumb-bg-active: var(--color-fixed-white);
+  --slider-thumb-bg-pressed: var(--color-fixed-white);
   --slider-thumb-bg-disabled: var(--color-fixed-white);
   --slider-thumb-border-color: var(--brand-component-bg-default);
   --slider-thumb-border-color-hover: var(--brand-component-bg-hover);
-  --slider-thumb-border-color-active: var(--brand-component-bg-pressed);
+  --slider-thumb-border-color-pressed: var(--brand-component-bg-pressed);
   --slider-thumb-border-color-disabled: var(--color-fixed-white);
   --slider-thumb-shadow-disabled: var(--shadow-none);
 
   /* ── Halo (Material-style hover ring around thumb) ── */
   --slider-thumb-halo-bg: var(--brand-container-bg);
-  --slider-thumb-halo-bg-active: var(--brand-container-pressed);
+  --slider-thumb-halo-bg-pressed: var(--brand-container-pressed);
   --slider-thumb-halo-opacity: 0.2;
 
   /* ── Tick marks ── */
   --slider-tick-color: var(--surface-base-cm-outline);
-  --slider-tick-color-active: var(--brand-component-bg-default);
+  --slider-tick-color-pressed: var(--brand-component-bg-default);
   --slider-tick-color-disabled: var(--surface-base-cm-outline);
 
   /* ── Tooltip ── */
@@ -176,11 +192,11 @@
 
   --slider-soft-fill-bg: var(--brand-container-bg);
   --slider-soft-fill-bg-hover: var(--brand-container-hover);
-  --slider-soft-fill-bg-active: var(--brand-container-pressed);
+  --slider-soft-fill-bg-pressed: var(--brand-container-pressed);
   --slider-soft-fill-bg-disabled: var(--brand-container-bg);
   --slider-soft-tooltip-bg: var(--brand-container-bg);
   --slider-soft-tooltip-fg: var(--brand-content-default);
-  --slider-soft-tick-color-active: var(--brand-container-bg);
+  --slider-soft-tick-color-pressed: var(--brand-container-bg);
 
   /* ────────────────────────────────────────────────────────────
      ✏️ TYPOGRAPHY  (11 vars)
@@ -197,13 +213,13 @@
   --slider-tooltip-font-weight: var(--font-weight-medium);
 
   /* Tooltip font-size per density */
-  --slider-tooltip-font-size-micro: var(--font-size-9);
+  --slider-tooltip-font-size-micro: var(--font-size-10);
   --slider-tooltip-font-size-tiny: var(--font-size-10);
   --slider-tooltip-font-size-small: var(--font-size-11);
   --slider-tooltip-font-size-base: var(--font-size-12);
   --slider-tooltip-font-size-medium: var(--font-size-13);
   --slider-tooltip-font-size-large: var(--font-size-14);
-  --slider-tooltip-font-size-big: var(--font-size-15);
+  --slider-tooltip-font-size-big: var(--font-size-14);
   --slider-tooltip-font-size-huge: var(--font-size-16);
   --slider-tooltip-font-size-mega: var(--font-size-18);
   --slider-tooltip-font-size-ultra: var(--font-size-20);
@@ -220,7 +236,7 @@
      🧩 SLOTS  (8 vars)
      ──────────────────────────────────────────────────────────── */
 
-  --slider-thumb-scale-active: 1.15;
+  --slider-thumb-scale-pressed: 1.15;
   --slider-thumb-icon-size: 0.6em;
   --slider-thumb-icon-color: var(--brand-on-component);
   --slider-tooltip-display: none;

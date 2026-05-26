@@ -57,6 +57,7 @@
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="success" type="button">Success</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="warning" type="button">Warning</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="danger" type="button">Danger</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="info" type="button">Info</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-role="neutral" type="button">Neutral</button>
     </div>
   </div>
@@ -85,7 +86,7 @@
     <label>Variant</label>
     <div class="pill-bar" id="variantBar" role="radiogroup" aria-label="Variant selector">
       <button class="pill" role="radio" aria-pressed="true"  data-ctrl-variant="filled" type="button">Filled</button>
-      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outline" type="button">Outline</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="outlined" type="button">Outlined</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="soft" type="button">Soft</button>
     </div>
   </div>
@@ -121,7 +122,7 @@
   <h1>Progress Bar Explorer <span>— Design Token Forge</span></h1>
   <div class="demo-meta">
     <span class="demo-badge">~110 CSS Variables</span>
-    <span class="demo-badge">5 Roles</span>
+    <span class="demo-badge">6 Roles</span>
     <span class="demo-badge">3 Variants</span>
     <span class="demo-badge">10 Sizes</span>
     <span class="demo-badge">7 Axes</span>
@@ -154,7 +155,7 @@
   <!-- ═══════════ 2. VARIANT GALLERY ═══════════ -->
   <section class="section" id="sec-variants">
     <div class="section-header"><h2>Variant Gallery</h2><span class="section-tag">Surface</span></div>
-    <p class="section-desc">Three structural variants — filled (default), outline, and soft — crossed with all five semantic roles.</p>
+    <p class="section-desc">Three structural variants — filled (default), outlined, and soft — crossed with all six semantic roles.</p>
     <div class="section-body"><div class="variant-grid" id="variantGallery"></div></div>
   </section>
 
@@ -340,10 +341,10 @@
 
 /* ── Surface ── */
 --progress-track-bg / -track-border-color
---progress-{role}-fill                /* primary, success, warning, danger, neutral */
+--progress-{role}-fill                /* brand | danger | warning | info | success | neutral */
 --progress-{role}-soft-track          /* tinted track for soft variant */
 --progress-{role}-label               /* role-colored label */
---progress-outline-track-bg / -border-color / -border-width
+--progress-outlined-track-bg / -border-color / -border-width
 --progress-buffer-bg / -opacity
 --progress-stripe-opacity
 --progress-opacity-disabled
@@ -379,8 +380,8 @@
 
   /* ── Constants ── */
   var SIZES = ['micro','tiny','small','base','medium','large','big','huge','mega','ultra'];
-  var ROLES = ['brand','success','warning','danger','neutral'];
-  var VARIANTS = ['filled','outline','soft'];
+  var ROLES = ['brand','danger','warning','info','success','neutral'];
+  var VARIANTS = ['filled','outlined','soft'];
   var STATES = ['Determinate','Indeterminate','Striped','Disabled'];
 
   /* Icons */
@@ -615,13 +616,13 @@
     c2.appendChild(stack2);
     el.appendChild(c2);
 
-    /* Outline + Square */
+    /* Outlined + Square */
     var c3 = cel('div','shape-card');
-    var t3 = cel('div','shape-card-title'); t3.textContent = 'Outline + Square';
+    var t3 = cel('div','shape-card-title'); t3.textContent = 'Outlined + Square';
     c3.appendChild(t3);
     var stack3 = cel('div','progress-stack');
     ['base','large','ultra'].forEach(function(s){
-      stack3.appendChild(makeBar({value:70, size:s, shape:'square', variant:'outline'}));
+      stack3.appendChild(makeBar({value:70, size:s, shape:'square', variant:'outlined'}));
     });
     c3.appendChild(stack3);
     el.appendChild(c3);
@@ -631,7 +632,7 @@
     var t4 = cel('div','shape-card-title'); t4.textContent = 'Elevated (Shadow)';
     c4.appendChild(t4);
     var stack4 = cel('div','progress-stack');
-    ['filled','outline','soft'].forEach(function(v){
+    ['filled','outlined','soft'].forEach(function(v){
       stack4.appendChild(makeBar({value:70, size:'large', variant:v, strong:true}));
     });
     c4.appendChild(stack4);

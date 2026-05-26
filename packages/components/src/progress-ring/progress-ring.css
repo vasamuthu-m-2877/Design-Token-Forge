@@ -47,7 +47,7 @@
   --_rg-gap: var(--ring-gap-base);
   --_rg-fs: var(--ring-font-size-base);
   --_rg-icon: var(--ring-icon-size-base);
-  --_rg-fill: var(--ring-primary-fill);
+  --_rg-fill: var(--ring-brand-fill);
   --_rg-track: var(--ring-track-color);
   --_rg-track-opacity: var(--ring-bg-opacity);
 
@@ -147,8 +147,8 @@
 
 .progress-ring:not([data-role]),
 .progress-ring[data-role="brand"] {
-  --_rg-fill: var(--ring-primary-fill);
-  --_rg-soft-track: var(--ring-primary-soft-track);
+  --_rg-fill: var(--ring-brand-fill);
+  --_rg-soft-track: var(--ring-brand-soft-track);
 }
 
 .progress-ring[data-role="success"] {
@@ -164,6 +164,11 @@
 .progress-ring[data-role="danger"] {
   --_rg-fill: var(--ring-danger-fill);
   --_rg-soft-track: var(--ring-danger-soft-track);
+}
+
+.progress-ring[data-role="info"] {
+  --_rg-fill: var(--ring-info-fill);
+  --_rg-soft-track: var(--ring-info-soft-track);
 }
 
 .progress-ring[data-role="neutral"] {
@@ -189,9 +194,9 @@
 }
 
 /* Outline — low-opacity track ring, no extra stroke */
-.progress-ring[data-variant="outline"] {
+.progress-ring[data-variant="outlined"] {
   --_rg-track: var(--_rg-fill);
-  --_rg-track-opacity: var(--ring-outline-track-opacity);
+  --_rg-track-opacity: var(--ring-outlined-track-opacity);
 }
 
 /* ════════════════════════════════════════════════════════════════

@@ -4,7 +4,7 @@
    Uses internal (--_sel-*) vars set by size & variant selectors.
 
    Markup:
-   <div class="select-group" data-variant="outline" data-size="base">
+   <div class="select-group" data-variant="outlined" data-size="base">
      <label class="select__label" for="sel1">Label</label>
      <div class="select-field">
        <select id="sel1">
@@ -20,7 +20,7 @@
    ════════════════════════════════════════════════════════════════ */
 
 /* ────────────────────────────────────────────────────────────────
-   1.  BASE — Internal active variables (default = base + outline)
+   1.  BASE — Internal active variables (default = base + outlined)
    ──────────────────────────────────────────────────────────────── */
 .select-group {
   display: flex;
@@ -37,11 +37,11 @@
   --_sel-radius: var(--select-radius-base);
   --_sel-chevron: var(--select-chevron-size-base);
 
-  /* Surface active vars (outline default) */
-  --_sel-bg: var(--select-outline-bg);
-  --_sel-fg: var(--select-outline-fg);
-  --_sel-border-color: var(--select-outline-border-color);
-  --_sel-placeholder: var(--select-outline-placeholder);
+  /* Surface active vars (outlined default) */
+  --_sel-bg: var(--select-outlined-bg);
+  --_sel-fg: var(--select-outlined-fg);
+  --_sel-border-color: var(--select-outlined-border-color);
+  --_sel-placeholder: var(--select-outlined-placeholder);
   --_sel-shadow: var(--select-shadow);
 }
 
@@ -133,13 +133,13 @@
    3.  VARIANT SELECTORS — map surface tokens → active vars
    ──────────────────────────────────────────────────────────────── */
 
-/* Outline (default) */
+/* Outlined (default) */
 .select-group,
-.select-group[data-variant="outline"] {
-  --_sel-bg: var(--select-outline-bg);
-  --_sel-fg: var(--select-outline-fg);
-  --_sel-border-color: var(--select-outline-border-color);
-  --_sel-placeholder: var(--select-outline-placeholder);
+.select-group[data-variant="outlined"] {
+  --_sel-bg: var(--select-outlined-bg);
+  --_sel-fg: var(--select-outlined-fg);
+  --_sel-border-color: var(--select-outlined-border-color);
+  --_sel-placeholder: var(--select-outlined-placeholder);
 }
 
 /* Filled */
@@ -159,14 +159,46 @@
 }
 
 /* ────────────────────────────────────────────────────────────────
-   4.  STATE OVERRIDES — hover, focus, error, disabled
-   ──────────────────────────────────────────────────────────────── */
+   ROLE SELECTORS — palette-level remapping (affects focus border,
+   focus label color). data-role="brand" is the default.
+   Invalid state (aria-invalid) always overrides role.
+   ───────────────────────────────────────────────────────────────── */
 
-/* ── Hover (outline) ──────────────────────────────────────── */
+.select-group[data-role="danger"] {
+  --brand-component-bg-default: var(--danger-component-bg-default);
+  --brand-component-outline-default: var(--danger-component-outline-default);
+  --brand-content-default: var(--danger-content-default);
+}
+.select-group[data-role="success"] {
+  --brand-component-bg-default: var(--success-component-bg-default);
+  --brand-component-outline-default: var(--success-component-outline-default);
+  --brand-content-default: var(--success-content-default);
+}
+.select-group[data-role="warning"] {
+  --brand-component-bg-default: var(--warning-component-bg-default);
+  --brand-component-outline-default: var(--warning-component-outline-default);
+  --brand-content-default: var(--warning-content-default);
+}
+.select-group[data-role="info"] {
+  --brand-component-bg-default: var(--info-component-bg-default);
+  --brand-component-outline-default: var(--info-component-outline-default);
+  --brand-content-default: var(--info-content-default);
+}
+.select-group[data-role="neutral"] {
+  --brand-component-bg-default: var(--surface-base-cm-bg-pressed);
+  --brand-component-outline-default: var(--surface-base-cm-outline-hover);
+  --brand-content-default: var(--surface-base-ct-default);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   4.  STATE OVERRIDES — hover, focus, invalid, disabled
+   ───────────────────────────────────────────────────────────────── */
+
+/* ── Hover (outlined) ───────────────────────────────────── */
 .select-group:not([data-disabled]):not([data-variant]):has(.select-field:hover),
-.select-group[data-variant="outline"]:not([data-disabled]):has(.select-field:hover) {
-  --_sel-bg: var(--select-outline-bg-hover);
-  --_sel-border-color: var(--select-outline-border-color-hover);
+.select-group[data-variant="outlined"]:not([data-disabled]):has(.select-field:hover) {
+  --_sel-bg: var(--select-outlined-bg-hover);
+  --_sel-border-color: var(--select-outlined-border-color-hover);
 }
 
 /* ── Hover (filled) ───────────────────────────────────────── */
@@ -181,11 +213,11 @@
   --_sel-border-color: var(--select-underline-border-color-hover);
 }
 
-/* ── Focus (outline) ──────────────────────────────────────── */
+/* ── Focus (outlined) ───────────────────────────────────── */
 .select-group:not([data-disabled]):not([data-variant]):has(.select-field:focus-visible),
-.select-group[data-variant="outline"]:not([data-disabled]):has(.select-field:focus-visible) {
-  --_sel-bg: var(--select-outline-bg-focus);
-  --_sel-border-color: var(--select-outline-border-color-focus);
+.select-group[data-variant="outlined"]:not([data-disabled]):has(.select-field:focus-visible) {
+  --_sel-bg: var(--select-outlined-bg-focus);
+  --_sel-border-color: var(--select-outlined-border-color-focus);
   --_sel-shadow: var(--select-shadow-focus);
 }
 
@@ -203,37 +235,37 @@
   --_sel-shadow: var(--select-shadow-focus);
 }
 
-/* ── Error (outline) ──────────────────────────────────────── */
-.select-group[data-error]:not([data-variant]),
-.select-group[data-error][data-variant="outline"] {
-  --_sel-bg: var(--select-outline-bg-error);
-  --_sel-border-color: var(--select-outline-border-color-error);
+/* ── Invalid (outlined) ──────────────────────────────────────── */
+.select-group[aria-invalid="true"]:not([data-variant]),
+.select-group[aria-invalid="true"][data-variant="outlined"] {
+  --_sel-bg: var(--select-outlined-bg-invalid);
+  --_sel-border-color: var(--select-outlined-border-color-invalid);
 }
 
-/* ── Error (filled) ───────────────────────────────────────── */
-.select-group[data-error][data-variant="filled"] {
-  --_sel-bg: var(--select-filled-bg-error);
-  --_sel-border-color: var(--select-filled-border-color-error);
+/* ── Invalid (filled) ───────────────────────────────────────── */
+.select-group[aria-invalid="true"][data-variant="filled"] {
+  --_sel-bg: var(--select-filled-bg-invalid);
+  --_sel-border-color: var(--select-filled-border-color-invalid);
 }
 
-/* ── Error (underline) ────────────────────────────────────── */
-.select-group[data-error][data-variant="underline"] {
-  --_sel-bg: var(--select-underline-bg-error);
-  --_sel-border-color: var(--select-underline-border-color-error);
+/* ── Invalid (underline) ────────────────────────────────────── */
+.select-group[aria-invalid="true"][data-variant="underline"] {
+  --_sel-bg: var(--select-underline-bg-invalid);
+  --_sel-border-color: var(--select-underline-border-color-invalid);
 }
 
-/* Error + Focus keeps error border */
-.select-group[data-error]:has(.select-field:focus-visible) {
+/* Invalid + Focus keeps invalid border */
+.select-group[aria-invalid="true"]:has(.select-field:focus-visible) {
   --_sel-shadow: var(--select-shadow-focus);
 }
 
-/* ── Disabled (outline) ───────────────────────────────────── */
+/* ── Disabled (outlined) ───────────────────────────────────── */
 .select-group[data-disabled]:not([data-variant]),
-.select-group[data-disabled][data-variant="outline"] {
-  --_sel-bg: var(--select-outline-bg-disabled);
-  --_sel-fg: var(--select-outline-fg-disabled);
-  --_sel-border-color: var(--select-outline-border-color-disabled);
-  --_sel-placeholder: var(--select-outline-placeholder-disabled);
+.select-group[data-disabled][data-variant="outlined"] {
+  --_sel-bg: var(--select-outlined-bg-disabled);
+  --_sel-fg: var(--select-outlined-fg-disabled);
+  --_sel-border-color: var(--select-outlined-border-color-disabled);
+  --_sel-placeholder: var(--select-outlined-placeholder-disabled);
 }
 
 /* ── Disabled (filled) ────────────────────────────────────── */
@@ -354,8 +386,8 @@
 
 }
 .select-group[data-disabled]:not([data-variant]) .select-field,
-.select-group[data-disabled][data-variant="outline"] .select-field {
-  opacity: var(--select-outline-opacity-disabled);
+.select-group[data-disabled][data-variant="outlined"] .select-field {
+  opacity: var(--select-outlined-opacity-disabled);
 }
 .select-group[data-disabled][data-variant="filled"] .select-field {
   opacity: var(--select-filled-opacity-disabled);
@@ -383,8 +415,8 @@
 .select-group:has(.select-field:focus-visible) .select__label {
   color: var(--select-label-color-focus);
 }
-.select-group[data-error] .select__label {
-  color: var(--select-label-color-error);
+.select-group[aria-invalid="true"] .select__label {
+  color: var(--select-label-color-invalid);
 }
 .select-group[data-disabled] .select__label {
   color: var(--select-label-color-disabled);
@@ -401,8 +433,8 @@
   margin-top: var(--select-helper-gap);
 }
 
-.select-group[data-error] .select__helper {
-  color: var(--select-helper-color-error);
+.select-group[aria-invalid="true"] .select__helper {
+  color: var(--select-helper-color-invalid);
 }
 .select-group[data-disabled] .select__helper {
   color: var(--select-label-color-disabled);
@@ -428,7 +460,7 @@
     border-color: GrayText;
     color: GrayText;
   }
-  .select-group[data-error] .select-field {
+  .select-group[aria-invalid="true"] .select-field {
     border-color: LinkText;
   }
   .select__chevron {

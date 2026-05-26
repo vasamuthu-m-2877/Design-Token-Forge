@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>03 · Archetype Gallery · DTF Wireframes</title>
+<link rel="stylesheet" href="wireframes.css" />
+</head>
+<body>
+
+<div class="wf-header">
+  <div>
+    <h1>03 · Archetype Gallery</h1>
+    <div class="wf-meta">The catalog UI. Every UI archetype your product contains, mapped + scored.</div>
+  </div>
+  <div class="wf-meta"><a href="index.html">← all wireframes</a></div>
+</div>
+
+<p style="font-family:var(--mono); font-size:12px; color:var(--ink-2); max-width:720px;">
+  This is the artifact the archaeology pipeline produces. After crawling a live product,
+  every UI region is clustered into archetypes and mapped against DTF tokens. This screen
+  is what the designer / DS lead opens to see <em>"what does our product actually contain?"</em>
+</p>
+
+<!-- ============ TOP-LEVEL GALLERY VIEW ============ -->
+
+<div class="wf-step-intro">Catalog · top-level view</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">Acme Checkout — 127 archetypes, 4,217 instances.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><span class="wf-step">Gallery</span> · Acme Checkout</span>
+    <span style="font-family:var(--mono); font-size:11px;">crawled 2 hours ago</span>
+  </div>
+  <div class="wf-screen-body">
+
+    <!-- Fidelity score header -->
+    <div class="wf-row between" style="padding:16px; border:1px solid var(--line); background:var(--bg); margin-bottom:24px;">
+      <div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Fidelity score</div>
+        <div style="font-family:var(--sans); font-size:32px; font-weight:600; margin-top:4px;">62%</div>
+        <div style="font-family:var(--mono); font-size:11px; color:var(--ok); margin-top:2px;">↑ +5% since last week</div>
+      </div>
+      <div style="flex:1; margin:0 32px;">
+        <div class="wf-bar" style="--pct: 62%; width:100%;"></div>
+      </div>
+      <div style="text-align:right; font-family:var(--mono); font-size:11px; color:var(--ink-3);">
+        <div>127 archetypes</div>
+        <div>4,217 instances</div>
+        <div>38 routes · 4 viewports</div>
+      </div>
+    </div>
+
+    <!-- Filter row -->
+    <div class="wf-row" style="gap:8px; margin-bottom:16px;">
+      <input class="wf-input" style="flex:1;" placeholder="Search archetypes…" />
+      <button class="wf-btn ghost">All ▼</button>
+      <button class="wf-btn ghost">Drift &gt; 30% ▼</button>
+      <button class="wf-btn ghost">Sort: instances ▼</button>
+    </div>
+
+    <!-- Archetype grid -->
+    <div class="wf-grid cols-5" style="gap:12px;">
+
+      <div class="wf-box" style="padding:10px;">
+        <div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">UserRow preview</div>
+        <div style="font-family:var(--mono); font-size:11px; font-weight:600;">UserRow</div>
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">847 inst · 12 routes</div>
+        <div style="margin-top:6px;"><span class="wf-pill ok">91%</span></div>
+      </div>
+
+      <div class="wf-box" style="padding:10px;">
+        <div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">StatTile</div>
+        <div style="font-family:var(--mono); font-size:11px; font-weight:600;">StatTile</div>
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">312 inst · 8 routes</div>
+        <div style="margin-top:6px;"><span class="wf-pill warn">64%</span></div>
+      </div>
+
+      <div class="wf-box" style="padding:10px;">
+        <div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">EmptyState</div>
+        <div style="font-family:var(--mono); font-size:11px; font-weight:600;">EmptyState</div>
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">187 inst · 21 routes</div>
+        <div style="margin-top:6px;"><span class="wf-pill ok">88%</span></div>
+      </div>
+
+      <div class="wf-box" style="padding:10px; border-color:var(--bad);">
+        <div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">PricingCard</div>
+        <div style="font-family:var(--mono); font-size:11px; font-weight:600;">PricingCard</div>
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">94 inst · 3 routes</div>
+        <div style="margin-top:6px;"><span class="wf-pill bad">32%</span></div>
+      </div>
+
+      <div class="wf-box" style="padding:10px;">
+        <div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">FormRow</div>
+        <div style="font-family:var(--mono); font-size:11px; font-weight:600;">FormRow</div>
+        <div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">298 inst · 15 routes</div>
+        <div style="margin-top:6px;"><span class="wf-pill warn">71%</span></div>
+      </div>
+
+      <div class="wf-box" style="padding:10px;"><div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">NavTab</div><div style="font-family:var(--mono); font-size:11px; font-weight:600;">NavTab</div><div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">412 inst</div><div style="margin-top:6px;"><span class="wf-pill ok">94%</span></div></div>
+      <div class="wf-box" style="padding:10px;"><div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">Toast</div><div style="font-family:var(--mono); font-size:11px; font-weight:600;">Toast</div><div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">156 inst</div><div style="margin-top:6px;"><span class="wf-pill warn">68%</span></div></div>
+      <div class="wf-box" style="padding:10px;"><div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">Breadcrumb</div><div style="font-family:var(--mono); font-size:11px; font-weight:600;">Breadcrumb</div><div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">89 inst</div><div style="margin-top:6px;"><span class="wf-pill ok">100%</span></div></div>
+      <div class="wf-box" style="padding:10px;"><div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">CheckoutLine</div><div style="font-family:var(--mono); font-size:11px; font-weight:600;">CheckoutLine</div><div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">76 inst</div><div style="margin-top:6px;"><span class="wf-pill bad">41%</span></div></div>
+      <div class="wf-box" style="padding:10px;"><div class="wf-box soft empty" style="min-height:54px; margin-bottom:8px; font-size:10px;">AddressForm</div><div style="font-family:var(--mono); font-size:11px; font-weight:600;">AddressForm</div><div style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">42 inst</div><div style="margin-top:6px;"><span class="wf-pill warn">73%</span></div></div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:16px; font-family:var(--mono); font-size:11px; color:var(--ink-3);">
+      … 117 more archetypes
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Fidelity score is the top-line number. One glance, one verdict.</li>
+  <li data-num="2">Each tile shows pattern thumbnail + instance count + route coverage + on-system %. Color-coded for fast scanning.</li>
+  <li data-num="3">Sorting defaults to most-instances first — that's where fixes have the most leverage.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ ARCHETYPE DETAIL VIEW — TABS ============ -->
+
+<div class="wf-step-intro">Click an archetype → detail view with tabs</div>
+<h2 class="wf-step-title" style="border:0; padding:0; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:18px; color:var(--ink); margin:0 0 16px;">UserRow — 847 instances, 71% on-system.</h2>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><a href="#" style="color:var(--ink);">← Gallery</a> / <span class="wf-step">UserRow</span></span>
+    <span style="font-family:var(--mono); font-size:11px;">847 instances · 12 routes · 4 variants · 71% on-system</span>
+  </div>
+  <div class="wf-screen-body" style="padding:0;">
+
+    <!-- Tabs -->
+    <div class="wf-tabs">
+      <span>Variants</span>
+      <span>States</span>
+      <span>Evidence</span>
+      <span>Spec</span>
+      <span class="active">Drift</span>
+      <span>On-system rebuild</span>
+    </div>
+
+    <!-- Drift tab content -->
+    <div style="padding:24px;">
+      <h3 style="margin-top:0;">Property-by-property analysis</h3>
+
+      <table class="wf-table">
+        <thead>
+          <tr><th>Property</th><th>Measured</th><th>Closest DTF token</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>padding-block</td><td>14px</td><td>--spacing-3 (12px)</td><td><span class="wf-pill warn">off (Δ 2px)</span></td></tr>
+          <tr><td>padding-inline</td><td>16px</td><td>--spacing-4 (16px)</td><td><span class="wf-pill ok">match</span></td></tr>
+          <tr><td>gap</td><td>12px</td><td>--spacing-3 (12px)</td><td><span class="wf-pill ok">match</span></td></tr>
+          <tr><td>background</td><td>#FAFAFA</td><td>--color-neutral-50</td><td><span class="wf-pill ok">match</span></td></tr>
+          <tr><td>border-radius</td><td>8px</td><td>--radius-md (8px)</td><td><span class="wf-pill ok">match</span></td></tr>
+          <tr><td>font-size</td><td>15px</td><td>--font-size-base (14/16)</td><td><span class="wf-pill warn">off-grid</span></td></tr>
+          <tr><td>box-shadow</td><td>0 1px 2px rgba(0,0,0,0.06)</td><td>(no match)</td><td><span class="wf-pill bad">missing token</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="wf-note" style="margin-top:16px;">
+        2 token gaps detected. <span class="wf-tertiary">Open proposal: add --shadow-row-sm + --spacing-3-half →</span> <span class="wf-marker">1</span>
+      </div>
+
+      <h3>Drift sources (where to act)</h3>
+      <ul class="wf-anno-list">
+        <li data-num="1">14px padding-block in 612 instances → propose new token --spacing-3-half OR migrate to --spacing-3 (12px)</li>
+        <li data-num="2">Custom box-shadow in all 847 instances → no DTF token matches → propose --shadow-row-sm</li>
+        <li data-num="3">15px font-size in 287 instances → off-grid, propose migrate to --font-size-base (16px)</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">Drift report doesn't just say "broken" — it proposes the fix (migrate to existing token OR add a new token). DS lead has actionable next step.</li>
+</ul>
+
+<div class="wf-arrow">▼</div>
+
+<!-- ============ SPEC TAB ============ -->
+
+<div class="wf-step-intro">Spec tab — auto-drafted by LLM, awaiting review</div>
+
+<div class="wf-screen">
+  <div class="wf-screen-bar">
+    <span><a href="#" style="color:var(--ink);">← Gallery</a> / <span class="wf-step">UserRow</span> / Spec</span>
+    <span style="font-family:var(--mono); font-size:11px;"><span class="wf-pill warn">draft · awaiting review</span></span>
+  </div>
+  <div class="wf-screen-body" style="padding:0;">
+
+    <div class="wf-tabs">
+      <span>Variants</span>
+      <span>States</span>
+      <span>Evidence</span>
+      <span class="active">Spec</span>
+      <span>Drift</span>
+      <span>On-system rebuild</span>
+    </div>
+
+    <div style="padding:24px;">
+      <div class="wf-grid cols-2" style="gap:24px;">
+
+        <!-- Spec -->
+        <div>
+          <h3 style="margin-top:0;">Auto-drafted spec</h3>
+          <pre style="font-family:var(--mono); font-size:11px; background:var(--bg); padding:16px; border:1px solid var(--line-soft); margin:0; overflow-x:auto; line-height:1.7;">name: UserRow
+evidence: 847 instances
+  across [/users, /team, /admin, ...]
+
+structure:
+  HStack:
+    - Avatar (L1, size=sm)
+    - VStack:
+        - Text (style=h6)
+        - Text (style=caption, color=muted)
+    - Spacer
+    - IconButton (L1, variant=ghost)
+
+tokens:
+  padding: --spacing-3 --spacing-4
+  gap: --spacing-3
+  background: --color-surface-default
+  border-radius: --radius-md
+  shadow: (PROPOSED) --shadow-row-sm
+
+variants:
+  - default
+  - with-status  (+ StatusDot)
+  - compact      (padding → --spacing-2)
+  - with-check   (+ Checkbox at start)</pre>
+        </div>
+
+        <!-- Evidence + actions -->
+        <div>
+          <h3 style="margin-top:0;">Evidence (5 of 847)</h3>
+          <div class="wf-grid cols-2" style="gap:8px;">
+            <div class="wf-box soft empty" style="min-height:48px; font-size:10px;">/users · row 1</div>
+            <div class="wf-box soft empty" style="min-height:48px; font-size:10px;">/users · row 12</div>
+            <div class="wf-box soft empty" style="min-height:48px; font-size:10px;">/team · row 3</div>
+            <div class="wf-box soft empty" style="min-height:48px; font-size:10px;">/admin · row 8</div>
+          </div>
+          <div class="wf-tertiary" style="margin-top:8px; display:inline-block;">View all 847 instances →</div>
+
+          <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--line-soft);">
+            <h3 style="margin-top:0;">Reviewer actions</h3>
+            <div class="wf-stack gap-sm">
+              <button class="wf-btn primary">✓ Approve as L2 component</button>
+              <button class="wf-btn">✎ Edit spec before approval</button>
+              <button class="wf-btn">📋 Promote as recipe instead</button>
+              <button class="wf-btn ghost">✗ Reject (one-off, don't componentize)</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="wf-note" style="margin-top:24px;">
+        LLM drafted this spec from the 5 most representative cluster members.
+        It references ONLY existing DTF L1 + tokens (plus the proposed gap tokens above).
+        Approving promotes this archetype to a real component in DTF core. <span class="wf-marker">1</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="wf-anno-list">
+  <li data-num="1">The approve action closes the loop: live product evidence → cluster → LLM draft → human review → DTF core. This is how the system learns from production.</li>
+</ul>
+
+<!-- ============ NAVIGATION ============ -->
+
+<div class="wf-arrow">▼</div>
+
+<div class="wf-row between" style="padding:24px; border:1px solid var(--line); background:var(--bg-elev); margin-top:24px;">
+  <div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-3); text-transform:uppercase; letter-spacing:0.06em;">Roll the catalog up</div>
+    <div style="font-family:var(--sans); font-size:16px; font-weight:600; margin-top:4px;">04 · Drift Dashboard</div>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--ink-2); margin-top:4px;">Exec / DS-lead view across multiple products + trends over time.</div>
+  </div>
+  <a class="wf-btn primary" href="04-drift-dashboard.html">Open dashboard →</a>
+</div>
+
+<!-- ============ REVIEW ============ -->
+
+<h2>Review this wireframe</h2>
+<div class="wf-stack gap-sm" style="font-family:var(--mono); font-size:12px; color:var(--ink-2);">
+  <div>Whole gallery: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span> <span class="wf-pill">expand</span> <span class="wf-pill">cut</span></div>
+  <div>Top-level catalog view: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Drift tab: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+  <div>Spec tab + reviewer actions: <span class="wf-pill">keep</span> <span class="wf-pill">rework</span></div>
+</div>
+
+<div class="wf-footer">
+  <span><a href="02-archetype-kit.html">← 02 · Archetype Kit</a></span>
+  <span><a href="04-drift-dashboard.html">04 · Drift Dashboard →</a></span>
+</div>
+
+</body>
+</html>

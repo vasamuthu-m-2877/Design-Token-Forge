@@ -1,0 +1,24 @@
+/* ════════════════════════════════════════════════════════════════
+   Design Token Forge — Mobile Foundation
+   L2 patterns shared across all mobile shape-kits.
+
+   Sits between L1 atoms (@design-token-forge/components) and
+   shape-kits (@design-token-forge/mobile-writing,
+   @design-token-forge/mobile-commerce, etc).
+
+   See v0.2 architecture:
+     docs/vision/v0.2-map/02-architecture.md
+   See governance + promotion rules:
+     packages/foundation-mobile/GOVERNANCE.md
+   ════════════════════════════════════════════════════════════════ */
+
+@import './top-bar/index.css';
+/* @import './bottom-tab-bar/index.css';   — Phase 2.5a */
+/* @import './search-header/index.css';    — Phase 2.5a */
+/* @import './swipe-row/index.css';        — Phase 2.5a */
+/* @import './action-sheet/index.css';     — Phase 2.5a */
+/* @import './confirm-sheet/index.css';    — Phase 2.5a */
+/* @import './settings-row/index.css';     — Phase 2.5a */
+/* @import './toast-mobile/index.css';     — Phase 2.5a */
+/* @import './empty-state/index.css';      — Phase 2.5a */
+/* @import './app-shell/index.css';        — Phase 2.5a (needs SafeAreaInset L1) */

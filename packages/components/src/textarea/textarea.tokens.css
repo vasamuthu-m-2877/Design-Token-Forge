@@ -1,6 +1,30 @@
 /* ════════════════════════════════════════════════════════════════
    Design Token Forge — Textarea Token Defaults
-   Layer 0: System defaults for 114 textarea variables.
+   Layer 0: System defaults for ~114 textarea variables.
+
+   Anatomy:
+     <div.textarea-group>
+       <label.textarea-label/>          (optional)
+       <div.textarea-field>
+         <textarea.textarea-control/>
+       </div>
+       <div.textarea-helper/>           (optional — helper or invalid msg)
+     </div>
+
+   Variants: outlined (default) | filled | underline
+   Roles:    brand (default) | danger | warning | info | success | neutral
+             (applied via [data-role="…"]; remaps --brand-* primitives
+              that drive focus ring + caret + focus border)
+   States:   default | hover | focus-visible | disabled | readonly
+             | invalid (aria-invalid="true")
+
+   Multi-line peer of input — same form-text archetype. Adds rows /
+   resize / min-height (via line-height × rows) instead of a fixed
+   height + affix slots.
+
+   Invalid is a STATE (triggered by aria-invalid="true"), not a role —
+   it always paints danger surfaces regardless of the active role.
+
    All values reference global tokens — zero hardcoded visuals.
    ════════════════════════════════════════════════════════════════ */
 
@@ -86,23 +110,23 @@
   --textarea-inline-size: 100%;
 
   /* ────────────────────────────────────────────────────────────
-     🎨 SURFACE — OUTLINE VARIANT  (15 vars)
+     🎨 SURFACE — OUTLINED VARIANT  (15 vars)
      ──────────────────────────────────────────────────────────── */
-  --textarea-outline-bg: transparent;
-  --textarea-outline-bg-hover: transparent;
-  --textarea-outline-bg-focus: transparent;
-  --textarea-outline-bg-disabled: transparent;
-  --textarea-outline-bg-error: transparent;
-  --textarea-outline-fg: var(--surface-base-ct-default);
-  --textarea-outline-fg-disabled: var(--surface-base-ct-faint);
-  --textarea-outline-border-color: var(--surface-base-cm-outline);
-  --textarea-outline-border-color-hover: var(--surface-base-cm-outline-hover);
-  --textarea-outline-border-color-focus: var(--brand-component-outline-default);
-  --textarea-outline-border-color-disabled: var(--surface-base-cm-outline);
-  --textarea-outline-border-color-error: var(--danger-component-outline-default);
-  --textarea-outline-placeholder: var(--surface-base-ct-faint);
-  --textarea-outline-placeholder-disabled: var(--surface-base-ct-faint);
-  --textarea-outline-opacity-disabled: 0.5;
+  --textarea-outlined-bg: transparent;
+  --textarea-outlined-bg-hover: transparent;
+  --textarea-outlined-bg-focus: transparent;
+  --textarea-outlined-bg-disabled: transparent;
+  --textarea-outlined-bg-invalid: transparent;
+  --textarea-outlined-fg: var(--surface-base-ct-default);
+  --textarea-outlined-fg-disabled: var(--surface-base-ct-faint);
+  --textarea-outlined-border-color: var(--surface-base-cm-outline);
+  --textarea-outlined-border-color-hover: var(--surface-base-cm-outline-hover);
+  --textarea-outlined-border-color-focus: var(--brand-component-outline-default);
+  --textarea-outlined-border-color-disabled: var(--surface-base-cm-outline);
+  --textarea-outlined-border-color-invalid: var(--danger-component-outline-default);
+  --textarea-outlined-placeholder: var(--surface-base-ct-faint);
+  --textarea-outlined-placeholder-disabled: var(--surface-base-ct-faint);
+  --textarea-outlined-opacity-disabled: 0.5;
 
   /* ────────────────────────────────────────────────────────────
      🎨 SURFACE — FILLED VARIANT  (15 vars)
@@ -111,14 +135,14 @@
   --textarea-filled-bg-hover: var(--surface-base-cm-bg-hover);
   --textarea-filled-bg-focus: var(--surface-base-cm-bg);
   --textarea-filled-bg-disabled: var(--surface-base-cm-bg);
-  --textarea-filled-bg-error: var(--surface-base-cm-bg);
+  --textarea-filled-bg-invalid: var(--surface-base-cm-bg);
   --textarea-filled-fg: var(--surface-base-ct-default);
   --textarea-filled-fg-disabled: var(--surface-base-ct-faint);
   --textarea-filled-border-color: var(--surface-base-cm-outline);
   --textarea-filled-border-color-hover: var(--surface-base-cm-outline-hover);
   --textarea-filled-border-color-focus: var(--brand-component-outline-default);
   --textarea-filled-border-color-disabled: var(--surface-base-cm-outline);
-  --textarea-filled-border-color-error: var(--danger-component-outline-default);
+  --textarea-filled-border-color-invalid: var(--danger-component-outline-default);
   --textarea-filled-placeholder: var(--surface-base-ct-faint);
   --textarea-filled-placeholder-disabled: var(--surface-base-ct-faint);
   --textarea-filled-opacity-disabled: 0.5;
@@ -130,14 +154,14 @@
   --textarea-underline-bg-hover: transparent;
   --textarea-underline-bg-focus: transparent;
   --textarea-underline-bg-disabled: transparent;
-  --textarea-underline-bg-error: transparent;
+  --textarea-underline-bg-invalid: transparent;
   --textarea-underline-fg: var(--surface-base-ct-default);
   --textarea-underline-fg-disabled: var(--surface-base-ct-faint);
   --textarea-underline-border-color: var(--surface-base-cm-outline);
   --textarea-underline-border-color-hover: var(--surface-base-ct-subtle);
   --textarea-underline-border-color-focus: var(--brand-component-outline-default);
   --textarea-underline-border-color-disabled: var(--surface-base-cm-outline);
-  --textarea-underline-border-color-error: var(--danger-component-outline-default);
+  --textarea-underline-border-color-invalid: var(--danger-component-outline-default);
   --textarea-underline-placeholder: var(--surface-base-ct-faint);
   --textarea-underline-placeholder-disabled: var(--surface-base-ct-faint);
   --textarea-underline-opacity-disabled: 0.5;
@@ -147,10 +171,10 @@
      ──────────────────────────────────────────────────────────── */
   --textarea-label-color: var(--surface-base-ct-subtle);
   --textarea-label-color-focus: var(--brand-content-default);
-  --textarea-label-color-error: var(--danger-content-default);
+  --textarea-label-color-invalid: var(--danger-content-default);
   --textarea-label-color-disabled: var(--surface-base-ct-faint);
   --textarea-helper-color: var(--surface-base-ct-subtle);
-  --textarea-helper-color-error: var(--danger-content-default);
+  --textarea-helper-color-invalid: var(--danger-content-default);
   --textarea-caret-color: var(--brand-component-bg-default);
 
   /* ────────────────────────────────────────────────────────────

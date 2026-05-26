@@ -72,17 +72,25 @@
   --avatar-bg-hover: var(--surface-base-cm-bg-hover);
   --avatar-fg: var(--surface-base-ct-default);
 
-  /* Semantic role overrides */
-  --avatar-primary-bg: var(--brand-container-bg);
-  --avatar-primary-fg: var(--brand-content-default);
+  /* Semantic role overrides (6 roles × 2 = 12 vars) */
+  /* brand */
   --avatar-brand-bg: var(--brand-container-bg);
   --avatar-brand-fg: var(--brand-content-default);
+  /* info */
+  --avatar-info-bg: var(--info-container-bg);
+  --avatar-info-fg: var(--info-content-default);
+  /* danger */
   --avatar-danger-bg: var(--danger-container-bg);
   --avatar-danger-fg: var(--danger-content-default);
+  /* success */
   --avatar-success-bg: var(--success-container-bg);
   --avatar-success-fg: var(--success-content-default);
+  /* warning */
   --avatar-warning-bg: var(--warning-container-bg);
   --avatar-warning-fg: var(--warning-content-default);
+  /* neutral */
+  --avatar-neutral-bg: var(--surface-base-cm-bg);
+  --avatar-neutral-fg: var(--surface-base-ct-default);
 
   /* Ring (e.g. online indicator) */
   --avatar-ring-width: 2px;

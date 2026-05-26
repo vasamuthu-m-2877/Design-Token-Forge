@@ -1,0 +1,237 @@
+/* v0.2 wireframe styles — inherits v0.1 vocabulary, adds delta-specific bits */
+@import url("../../v0.1-map/05-wireframes/wireframes.css");
+
+/* v0.2 marker — small pill that flags new/changed sections */
+.wf-v2-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  background: var(--note);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.wf-v1-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  background: var(--ink-3);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Tier diagram — stacked layer model for architecture */
+.wf-tier {
+  border: 1px solid var(--line);
+  background: var(--bg-elev);
+  padding: 14px 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: relative;
+}
+.wf-tier + .wf-tier { border-top: 0; }
+.wf-tier.new { background: rgba(178, 95, 0, 0.05); border-left: 3px solid var(--note); }
+.wf-tier-name { font-weight: 600; color: var(--ink); }
+.wf-tier-desc { color: var(--ink-2); font-family: var(--sans); font-size: 12px; flex: 1; }
+.wf-tier-owner { color: var(--ink-3); font-size: 10px; text-align: right; min-width: 120px; }
+.wf-tier-count { color: var(--note); font-size: 10px; font-weight: 600; }
+
+/* Side-by-side compare (v0.1 vs v0.2) */
+.wf-compare { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 16px; align-items: stretch; margin: 16px 0; }
+.wf-compare-col { border: 1px solid var(--line-soft); padding: 16px; background: var(--bg-elev); }
+.wf-compare-col.v1 { border-style: dashed; }
+.wf-compare-col h4 {
+  margin: 0 0 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+.wf-compare-col.v1 h4::after { content: " · v0.1"; color: var(--ink-3); }
+.wf-compare-col.v2 h4::after { content: " · v0.2"; color: var(--note); }
+.wf-compare-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  color: var(--ink-3);
+  font-size: 18px;
+}
+
+/* Sub-step progress (used in revised onboard) */
+.wf-substeps {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border: 1px solid var(--line);
+}
+.wf-substep {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  border-right: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wf-substep:last-child { border-right: 0; }
+.wf-substep.done { color: var(--ok); }
+.wf-substep.active { color: var(--ink); background: var(--bg); font-weight: 600; }
+.wf-substep-num {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  text-align: center;
+  line-height: 16px;
+  font-size: 10px;
+}
+.wf-substep.done .wf-substep-num::before { content: "✓"; }
+.wf-substep.done .wf-substep-num { color: var(--ok); }
+
+/* Role chip — for role mapping step */
+.wf-role-row {
+  display: grid;
+  grid-template-columns: 24px 100px 1fr 80px;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line-soft);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.wf-role-row:last-child { border-bottom: 0; }
+.wf-role-swatch { width: 20px; height: 20px; border: 1px solid var(--line); background: var(--ink-3); }
+.wf-role-name { color: var(--ink); font-weight: 600; }
+.wf-role-mini-ladder { display: flex; height: 16px; border: 1px solid var(--line); }
+.wf-role-mini-ladder div { flex: 1; border-right: 1px solid rgba(0,0,0,0.1); }
+.wf-role-mini-ladder div:last-child { border-right: 0; }
+.wf-role-step { color: var(--ink-3); font-size: 10px; text-align: right; }
+
+/* Theme pair — light + dark previews */
+.wf-theme-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.wf-theme-card { border: 1px solid var(--line); padding: 14px; }
+.wf-theme-card.light { background: #fff; color: #1a1a1a; }
+.wf-theme-card.dark { background: #1a1a1a; color: #fff; }
+.wf-theme-card h4 { margin: 0 0 12px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; }
+.wf-theme-card.dark h4 { color: #ccc; }
+
+/* Kit picker — platform → shape grid */
+.wf-picker-stage { margin-bottom: 24px; }
+.wf-picker-stage-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-2);
+  margin-bottom: 12px;
+}
+.wf-platform-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.wf-platform-card {
+  border: 1px solid var(--line);
+  padding: 20px;
+  background: var(--bg-elev);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+.wf-platform-card.selected {
+  background: var(--ink);
+  color: var(--bg-elev);
+  border-color: var(--ink);
+}
+.wf-platform-card.selected .wf-platform-meta { color: rgba(255,255,255,0.7); }
+.wf-platform-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+}
+.wf-platform-name { font-weight: 600; margin-bottom: 4px; }
+.wf-platform-meta { color: var(--ink-3); font-size: 10px; }
+
+.wf-shape-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 8px; }
+.wf-shape-card {
+  border: 1px solid var(--line-soft);
+  padding: 16px 14px;
+  background: var(--bg-elev);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  position: relative;
+}
+.wf-shape-card.ready { border-color: var(--ok); }
+.wf-shape-card.coming { color: var(--ink-3); }
+.wf-shape-card.coming::after {
+  content: "soon";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 9px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.wf-shape-name { font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.wf-shape-card.coming .wf-shape-name { color: var(--ink-3); }
+.wf-shape-desc { font-family: var(--sans); font-size: 11px; color: var(--ink-2); line-height: 1.4; }
+
+/* Foundation pill on a shape card */
+.wf-found-pill {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 1px 6px;
+  font-size: 9px;
+  color: var(--note);
+  border: 1px solid var(--note);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Build math bar — visualizes Foundation savings
+ * NOTE: named wf-stackbar to avoid colliding with v0.1's wf-bar (progress bar) */
+.wf-stackbar {
+  display: flex;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11px;
+  overflow: hidden;
+  background: var(--bg-elev);
+}
+.wf-stackbar-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(255,255,255,0.25);
+  color: var(--bg-elev);
+  padding: 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex-basis: 0;
+}
+.wf-stackbar-seg:last-child { border-right: 0; }
+.wf-stackbar-seg.foundation { background: var(--note); }
+.wf-stackbar-seg.writing { background: var(--ink); }
+.wf-stackbar-seg.commerce { background: var(--ink-2); }
+.wf-stackbar-seg.reading { background: #4a7a8a; }
+.wf-stackbar-seg.chat { background: #6a4a8a; }
+.wf-stackbar-seg.duplicate { background: var(--bad); }
+.wf-stackbar-label { font-family: var(--mono); font-size: 11px; color: var(--ink-2); margin-bottom: 6px; }

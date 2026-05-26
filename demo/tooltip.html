@@ -60,6 +60,8 @@
       <button class="pill" role="radio" aria-pressed="true" data-ctrl-variant="" type="button">Default</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="light" type="button">Light</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="danger" type="button">Danger</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="warning" type="button">Warning</button>
+      <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="info" type="button">Info</button>
       <button class="pill" role="radio" aria-pressed="false" data-ctrl-variant="success" type="button">Success</button>
     </div>
   </div>
@@ -200,7 +202,7 @@
   className="tooltip"
   data-placement={placement}   {/* top | bottom | left | right */}
   data-size={size}             {/* small | base | large */}
-  data-variant={variant}       {/* light | danger | success (omit for default) */}
+  data-variant={variant}       {/* light | danger | warning | info | success (omit for default) */}
   data-state={visible ? 'visible' : 'hidden'}
   role="tooltip"
   id={tooltipId}
@@ -253,6 +255,8 @@
 --tooltip-bg / -fg / -arrow-color
 --tooltip-light-bg / -fg / -border-color / -arrow-color
 --tooltip-danger-bg / -fg / -arrow-color
+--tooltip-warning-bg / -fg / -arrow-color
+--tooltip-info-bg / -fg / -arrow-color
 --tooltip-success-bg / -fg / -arrow-color
 --tooltip-shadow / -light-shadow
 
@@ -284,7 +288,7 @@
   'use strict';
 
   var PLACEMENTS = ['top','bottom','left','right'];
-  var VARIANTS   = [{key:'',label:'Default'},{key:'light',label:'Light'},{key:'danger',label:'Danger'},{key:'success',label:'Success'}];
+  var VARIANTS   = [{key:'',label:'Default'},{key:'light',label:'Light'},{key:'danger',label:'Danger'},{key:'warning',label:'Warning'},{key:'info',label:'Info'},{key:'success',label:'Success'}];
   var SIZES      = ['small','base','large'];
   var SLABELS    = ['Small','Base','Large'];
 
