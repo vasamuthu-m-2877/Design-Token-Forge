@@ -576,9 +576,11 @@ const pct = computed(() =&gt; ((props.modelValue - props.min) / (props.max - pro
 
   function renderDensity(){
     var el=clr('densityScale');
-    SIZES.forEach(function(s){
+    SIZES.forEach(function(s, idx){
+      var densityValue = 38 + (idx * 7);
+      if (densityValue > 86) densityValue = 86;
       var it=document.createElement('div');it.className='density-item';
-      it.appendChild(makeSlider(s,{value:50+Math.floor(Math.random()*30)-15,noSync:true}));
+      it.appendChild(makeSlider(s,{value:densityValue,noSync:true}));
       var m=document.createElement('div');m.className='density-meta';
       m.textContent='track '+TRACK_H[s]+' / thumb '+THUMB_W[s];
       it.appendChild(m);el.appendChild(it);

@@ -65,6 +65,27 @@ function demoURL(name) {
 }
 
 /**
+ * Bypass auth-gate for local visual snapshots.
+ * Must run before page scripts execute.
+ */
+async function seedAuthState(page) {
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem("dtf-session-epoch", "2");
+      localStorage.setItem("dtf-gh-pat", "ghp_visual_snapshot_token");
+      localStorage.setItem("dtf-gh-user", "visual-snapshot");
+      localStorage.setItem("dtf-gh-owner", "visual-snapshot");
+      sessionStorage.setItem("dtf-auth-ok", "1");
+      localStorage.setItem("dtf-active-project", "pearl");
+      localStorage.setItem(
+        "dtf-known-projects",
+        JSON.stringify([{ id: "pearl", name: "Pearl", owner: "visual-snapshot" }])
+      );
+    } catch (_) {}
+  });
+}
+
+/**
  * Wait for all demo JS to finish rendering (fonts, dynamic content).
  * Demos use DOMContentLoaded / load handlers to populate sections.
  */
@@ -79,6 +100,7 @@ async function waitForDemoReady(page) {
 for (const component of COMPONENTS) {
   test.describe(component, () => {
     test(`full page`, async ({ page }) => {
+      await seedAuthState(page);
       await page.goto(demoURL(component));
       await waitForDemoReady(page);
 
@@ -88,6 +110,7 @@ for (const component of COMPONENTS) {
     });
 
     test(`sections`, async ({ page }) => {
+      await seedAuthState(page);
       await page.goto(demoURL(component));
       await waitForDemoReady(page);
 

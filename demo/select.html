@@ -642,7 +642,9 @@ function pgApplyDensity(size) {
 function pgUpdateChain(){
   var surfSel=document.querySelector('[data-pg-surface="A"]');
   var roleSel=document.querySelector('[data-pg-role="A"]');
-  var field=body.querySelector('.select-group[data-variant="outlined"] .select-field');
+  var bodyEl=document.getElementById('pgBodyA');
+  if(!bodyEl)return;
+  var field=bodyEl.querySelector('.select-group[data-variant="outlined"] .select-field');
   if(!field)return;
   var cs=getComputedStyle(field);
   var chain=document.getElementById('pgChain');
