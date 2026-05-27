@@ -1,0 +1,115 @@
+component: spinner
+prefix: spin
+category: Display & Feedback
+description: Animated loading indicator. Renders as a circular arc that rotates continuously.
+
+classification:
+  type: display-feedback
+  has_variants: true
+  has_roles: true
+  density_modes: [micro, tiny, small, base, medium, large, big, huge, mega, ultra]
+
+variants:
+  structural:
+    - name: ring
+      description: Spinning arc ring (default)
+      default: true
+    - name: dots
+      description: Three pulsing dots in a row
+
+roles:
+  - brand
+  - danger
+  - success
+  - warning
+  - info
+  - neutral
+
+slots:
+  - name: track
+    element: .spinner__track
+    tokens: [color, opacity]
+  - name: arc
+    element: .spinner__arc (SVG circle or border-based)
+    tokens: [color, stroke-width]
+  - name: label
+    element: .spinner__label
+    tokens: [font-size, color, gap]
+
+states:
+  - default
+  - disabled
+
+variables:
+  shape:
+    - name: --spin-track-width-{size}
+      per_density: true
+      count: 10
+      description: Stroke/border width of the spinner
+    - name: --spin-radius-{size}
+      per_density: true
+      count: 10
+      description: Border radius (full for ring variant)
+
+  dimension:
+    - name: --spin-size-{size}
+      per_density: true
+      count: 10
+      range: [12px, 64px]
+      description: Width and height of the spinner
+    - name: --spin-label-gap-{size}
+      per_density: true
+      count: 10
+      description: Gap between spinner and optional label
+
+  surface:
+    - name: --spin-{role}-color
+      description: Arc/indicator color per role
+    - name: --spin-track-color
+      description: Track (background ring) color
+    - name: --spin-track-opacity
+      description: Track opacity
+
+  typography:
+    - name: --spin-font-family
+      default: var(--font-family-sans)
+    - name: --spin-font-size-{size}
+      per_density: true
+      count: 10
+    - name: --spin-font-weight
+      default: var(--font-weight-medium)
+    - name: --spin-label-color
+      default: var(--surface-base-ct-subtle)
+
+  slots:
+    track:
+      - name: --spin-track-color
+        default: currentColor
+      - name: --spin-track-opacity
+        default: 0.2
+    arc:
+      - name: --spin-arc-length
+        default: 0.75turn
+        description: How much of the circle the arc covers (0.25 = quarter)
+
+  motion:
+    - name: --spin-duration
+      default: 800ms
+      description: One full rotation duration
+    - name: --spin-easing
+      default: var(--easing-linear)
+    - name: --spin-dots-duration
+      default: 1200ms
+      description: Dots variant pulse cycle
+
+  a11y:
+    - name: --spin-min-tap-target
+      default: 0px
+      description: Non-interactive — no tap target needed
+
+summary:
+  total_variables: ~85
+  per_density_tokens: 50
+  variant_count: 2
+  role_count: 6
+  slot_count: 3
