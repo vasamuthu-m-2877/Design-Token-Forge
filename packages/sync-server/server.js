@@ -571,6 +571,33 @@ function cssVarToExtrasPath(value) {
 }
 
 /**
+ * Parse numeric CSS values used in comp-size tokens.
+ * Supports:
+ *   - plain numeric values (e.g. "16px", "1em", "0.5")
+ *   - calc(var(--token) * factor) where token suffix is numeric
+ */
+function parseCompSizeNumber(value, extrasVarSet) {
+  const direct = parseFloat(value);
+  if (!isNaN(direct)) return direct;
+
+  const calcMul = value.match(/^calc\(var\(--([a-zA-Z0-9_-]+)\)\s*\*\s*(-?\d*\.?\d+)\)$/);
+  if (!calcMul) return null;
+
+  const tokenName = calcMul[1];
+  const factor = parseFloat(calcMul[2]);
+  if (isNaN(factor)) return null;
+
+  const tokenPath = cssVarToExtrasPath(`var(--${tokenName})`);
+  if (!tokenPath || !extrasVarSet.has(tokenPath)) return null;
+
+  const numericSuffix = tokenPath.split('/')[1];
+  const base = parseFloat(numericSuffix);
+  if (isNaN(base)) return null;
+
+  return base * factor;
+}
+
+/**
  * Determine the proper scope for a comp-size variable based on its semantic name.
  */
 function scopeForCompSizeVar(varName) {
@@ -645,8 +672,8 @@ function buildComponentGroup(prefix, group, tokens, extrasVarSet, propMap) {
         }
       } else {
         // Direct numeric value (e.g. hardcoded px)
-        const num = parseFloat(cssValue);
-        if (!isNaN(num)) {
+        const num = parseCompSizeNumber(cssValue, extrasVarSet);
+        if (num !== null) {
           values[mode] = num;
         } else {
           valid = false;

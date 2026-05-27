@@ -268,6 +268,16 @@
   --datepicker-footer-display: none;
   --datepicker-weeknum-display: none;
   --datepicker-separator-display: none;
+   --datepicker-nav-icon-size-micro: var(--font-size-16);
+   --datepicker-nav-icon-size-tiny: var(--font-size-16);
+   --datepicker-nav-icon-size-small: var(--font-size-16);
+   --datepicker-nav-icon-size-base: var(--font-size-16);
+   --datepicker-nav-icon-size-medium: var(--font-size-16);
+   --datepicker-nav-icon-size-large: var(--font-size-16);
+   --datepicker-nav-icon-size-big: var(--font-size-16);
+   --datepicker-nav-icon-size-huge: var(--font-size-16);
+   --datepicker-nav-icon-size-mega: var(--font-size-16);
+   --datepicker-nav-icon-size-ultra: var(--font-size-16);
   --datepicker-nav-icon-size: 1em;
   --datepicker-nav-icon-color: currentColor;
   --datepicker-today-dot-display: none;
