@@ -434,114 +434,114 @@
   "t1Picks": {
     "light": {
       "brand": {
-        "fill": "550",
+        "fill": "500",
         "content": "550",
-        "container": "75",
-        "borderStep": "450",
-        "separatorStep": "350",
+        "container": "50",
+        "borderStep": "300",
+        "separatorStep": "100",
         "onComponent": "white",
-        "onContainerStep": "550"
+        "onContainerStep": "600"
       },
       "danger": {
-        "fill": "550",
+        "fill": "500",
         "content": "550",
-        "container": "75",
-        "borderStep": "450",
-        "separatorStep": "350",
+        "container": "50",
+        "borderStep": "300",
+        "separatorStep": "100",
         "onComponent": "white",
         "onContainerStep": "550"
       },
       "success": {
         "fill": "600",
-        "content": "700",
+        "content": "600",
         "container": "50",
         "borderStep": "500",
-        "separatorStep": "400",
+        "separatorStep": "100",
         "onComponent": "white",
         "onContainerStep": "700"
       },
       "warning": {
         "fill": "600",
-        "content": "750",
-        "container": "75",
-        "borderStep": "500",
-        "separatorStep": "400",
+        "content": "600",
+        "container": "50",
+        "borderStep": "300",
+        "separatorStep": "100",
         "onComponent": "white",
-        "onContainerStep": "750"
+        "onContainerStep": "700"
       },
       "info": {
         "fill": "600",
         "content": "700",
         "container": "50",
-        "borderStep": "450",
-        "separatorStep": "350",
+        "borderStep": "300",
+        "separatorStep": "100",
         "onComponent": "white",
-        "onContainerStep": "700"
+        "onContainerStep": "600"
       },
       "neutral": {
-        "fill": "550",
+        "fill": "500",
         "content": "550",
-        "container": "75",
-        "borderStep": "450",
-        "separatorStep": "350",
+        "container": "50",
+        "borderStep": "300",
+        "separatorStep": "100",
         "onComponent": "white",
-        "onContainerStep": "550"
+        "onContainerStep": "600"
       }
     },
     "dark": {
       "brand": {
         "fill": "500",
-        "content": "200",
+        "content": "150",
         "container": "black",
-        "borderStep": "400",
-        "separatorStep": "300",
+        "borderStep": "750",
+        "separatorStep": "350",
         "onComponent": "white",
         "onContainerStep": "200"
       },
       "danger": {
         "fill": "450",
-        "content": "200",
+        "content": "150",
         "container": "850",
-        "borderStep": "350",
-        "separatorStep": "250",
+        "borderStep": "450",
+        "separatorStep": "350",
         "onComponent": "white",
-        "onContainerStep": "200"
+        "onContainerStep": "150"
       },
       "success": {
         "fill": "600",
-        "content": "200",
+        "content": "150",
         "container": "850",
-        "borderStep": "400",
-        "separatorStep": "300",
+        "borderStep": "450",
+        "separatorStep": "350",
         "onComponent": "white",
-        "onContainerStep": "200"
+        "onContainerStep": "100"
       },
       "warning": {
         "fill": "600",
-        "content": "200",
-        "container": "850",
+        "content": "150",
+        "container": "900",
         "borderStep": "450",
         "separatorStep": "350",
         "onComponent": "white",
-        "onContainerStep": "200"
+        "onContainerStep": "175"
       },
       "info": {
         "fill": "700",
-        "content": "200",
+        "content": "150",
         "container": "850",
-        "borderStep": "350",
-        "separatorStep": "250",
+        "borderStep": "550",
+        "separatorStep": "450",
         "onComponent": "white",
-        "onContainerStep": "200"
+        "onContainerStep": "100"
       },
       "neutral": {
-        "fill": "550",
-        "content": "200",
-        "container": "75",
+        "fill": "450",
+        "content": "150",
+        "container": "800",
         "borderStep": "450",
         "separatorStep": "350",
         "onComponent": "white",
-        "onContainerStep": "350"
+        "onContainerStep": "100"
       }
     }
   },
