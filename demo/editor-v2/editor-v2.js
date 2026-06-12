@@ -822,11 +822,11 @@
   var $listSub   = document.getElementById('listSub');
   var $body      = document.getElementById('tokenListBody');
   var $frame     = document.getElementById('previewFrame');
-  // Start loading the preview iframe immediately — in parallel with
-  // the synchronous boot sequence below. The JS event loop guarantees
-  // the iframe's 'load' event fires AFTER this call stack unwinds, so
-  // pushPreview() always runs with fully-initialised State.
-  if ($frame) $frame.src = './preview.html?v=' + Date.now();
+  // The inline script in index.html already set $frame.src the moment
+  // the parser reached the <iframe> element — before this deferred
+  // script ran. Only set src here as a fallback (e.g. direct file://
+  // open where the inline script may have been blocked).
+  if ($frame && !$frame.src) $frame.src = './preview.html?v=' + Date.now();
   var $changeCt  = document.getElementById('changeCount');
   var $deploy    = document.getElementById('deployBtn');
   var $discard   = document.getElementById('discardBtn');
@@ -6673,7 +6673,10 @@
     });
   }
 
-  $frame.addEventListener('load', function () {
+  function _onFrameLoad() {
+    // Mark body so the stage reveals the checkerboard and the iframe
+    // fades in. Class is permanent once set (no flicker on re-pushes).
+    document.body.classList.add('ev2-frame-loaded');
     var mode = document.documentElement.getAttribute('data-theme') || 'light';
     try { $frame.contentWindow.postMessage({ type: 'ev2-theme', mode: mode }, '*'); } catch (e) {}
     try { $frame.contentWindow.postMessage({ type: 'ev2-active-role', role: State.activeRole }, '*'); } catch (e) {}
@@ -6684,7 +6687,19 @@
        with the project's primitives.css fonts and only updates
        when the user enters Tt. */
     try { loadTypoState(); pushTypoToPreview(); } catch (_e) {}
-  });
+  }
+  $frame.addEventListener('load', _onFrameLoad);
+  /* Race-condition guard: the inline-script in index.html sets
+     $frame.src the moment the parser hits the <iframe> element,
+     which is hundreds of ms before this deferred script runs.
+     On a warm cache preview.html can load in <100ms, so the
+     iframe's 'load' event fires BEFORE this listener is attached.
+     Detect that case and push overrides immediately. */
+  try {
+    if ($frame.contentDocument && $frame.contentDocument.readyState === 'complete' && $frame.src) {
+      _onFrameLoad();
+    }
+  } catch (_re) {}
 
   var draftStatus = document.getElementById('draftStatus');
 

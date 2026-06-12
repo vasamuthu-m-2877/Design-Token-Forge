@@ -82,7 +82,7 @@
   <link rel="stylesheet" href="../shared.css">
 
   <!-- Editor v2 specific layout -->
-  <link rel="stylesheet" href="./editor-v2.css?v=163">
+  <link rel="stylesheet" href="./editor-v2.css?v=164">
 
   <!-- Palette engine MUST load before the per-project token script
        below so we can synth primitives from cfg.paletteKeys before
@@ -647,6 +647,17 @@
 
       <div class="ev2-preview-stage" id="previewStage">
         <iframe class="ev2-preview-frame" id="previewFrame" title="Live component preview" sandbox="allow-same-origin allow-scripts"></iframe>
+        <!-- Set src INLINE (not deferred) so preview loads the moment
+             the parser reaches this element — ~300-500ms before the
+             442KB deferred editor-v2.js finishes parsing. Without this
+             the stage shows as empty checkerboard for that whole gap.
+             editor-v2.js skips re-setting src if it's already set. -->
+        <script>(function(){
+          try{
+            var f=document.getElementById('previewFrame');
+            if(f&&!f.src) f.src='./preview.html?v='+Date.now();
+          }catch(_e){}
+        })();</script>
       </div>
     </section>
 
@@ -936,6 +947,6 @@
     </div>
   </div>
 
-  <script src="./editor-v2.js?v=181" defer></script>
+  <script src="./editor-v2.js?v=182" defer></script>
 </body>
 </html>

@@ -1342,6 +1342,14 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
     linear-gradient(-45deg, transparent 75%, var(--ev2-chrome-subtle) 75%);
   background-size:18px 18px;
   background-position:0 0, 0 9px, 9px -9px, -9px 0px;
+  /* Smooth-in: don't show the raw checkerboard until the frame is
+     ready. Starts as the chrome bg, fades to checkerboard after
+     the frame loads (body gets ev2-frame-loaded class). */
+  background-color:var(--ev2-chrome-bg);
+  transition:background-color 0.3s ease;
+}
+body.ev2-frame-loaded .ev2-preview-stage{
+  background-color:transparent;
 }
 .ev2-preview-frame{
   flex:1;min-height:0;
@@ -1350,6 +1358,12 @@ html.ev2-tip-js [data-tip]::before { content:none !important; display:none !impo
   border-radius:var(--radius-md,6px);
   background:var(--ev2-chrome-cm-bg);
   box-shadow:var(--shadow-md,0 4px 12px rgba(0,0,0,.06));
+  /* Fade in the iframe once it has content */
+  opacity:0;
+  transition:opacity 0.2s ease;
+}
+body.ev2-frame-loaded .ev2-preview-frame{
+  opacity:1;
 }
 
 /* ── Save bar (bottom of preview pane) ────────────────── */
