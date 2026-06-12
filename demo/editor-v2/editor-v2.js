@@ -822,6 +822,11 @@
   var $listSub   = document.getElementById('listSub');
   var $body      = document.getElementById('tokenListBody');
   var $frame     = document.getElementById('previewFrame');
+  // Start loading the preview iframe immediately — in parallel with
+  // the synchronous boot sequence below. The JS event loop guarantees
+  // the iframe's 'load' event fires AFTER this call stack unwinds, so
+  // pushPreview() always runs with fully-initialised State.
+  if ($frame) $frame.src = './preview.html?v=' + Date.now();
   var $changeCt  = document.getElementById('changeCount');
   var $deploy    = document.getElementById('deployBtn');
   var $discard   = document.getElementById('discardBtn');
@@ -6875,7 +6880,8 @@
       });
     }
 
-    $frame.src = './preview.html?v=' + Date.now();
+    // $frame.src was already set at boot start (above) so the iframe
+    // loaded in parallel with this initialisation sequence.
     // Re-validate after draft load: if any saved t1 picks fail AA
     // against the CURRENT ladder (e.g. seed changed since last
     // session, or solver thresholds tightened), silently snap them

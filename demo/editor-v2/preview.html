@@ -14,11 +14,38 @@
        the first override arrives. Safety: auto-reveal after 4s in
        case the editor never sends overrides (preview opened
        standalone, dev page, etc) so the iframe isn't permanently
-       blank. -->
+       blank.
+
+       Design notes on the mask colours + animation:
+         • Light mode neutral (#f5f6f8) blends with the surface-base-bg
+           so the mask is invisible against the page — no jarring black
+           flash on reload in light mode.
+         • Dark mode keeps #0b0d12 (matches the dark surface background).
+         • 80ms fade-in delay: very fast loads (cache hits) never see
+           the mask at all. It only appears when the load is slow.
+         • 220ms fade-out when data-ev2-ready is set (opacity !important
+           beats animation fill-mode) → smooth reveal instead of a snap. -->
   <style id="ev2-preview-mask-css">
-    html:not([data-ev2-ready])::before{
+    /* always present, starts transparent, fades in after 80ms */
+    html::before{
       content:'';position:fixed;inset:0;z-index:2147483647;
-      background:#0b0d12;pointer-events:none;
+      pointer-events:none;
+      background:#f5f6f8;           /* light-mode neutral */
+      opacity:0;
+      animation:ev2MaskIn 0.15s ease-out 0.08s forwards;
+      transition:opacity 0.22s ease-out;
+    }
+    html[data-theme="dark"]::before{
+      background:#0b0d12;           /* dark-mode neutral */
+    }
+    /* lift mask: !important overrides animation forwards fill */
+    html[data-ev2-ready]::before{
+      opacity:0 !important;
+      pointer-events:none;
+    }
+    @keyframes ev2MaskIn{
+      from{opacity:0}
+      to{opacity:1}
     }
   </style>
   <script>
