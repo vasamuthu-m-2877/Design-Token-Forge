@@ -782,13 +782,11 @@ async function syncAll(data) {
   }
   stats.variables = verifyTotal; /* Use actual Figma count, not theoretical */
 
-  /* Pass 5: Sync Typography collection font-family/primary to match
-     font/family-headline from primitives-numbers.
-     The Typography collection is managed by Generate Components, not
-     syncAll, so its font-family/primary value goes stale when the
-     project's configured font changes. Update it in-place here so
-     that "Update Variables" alone is sufficient — no component
-     regeneration needed for a font change. */
+  /* Pass 5: Sync Typography collection font-family variables to match
+     primitives-numbers font/family-headline/-body/-code.
+     Runs on every Update Variables so a font change is immediately live
+     without needing to regenerate components.
+     Also self-heals the legacy font-family/primary → font-family/body rename. */
   try {
     var typoSyncCols = await figma.variables.getLocalVariableCollectionsAsync();
     var typoSyncCol = null;
@@ -800,28 +798,57 @@ async function syncAll(data) {
       }
     }
     if (typoSyncCol) {
-      /* Find font/family-headline in primitives-numbers */
-      var primNumsVars = await buildCollectionVarMap('primitives-numbers');
-      var fhVar2 = primNumsVars['font/family-headline'];
-      if (fhVar2) {
-        var fhModeKeys2 = Object.keys(fhVar2.valuesByMode);
-        var fhVal2 = fhModeKeys2.length > 0 ? fhVar2.valuesByMode[fhModeKeys2[0]] : null;
-        if (typeof fhVal2 === 'string' && fhVal2 && !fhVal2.startsWith('var(')) {
-          /* Find font-family/primary in the Typography collection */
-          var typoModeId5 = typoSyncCol.modes[0].modeId;
-          for (var tvi2 = 0; tvi2 < typoSyncCol.variableIds.length; tvi2++) {
-            var tv2 = await figma.variables.getVariableByIdAsync(typoSyncCol.variableIds[tvi2]);
-            if (tv2 && tv2.name === 'font-family/primary') {
-              var curVal = tv2.valuesByMode[typoModeId5];
-              if (curVal !== fhVal2) {
-                tv2.setValueForMode(typoModeId5, fhVal2);
-                log('Pass5: font-family/primary updated: "' + curVal + '" → "' + fhVal2 + '"');
-              } else {
-                log('Pass5: font-family/primary already "' + fhVal2 + '" — no change');
-              }
-              break;
-            }
+      var typoModeId5 = typoSyncCol.modes[0].modeId;
+      var primNumsVars2 = await buildCollectionVarMap('primitives-numbers');
+
+      /* Build a lookup of existing Typography vars */
+      var typoVars5 = {};
+      for (var tvi5 = 0; tvi5 < typoSyncCol.variableIds.length; tvi5++) {
+        var tv5 = await figma.variables.getVariableByIdAsync(typoSyncCol.variableIds[tvi5]);
+        if (tv5) typoVars5[tv5.name] = tv5;
+      }
+
+      /* Self-heal: rename font-family/primary → font-family/body if needed */
+      if (typoVars5['font-family/primary'] && !typoVars5['font-family/body']) {
+        try {
+          typoVars5['font-family/primary'].name = 'font-family/body';
+          typoVars5['font-family/body'] = typoVars5['font-family/primary'];
+          delete typoVars5['font-family/primary'];
+          log('Pass5: renamed font-family/primary → font-family/body');
+        } catch (rnErr) { log('Pass5 rename failed: ' + rnErr.message); }
+      }
+
+      /* Sync each role */
+      var p5Roles = [
+        { typoName: 'font-family/headline', primName: 'font/family-headline' },
+        { typoName: 'font-family/body',     primName: 'font/family-body' },
+        { typoName: 'font-family/code',     primName: 'font/family-code' }
+      ];
+      for (var p5i = 0; p5i < p5Roles.length; p5i++) {
+        var p5r = p5Roles[p5i];
+        var p5pv = primNumsVars2[p5r.primName];
+        if (!p5pv) continue;
+        var p5Keys = Object.keys(p5pv.valuesByMode);
+        if (p5Keys.length === 0) continue;
+        var p5val = p5pv.valuesByMode[p5Keys[0]];
+        if (typeof p5val !== 'string' || !p5val || p5val.startsWith('var(')) continue;
+
+        var p5tv = typoVars5[p5r.typoName];
+        if (p5tv) {
+          var p5cur = p5tv.valuesByMode[typoModeId5];
+          if (p5cur !== p5val) {
+            try { p5tv.setValueForMode(typoModeId5, p5val); } catch (e) {}
+            log('Pass5: ' + p5r.typoName + ': "' + p5cur + '" → "' + p5val + '"');
+          } else {
+            log('Pass5: ' + p5r.typoName + ' already "' + p5val + '"');
           }
+        } else {
+          /* Variable doesn't exist yet — create it */
+          try {
+            var p5new = figma.variables.createVariable(p5r.typoName, typoSyncCol, 'STRING');
+            p5new.setValueForMode(typoModeId5, p5val);
+            log('Pass5: created ' + p5r.typoName + ' = "' + p5val + '"');
+          } catch (p5ce) { log('Pass5 create ' + p5r.typoName + ' failed: ' + p5ce.message); }
         }
       }
     }
@@ -1760,23 +1787,26 @@ async function generateComponentFromBlueprint(blueprint) {
   var typoModeId = typoCol.modes[0].modeId;
 
   /* Read the project's configured font family from primitives-numbers/font/family-headline
-     (set by Update Variables from the project's typographyConfig). Falls back to 'Lato'
-     if Update Variables hasn't been run yet or the variable doesn't exist. */
-  var configuredFontFamily = 'Lato';
+     (set by Update Variables from the project's typographyConfig). Falls back to
+     system defaults if Update Variables hasn't been run yet. */
+  var configuredFamilyHeadline = 'Inter';
+  var configuredFamilyBody = 'Inter';
+  var configuredFamilyCode = 'SF Mono';
   try {
     var primNumsMap = await buildCollectionVarMap('primitives-numbers');
-    var fhVar = primNumsMap['font/family-headline'];
-    if (fhVar) {
-      var fhModeKeys = Object.keys(fhVar.valuesByMode);
-      if (fhModeKeys.length > 0) {
-        var fhVal = fhVar.valuesByMode[fhModeKeys[0]];
-        if (typeof fhVal === 'string' && fhVal && !fhVal.startsWith('var(')) {
-          configuredFontFamily = fhVal;
-        }
-      }
+    function readFamilyFromVar(varName, fallback) {
+      var v = primNumsMap[varName];
+      if (!v) return fallback;
+      var keys = Object.keys(v.valuesByMode);
+      if (keys.length === 0) return fallback;
+      var val = v.valuesByMode[keys[0]];
+      return (typeof val === 'string' && val && !val.startsWith('var(')) ? val : fallback;
     }
-  } catch (e) { /* keep default */ }
-  log('Typography: configured font family = ' + configuredFontFamily);
+    configuredFamilyHeadline = readFamilyFromVar('font/family-headline', configuredFamilyHeadline);
+    configuredFamilyBody     = readFamilyFromVar('font/family-body',     configuredFamilyBody);
+    configuredFamilyCode     = readFamilyFromVar('font/family-code',     configuredFamilyCode);
+  } catch (e) { /* keep defaults */ }
+  log('Typography: headline=' + configuredFamilyHeadline + ', body=' + configuredFamilyBody + ', code=' + configuredFamilyCode);
 
   /* Define typography tokens: font sizes and font weights */
   var TYPO_DEFS = [
@@ -1797,8 +1827,12 @@ async function generateComponentFromBlueprint(blueprint) {
     { name: 'letter-spacing/tight',  type: 'FLOAT', value: -0.2 },
     { name: 'letter-spacing/normal', type: 'FLOAT', value: 0 },
     { name: 'letter-spacing/wide',   type: 'FLOAT', value: 0.5 },
-    /* Font family (STRING) — sourced from primitives-numbers/font/family-headline */
-    { name: 'font-family/primary', type: 'STRING', value: configuredFontFamily },
+    /* Font families (STRING) — three roles, sourced from primitives-numbers.
+       Matches the Typography Scale collection: heading types → headline font,
+       body/label/caption types → body font, code types → code font. */
+    { name: 'font-family/headline', type: 'STRING', value: configuredFamilyHeadline },
+    { name: 'font-family/body',     type: 'STRING', value: configuredFamilyBody },
+    { name: 'font-family/code',     type: 'STRING', value: configuredFamilyCode },
     /* Font style (STRING) — for binding to text nodes */
     { name: 'font-style/default', type: 'STRING', value: 'Regular' },
     { name: 'font-style/bold', type: 'STRING', value: 'Bold' }
@@ -1808,6 +1842,18 @@ async function generateComponentFromBlueprint(blueprint) {
   for (var tvl = 0; tvl < typoCol.variableIds.length; tvl++) {
     var tvVar = await figma.variables.getVariableByIdAsync(typoCol.variableIds[tvl]);
     if (tvVar) typoVars[tvVar.name] = tvVar;
+  }
+
+  /* Self-heal: rename legacy font-family/primary → font-family/body in-place.
+     This preserves the variable ID so any existing component text bindings
+     (which reference the variable by ID) survive the rename. */
+  if (typoVars['font-family/primary'] && !typoVars['font-family/body']) {
+    try {
+      typoVars['font-family/primary'].name = 'font-family/body';
+      typoVars['font-family/body'] = typoVars['font-family/primary'];
+      delete typoVars['font-family/primary'];
+      log('Renamed Typography/font-family/primary → font-family/body (ID preserved)');
+    } catch (rne) { log('Rename font-family/primary failed: ' + rne.message); }
   }
 
   /* Create missing, update existing */
@@ -1829,18 +1875,9 @@ async function generateComponentFromBlueprint(blueprint) {
   log('Typography vars: ' + Object.keys(typoVars).length + ' in ' + typoColName);
 
   /* ── Step 1 (deferred): Load font from typography variable ── */
-  var primaryFamily = 'Lato'; /* default */
+  var primaryFamily = configuredFamilyBody || 'Inter'; /* used for component text nodes */
   var defaultStyle = 'Regular';
   var boldStyle = 'Bold';
-  if (typoVars['font-family/primary']) {
-    try {
-      var famVal = typoVars['font-family/primary'].valuesByMode;
-      var famKeys = Object.keys(famVal);
-      if (famKeys.length > 0 && typeof famVal[famKeys[0]] === 'string') {
-        primaryFamily = famVal[famKeys[0]];
-      }
-    } catch (e) { /* keep default */ }
-  }
   if (typoVars['font-style/default']) {
     try {
       var styVal = typoVars['font-style/default'].valuesByMode;
@@ -3536,9 +3573,10 @@ async function generateComponentFromBlueprint(blueprint) {
           }
         }
 
-        /* Bind typography variables to text node (font-family, font-style, line-height, letter-spacing) */
-        if (typoVars['font-family/primary']) {
-          await tryBindVar(textNode, 'fontFamily', typoVars['font-family/primary']);
+        /* Bind typography variables to text node (font-family, font-style, line-height, letter-spacing).
+           Button text is body-level — bind to font-family/body, not headline. */
+        if (typoVars['font-family/body']) {
+          await tryBindVar(textNode, 'fontFamily', typoVars['font-family/body']);
           stats.bindings++;
         }
         if (typoVars['font-style/default']) {
