@@ -2207,6 +2207,23 @@ async function generateComponentFromBlueprint(blueprint) {
     } catch (we) { /* ignore */ }
   }
 
+  /* ── Capture prior column X BEFORE cleanup deletes our sections ──
+     Sections owned by this BP are removed unconditionally below, so any
+     PAGE_X scan that runs AFTER cleanup will never find them.
+     Record the leftmost X of our existing sections now so we can
+     rebuild the presentation column in-place instead of shifting right. */
+  var _priorColumnX = null;
+  for (var _priorScan = 0; _priorScan < page.children.length; _priorScan++) {
+    var _ps = page.children[_priorScan];
+    if (!_ps) continue;
+    var _psOwned = false;
+    try { _psOwned = (_ps.getPluginData('dtf-owner') === BP.name); } catch(e) {}
+    if (_psOwned && (_ps.type === 'SECTION' || _ps.type === 'FRAME')) {
+      if (_priorColumnX === null || (_ps.x || 0) < _priorColumnX) _priorColumnX = (_ps.x || 0);
+    }
+  }
+  if (_priorColumnX !== null) log('Pre-cleanup: captured prior column X = ' + _priorColumnX);
+
   for (var ci2 = page.children.length - 1; ci2 >= 0; ci2--) {
     var child = page.children[ci2];
     if (!child) continue;
@@ -2566,33 +2583,29 @@ async function generateComponentFromBlueprint(blueprint) {
   var cursorY = 100;
 
   /* Determine PAGE_X for the BP column.
-     Strategy: if OUR OWN sections already exist on this page (SAFE_REBUILD
-     kept them), reuse the X they are currently at — rebuild in-place, no drift.
-     Only scan FOREIGN content (not stamped as ours) to shift past when this
-     BP has never been built on this page before. */
+     Priority 1: prior column X captured before cleanup (rebuild in-place).
+     Priority 2: shift right past foreign (non-BP-owned) content.
+     Priority 3: default PAGE_X = 100. */
   var PAGE_MARGIN = 200;
-  var ownSectionX = null; /* X of our existing sections, if any */
-  var foreignMaxX = null; /* right edge of non-BP-owned content */
-  for (var pcx = 0; pcx < page.children.length; pcx++) {
-    var pc = page.children[pcx];
-    if (pc.type !== 'SECTION' && pc.type !== 'FRAME' && pc.type !== 'COMPONENT' && pc.type !== 'COMPONENT_SET') continue;
-    var isMine = false;
-    try { isMine = (pc.getPluginData('dtf-owner') === BP.name); } catch(e) {}
-    if (isMine) {
-      /* Take leftmost X of our own sections as the anchor */
-      if (ownSectionX === null || (pc.x || 0) < ownSectionX) ownSectionX = (pc.x || 0);
-    } else {
-      var rightEdge = (pc.x || 0) + (pc.width || 0);
-      if (foreignMaxX === null || rightEdge > foreignMaxX) foreignMaxX = rightEdge;
+  if (_priorColumnX !== null) {
+    PAGE_X = _priorColumnX;
+    log('Rebuilding in-place at X = ' + PAGE_X);
+  } else {
+    var foreignMaxX = null;
+    for (var pcx = 0; pcx < page.children.length; pcx++) {
+      var pc = page.children[pcx];
+      if (pc.type !== 'SECTION' && pc.type !== 'FRAME' && pc.type !== 'COMPONENT' && pc.type !== 'COMPONENT_SET') continue;
+      var isForeign = true;
+      try { if (pc.getPluginData('dtf-owner') === BP.name || pc.getPluginData('dtf-owner') === 'DTF-PRIMITIVES') isForeign = false; } catch(e) {}
+      if (isForeign) {
+        var rightEdge = (pc.x || 0) + (pc.width || 0);
+        if (foreignMaxX === null || rightEdge > foreignMaxX) foreignMaxX = rightEdge;
+      }
     }
-  }
-  if (ownSectionX !== null) {
-    /* Rebuild in place — use the position our sections already occupy */
-    PAGE_X = ownSectionX;
-    log('SAFE_REBUILD: reusing existing column X = ' + PAGE_X);
-  } else if (foreignMaxX !== null && foreignMaxX > PAGE_X) {
-    PAGE_X = foreignMaxX + PAGE_MARGIN;
-    log('Foreign content detected (max X = ' + foreignMaxX + '). Shifting new layout to X = ' + PAGE_X);
+    if (foreignMaxX !== null && foreignMaxX > PAGE_X) {
+      PAGE_X = foreignMaxX + PAGE_MARGIN;
+      log('Foreign content detected (max X = ' + foreignMaxX + '). Shifting new layout to X = ' + PAGE_X);
+    }
   }
 
   /* ── Reserve a left column for the shared Primitives section ──
