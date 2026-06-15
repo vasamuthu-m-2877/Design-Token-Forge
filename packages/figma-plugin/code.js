@@ -2829,12 +2829,19 @@ async function generateComponentFromBlueprint(blueprint) {
           var rc = chevronIconSet.children[rci];
           try { rc.layoutSizingHorizontal = 'FIXED'; rc.layoutSizingVertical = 'FIXED'; } catch (e) {}
           try { if (rc.width !== 20 || rc.height !== 20) rc.resize(20, 20); } catch (e) {}
-          /* Repair vector paths to centred geometry */
+          /* Repair vector paths to centred geometry.
+             IMPORTANT: resize to 20×20 and reset to (0,0) FIRST so that
+             the path coordinates (0..20 space) are interpreted in the
+             full canvas, not accumulated on top of the shrunken bounds. */
           try {
             var _dir = rc.variantProperties && rc.variantProperties.Direction;
             if (_dir && _repairPaths[_dir]) {
               var _vec = rc.findOne(function(n) { return n.type === 'VECTOR'; });
-              if (_vec) _vec.vectorPaths = [{ windingRule: 'NONE', data: _repairPaths[_dir] }];
+              if (_vec) {
+                _vec.resize(20, 20);
+                _vec.x = 0; _vec.y = 0;
+                _vec.vectorPaths = [{ windingRule: 'NONE', data: _repairPaths[_dir] }];
+              }
             }
           } catch (e) {}
         }
