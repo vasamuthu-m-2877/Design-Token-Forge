@@ -3137,8 +3137,8 @@ async function generateComponentFromBlueprint(blueprint) {
       var repairPreview = existingPrimitivesSection.findOne(function(n) {
         return n.name === 'icon-preview';
       });
-      if (repairPreview && repairPreview.counterAxisAlignItems !== 'CENTER') {
-        repairPreview.counterAxisAlignItems = 'CENTER';
+      if (repairPreview && repairPreview.counterAxisAlignItems !== 'MIN') {
+        repairPreview.counterAxisAlignItems = 'MIN';
       }
     } catch (repErr) { log('Primitives repair skipped: ' + repErr.message); }
   } else if (existingPrimitivesSection && chevronCreated && chevronIconSet) {
@@ -3157,8 +3157,8 @@ async function generateComponentFromBlueprint(blueprint) {
         existingPreview.appendChild(chevronIconSet);
         try { chevronIconSet.layoutSizingHorizontal = 'FIXED'; chevronIconSet.layoutSizingVertical = 'FIXED'; } catch (e) {}
         /* Ensure center alignment (repairs old sections that used MIN). */
-        if (existingPreview.counterAxisAlignItems !== 'CENTER') {
-          existingPreview.counterAxisAlignItems = 'CENTER';
+        if (existingPreview.counterAxisAlignItems !== 'MIN') {
+          existingPreview.counterAxisAlignItems = 'MIN';
         }
         /* Card is auto-layout HUG; it now reflects the new preview size.
            Grow the section frame to fit the card. */
@@ -3216,7 +3216,7 @@ async function generateComponentFromBlueprint(blueprint) {
   icPreview.layoutMode = 'HORIZONTAL';
   icPreview.primaryAxisSizingMode = 'AUTO';
   icPreview.counterAxisSizingMode = 'AUTO';
-  icPreview.counterAxisAlignItems = 'CENTER';
+  icPreview.counterAxisAlignItems = 'MIN'; /* top-align: star top === chevron row top */
   icPreview.itemSpacing = 24;
   icPreview.paddingLeft = 22; icPreview.paddingRight = 22;
   icPreview.paddingTop = 22; icPreview.paddingBottom = 22;
