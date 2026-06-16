@@ -73,10 +73,10 @@
   --select-padding-x-base: var(--spacing-12);
   --select-padding-x-medium: var(--spacing-14);
   --select-padding-x-large: var(--spacing-16);
-  --select-padding-x-big: var(--spacing-20);
-  --select-padding-x-huge: var(--spacing-24);
-  --select-padding-x-mega: var(--spacing-28);
-  --select-padding-x-ultra: var(--spacing-36);
+  --select-padding-x-big: var(--spacing-16);
+  --select-padding-x-huge: var(--spacing-18);
+  --select-padding-x-mega: var(--spacing-20);
+  --select-padding-x-ultra: var(--spacing-20);
 
   /* Vertical padding per density mode */
   --select-padding-y-micro: var(--spacing-2);

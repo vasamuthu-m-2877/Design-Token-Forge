@@ -68,10 +68,10 @@
   --textarea-padding-x-base: var(--spacing-12);
   --textarea-padding-x-medium: var(--spacing-14);
   --textarea-padding-x-large: var(--spacing-16);
-  --textarea-padding-x-big: var(--spacing-20);
-  --textarea-padding-x-huge: var(--spacing-24);
-  --textarea-padding-x-mega: var(--spacing-28);
-  --textarea-padding-x-ultra: var(--spacing-36);
+  --textarea-padding-x-big: var(--spacing-16);
+  --textarea-padding-x-huge: var(--spacing-18);
+  --textarea-padding-x-mega: var(--spacing-20);
+  --textarea-padding-x-ultra: var(--spacing-20);
 
   /* Vertical padding per density mode */
   --textarea-padding-y-micro: var(--spacing-4);

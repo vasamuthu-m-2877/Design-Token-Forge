@@ -87,10 +87,10 @@
   --input-padding-x-base: var(--spacing-12);
   --input-padding-x-medium: var(--spacing-14);
   --input-padding-x-large: var(--spacing-16);
-  --input-padding-x-big: var(--spacing-20);
-  --input-padding-x-huge: var(--spacing-24);
-  --input-padding-x-mega: var(--spacing-28);
-  --input-padding-x-ultra: var(--spacing-36);
+  --input-padding-x-big: var(--spacing-16);
+  --input-padding-x-huge: var(--spacing-18);
+  --input-padding-x-mega: var(--spacing-20);
+  --input-padding-x-ultra: var(--spacing-20);
 
   /* Vertical padding per density mode */
   --input-padding-y-micro: var(--spacing-2);
