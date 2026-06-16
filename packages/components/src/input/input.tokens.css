@@ -32,17 +32,17 @@
      📐 SHAPE  (21 vars)
      ──────────────────────────────────────────────────────────── */
 
-  /* Border radius per density mode */
-  --input-radius-micro: var(--radius-xs);
-  --input-radius-tiny: var(--radius-sm);
-  --input-radius-small: var(--radius-md);
-  --input-radius-base: var(--radius-DEFAULT);
-  --input-radius-medium: var(--radius-DEFAULT);
-  --input-radius-large: var(--radius-lg);
-  --input-radius-big: var(--radius-lg);
-  --input-radius-huge: var(--radius-xl);
-  --input-radius-mega: var(--radius-2xl);
-  --input-radius-ultra: var(--radius-3xl);
+  /* Border radius per density mode — one step ahead of button scale, capped at xl */
+  --input-radius-micro: var(--radius-sm);     /* 4px  — same as btn-micro */
+  --input-radius-tiny: var(--radius-sm);      /* 4px  — same as btn-tiny */
+  --input-radius-small: var(--radius-md);     /* 6px  — same as btn-small */
+  --input-radius-base: var(--radius-DEFAULT); /* 8px  — one step above btn-base */
+  --input-radius-medium: var(--radius-DEFAULT); /* 8px */
+  --input-radius-large: var(--radius-md-lg);  /* 10px — one step above btn-large */
+  --input-radius-big: var(--radius-md-lg);    /* 10px — same as btn-big */
+  --input-radius-huge: var(--radius-lg);      /* 12px — one step above btn-huge */
+  --input-radius-mega: var(--radius-lg);      /* 12px — same as btn-mega */
+  --input-radius-ultra: var(--radius-xl);     /* 16px — two steps above btn-ultra, capped */
   --input-radius-rounded: var(--radius-full);
 
   /* Border width — 4 sides */

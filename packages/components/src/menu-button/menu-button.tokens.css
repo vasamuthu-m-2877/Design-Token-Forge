@@ -30,16 +30,16 @@
      ──────────────────────────────────────────────────────────── */
 
   /* Border radius per density mode */
-  --menu-btn-radius-micro: var(--radius-xs);
-  --menu-btn-radius-tiny: var(--radius-sm);
-  --menu-btn-radius-small: var(--radius-sm);
-  --menu-btn-radius-base: var(--radius-md);
-  --menu-btn-radius-medium: var(--radius-md);
-  --menu-btn-radius-large: var(--radius-DEFAULT);
-  --menu-btn-radius-big: var(--radius-DEFAULT);
-   --menu-btn-radius-huge: var(--radius-lg);
-   --menu-btn-radius-mega: var(--radius-xl);
-   --menu-btn-radius-ultra: var(--radius-2xl);
+  --menu-btn-radius-micro: var(--radius-sm);    /* 4px  — matches btn-micro */
+  --menu-btn-radius-tiny: var(--radius-sm);     /* 4px  — matches btn-tiny */
+  --menu-btn-radius-small: var(--radius-sm);    /* 4px */
+  --menu-btn-radius-base: var(--radius-md);     /* 6px  — matches btn-base */
+  --menu-btn-radius-medium: var(--radius-md);   /* 6px */
+  --menu-btn-radius-large: var(--radius-DEFAULT); /* 8px */
+  --menu-btn-radius-big: var(--radius-DEFAULT); /* 8px */
+   --menu-btn-radius-huge: var(--radius-lg);    /* 12px */
+   --menu-btn-radius-mega: var(--radius-lg);    /* 12px — capped; was xl */
+   --menu-btn-radius-ultra: var(--radius-xl);   /* 16px — capped; was 2xl */
 
   /* Border */
   --menu-btn-border-width: 1px;

@@ -29,7 +29,7 @@
   --checkbox-box-radius-big: var(--radius-DEFAULT); /* 8px  on 28px box */
    --checkbox-box-radius-huge: var(--radius-DEFAULT); /* 8px  on 32px box */
    --checkbox-box-radius-mega: var(--radius-lg);    /* 12px on 36px box */
-   --checkbox-box-radius-ultra: var(--radius-2xl);  /* 24px on 40px box */
+   --checkbox-box-radius-ultra: var(--radius-lg);   /* 12px on 40px box — capped; was 2xl */
 
   /* ────────────────────────────────────────────────────────────
      📏 DIMENSION  (10 vars)

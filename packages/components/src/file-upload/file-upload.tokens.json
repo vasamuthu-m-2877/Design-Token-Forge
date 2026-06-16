@@ -216,8 +216,8 @@
       "size": "mega",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-2xl)",
-      "aliasOf": "--radius-2xl",
+      "value": "var(--radius-lg)",
+      "aliasOf": "--radius-lg,
       "literal": false
     },
     "--file-upload-radius-ultra": {
@@ -228,8 +228,8 @@
       "size": "ultra",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-3xl)",
-      "aliasOf": "--radius-3xl",
+      "value": "var(--radius-xl)",
+      "aliasOf": "--radius-xl,
       "literal": false
     },
     "--file-upload-border-width": {

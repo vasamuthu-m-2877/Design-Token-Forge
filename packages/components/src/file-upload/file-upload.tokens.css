@@ -11,16 +11,16 @@
      ──────────────────────────────────────────────────────────── */
 
   /* Border radius per density mode */
-  --file-upload-radius-micro: var(--radius-xs);
-  --file-upload-radius-tiny: var(--radius-sm);
-  --file-upload-radius-small: var(--radius-md);
-  --file-upload-radius-base: var(--radius-DEFAULT);
-  --file-upload-radius-medium: var(--radius-DEFAULT);
-  --file-upload-radius-large: var(--radius-lg);
-  --file-upload-radius-big: var(--radius-lg);
-  --file-upload-radius-huge: var(--radius-xl);
-  --file-upload-radius-mega: var(--radius-2xl);
-  --file-upload-radius-ultra: var(--radius-3xl);
+  --file-upload-radius-micro: var(--radius-sm);     /* 4px */
+  --file-upload-radius-tiny: var(--radius-sm);      /* 4px */
+  --file-upload-radius-small: var(--radius-md);     /* 6px */
+  --file-upload-radius-base: var(--radius-DEFAULT); /* 8px */
+  --file-upload-radius-medium: var(--radius-DEFAULT); /* 8px */
+  --file-upload-radius-large: var(--radius-md-lg);  /* 10px */
+  --file-upload-radius-big: var(--radius-md-lg);    /* 10px */
+  --file-upload-radius-huge: var(--radius-lg);      /* 12px */
+  --file-upload-radius-mega: var(--radius-lg);      /* 12px — capped; was 2xl */
+  --file-upload-radius-ultra: var(--radius-xl);     /* 16px — capped; was 3xl */
 
   /* Border */
   --file-upload-border-width: 2px;

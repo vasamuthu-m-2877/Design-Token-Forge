@@ -34,17 +34,17 @@
      📐 SHAPE  (15 vars)
      ──────────────────────────────────────────────────────────── */
 
-  /* Border radius per density mode */
-  --textarea-radius-micro: var(--radius-xs);
-  --textarea-radius-tiny: var(--radius-sm);
-  --textarea-radius-small: var(--radius-md);
-  --textarea-radius-base: var(--radius-DEFAULT);
-  --textarea-radius-medium: var(--radius-DEFAULT);
-  --textarea-radius-large: var(--radius-lg);
-  --textarea-radius-big: var(--radius-lg);
-  --textarea-radius-huge: var(--radius-xl);
-  --textarea-radius-mega: var(--radius-2xl);
-  --textarea-radius-ultra: var(--radius-3xl);
+  /* Border radius per density mode — one step ahead of button scale, capped at xl */
+  --textarea-radius-micro: var(--radius-sm);     /* 4px  — same as btn-micro */
+  --textarea-radius-tiny: var(--radius-sm);      /* 4px  — same as btn-tiny */
+  --textarea-radius-small: var(--radius-md);     /* 6px  — same as btn-small */
+  --textarea-radius-base: var(--radius-DEFAULT); /* 8px  — one step above btn-base */
+  --textarea-radius-medium: var(--radius-DEFAULT); /* 8px */
+  --textarea-radius-large: var(--radius-md-lg);  /* 10px — one step above btn-large */
+  --textarea-radius-big: var(--radius-md-lg);    /* 10px — same as btn-big */
+  --textarea-radius-huge: var(--radius-lg);      /* 12px — one step above btn-huge */
+  --textarea-radius-mega: var(--radius-lg);      /* 12px — same as btn-mega */
+  --textarea-radius-ultra: var(--radius-xl);     /* 16px — capped */
   --textarea-radius-rounded: var(--radius-full);
 
   /* Border */
