@@ -2815,8 +2815,8 @@ async function generateComponentFromBlueprint(blueprint) {
         chevronIconSet.layoutMode = 'HORIZONTAL';
         chevronIconSet.counterAxisAlignItems = 'CENTER';
         chevronIconSet.itemSpacing = 16;
-        chevronIconSet.paddingLeft = 16; chevronIconSet.paddingRight = 16;
-        chevronIconSet.paddingTop = 16; chevronIconSet.paddingBottom = 16;
+        chevronIconSet.paddingLeft = 0; chevronIconSet.paddingRight = 0;
+        chevronIconSet.paddingTop = 0; chevronIconSet.paddingBottom = 0;
         chevronIconSet.primaryAxisSizingMode = 'AUTO';
         chevronIconSet.counterAxisSizingMode = 'AUTO';
         var _repairPaths = {
@@ -2906,8 +2906,8 @@ async function generateComponentFromBlueprint(blueprint) {
           chevronIconSet.layoutMode = 'HORIZONTAL';
           chevronIconSet.counterAxisAlignItems = 'CENTER';
           chevronIconSet.itemSpacing = 16;
-          chevronIconSet.paddingLeft = 16; chevronIconSet.paddingRight = 16;
-          chevronIconSet.paddingTop = 16; chevronIconSet.paddingBottom = 16;
+          chevronIconSet.paddingLeft = 0; chevronIconSet.paddingRight = 0;
+          chevronIconSet.paddingTop = 0; chevronIconSet.paddingBottom = 0;
           chevronIconSet.primaryAxisSizingMode = 'AUTO';
           chevronIconSet.counterAxisSizingMode = 'AUTO';
           for (var ncv = 0; ncv < chevronIconSet.children.length; ncv++) {
@@ -3156,8 +3156,9 @@ async function generateComponentFromBlueprint(blueprint) {
       var repairPreview = existingPrimitivesSection.findOne(function(n) {
         return n.name === 'icon-preview';
       });
-      if (repairPreview && repairPreview.counterAxisAlignItems !== 'MIN') {
-        repairPreview.counterAxisAlignItems = 'MIN';
+      if (repairPreview) {
+        if (repairPreview.counterAxisAlignItems !== 'CENTER') repairPreview.counterAxisAlignItems = 'CENTER';
+        if (repairPreview.itemSpacing !== 16) repairPreview.itemSpacing = 16;
       }
     } catch (repErr) { log('Primitives repair skipped: ' + repErr.message); }
   } else if (existingPrimitivesSection && chevronCreated && chevronIconSet) {
@@ -3175,10 +3176,9 @@ async function generateComponentFromBlueprint(blueprint) {
       if (existingPreview) {
         existingPreview.appendChild(chevronIconSet);
         try { chevronIconSet.layoutSizingHorizontal = 'FIXED'; chevronIconSet.layoutSizingVertical = 'FIXED'; } catch (e) {}
-        /* Ensure center alignment (repairs old sections that used MIN). */
-        if (existingPreview.counterAxisAlignItems !== 'MIN') {
-          existingPreview.counterAxisAlignItems = 'MIN';
-        }
+        /* Ensure center alignment and uniform spacing. */
+        if (existingPreview.counterAxisAlignItems !== 'CENTER') existingPreview.counterAxisAlignItems = 'CENTER';
+        if (existingPreview.itemSpacing !== 16) existingPreview.itemSpacing = 16;
         /* Card is auto-layout HUG; it now reflects the new preview size.
            Grow the section frame to fit the card. */
         if (existingCard) {
@@ -3235,8 +3235,8 @@ async function generateComponentFromBlueprint(blueprint) {
   icPreview.layoutMode = 'HORIZONTAL';
   icPreview.primaryAxisSizingMode = 'AUTO';
   icPreview.counterAxisSizingMode = 'AUTO';
-  icPreview.counterAxisAlignItems = 'MIN'; /* top-align: star top === chevron row top */
-  icPreview.itemSpacing = 24;
+  icPreview.counterAxisAlignItems = 'CENTER';
+  icPreview.itemSpacing = 16;
   icPreview.paddingLeft = 22; icPreview.paddingRight = 22;
   icPreview.paddingTop = 22; icPreview.paddingBottom = 22;
   icPreview.cornerRadius = 8;
