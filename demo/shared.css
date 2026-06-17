@@ -318,6 +318,11 @@ html[data-theme="dark"] .nav-acct-signout:hover{background:rgba(220,38,38,.15);c
 /* ── Hero ──────────────────────────────────────────────── */
 .hero{display:grid;grid-template-columns:1fr 420px;min-height:200px}
 .hero-preview{display:flex;align-items:center;justify-content:center;padding:48px 32px;background:var(--demo-surface)}
+/* Allow hero buttons to render at token-driven heights (not clamped by min-tap-target) for visual density progression */
+.hero-preview .btn,
+.hero-preview .split-btn,
+.hero-preview .menu-btn,
+.hero-preview .progress{min-height:0}
 .hero-inspector{padding:20px;border-left:1px solid var(--demo-border);background:var(--demo-surface);font-size:var(--font-size-11,11px);overflow-y:auto;max-height:420px}
 .inspector-title{font-weight:600;color:var(--demo-fg-subtle);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px;font-size:var(--font-size-10,10px)}
 .inspector-row{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--demo-border)}
