@@ -102,6 +102,7 @@
     "missingVariants": [],
     "remapOnlyRoles": [
       "danger",
+      "error",
       "success",
       "warning",
       "info",

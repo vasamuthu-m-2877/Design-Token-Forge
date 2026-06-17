@@ -494,8 +494,8 @@
       "size": "micro",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-20)",
-      "aliasOf": "--spacing-20",
+      "value": "var(--spacing-24)",
+      "aliasOf": "--spacing-24",
       "literal": false
     },
     "--btn-height-tiny": {
@@ -506,8 +506,8 @@
       "size": "tiny",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-24)",
-      "aliasOf": "--spacing-24",
+      "value": "var(--spacing-28)",
+      "aliasOf": "--spacing-28",
       "literal": false
     },
     "--btn-height-small": {
@@ -518,8 +518,8 @@
       "size": "small",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-28)",
-      "aliasOf": "--spacing-28",
+      "value": "var(--spacing-32)",
+      "aliasOf": "--spacing-32",
       "literal": false
     },
     "--btn-height-base": {
@@ -530,8 +530,8 @@
       "size": "base",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-32)",
-      "aliasOf": "--spacing-32",
+      "value": "var(--spacing-36)",
+      "aliasOf": "--spacing-36",
       "literal": false
     },
     "--btn-height-medium": {
@@ -542,8 +542,8 @@
       "size": "medium",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-36)",
-      "aliasOf": "--spacing-36",
+      "value": "var(--spacing-40)",
+      "aliasOf": "--spacing-40",
       "literal": false
     },
     "--btn-height-large": {
@@ -554,8 +554,8 @@
       "size": "large",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-40)",
-      "aliasOf": "--spacing-40",
+      "value": "var(--spacing-44)",
+      "aliasOf": "--spacing-44",
       "literal": false
     },
     "--btn-height-big": {
@@ -578,8 +578,8 @@
       "size": "huge",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-54)",
-      "aliasOf": "--spacing-54",
+      "value": "var(--spacing-56)",
+      "aliasOf": "--spacing-56",
       "literal": false
     },
     "--btn-height-mega": {
@@ -590,8 +590,8 @@
       "size": "mega",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-56)",
-      "aliasOf": "--spacing-56",
+      "value": "var(--spacing-64)",
+      "aliasOf": "--spacing-64",
       "literal": false
     },
     "--btn-height-ultra": {
@@ -602,8 +602,8 @@
       "size": "ultra",
       "state": null,
       "property": "height",
-      "value": "var(--spacing-64)",
-      "aliasOf": "--spacing-64",
+      "value": "var(--spacing-72)",
+      "aliasOf": "--spacing-72",
       "literal": false
     },
     "--btn-padding-x-micro": {
@@ -2990,8 +2990,8 @@
       "size": "base",
       "state": null,
       "property": "icon-size",
-      "value": "var(--spacing-16)",
-      "aliasOf": "--spacing-16",
+      "value": "var(--spacing-18)",
+      "aliasOf": "--spacing-18",
       "literal": false
     },
     "--btn-icon-size-medium": {

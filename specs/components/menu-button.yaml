@@ -127,18 +127,18 @@ variables:
 
     chevron-padding-end:
       - name: "--menu-btn-chevron-pe-{size}"
-        description: "Inline-end padding after chevron (right edge)"
+        description: "Inline-end padding after chevron (right edge). Formula: padding-x − gap."
         per_size:
-          micro: "var(--spacing-2)"
-          tiny: "var(--spacing-2)"
-          small: "var(--spacing-3)"
-          base: "var(--spacing-3)"
-          medium: "var(--spacing-4)"
-          large: "var(--spacing-4)"
-          big: "var(--spacing-5)"
-          huge: "var(--spacing-6)"
-          mega: "var(--spacing-8)"
-          ultra: "var(--spacing-10)"
+          micro: "var(--spacing-6)"
+          tiny: "var(--spacing-6)"
+          small: "var(--spacing-6)"
+          base: "var(--spacing-8)"
+          medium: "var(--spacing-8)"
+          large: "var(--spacing-10)"
+          big: "var(--spacing-12)"
+          huge: "var(--spacing-12)"
+          mega: "var(--spacing-14)"
+          ultra: "var(--spacing-16)"
         count: 10
 
     total: 40

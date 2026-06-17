@@ -141,8 +141,8 @@
       "size": "micro",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xs)",
-      "aliasOf": "--radius-xs",
+      "value": "var(--radius-sm)",
+      "aliasOf": "--radius-sm",
       "literal": false
     },
     "--textarea-radius-tiny": {
@@ -201,8 +201,8 @@
       "size": "large",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg",
+      "value": "var(--radius-md-lg)",
+      "aliasOf": "--radius-md-lg",
       "literal": false
     },
     "--textarea-radius-big": {
@@ -213,8 +213,8 @@
       "size": "big",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg",
+      "value": "var(--radius-md-lg)",
+      "aliasOf": "--radius-md-lg",
       "literal": false
     },
     "--textarea-radius-huge": {
@@ -225,8 +225,8 @@
       "size": "huge",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl",
+      "value": "var(--radius-lg)",
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--textarea-radius-mega": {
@@ -238,7 +238,7 @@
       "state": null,
       "property": "radius",
       "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg,
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--textarea-radius-ultra": {
@@ -250,7 +250,7 @@
       "state": null,
       "property": "radius",
       "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl,
+      "aliasOf": "--radius-xl",
       "literal": false
     },
     "--textarea-radius-rounded": {
@@ -405,8 +405,8 @@
       "size": "big",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-20)",
-      "aliasOf": "--spacing-20",
+      "value": "var(--spacing-16)",
+      "aliasOf": "--spacing-16",
       "literal": false
     },
     "--textarea-padding-x-huge": {
@@ -417,8 +417,8 @@
       "size": "huge",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-24)",
-      "aliasOf": "--spacing-24",
+      "value": "var(--spacing-18)",
+      "aliasOf": "--spacing-18",
       "literal": false
     },
     "--textarea-padding-x-mega": {
@@ -429,8 +429,8 @@
       "size": "mega",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-28)",
-      "aliasOf": "--spacing-28",
+      "value": "var(--spacing-20)",
+      "aliasOf": "--spacing-20",
       "literal": false
     },
     "--textarea-padding-x-ultra": {
@@ -441,8 +441,8 @@
       "size": "ultra",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-36)",
-      "aliasOf": "--spacing-36",
+      "value": "var(--spacing-20)",
+      "aliasOf": "--spacing-20",
       "literal": false
     },
     "--textarea-padding-y-micro": {
@@ -466,7 +466,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-5)",
-      "aliasOf": "--spacing-5,
+      "aliasOf": "--spacing-5",
       "literal": false
     },
     "--textarea-padding-y-small": {
@@ -478,7 +478,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-6)",
-      "aliasOf": "--spacing-6,
+      "aliasOf": "--spacing-6",
       "literal": false
     },
     "--textarea-padding-y-base": {
@@ -490,7 +490,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-8)",
-      "aliasOf": "--spacing-8,
+      "aliasOf": "--spacing-8",
       "literal": false
     },
     "--textarea-padding-y-medium": {
@@ -502,7 +502,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-10)",
-      "aliasOf": "--spacing-10,
+      "aliasOf": "--spacing-10",
       "literal": false
     },
     "--textarea-padding-y-large": {
@@ -514,7 +514,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-12)",
-      "aliasOf": "--spacing-12,
+      "aliasOf": "--spacing-12",
       "literal": false
     },
     "--textarea-padding-y-big": {
@@ -526,7 +526,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-14)",
-      "aliasOf": "--spacing-14,
+      "aliasOf": "--spacing-14",
       "literal": false
     },
     "--textarea-padding-y-huge": {
@@ -538,7 +538,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-16)",
-      "aliasOf": "--spacing-16,
+      "aliasOf": "--spacing-16",
       "literal": false
     },
     "--textarea-padding-y-mega": {
@@ -550,7 +550,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-18)",
-      "aliasOf": "--spacing-18,
+      "aliasOf": "--spacing-18",
       "literal": false
     },
     "--textarea-padding-y-ultra": {
@@ -562,7 +562,7 @@
       "state": null,
       "property": "padding-y",
       "value": "var(--spacing-22)",
-      "aliasOf": "--spacing-22,
+      "aliasOf": "--spacing-22",
       "literal": false
     },
     "--textarea-height-micro": {

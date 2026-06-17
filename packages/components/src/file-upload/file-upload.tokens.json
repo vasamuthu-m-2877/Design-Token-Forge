@@ -120,8 +120,8 @@
       "size": "micro",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xs)",
-      "aliasOf": "--radius-xs",
+      "value": "var(--radius-sm)",
+      "aliasOf": "--radius-sm",
       "literal": false
     },
     "--file-upload-radius-tiny": {
@@ -180,8 +180,8 @@
       "size": "large",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg",
+      "value": "var(--radius-md-lg)",
+      "aliasOf": "--radius-md-lg",
       "literal": false
     },
     "--file-upload-radius-big": {
@@ -192,8 +192,8 @@
       "size": "big",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg",
+      "value": "var(--radius-md-lg)",
+      "aliasOf": "--radius-md-lg",
       "literal": false
     },
     "--file-upload-radius-huge": {
@@ -204,8 +204,8 @@
       "size": "huge",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl",
+      "value": "var(--radius-lg)",
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--file-upload-radius-mega": {
@@ -217,7 +217,7 @@
       "state": null,
       "property": "radius",
       "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg,
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--file-upload-radius-ultra": {
@@ -229,7 +229,7 @@
       "state": null,
       "property": "radius",
       "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl,
+      "aliasOf": "--radius-xl",
       "literal": false
     },
     "--file-upload-border-width": {

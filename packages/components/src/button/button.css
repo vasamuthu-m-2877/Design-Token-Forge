@@ -83,6 +83,7 @@
   --_btn-min-width: var(--btn-min-width-base);
   --_btn-gap: var(--btn-gap-base);
   --_btn-radius: var(--btn-radius-base);
+  --_btn-std-icon-size: var(--btn-icon-size-base);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-base));
 }
 
@@ -95,6 +96,7 @@
   --_btn-min-width: var(--btn-min-width-micro);
   --_btn-gap: var(--btn-gap-micro);
   --_btn-radius: var(--btn-radius-micro);
+  --_btn-std-icon-size: var(--btn-icon-size-micro);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-micro));
 }
 
@@ -107,6 +109,7 @@
   --_btn-min-width: var(--btn-min-width-tiny);
   --_btn-gap: var(--btn-gap-tiny);
   --_btn-radius: var(--btn-radius-tiny);
+  --_btn-std-icon-size: var(--btn-icon-size-tiny);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-tiny));
 }
 
@@ -119,6 +122,7 @@
   --_btn-min-width: var(--btn-min-width-small);
   --_btn-gap: var(--btn-gap-small);
   --_btn-radius: var(--btn-radius-small);
+  --_btn-std-icon-size: var(--btn-icon-size-small);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-small));
 }
 
@@ -131,6 +135,7 @@
   --_btn-min-width: var(--btn-min-width-medium);
   --_btn-gap: var(--btn-gap-medium);
   --_btn-radius: var(--btn-radius-medium);
+  --_btn-std-icon-size: var(--btn-icon-size-medium);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-medium));
 }
 
@@ -143,6 +148,7 @@
   --_btn-min-width: var(--btn-min-width-large);
   --_btn-gap: var(--btn-gap-large);
   --_btn-radius: var(--btn-radius-large);
+  --_btn-std-icon-size: var(--btn-icon-size-large);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-large));
 }
 
@@ -155,6 +161,7 @@
   --_btn-min-width: var(--btn-min-width-big);
   --_btn-gap: var(--btn-gap-big);
   --_btn-radius: var(--btn-radius-big);
+  --_btn-std-icon-size: var(--btn-icon-size-big);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-big));
 }
 
@@ -167,6 +174,7 @@
   --_btn-min-width: var(--btn-min-width-huge);
   --_btn-gap: var(--btn-gap-huge);
   --_btn-radius: var(--btn-radius-huge);
+  --_btn-std-icon-size: var(--btn-icon-size-huge);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-huge));
 }
 
@@ -179,6 +187,7 @@
   --_btn-min-width: var(--btn-min-width-mega);
   --_btn-gap: var(--btn-gap-mega);
   --_btn-radius: var(--btn-radius-mega);
+  --_btn-std-icon-size: var(--btn-icon-size-mega);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-mega));
 }
 
@@ -191,6 +200,7 @@
   --_btn-min-width: var(--btn-min-width-ultra);
   --_btn-gap: var(--btn-gap-ultra);
   --_btn-radius: var(--btn-radius-ultra);
+  --_btn-std-icon-size: var(--btn-icon-size-ultra);
   --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-ultra));
 }
 
@@ -208,23 +218,24 @@
    ────────────────────────────────────────────────────────────────
    16px icons leave little drawing scope for filters, branded marks,
    or multi-stroke icons. data-icon-detail="high" bumps the icon to
-   20px ONLY in the base/medium/large range where 16px is the standard.
+   20px ONLY in the base/medium range where the standard icon is ≤20px.
 
    Suppressed on:
      • micro/tiny/small  → would crowd to <4px breathing room
-     • big/huge/mega/ultra → standard icon (24–32px) is already larger
-                             than 20px; "high" would visually shrink it
+     • large/big/huge/mega/ultra → standard icon (22–36px) exceeds 20px;
+                             "high" would visually shrink it
    For per-instance bumps outside this scale, set --btn-icon-size on
    the element directly.
    ════════════════════════════════════════════════════════════════ */
 .btn[data-icon-detail="high"] {
   --_btn-icon-size: var(--btn-icon-size-detail-high);
 }
-/* Suppress on sizes outside the base/medium/large sweet spot —
+/* Suppress on sizes outside the base/medium sweet spot —
    restore the per-density standard so "high" never makes the icon smaller. */
 .btn[data-size="micro"][data-icon-detail="high"]  { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-micro)); }
 .btn[data-size="tiny"][data-icon-detail="high"]   { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-tiny)); }
 .btn[data-size="small"][data-icon-detail="high"]  { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-small)); }
+.btn[data-size="large"][data-icon-detail="high"]  { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-large)); }
 .btn[data-size="big"][data-icon-detail="high"]    { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-big)); }
 .btn[data-size="huge"][data-icon-detail="high"]   { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-huge)); }
 .btn[data-size="mega"][data-icon-detail="high"]   { --_btn-icon-size: var(--btn-icon-size, var(--btn-icon-size-mega)); }
@@ -233,14 +244,15 @@
 /* ════════════════════════════════════════════════════════════════
    ASYMMETRIC ICON PADDING — tighter on the icon side
    Compensates inline padding when --_btn-icon-size grows beyond the
-   default (16px) so the larger glyph never crowds the edge below 4px.
+   per-size standard icon (--_btn-std-icon-size) so the larger glyph
+   never crowds the edge below 4px. Zero compensation for standard icons.
    ════════════════════════════════════════════════════════════════ */
 
 /* Leading icon present → reduce start padding, compensate for icon growth */
 .btn:has(> .btn__icon:first-child) {
   padding-inline-start: max(
     var(--spacing-4),
-    calc(var(--_btn-px-icon) - max(0px, (var(--_btn-icon-size) - var(--btn-icon-size-detail-default)) / 2))
+    calc(var(--_btn-px-icon) - max(0px, (var(--_btn-icon-size) - var(--_btn-std-icon-size)) / 2))
   );
 }
 
@@ -248,7 +260,7 @@
 .btn:has(> .btn__icon:last-child) {
   padding-inline-end: max(
     var(--spacing-4),
-    calc(var(--_btn-px-icon) - max(0px, (var(--_btn-icon-size) - var(--btn-icon-size-detail-default)) / 2))
+    calc(var(--_btn-px-icon) - max(0px, (var(--_btn-icon-size) - var(--_btn-std-icon-size)) / 2))
   );
 }
 

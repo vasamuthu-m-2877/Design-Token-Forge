@@ -441,8 +441,8 @@
       "size": "ultra",
       "state": null,
       "property": "size",
-      "value": "var(--spacing-80)",
-      "aliasOf": "--spacing-80",
+      "value": "var(--spacing-72)",
+      "aliasOf": "--spacing-72",
       "literal": false
     },
     "--avatar-group-offset-micro": {
@@ -561,8 +561,8 @@
       "size": "ultra",
       "state": null,
       "property": "group-offset",
-      "value": "calc(var(--spacing-80) * -0.25)",
-      "aliasOf": "--spacing-80",
+      "value": "calc(var(--spacing-72) * -0.25)",
+      "aliasOf": "--spacing-72",
       "literal": false
     },
     "--avatar-bg": {

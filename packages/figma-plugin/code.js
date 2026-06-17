@@ -117,7 +117,18 @@ var REQUIRED_COMPSIZE_VARS = [
      step silently skips bindings (variable not found) and the icon falls
      back to the placeholder's intrinsic size (20px). */
   { name: 'icon-button/size',            defaultVal: 36 },
-  { name: 'icon-button/icon container',  defaultVal: 18 }
+  { name: 'icon-button/icon container',  defaultVal: 18 },
+  /* Menu Button — auto-created when token sync hasn't run yet.
+     Values match the base-density row in menu-button.tokens.css. */
+  { name: 'menu-button/height',       defaultVal: 36 },
+  { name: 'menu-button/padding-x',    defaultVal: 12 },
+  { name: 'menu-button/chevron-pe',   defaultVal: 8  },
+  { name: 'menu-button/gap',          defaultVal: 4  },
+  { name: 'menu-button/icon-size',    defaultVal: 18 },
+  { name: 'menu-button/chevron-size', defaultVal: 14 },
+  { name: 'menu-button/font-size',    defaultVal: 14 },
+  { name: 'menu-button/radius',       defaultVal: 6  },
+  { name: 'menu-button/radius-rounded', defaultVal: 9999 }
 ];
 log('code.js loaded — version ' + CODE_VERSION);
 
@@ -1224,6 +1235,34 @@ async function rebindIconPlaceholderPaints() {
           }
         }
 
+        /* Strategy D — T2 surface-inverse fallback when T3 collection is absent.
+           For non-neutral filled Brand/semantic variants (e.g. Primary, where
+           T3/oncomponent-content/default is needed but T3 doesn't exist yet),
+           set surface-inverse T2 mode on each "Icon wrapper cont" frame so the
+           inherited T2/default/content/default resolves to near-white instead
+           of the default dark-on-bright value. Only fires when allT3Vars is
+           completely empty (T3 collection entirely missing, not just a gap). */
+        if (!roleVar && Object.keys(allT3Vars).length === 0 && t2) {
+          var _isNeutralD = /\bNeutral\b/i.test(set.name);
+          if (!_isNeutralD) {
+            var _invModeId = null;
+            for (var _tmd = 0; _tmd < t2.modes.length; _tmd++) {
+              if (t2.modes[_tmd].name === 'surface-inverse') { _invModeId = t2.modes[_tmd].modeId; break; }
+            }
+            if (_invModeId) {
+              var _iwNodes = variant.findAll(function(n) { return n.name === 'Icon wrapper cont'; });
+              var _iwSet = false;
+              for (var _iwi = 0; _iwi < _iwNodes.length; _iwi++) {
+                try {
+                  _iwNodes[_iwi].setExplicitVariableModeForCollection(t2, _invModeId);
+                  _iwSet = true;
+                } catch (_iwE) { /* ghost node mode set failed — skip */ }
+              }
+              if (_iwSet) roleVar = defaultContentVar;
+            }
+          }
+        }
+
         if (!roleVar) continue;
 
         /* Apply to every vector-shape descendant inside icon instances
@@ -1732,12 +1771,13 @@ var SPLIT_BUTTON_BLUEPRINT = {
    (two independent zones), menu-button is ONE unified zone:
      [icon? | text | chevron]
 
-   Layout strategy (differs from button which uses wrapper padding):
-     Root frame owns ALL spacing via Figma auto-layout primitives:
-       paddingLeft  = padding-x  (leading edge)
-       paddingRight = chevron-pe (trailing edge, narrower than leading)
-       itemSpacing  = gap        (uniform gap between icon, text, chevron)
-   Wrapper frames for icon/text have zero padding — root handles everything.
+   Layout strategy: wrapper-based padding (same architecture as button).
+     Each wrapper owns its outer-edge air; root itemSpacing stays 0.
+       iconWrapperPadL  = padding-x  (leading edge)
+       iconWrapperPadR  = gap        (space icon → text)
+       textWrapperPadR  = gap        (space text → chevron)
+       chevronWrapperPadR = chevron-pe (trailing edge after chevron)
+   Root carries only height + radius. No root-level padding or itemSpacing binding.
 
    Two masters:
      'Icon + Text + Chevron' — optional leading icon
@@ -1762,21 +1802,26 @@ var MENU_BUTTON_BLUEPRINT = {
     }
   },
 
-  /* Root owns ALL padding + gap. Wrapper children have zero padding so
-     there is no double-padding. Keys map to Figma auto-layout fields. */
+  /* Wrapper-based padding — mirrors button/split-button architecture.
+     Root holds height + radius only; wrappers own their outer-edge air.
+     Figma's setBoundVariable reliably supports paddingLeft/Right on frames;
+     itemSpacing binding is unreliable and intentionally avoided here. */
   sizeBindings: {
     root: {
       height:            'menu-button/height',
       topLeftRadius:     'menu-button/radius',
       topRightRadius:    'menu-button/radius',
       bottomLeftRadius:  'menu-button/radius',
-      bottomRightRadius: 'menu-button/radius',
-      paddingLeft:       'menu-button/padding-x',
-      paddingRight:      'menu-button/chevron-pe',
-      itemSpacing:       'menu-button/gap'
+      bottomRightRadius: 'menu-button/radius'
     },
-    /* No iconWrapperPadL/R or textWrapperPadL/R — root handles all spacing.
-       Omitting these keys causes the generator to skip wrapper padding. */
+    /* Leading icon wrapper: padL = padding-x (outer lead), padR = gap (space to text). */
+    iconWrapperPadL:    'menu-button/padding-x',
+    iconWrapperPadR:    'menu-button/gap',
+    /* Text wrapper: padL when first slot (text-only master) = padding-x; padR = gap (space to chevron). */
+    textWrapperPadL:    'menu-button/padding-x',
+    textWrapperPadR:    'menu-button/gap',
+    /* Chevron slot wrapper: padR = chevron-pe (trailing right edge). */
+    chevronWrapperPadR: 'menu-button/chevron-pe',
     icon: {
       width:  'menu-button/icon-size',
       height: 'menu-button/icon-size'
@@ -2069,6 +2114,23 @@ async function generateComponentFromBlueprint(blueprint) {
   var t2Count = Object.keys(t2Vars).length;
   var t3Count = Object.keys(t3Vars).length;
   log('Variables: ' + csCount + ' comp-size, ' + t2Count + ' T2, ' + t3Count + ' T3');
+
+  /* T3 guard — Brand/semantic families need T3 for icon/text color bindings.
+     If T3 is absent (user hasn't run Update Variables), emit a clear error
+     immediately so the user knows why Brand icons will be incorrectly colored. */
+  if (t3Count === 0) {
+    var _t3Needed = false;
+    var _t3FamKeys = Object.keys(BP.families || {});
+    for (var _t3fi = 0; _t3fi < _t3FamKeys.length; _t3fi++) {
+      if (BP.families[_t3FamKeys[_t3fi]].t3Mode) { _t3Needed = true; break; }
+    }
+    if (_t3Needed) {
+      stats.errors.push(
+        'T3 Status Context Tokens collection not found — Brand/semantic icon & text colors were not bound. ' +
+        'Run \u201cSync \u2192 Update Variables\u201d first, then rebuild to fix icon colors.'
+      );
+    }
+  }
 
   /* ── Step 2b: Create/find Typography variable collection ─── */
   figma.ui.postMessage({ type: 'gen-progress', text: 'Setting up typography variables…' });
@@ -2604,7 +2666,7 @@ async function generateComponentFromBlueprint(blueprint) {
             var _rescueSets = child.findAll(function(n) {
               return n.type === 'COMPONENT_SET' &&
                      reuseSetByName[n.name] !== undefined &&
-                     reuseSetByName[n.name] === n;
+                     reuseSetByName[n.name].id === n.id;
             });
             for (var _ri = 0; _ri < _rescueSets.length; _ri++) {
               page.appendChild(_rescueSets[_ri]);
@@ -2627,7 +2689,7 @@ async function generateComponentFromBlueprint(blueprint) {
       /* M4 — skip removal of any set we plan to reuse. Its old children
          will be pruned later, after the new variants have been appended,
          so the SET's node.id and library key survive. */
-      if (SAFE_REBUILD && reuseSetByName[child.name] === child) {
+      if (SAFE_REBUILD && reuseSetByName[child.name] && reuseSetByName[child.name].id === child.id) {
         continue;
       }
       child.remove(); continue;
@@ -2677,10 +2739,17 @@ async function generateComponentFromBlueprint(blueprint) {
 
   /* Find T2 collection + modes for presentation binding */
   var t2Col = null, t2Modes = {};
+  var t1Col = null, t1Modes = {};
   var t3Col = null, t3Modes = {};
   var presColls = await figma.variables.getLocalVariableCollectionsAsync();
   for (var pci = 0; pci < presColls.length; pci++) {
     var pcol = presColls[pci];
+    if (pcol.name === 'T1 Color Tokens') {
+      t1Col = pcol;
+      for (var pmi0 = 0; pmi0 < pcol.modes.length; pmi0++) {
+        t1Modes[pcol.modes[pmi0].name] = pcol.modes[pmi0].modeId;
+      }
+    }
     if (pcol.name === 'T2 Surface Context Tokens') {
       t2Col = pcol;
       for (var pmi = 0; pmi < pcol.modes.length; pmi++) {
@@ -3327,6 +3396,13 @@ async function generateComponentFromBlueprint(blueprint) {
     try {
       /* Set hero frame to inverse surface mode — all children inherit */
       heroBg.setExplicitVariableModeForCollection(t2Col, inverseModeId);
+      /* surface-inverse is always dark — force T1 semantic tokens to
+         Dark mode so role colors (brand, danger, etc.) inside the hero
+         resolve to their dark-theme steps rather than light steps. */
+      var t1DarkModeId = t1Modes['Dark'] || t1Modes['dark'] || null;
+      if (t1Col && t1DarkModeId) {
+        try { heroBg.setExplicitVariableModeForCollection(t1Col, t1DarkModeId); } catch (e) {}
+      }
 
       /* Background */
       tryBindFill(heroBg, t2Vars['default/surfaces/bg']);
@@ -3349,10 +3425,17 @@ async function generateComponentFromBlueprint(blueprint) {
       tryBindFill(t2l3, t2Vars['default/content/faint']);
       tryBindFill(arrowNode, t2Vars['default/content/faint']);
 
-      /* Stat badge backgrounds — bind to surfaces/subtle */
+      /* Stat badge backgrounds + text labels — bind to variables */
       for (var sbBind = 0; sbBind < statBadges.length; sbBind++) {
         tryBindFill(statBadges[sbBind], t2Vars['default/surfaces/subtle']);
+        /* Bind the text child's fill too — it's always the first child */
+        var sbText = statBadges[sbBind].children && statBadges[sbBind].children[0];
+        if (sbText) tryBindFill(sbText, t2Vars['default/content/subtle']);
       }
+      /* "Token-bound" badge text uses success accent — bind to T2 content/default
+         so it reads correctly on the inverse surface regardless of theme */
+      var tokenBoundText = statBadges[2] && statBadges[2].children && statBadges[2].children[0];
+      if (tokenBoundText) tryBindFill(tokenBoundText, t2Vars['default/content/default']);
 
       log('Hero: bound ALL children to T2 inverse surface variables');
     } catch (heroBindErr) {
@@ -3369,8 +3452,15 @@ async function generateComponentFromBlueprint(blueprint) {
   }
   if (t3Col && t3Modes['success']) {
     try {
-      /* t2l1 "TIER 2 — VARIANTS" uses success — but mode set on heroBg applies to children */
-      /* We can't set two T3 modes on one frame, so these stay as resolved colors */
+      /* t2l1 "TIER 2 — VARIANTS" — set success mode on t2Box so its children
+         resolve T3 vars in success mode, independent of the hero's brand mode. */
+      t2Box.setExplicitVariableModeForCollection(t3Col, t3Modes['success']);
+      tryBindFill(t2l1, t3Vars['content/default']); /* success green */
+      /* Also bind "Token-bound" badge text to T3 success content */
+      var _tbText = statBadges[2] && statBadges[2].children && statBadges[2].children[0];
+      if (_tbText) tryBindFill(_tbText, t3Vars['content/default']);
+      /* Token-bound badge itself needs success mode so its T3 binding resolves correctly */
+      statBadges[2].setExplicitVariableModeForCollection(t3Col, t3Modes['success']);
     } catch (e) {}
   }
 
@@ -4089,6 +4179,16 @@ async function generateComponentFromBlueprint(blueprint) {
           }
         }
 
+        /* Bind trailing-edge padding to the chevron slot WRAPPER frame.
+           chevron-pe gives the button its right breathing room. Done on the
+           wrapper (not root) to match the wrapper-based pattern used by button
+           and to avoid relying on itemSpacing variable binding on the root. */
+        var chevWrapPadRVar = compSizeVars[activeSizeBindings.chevronWrapperPadR];
+        if (chevWrapPadRVar) {
+          await tryBindVar(chevSlotFrame, 'paddingRight', chevWrapPadRVar);
+          stats.bindings++;
+        }
+
         chevronInstRef = chevSlotInst;
       }
     }
@@ -4256,6 +4356,25 @@ async function generateComponentFromBlueprint(blueprint) {
 
       var components = []; /* { component, type, state, rounded } */
 
+      /* SAFE_REBUILD variant reuse map — keyed by variant name.
+         If we have an existing set to reuse, pre-index its current COMPONENT
+         children so we can UPDATE them in-place instead of delete+recreate.
+         Preserving individual variant node IDs keeps placed instances from
+         showing "Missing variant" (instances track mainComponent by ID, not
+         just by the set's library key). */
+      var _existingVarMap = {};
+      if (SAFE_REBUILD) {
+        var _preReuseSet = reuseSetByName[setDisplayName];
+        if (_preReuseSet && !_preReuseSet.removed) {
+          var _preKids = _preReuseSet.children || [];
+          for (var _pki = 0; _pki < _preKids.length; _pki++) {
+            var _pk = _preKids[_pki];
+            if (_pk && _pk.type === 'COMPONENT') _existingVarMap[_pk.name] = _pk;
+          }
+          log('SAFE_REBUILD variant map: ' + Object.keys(_existingVarMap).length + ' existing variants for "' + setDisplayName + '"');
+        }
+      }
+
       /* Rounded axis — boolean variant property mirroring CSS [data-rounded].
          False = bound to button/default/radius (default). True = bound to
          button/radius-rounded (pill, 9999). Lookup tolerates both naming
@@ -4274,10 +4393,25 @@ async function generateComponentFromBlueprint(blueprint) {
           var overrides = famOverrides[typeName] && famOverrides[typeName][stateName];
           if (!overrides) continue;
 
-          /* Create variant component — thin wrapper, NO padding or layout of its own.
-             All structure comes from the master instance inside it. */
-          var varComp = figma.createComponent();
-          varComp.name = 'Type=' + typeName + ', State=' + stateName + ', Rounded=' + (isRounded ? 'True' : 'False');
+          var _variantName = 'Type=' + typeName + ', State=' + stateName + ', Rounded=' + (isRounded ? 'True' : 'False');
+
+          /* SAFE_REBUILD: reuse the existing COMPONENT node so placed instances
+             keep their mainComponent reference (same node ID). Clear its
+             children so we can re-add a fresh master instance below. */
+          var _reuseVarComp = _existingVarMap[_variantName];
+          var varComp;
+          if (_reuseVarComp && !_reuseVarComp.removed) {
+            varComp = _reuseVarComp;
+            delete _existingVarMap[_variantName]; /* mark consumed */
+            var _rvKids = varComp.children ? varComp.children.slice() : [];
+            for (var _rvk = 0; _rvk < _rvKids.length; _rvk++) {
+              try { _rvKids[_rvk].remove(); } catch (e) {}
+            }
+          } else {
+            /* Create variant component — thin wrapper, NO padding or layout. */
+            varComp = figma.createComponent();
+          }
+          varComp.name = _variantName;
           varComp.resize(120, 36);
           varComp.layoutMode = 'HORIZONTAL';
           varComp.counterAxisAlignItems = 'CENTER';
@@ -4635,27 +4769,36 @@ async function generateComponentFromBlueprint(blueprint) {
       var reuseTarget = (SAFE_REBUILD && reuseSetByName[setDisplayName]) || null;
 
       if (reuseTarget && !reuseTarget.removed) {
-        /* M4 — preserve set node.id and library key. Move new variants
-           into the existing set, then prune any leftover old variants. */
+        /* M4 + V2 — preserve set AND individual variant node IDs.
+           Variants that were updated in-place (consumed from _existingVarMap)
+           are already inside reuseTarget and don't need re-appending.
+           Only truly NEW variants (not found in _existingVarMap originally)
+           need to be appended. Unconsumed _existingVarMap entries are stale
+           variants (removed from the blueprint spec) and should be pruned. */
         try {
-          /* Capture old children so we know what to prune after the move. */
-          var _oldVariants = [];
-          var _existingKids = reuseTarget.children || [];
-          for (var _xi = 0; _xi < _existingKids.length; _xi++) {
-            if (_existingKids[_xi] && _existingKids[_xi].type === 'COMPONENT') {
-              _oldVariants.push(_existingKids[_xi]);
-            }
-          }
-          /* Append every new variant into the existing set. Figma reads
-             the "Prop=Value, Prop=Value" name to wire variant axes. */
+          /* Append only variants that are NOT already in the set
+             (i.e. newly created, not reused in-place). A reused variant
+             is no longer in _existingVarMap (we deleted its entry). */
           for (var _mi = 0; _mi < allComps.length; _mi++) {
-            try { reuseTarget.appendChild(allComps[_mi]); }
+            var _ac = allComps[_mi];
+            /* If this component is already a child of reuseTarget (reused
+               in-place), skip — appending would just move it to the end,
+               which reorders the set but doesn't break anything. Still,
+               avoid it to keep ordering stable. */
+            if (_ac.parent && _ac.parent.id === reuseTarget.id) continue;
+            try { reuseTarget.appendChild(_ac); }
             catch (_ae) { log('SAFE_REBUILD append failed: ' + _ae.message); }
           }
-          /* Prune old variants now that the new ones are in. */
-          for (var _di = 0; _di < _oldVariants.length; _di++) {
-            try { _oldVariants[_di].remove(); }
-            catch (_de) { /* ignore */ }
+          /* Prune stale variants — those still in _existingVarMap were NOT
+             consumed by the new build (their name no longer exists in the
+             blueprint), so they're obsolete and should be removed. */
+          var _staleNames = Object.keys(_existingVarMap);
+          for (var _si = 0; _si < _staleNames.length; _si++) {
+            var _stale = _existingVarMap[_staleNames[_si]];
+            if (_stale && !_stale.removed) {
+              try { _stale.remove(); }
+              catch (_se) { /* ignore */ }
+            }
           }
           componentSet = reuseTarget;
           reusedExistingSet = true;
@@ -5601,6 +5744,26 @@ figma.ui.onmessage = async function(msg) {
       } catch (we) {
         log('Auto-wire pass failed: ' + we.message);
         allStats.errors.push('Auto-wire: ' + we.message);
+      }
+
+      /* Post-build icon color heal — runs AFTER all variants are committed
+         to the page tree so that ghost-node overrides inside floating
+         instances (which can silently fail to persist through combineAsVariants)
+         are replaced with correct role-variable bindings in the live document.
+         Idempotent; mirrors the same pass run on sync/verify. */
+      figma.ui.postMessage({ type: 'gen-progress', text: 'Healing icon colors…' });
+      try {
+        var genRebind = await rebindIconPlaceholderPaints();
+        allStats.bindings += genRebind.rebound;
+        for (var gri = 0; gri < genRebind.warnings.length; gri++) {
+          allStats.errors.push('icon-color: ' + genRebind.warnings[gri]);
+        }
+        if (genRebind.rebound > 0) {
+          log('Post-build icon rebind: ' + genRebind.rebound + ' paints across ' +
+              genRebind.variantsTouched + ' variants');
+        }
+      } catch (gre) {
+        log('Post-build icon rebind skipped: ' + gre.message);
       }
 
       figma.ui.postMessage({ type: 'gen-done', stats: allStats });

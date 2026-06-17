@@ -189,8 +189,8 @@
       "size": "micro",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xs)",
-      "aliasOf": "--radius-xs",
+      "value": "var(--radius-sm)",
+      "aliasOf": "--radius-sm",
       "literal": false
     },
     "--icon-btn-radius-tiny": {
@@ -285,8 +285,8 @@
       "size": "mega",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl",
+      "value": "var(--radius-lg)",
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--icon-btn-radius-ultra": {
@@ -501,8 +501,8 @@
       "size": "ultra",
       "state": null,
       "property": "size",
-      "value": "var(--spacing-80)",
-      "aliasOf": "--spacing-80",
+      "value": "var(--spacing-72)",
+      "aliasOf": "--spacing-72",
       "literal": false
     },
     "--icon-btn-icon-size-micro": {
@@ -621,8 +621,8 @@
       "size": "ultra",
       "state": null,
       "property": "icon-size",
-      "value": "var(--spacing-40)",
-      "aliasOf": "--spacing-40",
+      "value": "var(--spacing-36)",
+      "aliasOf": "--spacing-36",
       "literal": false
     },
     "--icon-btn-filled-bg": {

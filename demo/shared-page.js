@@ -174,11 +174,18 @@ window.DTFPage = (function() {
         bodyEl.style.removeProperty('--surface-base-' + tok);
       });
       bodyEl.style.background = 'var(--surface-base-bg)';
+      bodyEl.removeAttribute('data-theme');
     } else {
       SURFACE_TOKENS.forEach(function(tok) {
         bodyEl.style.setProperty('--surface-base-' + tok, 'var(--surface-' + surfaceId + '-' + tok + ')');
       });
       bodyEl.style.background = 'var(--surface-' + surfaceId + '-bg)';
+      // surface-inverse is always dark — force dark semantic tokens inside it
+      if (surfaceId === 'inverse') {
+        bodyEl.setAttribute('data-theme', 'dark');
+      } else {
+        bodyEl.removeAttribute('data-theme');
+      }
     }
   }
 

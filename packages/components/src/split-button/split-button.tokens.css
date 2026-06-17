@@ -128,8 +128,8 @@
         huge     14      10
         mega     16      10
         ultra    20      12 */
-  --split-btn-chevron-padding-micro:  var(--spacing-2);
-  --split-btn-chevron-padding-tiny:   var(--spacing-2);
+  --split-btn-chevron-padding-micro:  var(--spacing-3);
+  --split-btn-chevron-padding-tiny:   var(--spacing-3);
   --split-btn-chevron-padding-small:  var(--spacing-3);
   --split-btn-chevron-padding-base:   var(--spacing-3);
   --split-btn-chevron-padding-medium: var(--spacing-4);
@@ -351,7 +351,7 @@
   --split-btn-chevron-size-large:  var(--spacing-14);
   --split-btn-chevron-size-big:    var(--spacing-14);
   --split-btn-chevron-size-huge:   var(--spacing-16);
-  --split-btn-chevron-size-mega:   var(--spacing-16);
+  --split-btn-chevron-size-mega:   var(--spacing-18);
   --split-btn-chevron-size-ultra:  var(--spacing-18);
 
   --split-btn-icon-color:       var(--btn-icon-color);

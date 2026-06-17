@@ -3886,17 +3886,17 @@ function updateGenPrereqs(data){
   var csOk = data.compSizeCount > 0;
   var t2Ok = data.t2Count > 0;
   var t3Ok = data.t3Count > 0;
-  genReady = csOk && t2Ok;
+  genReady = csOk && t2Ok && t3Ok;
   generateBtn.disabled = !genReady;
 
   var missing = [];
   if (!csOk) missing.push('comp-size');
   if (!t2Ok) missing.push('T2 Surface');
-  if (!t3Ok) missing.push('T3 Status');
+  if (!t3Ok) missing.push('T3 Status (run Update Variables first)');
 
   if (missing.length){
     prereqsBar.classList.add('visible');
-    document.getElementById('prereqsTitle').textContent = 'Missing collections (' + missing.length + ')';
+    document.getElementById('prereqsTitle').textContent = 'Required collections missing (' + missing.length + ')';
     prereqsList.innerHTML = missing.map(function(m){ return '<span>• ' + esc(m) + '</span>'; }).join('');
   } else {
     prereqsBar.classList.remove('visible');

@@ -32,14 +32,14 @@
   /* Border radius per density mode */
   --menu-btn-radius-micro: var(--radius-sm);    /* 4px  — matches btn-micro */
   --menu-btn-radius-tiny: var(--radius-sm);     /* 4px  — matches btn-tiny */
-  --menu-btn-radius-small: var(--radius-sm);    /* 4px */
+  --menu-btn-radius-small: var(--radius-md);     /* 6px  — matches btn-small */
   --menu-btn-radius-base: var(--radius-md);     /* 6px  — matches btn-base */
-  --menu-btn-radius-medium: var(--radius-md);   /* 6px */
-  --menu-btn-radius-large: var(--radius-DEFAULT); /* 8px */
-  --menu-btn-radius-big: var(--radius-DEFAULT); /* 8px */
-   --menu-btn-radius-huge: var(--radius-lg);    /* 12px */
-   --menu-btn-radius-mega: var(--radius-lg);    /* 12px — capped; was xl */
-   --menu-btn-radius-ultra: var(--radius-xl);   /* 16px — capped; was 2xl */
+  --menu-btn-radius-medium: var(--radius-DEFAULT); /* 8px  — matches btn-medium */
+  --menu-btn-radius-large: var(--radius-DEFAULT); /* 8px  — matches btn-large */
+  --menu-btn-radius-big: var(--radius-md-lg); /* 10px — matches btn-big */
+   --menu-btn-radius-huge: var(--radius-md-lg);   /* 10px — matches btn-huge */
+   --menu-btn-radius-mega: var(--radius-lg);    /* 12px — matches btn-mega */
+   --menu-btn-radius-ultra: var(--radius-lg-xl);   /* 14px — matches btn-ultra */
 
   /* Border */
   --menu-btn-border-width: 1px;
@@ -91,17 +91,19 @@
   --menu-btn-padding-y-mega: var(--spacing-16);
   --menu-btn-padding-y-ultra: var(--spacing-20);
 
-  /* Inline-end padding after chevron (right edge) */
-  --menu-btn-chevron-pe-micro: var(--spacing-2);
-  --menu-btn-chevron-pe-tiny: var(--spacing-2);
-  --menu-btn-chevron-pe-small: var(--spacing-3);
-  --menu-btn-chevron-pe-base: var(--spacing-3);
-  --menu-btn-chevron-pe-medium: var(--spacing-4);
-  --menu-btn-chevron-pe-large: var(--spacing-4);
-  --menu-btn-chevron-pe-big: var(--spacing-5);
-  --menu-btn-chevron-pe-huge: var(--spacing-6);
-  --menu-btn-chevron-pe-mega: var(--spacing-8);
-  --menu-btn-chevron-pe-ultra: var(--spacing-10);
+  /* Inline-end padding after chevron (right edge)
+     Formula: padding-x − gap  →  trailing air ≈ leading air at each density.
+     spacing-7 and spacing-9 don't exist in the ladder; rounded to spacing-6/8. */
+  --menu-btn-chevron-pe-micro: var(--spacing-6);   /* 8-2=6  */
+  --menu-btn-chevron-pe-tiny: var(--spacing-6);    /* 8-2=6  */
+  --menu-btn-chevron-pe-small: var(--spacing-6);   /* 10-3=7 → 6 */
+  --menu-btn-chevron-pe-base: var(--spacing-8);    /* 12-4=8  */
+  --menu-btn-chevron-pe-medium: var(--spacing-8);  /* 14-5=9 → 8 */
+  --menu-btn-chevron-pe-large: var(--spacing-10);  /* 16-6=10 */
+  --menu-btn-chevron-pe-big: var(--spacing-12);    /* 18-6=12 */
+  --menu-btn-chevron-pe-huge: var(--spacing-12);   /* 20-8=12 */
+  --menu-btn-chevron-pe-mega: var(--spacing-14);   /* 24-10=14 */
+  --menu-btn-chevron-pe-ultra: var(--spacing-16);  /* 28-12=16 */
 
   /* Gap (between icon, label, chevron) */
   --menu-btn-gap-micro: var(--spacing-2);
@@ -286,9 +288,9 @@
   --menu-btn-font-size-micro: var(--font-size-10);
   --menu-btn-font-size-tiny: var(--font-size-11);
   --menu-btn-font-size-small: var(--font-size-12);
-  --menu-btn-font-size-base: var(--font-size-14);
+  --menu-btn-font-size-base: var(--font-size-13);
   --menu-btn-font-size-medium: var(--font-size-14);
-  --menu-btn-font-size-large: var(--font-size-16);
+  --menu-btn-font-size-large: var(--font-size-14);
   --menu-btn-font-size-big: var(--font-size-16);
   --menu-btn-font-size-huge: var(--font-size-18);
   --menu-btn-font-size-mega: var(--font-size-20);
@@ -322,10 +324,10 @@
   --menu-btn-chevron-size-base:   var(--spacing-14);
   --menu-btn-chevron-size-medium: var(--spacing-14);
   --menu-btn-chevron-size-large:  var(--spacing-16);
-  --menu-btn-chevron-size-big:    var(--spacing-16);
-  --menu-btn-chevron-size-huge:   var(--spacing-16);
-  --menu-btn-chevron-size-mega:   var(--spacing-18);
-  --menu-btn-chevron-size-ultra:  var(--spacing-18);
+  --menu-btn-chevron-size-big:    var(--spacing-18);
+  --menu-btn-chevron-size-huge:   var(--spacing-20);
+  --menu-btn-chevron-size-mega:   var(--spacing-20);
+  --menu-btn-chevron-size-ultra:  var(--spacing-22);
 
   --menu-btn-icon-color: currentColor;
   --menu-btn-icon-color-hover: currentColor;

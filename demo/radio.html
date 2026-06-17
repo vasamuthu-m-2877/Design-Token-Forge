@@ -651,11 +651,13 @@
     if(surfaceId==='base'){
       SURFACE_TOKENS.forEach(function(tok){bodyEl.style.removeProperty('--surface-base-'+tok);});
       bodyEl.style.background='var(--surface-base-bg)';
+      bodyEl.removeAttribute('data-theme');
     } else {
       SURFACE_TOKENS.forEach(function(tok){
         bodyEl.style.setProperty('--surface-base-'+tok,'var(--surface-'+surfaceId+'-'+tok+')');
       });
       bodyEl.style.background='var(--surface-'+surfaceId+'-bg)';
+      if(surfaceId==='inverse'){bodyEl.setAttribute('data-theme','dark');}else{bodyEl.removeAttribute('data-theme');}
     }
   }
 

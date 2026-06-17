@@ -584,8 +584,8 @@
   /* 5. Surface context */
   var SURFACE_TOKENS=['bg','hover','pressed','outline','separator','ct-default','ct-strong','ct-subtle','ct-faint','cm-bg','cm-bg-hover','cm-bg-pressed','cm-outline','cm-outline-hover','cm-outline-pressed','cm-separator'];
   function applySurface(el,sid){
-    if(sid==='base'){SURFACE_TOKENS.forEach(function(t){el.style.removeProperty('--surface-base-'+t);});el.style.background='var(--surface-base-bg)';}
-    else{SURFACE_TOKENS.forEach(function(t){el.style.setProperty('--surface-base-'+t,'var(--surface-'+sid+'-'+t+')');});el.style.background='var(--surface-'+sid+'-bg)';}
+    if(sid==='base'){SURFACE_TOKENS.forEach(function(t){el.style.removeProperty('--surface-base-'+t);});el.style.background='var(--surface-base-bg)';el.removeAttribute('data-theme');}
+    else{SURFACE_TOKENS.forEach(function(t){el.style.setProperty('--surface-base-'+t,'var(--surface-'+sid+'-'+t+')');});el.style.background='var(--surface-'+sid+'-bg)';if(sid==='inverse'){el.setAttribute('data-theme','dark');}else{el.removeAttribute('data-theme');}}
   }
   function renderSurface(){
     ['surfaceBase','surfaceAlt','surfaceDeep'].forEach(function(id){

@@ -285,6 +285,7 @@
 .split-btn[data-size="micro"][data-icon-detail="high"]  { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-micro)); }
 .split-btn[data-size="tiny"][data-icon-detail="high"]   { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-tiny)); }
 .split-btn[data-size="small"][data-icon-detail="high"]  { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-small)); }
+.split-btn[data-size="large"][data-icon-detail="high"]  { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-large)); }
 .split-btn[data-size="big"][data-icon-detail="high"]    { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-big)); }
 .split-btn[data-size="huge"][data-icon-detail="high"]   { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-huge)); }
 .split-btn[data-size="mega"][data-icon-detail="high"]   { --_sb-icon-size: var(--split-btn-icon-size, var(--split-btn-icon-size-mega)); }

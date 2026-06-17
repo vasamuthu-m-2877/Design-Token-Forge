@@ -26,7 +26,7 @@
       "dimension": 65,
       "surface": 48,
       "typography": 30,
-      "slots": 11,
+      "slots": 21,
       "motion": 8,
       "a11y": 1
     }
@@ -70,7 +70,7 @@
     "missingVariants": [],
     "remapOnlyRoles": []
   },
-  "tokenCount": 182,
+  "tokenCount": 192,
   "tokens": {
     "--datepicker-radius": {
       "name": "--datepicker-radius",
@@ -656,8 +656,8 @@
       "size": "small",
       "state": null,
       "property": "nav-size",
-      "value": "var(--spacing-24)",
-      "aliasOf": "--spacing-24",
+      "value": "var(--spacing-22)",
+      "aliasOf": "--spacing-22",
       "literal": false
     },
     "--datepicker-nav-size-base": {
@@ -2051,6 +2051,126 @@
       "value": "none",
       "aliasOf": null,
       "literal": true
+    },
+    "--datepicker-nav-icon-size-micro": {
+      "name": "--datepicker-nav-icon-size-micro",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "micro",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-tiny": {
+      "name": "--datepicker-nav-icon-size-tiny",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "tiny",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-small": {
+      "name": "--datepicker-nav-icon-size-small",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "small",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-base": {
+      "name": "--datepicker-nav-icon-size-base",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "base",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-medium": {
+      "name": "--datepicker-nav-icon-size-medium",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "medium",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-large": {
+      "name": "--datepicker-nav-icon-size-large",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "large",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-big": {
+      "name": "--datepicker-nav-icon-size-big",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "big",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-huge": {
+      "name": "--datepicker-nav-icon-size-huge",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "huge",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-mega": {
+      "name": "--datepicker-nav-icon-size-mega",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "mega",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
+    },
+    "--datepicker-nav-icon-size-ultra": {
+      "name": "--datepicker-nav-icon-size-ultra",
+      "axis": "slots",
+      "role": "dimension",
+      "group": null,
+      "size": "ultra",
+      "state": null,
+      "property": "nav-icon-size",
+      "value": "var(--font-size-16)",
+      "aliasOf": "--font-size-16",
+      "literal": false
     },
     "--datepicker-nav-icon-size": {
       "name": "--datepicker-nav-icon-size",

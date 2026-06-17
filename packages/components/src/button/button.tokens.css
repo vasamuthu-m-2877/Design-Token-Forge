@@ -345,23 +345,24 @@
      🧩 SLOTS  (14 vars)
      ──────────────────────────────────────────────────────────── */
 
-  /* Icon slot — size per density mode (standard tiers: 12, 16, 20, 24, 32) */
+  /* Icon slot — size per density mode (graduated: 12, 14, 16, 18, 20, 22, 24, 28, 32, 36) */
   --btn-icon-size-micro: var(--spacing-12);
-  --btn-icon-size-tiny: var(--spacing-12);
+  --btn-icon-size-tiny: var(--spacing-14);
   --btn-icon-size-small: var(--spacing-16);
   --btn-icon-size-base: var(--spacing-18);
   --btn-icon-size-medium: var(--spacing-20);
-  --btn-icon-size-large: var(--spacing-20);
+  --btn-icon-size-large: var(--spacing-22);
   --btn-icon-size-big: var(--spacing-24);
-  --btn-icon-size-huge: var(--spacing-24);
+  --btn-icon-size-huge: var(--spacing-28);
   --btn-icon-size-mega: var(--spacing-32);
-  --btn-icon-size-ultra: var(--spacing-32);
+  --btn-icon-size-ultra: var(--spacing-36);
 
   /* Icon DETAIL tier — opt-in larger glyph for icons that need more drawing scope
      (filters, branded marks, multi-stroke). Apply via:
        • data-icon-detail="high"   → bumps --_btn-icon-size to --btn-icon-size-detail-high
        • --btn-icon-size at instance/product level → overrides any size mapping
-     Guardrail: detail="high" is suppressed on sizes ≤ small (would crowd to <4px breathing room).
+     Guardrail: detail="high" is suppressed on sizes ≤ small and ≥ large (standard icon exceeds
+     20px at those sizes; "high" would visually shrink the icon).
      Padding-side is auto-compensated when detail="high" is active. */
   --btn-icon-size-detail-default: var(--spacing-16);
   --btn-icon-size-detail-high: var(--spacing-20);

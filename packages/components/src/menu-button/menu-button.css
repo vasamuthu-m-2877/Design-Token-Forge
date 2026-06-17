@@ -93,6 +93,7 @@
 .menu-btn[data-size="base"] {
   --_mb-height: var(--menu-btn-height-base);
   --_mb-px: var(--menu-btn-padding-x-base);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-base);
   --_mb-py: var(--menu-btn-padding-y-base);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-base);
   --_mb-radius: var(--menu-btn-radius-base);
@@ -106,6 +107,7 @@
 .menu-btn[data-size="micro"] {
   --_mb-height: var(--menu-btn-height-micro);
   --_mb-px: var(--menu-btn-padding-x-micro);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-micro);
   --_mb-py: var(--menu-btn-padding-y-micro);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-micro);
   --_mb-radius: var(--menu-btn-radius-micro);
@@ -119,6 +121,7 @@
 .menu-btn[data-size="tiny"] {
   --_mb-height: var(--menu-btn-height-tiny);
   --_mb-px: var(--menu-btn-padding-x-tiny);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-tiny);
   --_mb-py: var(--menu-btn-padding-y-tiny);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-tiny);
   --_mb-radius: var(--menu-btn-radius-tiny);
@@ -132,6 +135,7 @@
 .menu-btn[data-size="small"] {
   --_mb-height: var(--menu-btn-height-small);
   --_mb-px: var(--menu-btn-padding-x-small);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-small);
   --_mb-py: var(--menu-btn-padding-y-small);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-small);
   --_mb-radius: var(--menu-btn-radius-small);
@@ -145,6 +149,7 @@
 .menu-btn[data-size="medium"] {
   --_mb-height: var(--menu-btn-height-medium);
   --_mb-px: var(--menu-btn-padding-x-medium);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-medium);
   --_mb-py: var(--menu-btn-padding-y-medium);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-medium);
   --_mb-radius: var(--menu-btn-radius-medium);
@@ -158,6 +163,7 @@
 .menu-btn[data-size="large"] {
   --_mb-height: var(--menu-btn-height-large);
   --_mb-px: var(--menu-btn-padding-x-large);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-large);
   --_mb-py: var(--menu-btn-padding-y-large);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-large);
   --_mb-radius: var(--menu-btn-radius-large);
@@ -171,6 +177,7 @@
 .menu-btn[data-size="big"] {
   --_mb-height: var(--menu-btn-height-big);
   --_mb-px: var(--menu-btn-padding-x-big);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-big);
   --_mb-py: var(--menu-btn-padding-y-big);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-big);
   --_mb-radius: var(--menu-btn-radius-big);
@@ -184,6 +191,7 @@
 .menu-btn[data-size="huge"] {
   --_mb-height: var(--menu-btn-height-huge);
   --_mb-px: var(--menu-btn-padding-x-huge);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-huge);
   --_mb-py: var(--menu-btn-padding-y-huge);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-huge);
   --_mb-radius: var(--menu-btn-radius-huge);
@@ -197,6 +205,7 @@
 .menu-btn[data-size="mega"] {
   --_mb-height: var(--menu-btn-height-mega);
   --_mb-px: var(--menu-btn-padding-x-mega);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-mega);
   --_mb-py: var(--menu-btn-padding-y-mega);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-mega);
   --_mb-radius: var(--menu-btn-radius-mega);
@@ -210,6 +219,7 @@
 .menu-btn[data-size="ultra"] {
   --_mb-height: var(--menu-btn-height-ultra);
   --_mb-px: var(--menu-btn-padding-x-ultra);
+  --_mb-px-icon: var(--menu-btn-padding-x-icon-ultra);
   --_mb-py: var(--menu-btn-padding-y-ultra);
   --_mb-chevron-pe: var(--menu-btn-chevron-pe-ultra);
   --_mb-radius: var(--menu-btn-radius-ultra);
@@ -218,6 +228,16 @@
   --_mb-chevron-size: var(--menu-btn-chevron-size-ultra);
   --_mb-gap: var(--menu-btn-gap-ultra);
   --_mb-min-width: var(--menu-btn-min-width-ultra);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ASYMMETRIC ICON PADDING — tighter on the icon side
+   When a leading icon is present (including icon + chevron with no label)
+   use the icon-specific start padding instead of the full text padding.
+   ════════════════════════════════════════════════════════════════ */
+
+.menu-btn:has(> .menu-btn__icon:first-child) {
+  padding-inline-start: var(--_mb-px-icon);
 }
 
 /* ════════════════════════════════════════════════════════════════

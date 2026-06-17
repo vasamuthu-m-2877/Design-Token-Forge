@@ -139,8 +139,8 @@
       "size": "micro",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xs)",
-      "aliasOf": "--radius-xs",
+      "value": "var(--radius-sm)",
+      "aliasOf": "--radius-sm",
       "literal": false
     },
     "--select-radius-tiny": {
@@ -199,8 +199,8 @@
       "size": "large",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg",
+      "value": "var(--radius-md-lg)",
+      "aliasOf": "--radius-md-lg",
       "literal": false
     },
     "--select-radius-big": {
@@ -211,8 +211,8 @@
       "size": "big",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg",
+      "value": "var(--radius-md-lg)",
+      "aliasOf": "--radius-md-lg",
       "literal": false
     },
     "--select-radius-huge": {
@@ -223,8 +223,8 @@
       "size": "huge",
       "state": null,
       "property": "radius",
-      "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl",
+      "value": "var(--radius-lg)",
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--select-radius-mega": {
@@ -236,7 +236,7 @@
       "state": null,
       "property": "radius",
       "value": "var(--radius-lg)",
-      "aliasOf": "--radius-lg,
+      "aliasOf": "--radius-lg",
       "literal": false
     },
     "--select-radius-ultra": {
@@ -248,7 +248,7 @@
       "state": null,
       "property": "radius",
       "value": "var(--radius-xl)",
-      "aliasOf": "--radius-xl,
+      "aliasOf": "--radius-xl",
       "literal": false
     },
     "--select-radius-rounded": {
@@ -523,8 +523,8 @@
       "size": "big",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-20)",
-      "aliasOf": "--spacing-20",
+      "value": "var(--spacing-16)",
+      "aliasOf": "--spacing-16",
       "literal": false
     },
     "--select-padding-x-huge": {
@@ -535,8 +535,8 @@
       "size": "huge",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-24)",
-      "aliasOf": "--spacing-24",
+      "value": "var(--spacing-18)",
+      "aliasOf": "--spacing-18",
       "literal": false
     },
     "--select-padding-x-mega": {
@@ -547,8 +547,8 @@
       "size": "mega",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-28)",
-      "aliasOf": "--spacing-28",
+      "value": "var(--spacing-20)",
+      "aliasOf": "--spacing-20",
       "literal": false
     },
     "--select-padding-x-ultra": {
@@ -559,8 +559,8 @@
       "size": "ultra",
       "state": null,
       "property": "padding-x",
-      "value": "var(--spacing-36)",
-      "aliasOf": "--spacing-36",
+      "value": "var(--spacing-20)",
+      "aliasOf": "--spacing-20",
       "literal": false
     },
     "--select-padding-y-micro": {
@@ -667,8 +667,8 @@
       "size": "mega",
       "state": null,
       "property": "padding-y",
-      "value": "var(--spacing-18)",
-      "aliasOf": "--spacing-18",
+      "value": "var(--spacing-16)",
+      "aliasOf": "--spacing-16",
       "literal": false
     },
     "--select-padding-y-ultra": {
@@ -679,8 +679,8 @@
       "size": "ultra",
       "state": null,
       "property": "padding-y",
-      "value": "var(--spacing-24)",
-      "aliasOf": "--spacing-24",
+      "value": "var(--spacing-20)",
+      "aliasOf": "--spacing-20",
       "literal": false
     },
     "--select-min-width": {
@@ -1519,8 +1519,8 @@
       "size": "small",
       "state": null,
       "property": "chevron-size",
-      "value": "var(--spacing-13)",
-      "aliasOf": "--spacing-13",
+      "value": "var(--spacing-14)",
+      "aliasOf": "--spacing-14",
       "literal": false
     },
     "--select-chevron-size-base": {
