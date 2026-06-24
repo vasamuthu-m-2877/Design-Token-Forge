@@ -3,7 +3,7 @@
     "id": "desktop-pdf-editor",
     "name": "Desktop PDF Editor",
     "owner": "sridhar-ravi-2917",
-    "description": "Default project — the original DTF token set for the Desktop PDF Editor product."
+    "description": "Default project â the original DTF token set for the Desktop PDF Editor product."
   },
   {
     "id": "pearl",
@@ -22,5 +22,11 @@
     "name": "writer-handhelds",
     "owner": "sridhar-ravi-2917",
     "description": ""
+  },
+  {
+    "id": "vasa-ui",
+    "name": "Vasa UI",
+    "owner": "vasamuthu-m-2877",
+    "description": "Design tokens for Vasa UI"
   }
 ]
