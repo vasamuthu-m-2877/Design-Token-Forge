@@ -1410,12 +1410,12 @@ var TOGGLE_BLUEPRINT = {
                             stroke: { t3: 'component/outline-default' }, strokeWeight: 2,
                             t3Mode: 'brand' },
           'Off-Disabled': { fill: 'default/component/outline-default', componentOpacity: 0.5 },
-          'On':           { t3Mode: 'success', fill: { t3: 'component/bg-default' } },
-          'On-Hover':     { t3Mode: 'success', fill: { t3: 'component/bg-hover' } },
+          'On':           { t3Mode: 'success', fill: { t3: 'component/bg-default' }, thumbXOverride: 'toggle/thumb-x-on' },
+          'On-Hover':     { t3Mode: 'success', fill: { t3: 'component/bg-hover' },  thumbXOverride: 'toggle/thumb-x-on' },
           'On-Focus':     { t3Mode: 'success', fill: { t3: 'component/bg-default' },
-                            stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
+                            stroke: { t3: 'component/outline-default' }, strokeWeight: 2, thumbXOverride: 'toggle/thumb-x-on' },
           'On-Disabled':  { t3Mode: 'success', fill: { t3: 'component/bg-default' },
-                            componentOpacity: 0.5 }
+                            componentOpacity: 0.5, thumbXOverride: 'toggle/thumb-x-on' }
         }
       }
     },
@@ -1434,12 +1434,12 @@ var TOGGLE_BLUEPRINT = {
                             t3Mode: 'brand' },
           'Off-Disabled': { stroke: 'default/component/outline-default', strokeWeight: 2,
                             componentOpacity: 0.5 },
-          'On':           { t3Mode: 'success', fill: { t3: 'component/bg-default' } },
-          'On-Hover':     { t3Mode: 'success', fill: { t3: 'component/bg-hover' } },
+          'On':           { t3Mode: 'success', fill: { t3: 'component/bg-default' }, thumbXOverride: 'toggle/thumb-x-on' },
+          'On-Hover':     { t3Mode: 'success', fill: { t3: 'component/bg-hover' },  thumbXOverride: 'toggle/thumb-x-on' },
           'On-Focus':     { t3Mode: 'success', fill: { t3: 'component/bg-default' },
-                            stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
+                            stroke: { t3: 'component/outline-default' }, strokeWeight: 2, thumbXOverride: 'toggle/thumb-x-on' },
           'On-Disabled':  { t3Mode: 'success', fill: { t3: 'component/bg-default' },
-                            componentOpacity: 0.5 }
+                            componentOpacity: 0.5, thumbXOverride: 'toggle/thumb-x-on' }
         }
       }
     },
@@ -1460,11 +1460,11 @@ var TOGGLE_BLUEPRINT = {
                             stroke: { t3: 'component/outline-default' }, strokeWeight: 2,
                             t3Mode: 'brand' },
           'Off-Disabled': { fill: 'default/component/outline-default', componentOpacity: 0.5 },
-          'On':           { fill: { t3: 'component/bg-default' } },
-          'On-Hover':     { fill: { t3: 'component/bg-hover' } },
+          'On':           { fill: { t3: 'component/bg-default' }, thumbXOverride: 'toggle/thumb-x-on' },
+          'On-Hover':     { fill: { t3: 'component/bg-hover' },  thumbXOverride: 'toggle/thumb-x-on' },
           'On-Focus':     { t3Mode: 'brand', fill: { t3: 'component/bg-default' },
-                            stroke: { t3: 'component/outline-default' }, strokeWeight: 2 },
-          'On-Disabled':  { fill: { t3: 'component/bg-default' }, componentOpacity: 0.5 }
+                            stroke: { t3: 'component/outline-default' }, strokeWeight: 2, thumbXOverride: 'toggle/thumb-x-on' },
+          'On-Disabled':  { fill: { t3: 'component/bg-default' }, componentOpacity: 0.5, thumbXOverride: 'toggle/thumb-x-on' }
         }
       }
     }
@@ -4238,63 +4238,68 @@ async function generateComponentFromBlueprint(blueprint) {
       }
 
       if (masterCfg.trackLabels) {
-        /* ── LABELED TRACK — HORIZONTAL HUG auto-layout ──────────────────
-           Structure: [LabelOn (HUG)] [Thumb (FIXED layout-child)] [LabelOff (HUG)]
-           Track expands to fit labels + thumb — no clipping.
-           Thumb is a layout child (not absolute) so it stays centered.
-           State = track fill change + LabelOn/LabelOff opacity swap.
-           Mirrors the CSS [data-track-labels] flex-row layout.              */
-        var ttLblFS = Math.max(Math.floor(ttH * 0.38), 6); /* ~9px at 24px base */
-        ttMaster.layoutMode = 'HORIZONTAL';
-        ttMaster.layoutSizingHorizontal = 'HUG';
-        ttMaster.layoutSizingVertical = 'FIXED';
-        ttMaster.counterAxisAlignItems = 'CENTER';
-        ttMaster.paddingLeft = 2; ttMaster.paddingRight = 2;
-        ttMaster.paddingTop = 2;  ttMaster.paddingBottom = 2;
-        ttMaster.itemSpacing = 0;
-        ttMaster.clipsContent = false;
+        /* ── LABELED TRACK — absolute-positioned labels, sliding thumb ────────
+           Structure (OFF state master):
+             [● Thumb at x=inset] | [LabelOff — right zone, visible]
+             LabelOn is in LEFT zone (same position as thumb), opacity=0 (hidden under thumb).
+           In ON variants: thumbXOverride slides thumb right; label opacities swap.
+           Track is FIXED WIDTH (standard toggle/track-w) — not HUG.
+           Mirrors CSS [data-track-labels] absolute-label approach.               */
+        ttMaster.clipsContent = false; /* allow shadow + labels to render cleanly */
 
-        /* LabelOn — LEFT of thumb, hidden by default (Off state) */
-        var ttLblOnTxt = figma.createText();
-        ttLblOnTxt.name = 'LabelOn';
-        ttLblOnTxt.fontName = fontNameBold;
-        ttLblOnTxt.characters = 'ON';
-        ttLblOnTxt.fontSize = ttLblFS;
-        ttLblOnTxt.textAutoResize = 'WIDTH_AND_HEIGHT';
-        ttLblOnTxt.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
-        ttLblOnTxt.opacity = 0; /* visible only in On-* states */
-        ttMaster.appendChild(ttLblOnTxt);
-        ttLblOnTxt.layoutSizingHorizontal = 'HUG';
-        ttLblOnTxt.layoutSizingVertical = 'HUG';
-        tryBindFill(ttLblOnTxt, t3Vars['oncomponent-content/default']);
-        stats.bindings++;
+        var ttLblInset  = 2;  /* default base inset (px) */
+        var ttLblThumbW = 20; /* default base thumb width (px) */
+        var ttLblZoneW  = Math.max(ttW - ttLblInset - ttLblThumbW - ttLblInset * 2, 8);
+        var ttLblFS     = Math.max(Math.floor(ttH * 0.38), 6); /* ~9px at 24px base */
 
-        /* Thumb — CENTER layout child (static, between labels) */
-        ttMaster.appendChild(ttThumb);
-        ttThumb.layoutSizingHorizontal = 'FIXED';
-        ttThumb.layoutSizingVertical = 'FIXED';
-        /* No x/y variable binding — position managed by auto-layout */
-
-        /* LabelOff — RIGHT of thumb, visible by default (Off state) */
+        /* LabelOff — RIGHT zone: x = inset + thumb + inset, full-height zone */
         var ttLblOffTxt = figma.createText();
         ttLblOffTxt.name = 'LabelOff';
         ttLblOffTxt.fontName = fontNameBold;
         ttLblOffTxt.characters = 'OFF';
         ttLblOffTxt.fontSize = ttLblFS;
-        ttLblOffTxt.textAutoResize = 'WIDTH_AND_HEIGHT';
+        ttLblOffTxt.textAutoResize = 'NONE';
+        ttLblOffTxt.textAlignHorizontal = 'CENTER';
+        ttLblOffTxt.textAlignVertical = 'CENTER';
         ttLblOffTxt.fills = [{ type: 'SOLID', color: COLOR_BODY }];
+        ttLblOffTxt.resize(ttLblZoneW, ttH);
+        ttLblOffTxt.x = ttLblInset + ttLblThumbW + ttLblInset;
+        ttLblOffTxt.y = 0;
         ttMaster.appendChild(ttLblOffTxt);
-        ttLblOffTxt.layoutSizingHorizontal = 'HUG';
-        ttLblOffTxt.layoutSizingVertical = 'HUG';
         tryBindFill(ttLblOffTxt, t2Vars['default/content/default']);
         stats.bindings++;
 
-        log('Track-thumb labeled master built (HUG): ' + masterName);
+        /* LabelOn — LEFT zone: x = inset (same as thumb OFF position).
+           opacity=0 in master (OFF state) — hidden under the thumb.
+           Variant builder sets opacity=1 for On-* states. */
+        var ttLblOnTxt = figma.createText();
+        ttLblOnTxt.name = 'LabelOn';
+        ttLblOnTxt.fontName = fontNameBold;
+        ttLblOnTxt.characters = 'ON';
+        ttLblOnTxt.fontSize = ttLblFS;
+        ttLblOnTxt.textAutoResize = 'NONE';
+        ttLblOnTxt.textAlignHorizontal = 'CENTER';
+        ttLblOnTxt.textAlignVertical = 'CENTER';
+        ttLblOnTxt.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+        ttLblOnTxt.resize(ttLblZoneW, ttH);
+        ttLblOnTxt.x = ttLblInset;
+        ttLblOnTxt.y = 0;
+        ttLblOnTxt.opacity = 0; /* hidden in OFF master */
+        ttMaster.appendChild(ttLblOnTxt);
+        tryBindFill(ttLblOnTxt, t3Vars['oncomponent-content/default']);
+        stats.bindings++;
+
+        /* Thumb — appended LAST so it renders above LabelOn (which it overlaps in OFF state) */
+        ttMaster.appendChild(ttThumb);
+        var ttThumbXVar = masterCfg.thumbXVar && compSizeVars[masterCfg.thumbXVar];
+        var ttThumbYVar = BP.sizeBindings.thumbY && compSizeVars[BP.sizeBindings.thumbY];
+        if (ttThumbXVar) { await tryBindVar(ttThumb, 'x', ttThumbXVar); stats.bindings++; }
+        if (ttThumbYVar) { await tryBindVar(ttThumb, 'y', ttThumbYVar); stats.bindings++; }
+        log('Track-thumb labeled master built (absolute labels): ' + masterName);
+
       } else {
-        /* ── STANDARD TRACK — NONE layout, absolute thumb, sliding ──────
-           Track has fixed width (comp-size variables). Thumb slides via
-           variable-bound x position (thumbXVar + thumbXOverride per state). */
-        ttMaster.appendChild(ttThumb); /* absolute: no layout contribution */
+        /* ── STANDARD TRACK — NONE layout, absolute thumb, no labels ────────── */
+        ttMaster.appendChild(ttThumb);
         var ttThumbXVar = masterCfg.thumbXVar && compSizeVars[masterCfg.thumbXVar];
         var ttThumbYVar = BP.sizeBindings.thumbY && compSizeVars[BP.sizeBindings.thumbY];
         if (ttThumbXVar) { await tryBindVar(ttThumb, 'x', ttThumbXVar); stats.bindings++; }
@@ -5155,9 +5160,9 @@ async function generateComponentFromBlueprint(blueprint) {
             }
           }
 
-          /* thumbXOverride — skip for labeled masters (thumb is a layout child
-             in auto-layout HUG track; sliding via x-variable doesn't apply). */
-          if (overrides.thumbXOverride && !(masterCfg && masterCfg.trackLabels)) {
+          /* thumbXOverride — rebind thumb X to the ON-position variable.
+             Works for both standard and labeled (sliding-thumb) masters. */
+          if (overrides.thumbXOverride) {
             var ttOnXVar = compSizeVars[overrides.thumbXOverride];
             if (ttOnXVar) {
               var ttThumbNode = instance.findOne(function(n) { return n.name === 'Thumb'; });
@@ -5297,8 +5302,10 @@ async function generateComponentFromBlueprint(blueprint) {
         entry.component.y = padY + typeIdx * rowSpacing + roundedOffset;
       }
       var totalW = padX * 2 + (colCount - 1) * colSpacing + 120;
-      /* Doubled height to fit Rounded=False block + Rounded=True block + gap. */
-      var totalH = padY + (rowCount - 1) * rowSpacing + 32 + (blockHeight + roundedBlockGap) + padY;
+      /* Height: single block when skipRounded, doubled block otherwise. */
+      var totalH = BP.skipRounded
+        ? padY + (rowCount - 1) * rowSpacing + 32 + padY
+        : padY + (rowCount - 1) * rowSpacing + 32 + (blockHeight + roundedBlockGap) + padY;
       try { componentSet.resize(totalW, totalH); } catch (e) { /* auto-size */ }
 
       /* ── Row/column label constants ── */
@@ -5508,26 +5515,30 @@ async function generateComponentFromBlueprint(blueprint) {
       squareHdr.y = csY + 6;
       tryBindFill(squareHdr, t2Vars['default/content/subtle']);
 
-      var pillHdr = createLabel('Pill (Rounded=True)', 10, true, COLOR_DIMMED);
-      variantSec.section.appendChild(pillHdr);
-      pillHdr.x = variantSec.innerX + 4;
-      pillHdr.y = csY + halfBlockOffset + 6;
-      tryBindFill(pillHdr, t2Vars['default/content/subtle']);
+      if (!BP.skipRounded) {
+        var pillHdr = createLabel('Pill (Rounded=True)', 10, true, COLOR_DIMMED);
+        variantSec.section.appendChild(pillHdr);
+        pillHdr.x = variantSec.innerX + 4;
+        pillHdr.y = csY + halfBlockOffset + 6;
+        tryBindFill(pillHdr, t2Vars['default/content/subtle']);
+      }
 
       for (var rhi = 0; rhi < famTypes.length; rhi++) {
-        /* Square block label */
+        /* Square block label (always shown) */
         var rowLabel = createLabel(famTypes[rhi], 11, false, COLOR_BODY);
         variantSec.section.appendChild(rowLabel);
         rowLabel.x = variantSec.innerX + 4;
         rowLabel.y = csY + padY + rhi * rowSpacing + 8;
         tryBindFill(rowLabel, t2Vars['default/content/default']);
 
-        /* Pill block label (same type name, offset down by one block) */
-        var rowLabelPill = createLabel(famTypes[rhi], 11, false, COLOR_BODY);
-        variantSec.section.appendChild(rowLabelPill);
-        rowLabelPill.x = variantSec.innerX + 4;
-        rowLabelPill.y = csY + padY + rhi * rowSpacing + 8 + halfBlockOffset;
-        tryBindFill(rowLabelPill, t2Vars['default/content/default']);
+        /* Pill block label — only when Rounded axis exists */
+        if (!BP.skipRounded) {
+          var rowLabelPill = createLabel(famTypes[rhi], 11, false, COLOR_BODY);
+          variantSec.section.appendChild(rowLabelPill);
+          rowLabelPill.x = variantSec.innerX + 4;
+          rowLabelPill.y = csY + padY + rhi * rowSpacing + 8 + halfBlockOffset;
+          tryBindFill(rowLabelPill, t2Vars['default/content/default']);
+        }
       }
 
       /* Place the component set */

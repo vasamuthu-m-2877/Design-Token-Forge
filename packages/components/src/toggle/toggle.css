@@ -492,60 +492,51 @@
      </button>
    ════════════════════════════════════════════════════════════════ */
 
-/* Track hugs content — overrides the fixed --_sw-track-w binding */
+/* Track: unchanged width — labels are absolutely positioned inside the track.
+   Thumb slides left ↔ right via the standard left: var(--_sw-inset) / calc rule.
+   OFF state: ● thumb at left | OFF text in right zone
+   ON  state: ON text in left zone | ● thumb at right                           */
 .switch[data-track-labels] .switch__track {
-  width: max-content;
-  padding: var(--_sw-inset);
-  gap: 0;
+  /* No width or layout change — standard fixed-width track */
 }
 
-/* Labels back in flex flow (override absolute from no-label rule) */
+/* Shared label base — absolutely fills its zone from top to bottom */
 .switch[data-track-labels] .switch__track-label {
-  position: static;
+  position: absolute;
+  top: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
+  justify-content: center;
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
   white-space: nowrap;
   line-height: 1;
-  font-family: var(--switch-label-font-family);
+  font-family: var(--switch-label-font-family, inherit);
   font-size: calc(var(--_sw-track-h) * 0.38);
   font-weight: var(--switch-track-label-font-weight);
   letter-spacing: var(--switch-track-label-letter-spacing);
   transition: opacity var(--switch-transition-duration) var(--switch-transition-easing);
-  padding-inline: 2px;
 }
 
-/* ON label — LEFT of thumb (order 1), hidden until checked */
-.switch[data-track-labels] .switch__track-label--on {
-  order: 1;
-  color: var(--switch-track-label-color-on);
-  opacity: 0; /* invisible but keeps its width — prevents layout shift */
-  left: auto; right: auto; top: auto; bottom: auto;
-}
-
-/* OFF label — RIGHT of thumb (order 3), visible when unchecked */
+/* OFF label — RIGHT zone (after thumb in OFF position): visible by default */
 .switch[data-track-labels] .switch__track-label--off {
-  order: 3;
+  left: calc(var(--_sw-thumb-size) + var(--_sw-inset) * 2);
+  right: var(--_sw-inset);
   color: var(--switch-track-label-color-off);
   opacity: 1;
-  left: auto; right: auto; top: auto; bottom: auto;
 }
 
-/* Thumb back in flex flow — static, centered between labels */
-.switch[data-track-labels] .switch__thumb {
-  position: relative;
-  left: auto;
-  top: auto; bottom: auto; margin-block: 0;
-  flex-shrink: 0;
-  order: 2;
+/* ON label — LEFT zone (behind thumb in OFF state, revealed when thumb slides right) */
+.switch[data-track-labels] .switch__track-label--on {
+  left: var(--_sw-inset);
+  right: calc(var(--_sw-thumb-size) + var(--_sw-inset) * 2);
+  color: var(--switch-track-label-color-on);
+  opacity: 0;
 }
 
-/* Prevent the checked-state slide rule from re-positioning the thumb */
-.switch[data-track-labels][aria-checked="true"] .switch__thumb { left: auto; }
-
-/* Swap label visibility on checked */
+/* ON state: thumb has slid to right zone — swap label visibility */
 .switch[data-track-labels][aria-checked="true"] .switch__track-label--on  { opacity: 1; }
 .switch[data-track-labels][aria-checked="true"] .switch__track-label--off { opacity: 0; }
 
