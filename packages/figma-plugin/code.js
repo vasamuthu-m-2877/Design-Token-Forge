@@ -4249,7 +4249,7 @@ async function generateComponentFromBlueprint(blueprint) {
 
         var ttLblInset  = 2;  /* default base inset (px) */
         var ttLblThumbW = 20; /* default base thumb width (px) */
-        var ttLblZoneW  = Math.max(ttW - ttLblInset - ttLblThumbW - ttLblInset * 2, 8);
+        var ttLblZoneW  = Math.max(ttW - 2 * ttLblInset - ttLblThumbW, 8);
         var ttLblFS     = Math.max(Math.floor(ttH * 0.38), 6); /* ~9px at 24px base */
 
         /* LabelOff — RIGHT zone: x = inset + thumb + inset, full-height zone */
@@ -5227,6 +5227,13 @@ async function generateComponentFromBlueprint(blueprint) {
         }
         if (_hasOldRounded) {
           log('SAFE_REBUILD schema change (skipRounded): forcing fresh set for "' + setDisplayName + '"');
+          /* Delete the rescued set from page root — it has the wrong schema
+             (Rounded axis) and would be left as a stale duplicate otherwise. */
+          var _staleOldSet = reuseSetByName[setDisplayName];
+          if (_staleOldSet && !_staleOldSet.removed) {
+            try { _staleOldSet.remove(); }
+            catch (_soe) { log('Schema-change cleanup failed: ' + _soe.message); }
+          }
           reuseTarget = null; /* fall through to combineAsVariants */
         }
       }
@@ -5508,12 +5515,15 @@ async function generateComponentFromBlueprint(blueprint) {
          a "Rounded" toggle. */
       var halfBlockOffset = blockHeight + roundedBlockGap;
 
-      /* Sub-header above each block */
-      var squareHdr = createLabel('Square (Default)', 10, true, COLOR_DIMMED);
-      variantSec.section.appendChild(squareHdr);
-      squareHdr.x = variantSec.innerX + 4;
-      squareHdr.y = csY + 6;
-      tryBindFill(squareHdr, t2Vars['default/content/subtle']);
+      /* Row label sub-header: only show shape label when Rounded axis exists.
+         With skipRounded, each master IS its own shape — no sub-header needed. */
+      if (!BP.skipRounded) {
+        var squareHdr = createLabel('Square (Default)', 10, true, COLOR_DIMMED);
+        variantSec.section.appendChild(squareHdr);
+        squareHdr.x = variantSec.innerX + 4;
+        squareHdr.y = csY + 6;
+        tryBindFill(squareHdr, t2Vars['default/content/subtle']);
+      }
 
       if (!BP.skipRounded) {
         var pillHdr = createLabel('Pill (Rounded=True)', 10, true, COLOR_DIMMED);
