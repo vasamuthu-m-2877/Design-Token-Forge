@@ -5207,15 +5207,48 @@ async function generateComponentFromBlueprint(blueprint) {
       var reusedExistingSet = false;
       var reuseTarget = (SAFE_REBUILD && reuseSetByName[setDisplayName]) || null;
 
+      /* Schema-change guard: if the existing set has a "Rounded=" variant property
+         but the new blueprint has skipRounded:true, the schemas are incompatible.
+         Appending non-Rounded variants into a Rounded set causes Figma to assign
+         implicit Rounded=False to new variants, leaving an empty Pill row even after
+         stale pruning. Force a fresh combineAsVariants instead of SAFE_REBUILD. */
+      if (reuseTarget && BP.skipRounded) {
+        var _kids = reuseTarget.children || [];
+        var _hasOldRounded = false;
+        for (var _rci = 0; _rci < _kids.length && !_hasOldRounded; _rci++) {
+          if (_kids[_rci].name && _kids[_rci].name.indexOf('Rounded=') !== -1) {
+            _hasOldRounded = true;
+          }
+        }
+        if (_hasOldRounded) {
+          log('SAFE_REBUILD schema change (skipRounded): forcing fresh set for "' + setDisplayName + '"');
+          reuseTarget = null; /* fall through to combineAsVariants */
+        }
+      }
+
       if (reuseTarget && !reuseTarget.removed) {
         /* M4 + V2 — preserve set AND individual variant node IDs.
            Variants that were updated in-place (consumed from _existingVarMap)
            are already inside reuseTarget and don't need re-appending.
            Only truly NEW variants (not found in _existingVarMap originally)
            need to be appended. Unconsumed _existingVarMap entries are stale
-           variants (removed from the blueprint spec) and should be pruned. */
+           variants (removed from the blueprint spec) and should be pruned.
+           IMPORTANT: prune stale variants BEFORE appending new ones so that
+           Figma never sees old+new variants coexisting with different property
+           schemas (which would cause implicit property assignment on new variants). */
         try {
-          /* Append only variants that are NOT already in the set
+          /* STEP 1: Prune stale variants FIRST — removes schema-incompatible
+             variants before new variants arrive, preventing Figma from inferring
+             obsolete properties (e.g. "Rounded") on the incoming new variants. */
+          var _staleNamesFirst = Object.keys(_existingVarMap);
+          for (var _sfi = 0; _sfi < _staleNamesFirst.length; _sfi++) {
+            var _staleFirst = _existingVarMap[_staleNamesFirst[_sfi]];
+            if (_staleFirst && !_staleFirst.removed) {
+              try { _staleFirst.remove(); } catch (_sfe) { /* ignore */ }
+            }
+          }
+
+          /* STEP 2: Append only variants that are NOT already in the set
              (i.e. newly created, not reused in-place). A reused variant
              is no longer in _existingVarMap (we deleted its entry). */
           for (var _mi = 0; _mi < allComps.length; _mi++) {
@@ -5228,17 +5261,7 @@ async function generateComponentFromBlueprint(blueprint) {
             try { reuseTarget.appendChild(_ac); }
             catch (_ae) { log('SAFE_REBUILD append failed: ' + _ae.message); }
           }
-          /* Prune stale variants — those still in _existingVarMap were NOT
-             consumed by the new build (their name no longer exists in the
-             blueprint), so they're obsolete and should be removed. */
-          var _staleNames = Object.keys(_existingVarMap);
-          for (var _si = 0; _si < _staleNames.length; _si++) {
-            var _stale = _existingVarMap[_staleNames[_si]];
-            if (_stale && !_stale.removed) {
-              try { _stale.remove(); }
-              catch (_se) { /* ignore */ }
-            }
-          }
+          /* Stale pruning already done before append (STEP 1 above). */
           componentSet = reuseTarget;
           reusedExistingSet = true;
           log('SAFE_REBUILD: reused set "' + setDisplayName + '" id=' + reuseTarget.id);
