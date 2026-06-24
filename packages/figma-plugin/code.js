@@ -4908,7 +4908,6 @@ async function generateComponentFromBlueprint(blueprint) {
             _lbOn.characters = 'ON';
             _lbOn.fontSize = _lblFS;
             _lbOn.textAutoResize = 'WIDTH_AND_HEIGHT';
-            _lbOn.layoutPositioning = _lblIsOn ? 'AUTO' : 'ABSOLUTE';
             _lbOn.visible = _lblIsOn;
             var _lbOnFv = _lblIsOn
               ? (t3Vars['oncomponent-content/default'] || t2Vars['default/content/inverse'])
@@ -4916,6 +4915,7 @@ async function generateComponentFromBlueprint(blueprint) {
             if (_lbOnFv) { tryBindFill(_lbOn, _lbOnFv); stats.bindings++; }
             else { _lbOn.fills = [{ type: 'SOLID', color: _lblIsOn ? { r:1,g:1,b:1 } : COLOR_BODY }]; }
             varComp.appendChild(_lbOn);
+            try { _lbOn.layoutPositioning = _lblIsOn ? 'AUTO' : 'ABSOLUTE'; } catch (e) {}
 
             /* Thumb — FIXED centre child */
             var _lbThumb = figma.createFrame();
@@ -4954,12 +4954,12 @@ async function generateComponentFromBlueprint(blueprint) {
             _lbOff.characters = 'OFF';
             _lbOff.fontSize = _lblFS;
             _lbOff.textAutoResize = 'WIDTH_AND_HEIGHT';
-            _lbOff.layoutPositioning = _lblIsOn ? 'ABSOLUTE' : 'AUTO';
             _lbOff.visible = !_lblIsOn;
             var _lbOffFv = t2Vars['default/content/default'];
             if (_lbOffFv) { tryBindFill(_lbOff, _lbOffFv); stats.bindings++; }
             else { _lbOff.fills = [{ type: 'SOLID', color: COLOR_BODY }]; }
             varComp.appendChild(_lbOff);
+            try { _lbOff.layoutPositioning = _lblIsOn ? 'ABSOLUTE' : 'AUTO'; } catch (e) {}
 
             components.push({ component: varComp, type: typeName, state: stateName, rounded: isRounded });
             stats.components++;
@@ -5701,6 +5701,21 @@ async function generateComponentFromBlueprint(blueprint) {
   variantSec.section.x = PAGE_X;
   variantSec.section.y = cursorY;
   cursorY += varSecH + SECTION_GAP;
+
+  /* Post-build: delete any BP-owned component sets still at page root.
+     These are SAFE_REBUILD-rescued sets whose family or master was removed
+     from the blueprint (e.g. old 'Brand' family). All newly generated sets
+     have been moved into sections above, so anything remaining at root is stale. */
+  if (SAFE_REBUILD) {
+    var _pageTopKids = page.children ? page.children.slice() : [];
+    for (var _ptki = 0; _ptki < _pageTopKids.length; _ptki++) {
+      var _ptkNode = _pageTopKids[_ptki];
+      if (_ptkNode && _ptkNode.type === 'COMPONENT_SET' && ownedByThisBP(_ptkNode)) {
+        try { _ptkNode.remove(); log('Post-build orphan removed: "' + _ptkNode.name + '"'); }
+        catch (_pte) { log('Orphan removal failed: ' + _pte.message); }
+      }
+    }
+  }
 
   /* ── Step 9: Store version metadata ────────────────────── */
   var existingVersions = {};
